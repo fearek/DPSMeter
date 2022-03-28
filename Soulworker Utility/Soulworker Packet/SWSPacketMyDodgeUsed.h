@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include ".\Language\Region.h"
 #include ".\Damage Meter\Damage Meter.h"
-#include ".\Soulworker Packet\SWSPacket.h"
+#include ".\Soulworker Packet\SWPacket.h"
 #include <unordered_set>
 
 #pragma pack(push, 1)
@@ -28,16 +28,16 @@ static std::unordered_set<UINT32> normalDodgeList({
 	});
 
 
-class SWSPacketMyDodgeUsed : public SWSPacket {
+class SWSPacketMyDodgeUsed : public SWPacket {
 protected:
-	SWSHEADER* _swheader;
+	SWHEADER* _swheader;
 	BYTE* _data;
 
 	SWSPacketMyDodgeUsed() {}
-	SWSPacketMyDodgeUsed(SWSPacket& other) {}
+	SWSPacketMyDodgeUsed(SWPacket& other) {}
 
 public:
-	SWSPacketMyDodgeUsed(SWSHEADER* swheader, BYTE* data);
+	SWSPacketMyDodgeUsed(SWHEADER* swheader, BYTE* data);
 	virtual ~SWSPacketMyDodgeUsed() {}
 
 	virtual VOID Debug();

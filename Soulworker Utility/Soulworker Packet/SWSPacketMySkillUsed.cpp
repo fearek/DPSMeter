@@ -2,13 +2,13 @@
 #include ".\Soulworker Packet\SWSPacketMySkillUsed.h"
 #include ".\Damage Meter\Damage Meter.h"
 
-SWSPacketMySkillUsed::SWSPacketMySkillUsed(SWSHEADER* swheader, BYTE* data) {
+SWSPacketMySkillUsed::SWSPacketMySkillUsed(SWHEADER* swheader, BYTE* data) {
 	_swheader = swheader;
 	_data = data;
 }
 
 VOID SWSPacketMySkillUsed::Do() {
-	SWPACKET_MYSKILLUSED* skillUsed = (SWPACKET_MYSKILLUSED*)(_data + sizeof(SWSHEADER));
+	SWPACKET_MYSKILLUSED* skillUsed = (SWPACKET_MYSKILLUSED*)(_data + sizeof(SWHEADER));
 
 	DAMAGEMETER.AddSkillUsed(skillUsed->_playerId, skillUsed->_skillId);
 	return;

@@ -21,8 +21,10 @@
 typedef struct _SWHEADER {
 	USHORT _magic;
 	USHORT _size;
-	UCHAR _const_value01;
+	UCHAR _const_value01; //1 for recv 2 for sent, so sent packets dont crash on recv
+	UCHAR unknownshit1;
 	USHORT _op;
+	UCHAR unknownshit2;
 } SWHEADER;
 
 #pragma pack(pop)

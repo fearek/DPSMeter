@@ -297,9 +297,6 @@
     <ClInclude Include="Third Party\imgui\implot_internal.h">
       <Filter>UI\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Soulworker Packet\SWSPacketMaker.h">
-      <Filter>SWSPacket</Filter>
-    </ClInclude>
     <ClInclude Include="Soulworker Packet\SWSPacketMySkillUsed.h">
       <Filter>SWSPacket\0x06 Combat</Filter>
     </ClInclude>
@@ -505,9 +502,6 @@
     </ClCompile>
     <ClCompile Include="Third Party\imgui\implot_items.cpp">
       <Filter>UI\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Soulworker Packet\SWSPacketMaker.cpp">
-      <Filter>SWSPacket</Filter>
     </ClCompile>
     <ClCompile Include="Soulworker Packet\SWSPacketMySkillUsed.cpp">
       <Filter>SWSPacket\0x06 Combat</Filter>

@@ -31,20 +31,6 @@ private:
 		IPv4Packet _packet;
 
 	public:
-		SegmentationPacket() {
-			_data = nullptr;
-			_size = 0;
-			_curSize = 0;
-			_packetSize = 0;
-		}
-
-		~SegmentationPacket() {
-
-			if (_data != nullptr)
-				delete[] _data;
-
-			_data = nullptr;
-		}
 
 		VOID Init(SIZE_T size) {
 
@@ -132,27 +118,14 @@ private:
 
 	
 
-	SWHEADER* GetSWHeader(IPv4Packet* packet);
-	BYTE* GetSWData(IPv4Packet* packet);
+	SWHEADER* GetSWHeader(std::vector<unsigned char>& packet);
+	BYTE* GetSWData(std::vector<unsigned char>& packet);
 
-	VOID ResizePacket(IPv4Packet* packet);
-	VOID ResizePacket(SIZE_T remainsize, IPv4Packet* packet);
 
-	DWORD CheckSegmentation(IPv4Packet* packet);
-	BOOL _isSegmentation;
-
-	VOID StartReassambly(IPv4Packet* packet);
-	VOID Reassambly(IPv4Packet* packet);
-	SegmentationPacket _segmentationPacket;
-
-	VOID CreateSWPacket(IPv4Packet* packet);
-
-	VOID CheckRemainPacket(IPv4Packet* packet);
 
 public:
 	SWPacketMaker();
 	~SWPacketMaker();
-
-	DWORD Parse(IPv4Packet* packet);
+	VOID CreateSWPacket(std::vector<unsigned char>& packet);
 	char* GetKeyInfo();
 };

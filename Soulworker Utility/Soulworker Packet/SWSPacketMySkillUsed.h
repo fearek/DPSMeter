@@ -1,7 +1,7 @@
 #pragma once
 #include ".\Language\Region.h"
 #include ".\Damage Meter\Damage Meter.h"
-#include ".\Soulworker Packet\SWSPacket.h"
+#include ".\Soulworker Packet\SWPacket.h"
 
 #pragma pack(push, 1)
 
@@ -18,16 +18,16 @@ typedef struct _SWPACKET_MYSKILLUSED {
 #pragma pack(pop)
 
 
-class SWSPacketMySkillUsed : public SWSPacket {
+class SWSPacketMySkillUsed : public SWPacket {
 protected:
-	SWSHEADER* _swheader;
+	SWHEADER* _swheader;
 	BYTE* _data;
 
 	SWSPacketMySkillUsed() {}
-	SWSPacketMySkillUsed(SWSPacket& other) {}
+	SWSPacketMySkillUsed(SWPacket& other) {}
 
 public:
-	SWSPacketMySkillUsed(SWSHEADER* swheader, BYTE* data);
+	SWSPacketMySkillUsed(SWHEADER* swheader, BYTE* data);
 	virtual ~SWSPacketMySkillUsed() {}
 
 	virtual VOID Debug();
