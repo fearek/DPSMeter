@@ -5,7 +5,7 @@
 	 />
  </a>
 
-Soulworker DPS Meter for Global Server\
+Soulworker DPS Meter for Global Server
 
 CTRL + DEL : Reset
 
