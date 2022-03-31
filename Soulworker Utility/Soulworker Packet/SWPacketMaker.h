@@ -106,7 +106,7 @@ private:
 	char _keyInfo[32] = "Bypass";
 	int _keyLength = 15;
 
-	USHORT _SWMAGIC = 0xA;
+	USHORT _SWMAGIC = 1;
 #endif
 #if defined(SERVER_JAPAN) // same as past of KR server
 	BYTE _keyTable[64] = { 0x60, 0x3B, 0x0B }; 

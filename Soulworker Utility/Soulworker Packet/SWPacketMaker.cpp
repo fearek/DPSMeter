@@ -20,7 +20,6 @@ SWHEADER* SWPacketMaker::GetSWHeader(std::vector<unsigned char>& packet) {
 		
 
 	SWHEADER* swheader = (SWHEADER*)(&packet[0]);
-
 	if (swheader->_magic != _SWMAGIC || (swheader->_const_value01 != 1 && swheader->_const_value01 != 2 )) {
 		return nullptr;
 	}
