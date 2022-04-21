@@ -8,10 +8,11 @@ typedef struct _HISTORYINFO {
 public:
 	std::vector<SWDamagePlayer*> _history;
 	UINT32 _worldID;
+	UINT32 _ping;
 	SYSTEMTIME _saveTime;
 	FLOAT _time;
 
-	VOID Setup(std::vector<SWDamagePlayer*>& history, UINT32 worldID, FLOAT time);
+	VOID Setup(std::vector<SWDamagePlayer*>& history, UINT32 worldID, FLOAT time, UINT32 ping);
 	VOID Clear();
 }HISTORY_INFO;
 

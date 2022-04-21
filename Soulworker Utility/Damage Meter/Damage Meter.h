@@ -309,10 +309,12 @@ private:
 
 	CHAR _mapName[MAX_MAP_LEN];
 	UINT32 _myID;
+	UINT32 _ping;
 	USHORT _worldID;
 
 	USHORT _historyWorldID;
 	FLOAT _historyTime;
+	UINT32 _historyPing;
 
 	UINT32 _aggroedId;
 
@@ -345,7 +347,8 @@ public:
 
 	VOID InsertOwnerID(UINT32 id, UINT32 owner_id);
 	UINT32 GetOwnerID(UINT32 id);
-
+	UINT32 GetPing();
+	void SetPing(UINT32 ping);
 	VOID InsertDB(UINT32 id, UINT32 db2);
 	SW_DB2_STRUCT* GetMonsterDB(UINT32 id);
 

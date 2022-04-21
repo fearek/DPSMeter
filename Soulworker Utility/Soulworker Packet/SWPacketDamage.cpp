@@ -32,7 +32,6 @@ VOID SWPacketDamage::Do() {
 
 	BYTE monsterNum = *(_data + sizeof(SWHEADER));
 	SWPACKETDAMAGE_PLAYER* player = (SWPACKETDAMAGE_PLAYER*)((_data + sizeof(_SWPACKETDAMAGE_MONSTER) * monsterNum) + sizeof(SWHEADER) + 1);
-
 	if (player->_playerID == NULL) {
 		player->_playerID = 0;
 	}

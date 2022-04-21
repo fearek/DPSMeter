@@ -370,7 +370,17 @@ VOID SWDamageMeter::SetWorldID(USHORT worldID) {
 	Log::WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [Set World] [World ID = %d]")), _worldID);
 #endif
 }
-
+UINT32 SWDamageMeter::GetPing()
+{
+	if (!_historyMode)
+		return _ping;
+	else
+		return _historyPing;
+}
+void SWDamageMeter::SetPing(UINT32 ping)
+{
+	_ping = ping;
+}
 USHORT SWDamageMeter::GetWorldID() {
 
 	if (!_historyMode)
@@ -574,7 +584,7 @@ VOID SWDamageMeter::SetHistory(INT index) {
 	_playerInfo = history._history;
 	_historyWorldID = history._worldID;
 	_historyTime = history._time;
-
+	_historyPing = history._ping;
 	_historyMode = TRUE;
 }
 

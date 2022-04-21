@@ -188,6 +188,8 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Soulworker Packet\PacketInfo.h" />
     <ClInclude Include="Soulworker Packet\PacketType.h" />
+    <ClInclude Include="Soulworker Packet\SWCPacket.h" />
+    <ClInclude Include="Soulworker Packet\SWCPing.h" />
     <ClInclude Include="Soulworker Packet\SWPacket.h" />
     <ClInclude Include="Soulworker Packet\SWPacketAggroChanged.h" />
     <ClInclude Include="Soulworker Packet\SWPacketAkasic.h" />
@@ -255,6 +257,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Packet Capture\MyWinDivert.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Soulworker Packet\SWCPacket.cpp" />
+    <ClCompile Include="Soulworker Packet\SWCPing.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacket.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketAggroChanged.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketAkasic.cpp" />

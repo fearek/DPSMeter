@@ -115,6 +115,9 @@
     <Filter Include="SWPacket\Packet\0x2e Force">
       <UniqueIdentifier>{f911b8c3-fb70-445c-b73c-f1556b202276}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SWCPacket">
+      <UniqueIdentifier>{679669da-3ae9-452e-9612-33b8341efd2e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -333,6 +336,12 @@
     <ClInclude Include="Language\Japanese.h">
       <Filter>Language</Filter>
     </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWCPacket.h">
+      <Filter>SWCPacket</Filter>
+    </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWCPing.h">
+      <Filter>SWCPacket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -532,6 +541,12 @@
     </ClCompile>
     <ClCompile Include="Soulworker Packet\SWPacketDead.cpp">
       <Filter>SWPacket\Packet\0x03</Filter>
+    </ClCompile>
+    <ClCompile Include="Soulworker Packet\SWCPacket.cpp">
+      <Filter>SWCPacket</Filter>
+    </ClCompile>
+    <ClCompile Include="Soulworker Packet\SWCPing.cpp">
+      <Filter>SWCPacket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

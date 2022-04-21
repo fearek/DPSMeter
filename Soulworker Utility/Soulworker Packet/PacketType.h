@@ -56,6 +56,9 @@
 #include ".\Soulworker Packet\SWSPacketMySkillUsed.h"
 #include ".\Soulworker Packet\SWSPacketMyDodgeUsed.h"
 
+// SWCPacket
+#include ".\Soulworker Packet\SWCPacket.h"
+#include ".\Soulworker Packet\SWCPing.h"
 // 대충 여기에 다 집어놓고 packetType만 include해서 쓰면 됨
 
 

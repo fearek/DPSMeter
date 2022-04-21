@@ -20,11 +20,13 @@ SWHEADER* SWPacketMaker::GetSWHeader(std::vector<unsigned char>& packet) {
 		
 
 	SWHEADER* swheader = (SWHEADER*)(&packet[0]);
-	if (swheader->_magic != _SWMAGIC || (swheader->_const_value01 != 1 && swheader->_const_value01 != 2 )) {
+	//if (swheader->_magic != _SWMAGIC || (swheader->_const_value01 != 1 && swheader->_const_value01 != 2 )) {
+	//	return nullptr;
+	//}
+	if (swheader->_const_value01 != 1 && swheader->_const_value01 != 2 && swheader->_const_value01 != 3)
+	{
 		return nullptr;
 	}
-		
-
 	return swheader;
 
 }
@@ -172,6 +174,15 @@ VOID SWPacketMaker::CreateSWPacket(std::vector<unsigned char>& packet) {
 				break;
 			case 0x0608:
 				swpacket = new SWSPacketMySkillUsed(swheader, data);
+				break;
+			}
+		}
+		else if (swheader->_const_value01 == 3)
+		{
+			switch (_byteswap_ushort(swheader->_op))
+			{
+			case 0x0101:
+				swpacket = new SWCPing(swheader,data);
 				break;
 			}
 		}
