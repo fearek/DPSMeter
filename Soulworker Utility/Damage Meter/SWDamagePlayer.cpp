@@ -54,7 +54,7 @@ VOID SWDamagePlayer::Sort() {
 
 VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, USHORT maxCombo, UINT32 monsterID, UINT32 skillID)
 {
-	//Log::WriteLog(const_cast<LPTSTR>(_T("[PLAYER] [DamageType = %d]")), damageType.CRIT);
+	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[PLAYER] [DamageType = %d]")), damageType.CRIT);
 
 
 	// db부분 임의로 추가함
@@ -120,7 +120,7 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 	}
 
 #if DEBUG_DAMAGE_PLAYER == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("[PLAYER] [ID = %d] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d] [maxCombo = %d]")), _id, _damage, _critDamage, _hitCount, _critHitCount, _maxCombo);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[PLAYER] [ID = %d] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d] [maxCombo = %d]")), _id, _damage, _critDamage, _hitCount, _critHitCount, _maxCombo);
 #endif
 
 	InsertMonsterInfo(monsterID, totalDMG, soulstoneDMG, 1, damageType.CRIT, skillID);

@@ -21,5 +21,5 @@ VOID SWPacketAkasic::Log() {
 VOID SWPacketAkasic::Debug() {
 	SWPACKETAKASIC* akasic = (SWPACKETAKASIC*)(_data + sizeof(SWHEADER));
 
-	//Log::WriteLogA(const_cast<CHAR*>("[DEBUG] [Akasic] [ID = %08x] [Owner ID = %08x]"), akasic->_id, akasic->_ownder_id);
+	//LogInstance.WriteLogA(const_cast<CHAR*>("[DEBUG] [Akasic] [ID = %08x] [Owner ID = %08x]"), akasic->_id, akasic->_ownder_id);
 }

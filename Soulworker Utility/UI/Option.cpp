@@ -186,7 +186,7 @@ BOOL UiOption::GetOption() {
 	attr->QueryFloatValue(&_fontScale);
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read FontScale = %.1f")), _fontScale);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read FontScale = %.1f")), _fontScale);
 #endif
 
 	attr = ele->FindAttribute("TableScale");
@@ -197,7 +197,7 @@ BOOL UiOption::GetOption() {
 	attr->QueryFloatValue(&_tableFontScale);
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read TableFontScale = %.1f")), _tableFontScale);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read TableFontScale = %.1f")), _tableFontScale);
 #endif
 
 	attr = ele->FindAttribute("ColumnScale");
@@ -208,7 +208,7 @@ BOOL UiOption::GetOption() {
 	attr->QueryFloatValue(&_columnFontScale);
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read ColumnFontScale = %.1f")), _columnFontScale);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read ColumnFontScale = %.1f")), _columnFontScale);
 #endif
 
 	attr = ele->FindAttribute("K");
@@ -219,7 +219,7 @@ BOOL UiOption::GetOption() {
 	attr->QueryIntValue(&_is1K);
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read 1K = %d")), _is1K);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read 1K = %d")), _is1K);
 #endif
 
 	attr = ele->FindAttribute("M");
@@ -247,7 +247,7 @@ BOOL UiOption::GetOption() {
 	attr->QueryIntValue(&_isTopMost);
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read 1M = %d")), _is1M);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read 1M = %d")), _is1M);
 #endif
 
 	attr = ele->FindAttribute("CellPaddingX");
@@ -259,7 +259,7 @@ BOOL UiOption::GetOption() {
 	style.CellPadding.x = _cellPadding.x;
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read CellPadding X = %f")), _cellPadding.x);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read CellPadding X = %f")), _cellPadding.x);
 #endif
 
 	attr = ele->FindAttribute("CellPaddingY");
@@ -271,7 +271,7 @@ BOOL UiOption::GetOption() {
 	style.CellPadding.y = _cellPadding.y;
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read CellPadding Y = %f")), _cellPadding.y);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read CellPadding Y = %f")), _cellPadding.y);
 #endif
 
 	attr = ele->FindAttribute("BorderSize");
@@ -283,7 +283,7 @@ BOOL UiOption::GetOption() {
 	style.WindowBorderSize = _windowBorderSize;
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read WindowBorderSize = %f")), _windowBorderSize);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read WindowBorderSize = %f")), _windowBorderSize);
 #endif
 
 	attr = ele->FindAttribute("WindowWidth");
@@ -295,7 +295,7 @@ BOOL UiOption::GetOption() {
 
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read WindowWidth = %f")), _windowWidth);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read WindowWidth = %f")), _windowWidth);
 #endif
 
 	attr = ele->FindAttribute("RefreshTime");
@@ -306,7 +306,7 @@ BOOL UiOption::GetOption() {
 	attr->QueryFloatValue(&_refreshTime);
 
 #if DEBUG_READ_XML == 1
-		Log::WriteLog(const_cast<LPTSTR>(_T("Read RefreshTime = %f")), _refreshTime);
+		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read RefreshTime = %f")), _refreshTime);
 #endif
 		attr = ele->FindAttribute("WinPosX");
 
@@ -328,7 +328,7 @@ BOOL UiOption::GetOption() {
 		SetWindowPos(UIWINDOW.GetHWND(), HWND_TOPMOST, winX, winY, 0, 0, SWP_NOSIZE);
 
 #if DEBUG_READ_XML == 1
-		Log::WriteLog(const_cast<LPTSTR>(_T("Read WinPos(X,Y) = (%f, %f)")), winX, winY);
+		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read WinPos(X,Y) = (%f, %f)")), winX, winY);
 #endif
 
 	// Text Color
@@ -364,7 +364,7 @@ BOOL UiOption::GetOption() {
 	style.Colors[0] = _textColor;
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read TextColor = %.1f, %.1f, %.1f, %.1f")), _textColor.x, _textColor.y, _textColor.z, _textColor.w);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read TextColor = %.1f, %.1f, %.1f, %.1f")), _textColor.x, _textColor.y, _textColor.z, _textColor.w);
 #endif
 
 	// WindowBg Color
@@ -398,7 +398,7 @@ BOOL UiOption::GetOption() {
 	style.Colors[2] = _windowBg;
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read WindowBgColor = %.1f, %.1f, %.1f, %.1f")), _windowBg.x, _windowBg.y, _windowBg.z, _windowBg.w);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read WindowBgColor = %.1f, %.1f, %.1f, %.1f")), _windowBg.x, _windowBg.y, _windowBg.z, _windowBg.w);
 #endif
 
 	// Outline Color
@@ -430,7 +430,7 @@ BOOL UiOption::GetOption() {
 	}
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read OutlineColor = %.1f, %.1f, %.1f, %.1f")), _outlineColor.x, _outlineColor.y, _outlineColor.z, _outlineColor.w);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read OutlineColor = %.1f, %.1f, %.1f, %.1f")), _outlineColor.x, _outlineColor.y, _outlineColor.z, _outlineColor.w);
 #endif
 
 	// ActiveColor
@@ -462,7 +462,7 @@ BOOL UiOption::GetOption() {
 	}
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read ActiveColor = %.1f, %.1f, %.1f, %.1f")), _activeColor[1].x, _activeColor[1].y, _activeColor[1].z, _activeColor[1].w);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read ActiveColor = %.1f, %.1f, %.1f, %.1f")), _activeColor[1].x, _activeColor[1].y, _activeColor[1].z, _activeColor[1].w);
 #endif
 
 	ele = ele->NextSiblingElement("InActiveColor");
@@ -493,7 +493,7 @@ BOOL UiOption::GetOption() {
 	}
 
 #if DEBUG_READ_XML == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("Read InActiveColor = %.1f, %.1f, %.1f, %.1f")), _activeColor[0].x, _activeColor[0].y, _activeColor[0].z, _activeColor[0].w);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read InActiveColor = %.1f, %.1f, %.1f, %.1f")), _activeColor[0].x, _activeColor[0].y, _activeColor[0].z, _activeColor[0].w);
 #endif
 
 	for (int i = 0; i < 10; i++) {
@@ -527,7 +527,7 @@ BOOL UiOption::GetOption() {
 		}
 
 #if DEBUG_READ_XML == 1
-		Log::WriteLog(const_cast<LPTSTR>(_T("Read JobColor%d = %.1f, %.1f, %.1f, %.1f")), i, _jobColor[i].x, _jobColor[i].y, _jobColor[i].z, _jobColor[i].w);
+		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read JobColor%d = %.1f, %.1f, %.1f, %.1f")), i, _jobColor[i].x, _jobColor[i].y, _jobColor[i].z, _jobColor[i].w);
 #endif
 	}
 	
@@ -562,7 +562,7 @@ BOOL UiOption::GetOption() {
 		}
 
 #if DEBUG_READ_XML == 1
-		Log::WriteLog(const_cast<LPTSTR>(_T("Read Hotkey %s, key1 = %d, key2 = %d, key3 = %d")), name2, key[0], key[1], key[2]);
+		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read Hotkey %s, key1 = %d, key2 = %d, key3 = %d")), name2, key[0], key[1], key[2]);
 #endif
 		
 		if (strcmp(name2, u8"Toogle") == 0)
@@ -769,7 +769,7 @@ VOID UiOption::Update() {
 
 #if DEBUG_COLUMN_WIDTH == 1
 	for (INT i = 0; i < 8; i++)
-		Log::WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [Column Width] [%d] [%f]")), i, UIOPTION[i]);
+		LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [Column Width] [%d] [%f]")), i, UIOPTION[i]);
 #endif
 }
 

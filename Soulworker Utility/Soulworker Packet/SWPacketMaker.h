@@ -49,14 +49,14 @@ private:
 			_packetSize = size;
 
 #if DEBUG_SEGMENTATION == 1
-			Log::WriteLogA(const_cast<CHAR*>("[segmentationPacket Init] [curSize = %d] [packetSize = %d]"), _curSize, _packetSize);
+			LogInstance.WriteLogA(const_cast<CHAR*>("[segmentationPacket Init] [curSize = %d] [packetSize = %d]"), _curSize, _packetSize);
 #endif
 
 		}
 
 		SIZE_T GetRemainSize() {
 #if DEBUG_SEGMENTATION == 1
-			Log::WriteLogA(const_cast<CHAR*>("[segmentationPacket RemainSize = %d]"), _packetSize - _curSize);
+			LogInstance.WriteLogA(const_cast<CHAR*>("[segmentationPacket RemainSize = %d]"), _packetSize - _curSize);
 #endif
 
 			return _packetSize - _curSize;
@@ -70,7 +70,7 @@ private:
 			_curSize += size;
 
 #if DEBUG_SEGMENTATION == 1
-			Log::WriteLogA(const_cast<CHAR*>("[segmentationPacket AppendData Before curSize = %d After curSize = %d]"), temp_debug, _curSize);
+			LogInstance.WriteLogA(const_cast<CHAR*>("[segmentationPacket AppendData Before curSize = %d After curSize = %d]"), temp_debug, _curSize);
 
 			for (int i = temp_debug; i < _curSize; i++)
 				printf("%02x ", _data[i]);

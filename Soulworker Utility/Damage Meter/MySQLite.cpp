@@ -26,7 +26,7 @@ MySQL::~MySQL() {
 BOOL MySQL::InitDB(){
 
 	if (sqlite3_open(SWDBPATH, &_db) != SQLITE_OK) {
-		Log::WriteLogA(const_cast<CHAR*>("Error in InitDB : %s"), sqlite3_errmsg(_db));
+		LogInstance.WriteLogA(const_cast<CHAR*>("Error in InitDB : %s"), sqlite3_errmsg(_db));
 		sqlite3_close(_db);
 		_db = nullptr;
 
@@ -39,7 +39,7 @@ BOOL MySQL::InitDB(){
 BOOL MySQL::InitMemDB() {
 
 	if (sqlite3_open(":memory:", &_memdb) != SQLITE_OK) {
-		Log::WriteLogA(const_cast<CHAR*>("Error in InitMemDB : %s"), sqlite3_errmsg(_memdb));
+		LogInstance.WriteLogA(const_cast<CHAR*>("Error in InitMemDB : %s"), sqlite3_errmsg(_memdb));
 		sqlite3_close(_memdb);
 		_memdb = nullptr;
 
@@ -80,7 +80,7 @@ BOOL MySQL::InitSkillDB() {
 	const CHAR* sql = "CREATE TABLE IF NOT EXISTS Skill(Id INTEGER PRIMARY KEY, Name_KR TEXT NOT NULL);";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
-		Log::WriteLogA(const_cast<CHAR*>("Error in InitSkillDB : %s"), errbuf);
+		LogInstance.WriteLogA(const_cast<CHAR*>("Error in InitSkillDB : %s"), errbuf);
 		sqlite3_free(errbuf);
 
 		return FALSE;
@@ -90,7 +90,7 @@ BOOL MySQL::InitSkillDB() {
 	std::string sql2 = std::string("SELECT Name_") + std::string(LANG) + " From Skill Where Id = ?";
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_skill_stmt, 0) != SQLITE_OK) {
-		Log::WriteLogA(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
+		LogInstance.WriteLogA(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
 
 		return FALSE;
 	}
@@ -106,7 +106,7 @@ BOOL MySQL::InitMonsterDB() {
 	const CHAR* sql = "CREATE TABLE IF NOT EXISTS Monster(Db2 INTEGER, Name_KR TEXT NOT NULL, PRIMARY KEY(Db2));";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
-		Log::WriteLogA(const_cast<CHAR*>("Error in InitMonsterDB : %s"), errbuf);
+		LogInstance.WriteLogA(const_cast<CHAR*>("Error in InitMonsterDB : %s"), errbuf);
 		sqlite3_free(errbuf);
 
 		return FALSE;
@@ -117,7 +117,7 @@ BOOL MySQL::InitMonsterDB() {
 	std::string sql2 = "SELECT Name_" + lang + " From Monster Where Db2 = ?"; //msvc doesnt like defines in + operator of std::string
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_monster_stmt, 0) != SQLITE_OK) {
-		Log::WriteLogA(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
+		LogInstance.WriteLogA(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
 
 		return FALSE;
 	}
@@ -131,7 +131,7 @@ BOOL MySQL::InitMapDB() {
 	const CHAR* sql = "CREATE TABLE IF NOT EXISTS Map(Id INTEGER PRIMARY KEY, Name_KR TEXT NOT NULL);";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
-		Log::WriteLogA(const_cast<CHAR*>("Error in InitMapDB : %s"), errbuf);
+		LogInstance.WriteLogA(const_cast<CHAR*>("Error in InitMapDB : %s"), errbuf);
 		sqlite3_free(errbuf);
 
 		return FALSE;
@@ -140,7 +140,7 @@ BOOL MySQL::InitMapDB() {
 	std::string sql2 = "SELECT Name_" + lang +" From Map Where Id = ?";
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_map_stmt, 0) != SQLITE_OK) {
-		Log::WriteLogA(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
+		LogInstance.WriteLogA(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
 
 		return FALSE;
 	}
@@ -154,7 +154,7 @@ BOOL MySQL::InitBuffDB() {
 	const CHAR* sql = "CREATE TABLE IF NOT EXISTS Buff(Id INTEGER PRIMARY KEY, Name_KR TEXT NOT NULL);";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
-		Log::WriteLogA(const_cast<CHAR*>("Error in InitBuffDB : %s"), errbuf);
+		LogInstance.WriteLogA(const_cast<CHAR*>("Error in InitBuffDB : %s"), errbuf);
 		sqlite3_free(errbuf);
 
 		return FALSE;
@@ -163,7 +163,7 @@ BOOL MySQL::InitBuffDB() {
 	const CHAR* sql2 = "SELECT Name From Buff Where Id = ?";
 
 	if (sqlite3_prepare_v2(_db, sql2, -1, &_buff_stmt, 0) != SQLITE_OK) {
-		Log::WriteLogA(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
+		LogInstance.WriteLogA(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
 
 		return FALSE;
 	}

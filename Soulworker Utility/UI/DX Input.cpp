@@ -7,28 +7,28 @@ BOOL DXInput::Init(HINSTANCE hinst, HWND hWnd) {
 	HRESULT result = DirectInput8Create(hinst, DIRECTINPUT_VERSION, IID_IDirectInput8, (LPVOID*)&_directInput, NULL);
 
 	if (FAILED(result)) {
-		Log::WriteLog(const_cast<LPTSTR>(_T("Error in DirectInput8Create")));
+		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in DirectInput8Create")));
 		return FALSE;
 	}
 	
 
 	if (FAILED(_directInput->CreateDevice(GUID_SysKeyboard, &_keyboard, NULL))) {
-		Log::WriteLog(const_cast<LPTSTR>(_T("Error in CreateDevice")));
+		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in CreateDevice")));
 		return FALSE;
 	}
 
 	if (FAILED(_keyboard->SetDataFormat(&c_dfDIKeyboard))) {
-		Log::WriteLog(const_cast<LPTSTR>(_T("Error in SetDataFormat")));
+		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SetDataFormat")));
 		return FALSE;
 	}
 
 	if (FAILED(_keyboard->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE))) {
-		Log::WriteLog(const_cast<LPTSTR>(_T("Error in SetCooperativeLevel")));
+		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SetCooperativeLevel")));
 		return FALSE;
 	}
 
 	if (FAILED(_keyboard->Acquire())) {
-		Log::WriteLog(const_cast<LPTSTR>(_T("Error in Acquire")));
+		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in Acquire")));
 		return FALSE;
 	}
 

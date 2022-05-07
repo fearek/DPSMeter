@@ -20,11 +20,11 @@ VOID SWPacketAggroChanged::Log() {
 VOID SWPacketAggroChanged::Debug() {
 	SWPACKETAGGROCHANGED* aggro_data = (SWPACKETAGGROCHANGED*)(_data + sizeof(SWHEADER));
 
-	//Log::MyLog(_T("Aggro Packet\n"));
+	//LogInstance.MyLog(_T("Aggro Packet\n"));
 	//for (int i = sizeof(SWHEADER); i < _swheader->_size; i++)
-	//	Log::MyLog(_T("%02x "), _data[i]);
-	//Log::MyLog(_T("\n"));
-	//Log::MyLog(_T("ID : %u / Targeted : %u\n"), aggro_data->_id, aggro_data->_targetedId);
+	//	LogInstance.MyLog(_T("%02x "), _data[i]);
+	//LogInstance.MyLog(_T("\n"));
+	//LogInstance.MyLog(_T("ID : %u / Targeted : %u\n"), aggro_data->_id, aggro_data->_targetedId);
 
-	//Log::MyLog(_T("ID : %u / Targeted : %u"), aggro_data->_id, aggro_data->_targetedId);
+	//LogInstance.MyLog(_T("ID : %u / Targeted : %u"), aggro_data->_id, aggro_data->_targetedId);
 }

@@ -23,7 +23,7 @@ VOID SWPacketParty::Do() {
 
 		CHAR utf8[MAX_NAME_LEN] = { 0 };
 		if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
-			//Log::WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
+			//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
 			return;
 		}
 
@@ -53,11 +53,11 @@ VOID SWPacketParty::Debug() {
 
 		CHAR utf8[MAX_NAME_LEN] = { 0 };
 		if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
-			//Log::WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
+			//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
 			return;
 		}
 
-		//Log::WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [PARTY DATA] [ID %08x] [NAME = %s] [NICKMEMSIZE = %d] [JOB = %d]")), party_data->_playerID, utf16, party_data->_nickSize, job);
+		//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [PARTY DATA] [ID %08x] [NAME = %s] [NICKMEMSIZE = %d] [JOB = %d]")), party_data->_playerID, utf16, party_data->_nickSize, job);
 
 		p_data += sizeof(SWPACKETPARTY_DATA) + party_data->_nickSize + SWPACKETPARTY_DUMMY;
 	}

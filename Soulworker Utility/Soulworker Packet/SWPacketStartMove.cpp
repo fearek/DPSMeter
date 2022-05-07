@@ -32,42 +32,42 @@ VOID SWPacketStartMove::Debug() {
 	//	printf("%02x ", _data[i]);
 	//printf("\n");
 
-	//Log::MyLog(_T("Unkown Packet : %04x\n"), op);
+	//LogInstance.MyLog(_T("Unkown Packet : %04x\n"), op);
 	//for (int i = sizeof(SWHEADER); i < _swheader->_size; i++)
-	//	Log::MyLog(_T("%02x "), _data[i]);
-	//Log::MyLog(_T("\n"));
+	//	LogInstance.MyLog(_T("%02x "), _data[i]);
+	//LogInstance.MyLog(_T("\n"));
 
-	//Log::MyLog(_T("player ID : %08x / map ID : %u / X : %f, Y : %f, Z : %f\n"), move->_playerId, move->_mapId, move->_locationX, move->_locationY, move->_locationZ);
-	//Log::MyLog(_T("direction %f / endLocationX %f / endLocationX %f\n"), move->_direction, move->_endLocationX, move->_endLocationY);
-	//Log::MyLog(_T("speed : %f\n "), move->_speed);
+	//LogInstance.MyLog(_T("player ID : %08x / map ID : %u / X : %f, Y : %f, Z : %f\n"), move->_playerId, move->_mapId, move->_locationX, move->_locationY, move->_locationZ);
+	//LogInstance.MyLog(_T("direction %f / endLocationX %f / endLocationX %f\n"), move->_direction, move->_endLocationX, move->_endLocationY);
+	//LogInstance.MyLog(_T("speed : %f\n "), move->_speed);
 
-	//Log::MyLog(_T("Unknown01 : "));
+	//LogInstance.MyLog(_T("Unknown01 : "));
 	//for (int i = 0; i < sizeof(move->_unknown01); i++) {
-	//	Log::MyLog(_T("%02x "), move->_unknown01[i]);
+	//	LogInstance.MyLog(_T("%02x "), move->_unknown01[i]);
 	//}
-	//Log::MyLog(_T(" / "));
+	//LogInstance.MyLog(_T(" / "));
 
-	//Log::MyLog(_T("Unknown02 : "));
+	//LogInstance.MyLog(_T("Unknown02 : "));
 	//for (int i = 0; i < sizeof(move->_unknown02); i++) {
-	//	Log::MyLog(_T("%02x "), move->_unknown02[i]);
+	//	LogInstance.MyLog(_T("%02x "), move->_unknown02[i]);
 	//}
-	//Log::MyLog(_T(" / "));
+	//LogInstance.MyLog(_T(" / "));
 
-	//Log::MyLog(_T("_screen : "));
+	//LogInstance.MyLog(_T("_screen : "));
 	//for (int i = 0; i < sizeof(move->_screen); i++) {
-	//	Log::MyLog(_T("%02x "), move->_screen[i]);
+	//	LogInstance.MyLog(_T("%02x "), move->_screen[i]);
 	//}
-	//Log::MyLog(_T(" / \n"));
+	//LogInstance.MyLog(_T(" / \n"));
 	//
-	//Log::MyLog(_T("unknown 04 : %02x"), move->_unknown04);
+	//LogInstance.MyLog(_T("unknown 04 : %02x"), move->_unknown04);
 
-	//Log::MyLog(_T(" / "));
+	//LogInstance.MyLog(_T(" / "));
 
-	//Log::MyLog(_T("Unknown05 : "));
+	//LogInstance.MyLog(_T("Unknown05 : "));
 	//for (int i = 0; i < sizeof(move->_unknown05); i++) {
-	//	Log::MyLog(_T("%02x "), move->_unknown05[i]);
+	//	LogInstance.MyLog(_T("%02x "), move->_unknown05[i]);
 	//}
-	//Log::MyLog(_T(" / \n"));
+	//LogInstance.MyLog(_T(" / \n"));
 
 	return;
 }

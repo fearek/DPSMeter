@@ -17,7 +17,7 @@ SWDamageMonster::SWDamageMonster(UINT32 id, UINT32 db2, UINT64 damage, UINT64 cr
 	SWDB.GetMonsterName(db2, _name, MONSTER_NAME_LEN);
 
 #if DEBUG_DAMAGE_MONSTER == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("\t[MONSTER] [ID = %d] [DB1 = %d] [DB2 = %d] [NAME = %s] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d]")), _id, _db1, _db2, _name, _damage, _critDamage, _hitCount, _critHitCount);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("\t[MONSTER] [ID = %d] [DB1 = %d] [DB2 = %d] [NAME = %s] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d]")), _id, _db1, _db2, _name, _damage, _critDamage, _hitCount, _critHitCount);
 #endif
 	
 
@@ -44,7 +44,7 @@ VOID SWDamageMonster::AddDamage(UINT64 damage, UINT64 critDamage, USHORT hitCoun
 	_critHitCount += critHitCount;
 
 #if DEBUG_DAMAGE_MONSTER == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("\t[MONSTER] [ID = %d] [DB1 = %d] [DB2 = %d] [NAME = %s] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d]")), _id, _db1, _db2, _name, _damage, _critDamage, _hitCount, _critHitCount);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("\t[MONSTER] [ID = %d] [DB1 = %d] [DB2 = %d] [NAME = %s] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d]")), _id, _db1, _db2, _name, _damage, _critDamage, _hitCount, _critHitCount);
 #endif
 
 	InsertSkillInfo(skillID, damage, critDamage, hitCount, critHitCount);

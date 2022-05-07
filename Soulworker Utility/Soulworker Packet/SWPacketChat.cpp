@@ -28,11 +28,11 @@ VOID SWPacketChat::Debug() {
 
 	//CHAR utf8[MAX_NAME_LEN] = { 0 };
 	//if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
-	//	//Log::WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketChat : UTF16toUTF8 FAILED")));
+	//	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketChat : UTF16toUTF8 FAILED")));
 	//	return;
 	//}
 
-	//Log::MyLog(const_cast<LPTSTR>(_T("[DEBUG] [CHAT] [ID %d] [ChatType = %d] [unknown1 = %02x] [unknown2 = %04x] [chatSize = %d] [chat = %s]\n")), 
+	//LogInstance.MyLog(const_cast<LPTSTR>(_T("[DEBUG] [CHAT] [ID %d] [ChatType = %d] [unknown1 = %02x] [unknown2 = %04x] [chatSize = %d] [chat = %s]\n")), 
 	//chat_header->_playerID, chat_header->_chatType, chat_header->_unknown01, chat_header->_unknown02, chat_header->_chatSize, utf16);
 
 }

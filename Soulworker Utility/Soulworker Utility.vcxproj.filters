@@ -359,9 +359,6 @@
     <ClCompile Include="Util\ExceptionHandler.cpp">
       <Filter>Utiliry\소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Util\Log.cpp">
-      <Filter>Utiliry\소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Util\MemoryPool.cpp">
       <Filter>Utiliry\소스 파일</Filter>
     </ClCompile>
@@ -547,6 +544,9 @@
     </ClCompile>
     <ClCompile Include="Soulworker Packet\SWCPing.cpp">
       <Filter>SWCPacket</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Utiliry\소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

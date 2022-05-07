@@ -16,10 +16,10 @@ VOID SWPacketMazeEnd::Log() {
 }
 
 VOID SWPacketMazeEnd::Debug() {
-	//Log::WriteLog(const_cast<LPTSTR>(_T("[TEST] [Maze End]")));
+	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[TEST] [Maze End]")));
 
-	//Log::MyLog(_T("Maze End\n"));
+	//LogInstance.MyLog(_T("Maze End\n"));
 	//for (int i = sizeof(SWHEADER); i < _swheader->_size; i++)
-	//	Log::MyLog(_T("%02x "), _data[i]);
-	//Log::MyLog(_T("\n"));
+	//	LogInstance.MyLog(_T("%02x "), _data[i]);
+	//LogInstance.MyLog(_T("\n"));
 }

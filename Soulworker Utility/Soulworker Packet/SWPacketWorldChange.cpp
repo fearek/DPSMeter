@@ -27,5 +27,5 @@ VOID SWPacketWorldChange::Log() {
 VOID SWPacketWorldChange::Debug() {
 	SWPACKETWORLDCHANGE* world_change = (SWPACKETWORLDCHANGE*)(_data + sizeof(SWHEADER));
 
-	//Log::WriteLogA(const_cast<CHAR*>("[DEBUG] [World Change = %04x] [MyID = %08x]"), world_change->_worldID, world_change->_id);
+	//LogInstance.WriteLogA(const_cast<CHAR*>("[DEBUG] [World Change = %04x] [MyID = %08x]"), world_change->_worldID, world_change->_id);
 }

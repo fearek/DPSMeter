@@ -18,7 +18,7 @@ VOID SWPacketBuffOut::Do() {
 			BUFFMETER.EndBuff(buff->_playerID, buff->_buffID);
 		}
 			
-		//Log::WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [BUFF OUT] [PLAYER ID = %08x] [BUFF ID = %d]")), buff->_playerID, buff->_buffID);
+		//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [BUFF OUT] [PLAYER ID = %08x] [BUFF ID = %d]")), buff->_playerID, buff->_buffID);
 	}
 	BUFFMETER.FreeLock();
 }
@@ -30,5 +30,5 @@ VOID SWPacketBuffOut::Log() {
 VOID SWPacketBuffOut::Debug() {
 	SWPACKETBUFFOUT* buff = (SWPACKETBUFFOUT*)(_data + sizeof(SWHEADER));
 
-	//Log::WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [BUFF OUT] [PLAYER ID = %08x] [BUFF ID = %d]")), buff->_playerID, buff->_buffID);
+	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [BUFF OUT] [PLAYER ID = %08x] [BUFF ID = %d]")), buff->_playerID, buff->_buffID);
 }

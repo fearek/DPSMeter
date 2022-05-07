@@ -10,20 +10,20 @@ SWPacketPartyListInfo::SWPacketPartyListInfo(SWHEADER* swheader, BYTE* data) : S
 VOID SWPacketPartyListInfo::Do() {
 
 
-	//Log::MyLog(_T("Party Info\n"));
+	//LogInstance.MyLog(_T("Party Info\n"));
 	//for (int i = sizeof(SWHEADER); i < _swheader->_size; i++)
-	//	Log::MyLog(_T("%02x "), _data[i]);
-	//Log::MyLog(_T("\n"));
+	//	LogInstance.MyLog(_T("%02x "), _data[i]);
+	//LogInstance.MyLog(_T("\n"));
 
 	BYTE* p_data = _data;
 	p_data += sizeof(SWHEADER);
 	BYTE partyCount = *p_data;
-	//Log::MyLog("Party Counts : %u\n", partyCount);
+	//LogInstance.MyLog("Party Counts : %u\n", partyCount);
 	p_data += 1;
 
-	//Log::MyLog("Unknown01 : %04x\n", *((USHORT*)p_data));
+	//LogInstance.MyLog("Unknown01 : %04x\n", *((USHORT*)p_data));
 	p_data += 2;
-	//Log::MyLog("\n");
+	//LogInstance.MyLog("\n");
 
 	for (int i = 0; i < partyCount; i++) {
 		USHORT unknown01 = *((USHORT*)p_data);
@@ -39,7 +39,7 @@ VOID SWPacketPartyListInfo::Do() {
 		memcpy_s(partyName_utf16, MAX_NAME_LEN * sizeof(WCHAR), p_data, partyNameLength);
 		CHAR partyName_utf8[MAX_NAME_LEN] = { 0 };
 		if (!UTF16toUTF8(partyName_utf16, partyName_utf8, MAX_NAME_LEN)) {
-			//Log::WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
+			//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
 			return;
 		}
 		p_data += partyNameLength;
@@ -59,7 +59,7 @@ VOID SWPacketPartyListInfo::Do() {
 		memcpy_s(leaderName_utf16, MAX_NAME_LEN * sizeof(WCHAR), p_data, leaderNameLength);
 		CHAR leaderName_utf8[MAX_NAME_LEN] = { 0 };
 		if (!UTF16toUTF8(leaderName_utf16, leaderName_utf8, MAX_NAME_LEN)) {
-			//Log::WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
+			//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
 			return;
 		}
 		p_data += leaderNameLength;
@@ -87,13 +87,13 @@ VOID SWPacketPartyListInfo::Do() {
 		BYTE unknown06 = *p_data;
 		p_data += 1;
 
-		//Log::MyLog(_T("unknown 01 : %04x / 2: %02x / 3: %02x / 4 : %04x / 5 : %02x / 6 : %02x\n")
+		//LogInstance.MyLog(_T("unknown 01 : %04x / 2: %02x / 3: %02x / 4 : %04x / 5 : %02x / 6 : %02x\n")
 		//	, unknown01, unknown02, unknown03, unknown04, unknown05, unknown06);
-		//Log::MyLog(_T("Party Name : %s\n"), partyName_utf16);
-		//Log::MyLog(_T("memberCounts : %u / minLvl : %u, maxLv : %u \n"), partyMemberCount, minLv, maxLv);
-		//Log::MyLog(_T("Leader Name : %s / LeaderId : %u\n"), leaderName_utf16, leaderId);
-		//Log::MyLog(_T("PartyId : %u / mapId : %u / remaindTime : %u \n"), partyId, mapId, remainedTime);
-		//Log::MyLog("\n");
+		//LogInstance.MyLog(_T("Party Name : %s\n"), partyName_utf16);
+		//LogInstance.MyLog(_T("memberCounts : %u / minLvl : %u, maxLv : %u \n"), partyMemberCount, minLv, maxLv);
+		//LogInstance.MyLog(_T("Leader Name : %s / LeaderId : %u\n"), leaderName_utf16, leaderId);
+		//LogInstance.MyLog(_T("PartyId : %u / mapId : %u / remaindTime : %u \n"), partyId, mapId, remainedTime);
+		//LogInstance.MyLog("\n");
 	}
 }
 
@@ -117,11 +117,11 @@ VOID SWPacketPartyListInfo::Debug() {
 
 	//	CHAR utf8[MAX_NAME_LEN] = { 0 };
 	//	if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
-	//		//Log::WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
+	//		//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
 	//		return;
 	//	}
 
-	//	//Log::WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [PARTY DATA] [PARTY PLAYER %d] [ID %08x] [NAME = %s] [NICKMEMSIZE = %d] [JOB = %d]")), party_data->_playerID, utf16, party_data->_nickSize, job);
+	//	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [PARTY DATA] [PARTY PLAYER %d] [ID %08x] [NAME = %s] [NICKMEMSIZE = %d] [JOB = %d]")), party_data->_playerID, utf16, party_data->_nickSize, job);
 
 	//	p_data += sizeof(SWPACKETPARTY_DATA) + party_data->_nickSize + SWPACKETPARTY_DUMMY;
 	//}

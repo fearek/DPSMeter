@@ -108,7 +108,7 @@ VOID AutoHotKey::CheckKey() {
 	}
 
 #if DEBUG_HOTKEY == 1
-	Log::WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [HOTKEY] [KEY1 = %d] [KEY2 = %d] [KEY3 = %d] [%s]")), _key[0], _key[1], _key[2], _name);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [HOTKEY] [KEY1 = %d] [KEY2 = %d] [KEY3 = %d] [%s]")), _key[0], _key[1], _key[2], _name);
 #endif
 
 	_isActive = TRUE;
@@ -138,7 +138,7 @@ VOID HotKey::CheckKey() {
 				if (*itr == i) {
 
 #if DEBUG_HOTKEY == 1
-					Log::WriteLogA(const_cast<char*>("Release Key - %d"), i);
+					LogInstance.WriteLogA(const_cast<char*>("Release Key - %d"), i);
 #endif
 					_pressedKey.erase(itr);
 					break;
@@ -150,7 +150,7 @@ VOID HotKey::CheckKey() {
 	for (INT i = 0; i < DXINPUT.GetStateSize(); i++) {
 		if (DXINPUT.isKeyDown(i)) {
 #if DEBUG_HOTKEY == 1
-			Log::WriteLogA(const_cast<char*>("Down Key - %d"), i);
+			LogInstance.WriteLogA(const_cast<char*>("Down Key - %d"), i);
 #endif
 			_pressedKey.push_back(i);
 		}

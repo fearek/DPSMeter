@@ -19,9 +19,9 @@ VOID SWPacketUseSkill::Log() {
 
 VOID SWPacketUseSkill::Debug() {
 
-	//Log::MyLog(_T("UseSkill Packet\n"));
+	//LogInstance.MyLog(_T("UseSkill Packet\n"));
 	//for (int i = sizeof(SWHEADER); i < _swheader->_size; i++)
-	//	Log::MyLog(_T("%02x "), _data[i]);
-	//Log::MyLog(_T("\n"));
+	//	LogInstance.MyLog(_T("%02x "), _data[i]);
+	//LogInstance.MyLog(_T("\n"));
 
 }

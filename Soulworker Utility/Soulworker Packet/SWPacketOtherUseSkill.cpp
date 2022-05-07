@@ -29,16 +29,16 @@ VOID SWPacketOtherUseSkill::Do() {
 			}
 
 			if (db2 == 31310101) {
-				//Log::MyLog(_T("1"));
+				//LogInstance.MyLog(_T("1"));
 				ZeroMemory(_skillName, SKILL_NAME_LEN);
-			//	Log::MyLog(_T("2"));
+			//	LogInstance.MyLog(_T("2"));
 				SWDB.GetSkillName(otherSkill->_skillId, _skillName, SKILL_NAME_LEN);
-				//Log::MyLog(_T("3"));
+				//LogInstance.MyLog(_T("3"));
 				std::string test = u8"테네브리스가 [";
 				test.append(_skillName);
 				test.append(u8"]를 사용");
 				UTILLWINDOW.AddLog(test);
-				//Log::MyLog(test.c_str());
+				//LogInstance.MyLog(test.c_str());
 			}
 		}
 	}
@@ -52,19 +52,19 @@ VOID SWPacketOtherUseSkill::Log() {
 
 VOID SWPacketOtherUseSkill::Debug() {
 
-	//Log::MyLog(_T("UseSkill Packet\n"));
+	//LogInstance.MyLog(_T("UseSkill Packet\n"));
 	//for (int i = sizeof(SWHEADER); i < _swheader->_size; i++)
-	//	Log::MyLog(_T("%02x "), _data[i]);
-	//Log::MyLog(_T("\n"));
+	//	LogInstance.MyLog(_T("%02x "), _data[i]);
+	//LogInstance.MyLog(_T("\n"));
 
 	//SWPACKET_OTHERUSESKILL* otherSkill = (SWPACKET_OTHERUSESKILL*)(_data + sizeof(SWHEADER));
 
-	//Log::MyLog(_T("id : %08x / skill : %u / x : %f / y : %f / z : %f\n"), otherSkill->_playerId, otherSkill->_skillId, otherSkill->_locationX, otherSkill->_locationY, otherSkill->_locationZ);
+	//LogInstance.MyLog(_T("id : %08x / skill : %u / x : %f / y : %f / z : %f\n"), otherSkill->_playerId, otherSkill->_skillId, otherSkill->_locationX, otherSkill->_locationY, otherSkill->_locationZ);
 
-	//Log::MyLog(_T("Unknown01 : "));
+	//LogInstance.MyLog(_T("Unknown01 : "));
 	//for (int i = 0; i < sizeof(otherSkill->_unknown01); i++) {
-	//	Log::MyLog(_T("%02x "), otherSkill->_unknown01[i]);
+	//	LogInstance.MyLog(_T("%02x "), otherSkill->_unknown01[i]);
 	//}
-	//Log::MyLog(_T("\n"));
+	//LogInstance.MyLog(_T("\n"));
 
 }

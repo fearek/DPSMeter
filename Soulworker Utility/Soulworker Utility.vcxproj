@@ -254,6 +254,7 @@
     <ClCompile Include="Damage Meter\SWDamagePlayer.cpp" />
     <ClCompile Include="Damage Meter\SWDamageSkill.cpp" />
     <ClCompile Include="Damage Meter\Timer.cpp" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Packet Capture\MyWinDivert.cpp" />
     <ClCompile Include="pch.cpp" />
@@ -309,7 +310,6 @@
     <ClCompile Include="UI\UtillWindow.cpp" />
     <ClCompile Include="Util\CriticalSection.cpp" />
     <ClCompile Include="Util\ExceptionHandler.cpp" />
-    <ClCompile Include="Util\Log.cpp" />
     <ClCompile Include="Util\MemoryPool.cpp" />
     <ClCompile Include="Util\MultiThreadSync.cpp" />
     <ClCompile Include="Util\Type.cpp" />

@@ -27,10 +27,10 @@ VOID SWSPacket::Debug() {
 	//	return;
 	//}
 
-	//Log::MyLog(_T("Unkown Packet : %04x\n"), op);
+	//LogInstance.MyLog(_T("Unkown Packet : %04x\n"), op);
 	//for (int i = sizeof(SWSHEADER); i < _swheader->_size; i++)
-	//	Log::MyLog(_T("%02x "), _data[i]);
-	//Log::MyLog(_T("\n"));
+	//	LogInstance.MyLog(_T("%02x "), _data[i]);
+	//LogInstance.MyLog(_T("\n"));
 
 
 	return;
