@@ -102,7 +102,7 @@ VOID PlotWindow::Update()
 
 VOID PlotWindow::UpdatePlotTab()
 {
-	if (ImGui::BeginTabItem(u8"일반 그래프"))
+	if (ImGui::BeginTabItem(STR_UTILWINDOW_DPSGRAPH))
 	{
 		if (timeList.size() > 0) {
 			UINT32 firstId = metaInfos.front()->_id;
@@ -164,7 +164,7 @@ VOID PlotWindow::UpdatePlotTab()
 
 VOID PlotWindow::UpdateAbPlotTab()
 {
-	if (ImGui::BeginTabItem(u8"방관 그래프"))
+	if (ImGui::BeginTabItem(STR_UTILWINDOW_ABGRAPH))
 	{
 		UINT32 currentSize = _abTimeList.size();
 
