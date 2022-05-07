@@ -89,7 +89,7 @@ VOID PlayerTable::Update() {
 
 		CHAR title[128] = { 0 };
 
-		sprintf_s(title, 128, "%s : %02d:%02d [v1.2.9.4_%s] Ping: %d  ###DamageMeter", DAMAGEMETER.GetWorldName(), (UINT)DAMAGEMETER.GetTime() / 60, (UINT)DAMAGEMETER.GetTime() % 60, SWPACKETMAKER.GetKeyInfo(), DAMAGEMETER.GetPing());
+		sprintf_s(title, 128, "%s : %02d:%02d [v1.2.9.5_%s] Ping: %d https://discord.com/invite/H7jZpcVJhq ###DamageMeter", DAMAGEMETER.GetWorldName(), (UINT)DAMAGEMETER.GetTime() / 60, (UINT)DAMAGEMETER.GetTime() % 60, SWPACKETMAKER.GetKeyInfo(), DAMAGEMETER.GetPing());
 		ImGui::Begin(title, 0, windowFlag);
 		{
 			if (!UIOPTION.isOption() || _tableResize)
