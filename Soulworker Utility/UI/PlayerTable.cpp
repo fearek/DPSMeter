@@ -48,7 +48,7 @@ VOID PlayerTable::SetupFontScale() {
 VOID PlayerTable::ResizeTalbe() {
 	_tableResize = TRUE;
 }
-
+int mswideness = 1;
 VOID PlayerTable::Update() {
 
 	DAMAGEMETER.GetLock();
@@ -75,7 +75,7 @@ VOID PlayerTable::Update() {
 		_accumulatedTime += UIWINDOW.GetDeltaTime();
 
 		if (_accumulatedTime > UIOPTION.GetRefreshTime()) {
-			_tableTime = DAMAGEMETER.GetTime();
+			_tableTime = DAMAGEMETER.GetTime() / 1000;
 			_accumulatedTime = 0;
 		}
 
@@ -88,8 +88,19 @@ VOID PlayerTable::Update() {
 			windowFlag = windowFlag | ImGuiWindowFlags_NoResize;
 
 		CHAR title[128] = { 0 };
-
-		sprintf_s(title, 128, "%s : %02d:%02d [v1.2.9.5_%s] Ping: %d https://discord.com/invite/H7jZpcVJhq ###DamageMeter", DAMAGEMETER.GetWorldName(), (UINT)DAMAGEMETER.GetTime() / 60, (UINT)DAMAGEMETER.GetTime() % 60, SWPACKETMAKER.GetKeyInfo(), DAMAGEMETER.GetPing());
+		unsigned int miliseconds = ((UINT)DAMAGEMETER.GetTime() % 1000);
+		if (mswideness == 1)
+		{
+			miliseconds = miliseconds / 100;
+		}
+		else if (mswideness == 2)
+		{
+			miliseconds = miliseconds / 10;
+		}
+		//and if 3 then do nothing basically so we display all to 999
+		std::string milisecondsstring = std::to_string(miliseconds);
+		//turning it into a string before so we dont display leading 0's so timer is more readable
+		sprintf_s(title, 128, "%s : %02d:%02d:%s [v1.2.9.5_%s] Ping: %d https://discord.com/invite/H7jZpcVJhq ###DamageMeter", DAMAGEMETER.GetWorldName(),(UINT)DAMAGEMETER.GetTime() / 60000, ((UINT)DAMAGEMETER.GetTime() / 1000)%60, milisecondsstring.c_str(), SWPACKETMAKER.GetKeyInfo(), DAMAGEMETER.GetPing());
 		ImGui::Begin(title, 0, windowFlag);
 		{
 			if (!UIOPTION.isOption() || _tableResize)

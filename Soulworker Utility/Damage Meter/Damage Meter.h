@@ -123,7 +123,7 @@ public:
 			break;
 		case StatType::ArmorBreak:
 			if (DAMAGEMETER.isRun()) {
-				UINT64 time = (UINT64)((DOUBLE)DAMAGEMETER.GetTime() * 1000);
+				UINT64 time = DAMAGEMETER.GetTime() * 1000;
 				FLOAT correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
 				_avgABSum += (time - _avgABPreviousTime) * correctedAB;
 				_avgABPreviousTime = time;
@@ -153,7 +153,7 @@ public:
 		}
 	}
 	VOID MeterSuspended() {
-		UINT64 currentTime = (UINT64)((DOUBLE)DAMAGEMETER.GetTime() * 1000);
+		UINT64 currentTime = DAMAGEMETER.GetTime() * 1000;
 
 		FLOAT correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
 		_avgABSum += (currentTime - _avgABPreviousTime) * correctedAB;
@@ -169,7 +169,7 @@ public:
 
 			if (_id == DAMAGEMETER.GetMyID()) {
 				// 평균방관 저장
-				UINT64 currentTime = (UINT64)((DOUBLE)DAMAGEMETER.GetTime() * 1000);
+				UINT64 currentTime = DAMAGEMETER.GetTime() * 1000;
 
 				UINT64 avgTimeDifference = currentTime - _avgABPreviousTime;
 				DOUBLE currentAB = GetStat(StatType::ArmorBreak);
@@ -241,7 +241,7 @@ public:
 		if (!DAMAGEMETER.isRun()) {
 			return;
 		}
-		UINT64 time = (UINT64)((DOUBLE)DAMAGEMETER.GetTime() * 1000);
+		UINT64 time = DAMAGEMETER.GetTime() * 1000;
 		DOUBLE hpPercent = (DOUBLE)_currentHP / (DOUBLE)_maxHP * 100;
 
 		if (hpPercent >= 90.0) {
@@ -387,7 +387,7 @@ public:
 	VOID Clear();
 	VOID Toggle();
 
-	FLOAT GetTime();
+	uint64_t GetTime();
 
 	VOID SetMazeState(BOOL end);
 

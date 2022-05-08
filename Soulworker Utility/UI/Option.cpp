@@ -127,7 +127,14 @@ VOID UiOption::OpenOption() {
 			}
 			_open = FALSE;
 		}
-
+		/*if (ImGui::Button("START TIMER")) {
+			DAMAGEMETER.Start();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("STOP TIMER")) {
+			DAMAGEMETER.Suspend();
+		}*/
+		ImGui::SliderInt("Timer accuarcy", &mswideness, 1, 3);
 		ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.2f);
 		ShowFontSelector();
 		ImGui::PopItemWidth();

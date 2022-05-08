@@ -1,6 +1,6 @@
 #pragma once
 #include ".\UI\SpecificInfomation.h"
-
+extern int mswideness;
 typedef struct _SELECTED_PLAYER {
 	
 	UINT32 _playerID;

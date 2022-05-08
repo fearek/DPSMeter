@@ -3,8 +3,8 @@
 
 Timer::Timer() {
 	_status = TIMER_STATUS::end;
-	_startTimePoint = std::chrono::system_clock::now();
-	_suspendTimePoint = std::chrono::system_clock::now();
+	_startTimePoint = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+	_suspendTimePoint = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 	_suspendedTime = 0.f;
 }
 
@@ -15,14 +15,14 @@ Timer::~Timer() {
 VOID Timer::Run() {
 	
 	if (_status == TIMER_STATUS::end) {
-		_startTimePoint = std::chrono::system_clock::now();
+		_startTimePoint = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		_suspendedTime = 0.f;
 		_status = TIMER_STATUS::run;
 	}
 	else if (_status == TIMER_STATUS::suspend) {
-		std::chrono::duration<FLOAT> suspendedTime;
-		suspendedTime = std::chrono::system_clock::now() - _suspendTimePoint;
-		_suspendedTime += suspendedTime.count();
+		uint64_t suspendedTime;
+		suspendedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - _suspendTimePoint;
+		_suspendedTime += suspendedTime;
 		_status = TIMER_STATUS::run;
 	}
 	else {
@@ -33,7 +33,7 @@ VOID Timer::Run() {
 VOID Timer::Suspend() {
 
 	if (_status == TIMER_STATUS::run) {
-		_suspendTimePoint = std::chrono::system_clock::now();
+		_suspendTimePoint = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		_status = TIMER_STATUS::suspend;
 	}
 	else {
@@ -53,12 +53,12 @@ BOOL Timer::isRun() {
 		return FALSE;
 }
 
-FLOAT Timer::GetTime() {
+uint64_t Timer::GetTime() {
 
-	std::chrono::duration<FLOAT> time;
+	uint64_t time;
 
 	if (_status == TIMER_STATUS::run) {
-		time = std::chrono::system_clock::now() - _startTimePoint;
+		time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - _startTimePoint;
 	}
 	else if (_status == TIMER_STATUS::suspend) {
 		time = _suspendTimePoint - _startTimePoint;
@@ -67,5 +67,5 @@ FLOAT Timer::GetTime() {
 		return 0;
 	}
 
-	return time.count() - _suspendedTime;
+	return time - _suspendedTime;
 }
