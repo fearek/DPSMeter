@@ -159,15 +159,12 @@ BOOL MySQL::InitBuffDB() {
 
 		return FALSE;
 	}
-
-	const CHAR* sql2 = "SELECT Name From Buff Where Id = ?";
-
-	if (sqlite3_prepare_v2(_db, sql2, -1, &_buff_stmt, 0) != SQLITE_OK) {
+	std::string lang = LANG;
+	std::string sql2 = "SELECT Name_" + lang + " From Buff Where Id = ?";
+	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_buff_stmt, 0) != SQLITE_OK) {
 		LogInstance.WriteLogA(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
-
 		return FALSE;
 	}
-
 	return TRUE;
 }
 
