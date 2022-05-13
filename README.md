@@ -9,7 +9,6 @@ Soulworker DPS Meter for Global Server
 
 CTRL + DEL : Reset
 
-CTRL + END : Manual Pause/Resume
 
 This meter requires a loader, on its own its just a imgui window
 
