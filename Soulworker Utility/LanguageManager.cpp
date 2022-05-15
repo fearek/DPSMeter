@@ -148,6 +148,15 @@ void DICTIONARY_t::SetLanguage(LANGUAGE lang)
 }
 
 /// <summary>
+/// Get the Current used language.
+/// </summary>
+/// <returns></returns>
+LANGUAGE DICTIONARY_t::GetLanguage()
+{
+    return _lang;
+}
+
+/// <summary>
 /// Get the short language name used by SQLite
 /// </summary>
 /// <returns>The short language name used by SQLite</returns>
