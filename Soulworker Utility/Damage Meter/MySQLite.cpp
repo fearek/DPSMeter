@@ -2,19 +2,6 @@
 #include ".\Language\Region.h"
 #include ".\Damage Meter\MySQLite.h"
 
-#ifdef _LANG_KOREAN
-#define LANG "KR"
-#endif
-#ifdef _LANG_ENGLISH
-#define LANG "EN"
-#endif
-#ifdef _LANG_CHINESES
-#define LANG "TC"
-#endif
-#ifdef _LANG_JAPANESE
-#define LANG "JP"
-#endif
-
 MySQL::MySQL() : _db(nullptr), _memdb(nullptr) {
 
 }
@@ -87,7 +74,8 @@ BOOL MySQL::InitSkillDB() {
 	}
 
 //	const CHAR* sql2 = "SELECT Name From Skill Where Id = ?";
-	std::string sql2 = std::string("SELECT Name_") + std::string(LANG) + " From Skill Where Id = ?";
+	std::string lang = Language.GetLanguageNameUsedForSQLite();
+	std::string sql2 = std::string("SELECT Name_") + std::string(lang) + " From Skill Where Id = ?";
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_skill_stmt, 0) != SQLITE_OK) {
 		LogInstance.WriteLogA(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
@@ -113,7 +101,7 @@ BOOL MySQL::InitMonsterDB() {
 	}
 
 	//std::string sql2 = "SELECT Name_" LANG " From Monster Where Db1 = ? and Db2 = ?";
-	std::string lang = LANG;
+	std::string lang = Language.GetLanguageNameUsedForSQLite();
 	std::string sql2 = "SELECT Name_" + lang + " From Monster Where Db2 = ?"; //msvc doesnt like defines in + operator of std::string
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_monster_stmt, 0) != SQLITE_OK) {
@@ -136,7 +124,7 @@ BOOL MySQL::InitMapDB() {
 
 		return FALSE;
 	}
-	std::string lang = LANG;
+	std::string lang = Language.GetLanguageNameUsedForSQLite();
 	std::string sql2 = "SELECT Name_" + lang +" From Map Where Id = ?";
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_map_stmt, 0) != SQLITE_OK) {
@@ -159,7 +147,7 @@ BOOL MySQL::InitBuffDB() {
 
 		return FALSE;
 	}
-	std::string lang = LANG;
+	std::string lang = Language.GetLanguageNameUsedForSQLite();
 	std::string sql2 = "SELECT Name_" + lang + " From Buff Where Id = ?";
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_buff_stmt, 0) != SQLITE_OK) {
 		LogInstance.WriteLogA(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
@@ -290,7 +278,7 @@ BOOL MySQL::GetMapName(UINT32 mapID, CHAR* out_buffer, SIZE_T out_buffer_length)
 		return FALSE;
 
 	if (mapID == 0) {
-		strcpy_s(out_buffer, out_buffer_length, const_cast<CHAR*>(STR_WORLD_NO_INFORMATION));
+		strcpy_s(out_buffer, out_buffer_length, Language.GetText(STR_WORLD_NO_INFORMATION).c_str());
 		return TRUE;
 	}
 

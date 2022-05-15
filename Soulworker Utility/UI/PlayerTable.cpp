@@ -175,12 +175,12 @@ VOID PlayerTable::BeginPopupMenu() {
 		//	//DAMAGEMETER.Toggle();
 		//}
 
-		if (ImGui::MenuItem(STR_MENU_RESET)) {
+		if (ImGui::MenuItem(Language.GetText(STR_MENU_RESET).c_str())) {
 			DAMAGEMETER.Clear();
 			PLAYERTABLE.ClearTable();
 		}
 
-		if (ImGui::MenuItem(STR_MENU_TOPMOST,nullptr,UIOPTION.isTopMost())) {
+		if (ImGui::MenuItem(Language.GetText(STR_MENU_TOPMOST).c_str(), nullptr, UIOPTION.isTopMost())) {
 			UIOPTION.ToggleTopMost();
 		}
 
@@ -189,7 +189,7 @@ VOID PlayerTable::BeginPopupMenu() {
 		if (HISTORY.size() > 0)
 			history_open = true;
 
-		if (ImGui::BeginMenu(STR_MENU_HISTORY, history_open)) {
+		if (ImGui::BeginMenu(Language.GetText(STR_MENU_HISTORY).c_str(), history_open)) {
 
 			for (INT i = 0; i < HISTORY.size(); i++) {
 
@@ -208,16 +208,16 @@ VOID PlayerTable::BeginPopupMenu() {
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::MenuItem(STR_UTILWINDOW_MEOW)) {
+		if (ImGui::MenuItem(Language.GetText(STR_UTILWINDOW_MEOW).c_str())) {
 			//UTILLWINDOW.OpenWindow();
 			PLOTWINDOW.OpenWindow();
 		}
 
-		if (ImGui::MenuItem(STR_MENU_OPTIONS)) {
+		if (ImGui::MenuItem(Language.GetText(STR_MENU_OPTIONS).c_str())) {
 			UIOPTION.OpenOption();
 		}
 
-		if (ImGui::MenuItem(STR_MENU_EXIT))
+		if (ImGui::MenuItem(Language.GetText(STR_MENU_EXIT).c_str()))
 			exit(1);
 
 		ImGui::EndPopup();
@@ -236,41 +236,41 @@ VOID PlayerTable::SetupTable() {
 
 		ImGui::SetWindowFontScale(_columnFontScale);
 
-		ImGui::TableSetupColumn(STR_TABLE_NAME, ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed | columnFlags, -1);
-		ImGui::TableSetupColumn(STR_TABLE_DPS, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_DAMAGE_PERCENT, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_TOTAL_DAMAGE, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_TOTAL_HIT, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_CRIT_RATE, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_HIT_PER_SECOND, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_CRIT_HIT_PER_SECOND, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_SKILL_PER_SECOND, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_MAX_COMBO, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_ATTACK_CDMG_SUM, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_SOUL_GAUGE, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_ATTACK_SPEED, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_ARMOR_BREAK, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_STAMINA, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_SOUL_VAPOR, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_SOULSTONE_PERCENT, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_SOULSTONE_PROC, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_SOULSTONE_DAMAGE, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_AVERAGE_AB, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_MiSS, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_MISS_RATE, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_PARTIAL, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_GET_HIT_INCLUDEZERO, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_GET_HIT, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_GET_HIT_BS, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_ACC1_BS, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_ACC2_BS, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_ACC3_BS, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_EVADE_RATE_A, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_EVADE_RATE_B, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_GIGA_ENLIGHTEN, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_TERA_ENLIGHTEN, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_LOSED_HP, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_DODGE_COUNT, columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_NAME).c_str(), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed | columnFlags, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_DPS).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_DAMAGE_PERCENT).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_TOTAL_DAMAGE).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_TOTAL_HIT).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_CRIT_RATE).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_HIT_PER_SECOND).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_CRIT_HIT_PER_SECOND).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_SKILL_PER_SECOND).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_MAX_COMBO).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_ATTACK_CDMG_SUM).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_SOUL_GAUGE).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_ATTACK_SPEED).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_ARMOR_BREAK).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_STAMINA).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_SOUL_VAPOR).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_SOULSTONE_PERCENT).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_SOULSTONE_PROC).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_SOULSTONE_DAMAGE).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_AVERAGE_AB).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_MiSS).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_MISS_RATE).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_PARTIAL).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_GET_HIT_INCLUDEZERO).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_GET_HIT).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_GET_HIT_BS).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_ACC1_BS).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_ACC2_BS).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_ACC3_BS).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_EVADE_RATE_A).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_EVADE_RATE_B).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_GIGA_ENLIGHTEN).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_TERA_ENLIGHTEN).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_LOSED_HP).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_DODGE_COUNT).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn("Death", columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		//ImGuiTableColumnFlags_WidthStretch
 
@@ -651,13 +651,12 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 
 		ImGui::TableNextColumn();
 
-		// BS accessory comparison
+		// 기어90 테스트
 		static DOUBLE gear90savedResult = 0.0;
 		static DOUBLE gear50savedResult = 0.0;
 		static DOUBLE acc01savedResult = 0.0;
 		static DOUBLE acc02savedResult = 0.0;
 
-		// Display none it is not YOU or meter is reseted
 		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
 			sprintf_s(label, 128, "-");
 			TextCommma(label, comma);
@@ -675,48 +674,68 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 			ImGui::TableNextColumn();
 		}
 
-		// Read saved result if it is history mode
 		else if (DAMAGEMETER.isHistoryMode()) {
-			DOUBLE gearSavedResultSum = (*itr)->GetHistoryBS(90) + (*itr)->GetHistoryBS(50);
+			DOUBLE gearSum = (*itr)->GetHistoryBS(90) + (*itr)->GetHistoryBS(50);
 			acc01savedResult = (*itr)->GetHistoryBS(1);
 			acc02savedResult = (*itr)->GetHistoryBS(2);
 
-			sprintf_s(label, 128, "%.0f", gearSavedResultSum + (*itr)->GetHistoryBS(1));
+			sprintf_s(label, 128, "%.0f", gearSum + (*itr)->GetHistoryBS(1));
 			TextCommma(label, comma);
 			ImGui::Text(comma);
 			ImGui::TableNextColumn();
 
-			sprintf_s(label, 128, "%.0f", gearSavedResultSum + (*itr)->GetHistoryBS(2));
+			sprintf_s(label, 128, "%.0f", gearSum + (*itr)->GetHistoryBS(2));
 			TextCommma(label, comma);
 			ImGui::Text(comma);
 			ImGui::TableNextColumn();
 
-			sprintf_s(label, 128, "%.0f", gearSavedResultSum + 650);
+			sprintf_s(label, 128, "%.0f", gearSum + 650);
 			TextCommma(label, comma);
 			ImGui::Text(comma);
 			ImGui::TableNextColumn();
 		}
-
 		else {
 
-			UINT64 bs3GearOngoing = playerMetaData->CalBsGear3Set(false, milliTableTime);
-			if (bs3GearOngoing != 0) {
-				gear90savedResult = (DOUBLE)(playerMetaData->_gear90Sum + bs3GearOngoing) / milliTableTime;
+			if (playerMetaData->_gear90Started == false) {
+				gear90savedResult = 0.0;
+			}
+			else if ((INT64)(milliTableTime - playerMetaData->_gear90PreviousTime) >= 0) {
+				UINT64 gear90TimeDiff = (milliTableTime - playerMetaData->_gear90PreviousTime);
+				gear90TimeDiff = (gear90TimeDiff >= 5000) ? 5000 : gear90TimeDiff;
+				UINT64 gear90Sum = (playerMetaData->_gear90Sum + gear90TimeDiff * 500);
+				gear90savedResult = (DOUBLE)gear90Sum / milliTableTime;
 			}
 
-			UINT64 bs4GearOngoing = playerMetaData->CalBsGear4Set(false, milliTableTime);
-			if (bs4GearOngoing != 0) {
-				gear50savedResult = (DOUBLE)(playerMetaData->_gear50Sum + bs4GearOngoing) / milliTableTime;
+			if (playerMetaData->_gear50Started == false) {
+				gear50savedResult = 0.0;
+			}
+			else if ((INT64)(milliTableTime - playerMetaData->_gear50PreviousTime) >= 0) {
+				UINT64 gear50TimeDiff = (milliTableTime - playerMetaData->_gear50PreviousTime);
+				gear50TimeDiff = (gear50TimeDiff >= 5000) ? 5000 : gear50TimeDiff;
+				UINT64 gear50Sum = (playerMetaData->_gear50Sum + gear50TimeDiff * 1000);
+				gear50savedResult = (DOUBLE)gear50Sum / milliTableTime;
 			}
 
-			UINT64 bsAcc1Ongoing = playerMetaData->CalBsAccSet1(false, milliTableTime);
-			if (bsAcc1Ongoing != 0) {
-				acc01savedResult = (DOUBLE)(playerMetaData->_acc01Sum + bsAcc1Ongoing) / milliTableTime;
+			// 악세
+			if (playerMetaData->_acc01Started == false) {
+				acc01savedResult = 0.0;
+			}
+			else if ((INT64)(milliTableTime - playerMetaData->_acc01PreviousTime) >= 0) {
+				UINT64 acc01TimeDiff = (milliTableTime - playerMetaData->_acc01PreviousTime);
+				acc01TimeDiff = (acc01TimeDiff >= 2000) ? 2000 : acc01TimeDiff;
+				UINT64 acc01Sum = (playerMetaData->_acc01Sum + acc01TimeDiff * 1200);
+				acc01savedResult = (DOUBLE)acc01Sum / milliTableTime;
 			}
 
-			UINT bsAcc2Ongoing = playerMetaData->CalBsAccSet2(false, milliTableTime);
-			if (bsAcc2Ongoing != 0) {
-				acc02savedResult = (DOUBLE)(playerMetaData->_acc02Sum + bsAcc2Ongoing) / milliTableTime;
+			// 악세
+			if (playerMetaData->_acc02Started == false) {
+				acc02savedResult = 0.0;
+			}
+			else if ((INT64)(milliTableTime - playerMetaData->_acc02PreviousTime) >= 0) {
+				UINT64 acc02TimeDiff = (milliTableTime - playerMetaData->_acc02PreviousTime);
+				acc02TimeDiff = (acc02TimeDiff >= 10000) ? 10000 : acc02TimeDiff;
+				UINT64 acc02Sum = (playerMetaData->_acc02Sum + acc02TimeDiff * 3000);
+				acc02savedResult = (DOUBLE)acc02Sum / milliTableTime;
 			}
 
 			DOUBLE gearSum = gear50savedResult + gear90savedResult;

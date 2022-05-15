@@ -59,7 +59,7 @@ VOID SpecificInformation::Update(BOOL* open) {
 
 VOID SpecificInformation::UpdateSkillInfo() {
 	
-	if(ImGui::BeginTabItem(STR_DETAIL_SKILL))
+	if(ImGui::BeginTabItem(Language.GetText(STR_DETAIL_SKILL).c_str()))
 	{
 		UpdateMonsterCombo();
 		
@@ -96,7 +96,7 @@ VOID SpecificInformation::UpdateSkillTotalInfo()
 			sprintf_s(table, 128, "##skilltable%d", _playerID);
 			if (ImGui::BeginTable(table, 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Reorderable)) {
 
-				ImGui::TableSetupColumn(STR_TABLE_NAME, ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
+				ImGui::TableSetupColumn(Language.GetText(STR_TABLE_NAME).c_str(), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
 				ImGui::TableSetupColumn(u8"시전횟수", ImGuiTableColumnFlags_WidthFixed, -1);
 				ImGui::TableHeadersRow();
 
@@ -146,7 +146,7 @@ VOID SpecificInformation::UpdateMonsterCombo() {
 		comboPreview = (*monster)->GetName();
 	}
 
-	if(ImGui::BeginCombo(STR_DETAIL_MONSTER, comboPreview, ImGuiComboFlags_HeightLarge)) {
+	if(ImGui::BeginCombo(Language.GetText(STR_DETAIL_MONSTER).c_str(), comboPreview, ImGuiComboFlags_HeightLarge)) {
 	
 		for (auto itr = (*player)->begin(); itr != (*player)->end(); itr++) {
 			
@@ -186,13 +186,13 @@ VOID SpecificInformation::UpdateSkillTable() {
 	
 		ImGui::SetWindowFontScale(_columnFontScale);
 
-		ImGui::TableSetupColumn(STR_TABLE_NAME, ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_DPS, ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_DAMAGE_PERCENT, ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_TOTAL_DAMAGE, ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
-		ImGui::TableSetupColumn(STR_TABLE_TOTAL_HIT, ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
-		ImGui::TableSetupColumn(STR_TABLE_CRIT_RATE, ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
-		ImGui::TableSetupColumn(STR_TABLE_HIT_PER_SECOND, ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_NAME).c_str(), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_DPS).c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_DAMAGE_PERCENT).c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_TOTAL_DAMAGE).c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_TOTAL_HIT).c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_CRIT_RATE).c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_HIT_PER_SECOND).c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
 	// ImGui::TableSetupColumn(STR_TABLE_SKILL_PER_SECOND, ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableHeadersRow();
 
@@ -300,7 +300,7 @@ VOID SpecificInformation::UpdateBuffMeter() {
 
 	BUFFMETER.GetLock();
 	{
-		if (ImGui::BeginTabItem(STR_DETAIL_BUFF_AND_DEBUFF))
+		if (ImGui::BeginTabItem(Language.GetText(STR_DETAIL_BUFF_AND_DEBUFF).c_str()))
 		{
 			ImGui::OutlineText::PushOutlineText(ImGui::IMGUIOUTLINETEXT(UIOPTION.GetOutlineColor(), 1));
 			ImGui::TextAlignCenter::SetTextAlignCenter();
@@ -335,8 +335,8 @@ VOID SpecificInformation::UpdateBuffTable() {
 
 		ImGui::SetWindowFontScale(_columnFontScale);
 
-		ImGui::TableSetupColumn(STR_TABLE_NAME, ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(STR_TABLE_DURATION, ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_NAME).c_str(), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_DURATION).c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableHeadersRow();
 
 		ImGui::SetWindowFontScale(_tableFontScale);

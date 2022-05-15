@@ -33,7 +33,6 @@
 #define STR_TABLE_ARMOR_BREAK u8"貫穿"
 #define STR_TABLE_STAMINA u8"耐力"
 #define STR_TABLE_SOUL_VAPOR u8"SV"
-#define STR_TABLE_SOULSTONE_PERCENT u8"stone%"
 #define STR_TABLE_SOULSTONE_PERCENT u8"靈魂石總傷(%)"
 #define STR_TABLE_SOULSTONE_PROC u8"靈魂石機率"
 #define STR_TABLE_SOULSTONE_DAMAGE u8"靈魂石傷(%)"

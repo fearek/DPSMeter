@@ -12,18 +12,10 @@
 #endif
 
 //int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd) 
+void ParseCommandLineArguments();
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ PSTR szCmdLine, _In_ int iCmdShow) {
-	int argc;
-	LPWSTR* argv;
-	argv = CommandLineToArgvW(GetCommandLine(),&argc);
-	if (argc == 2)
-	{
-		if (wcscmp(argv[1], L"log") == 0)
-		{
-			LogInstance.Enable();
-		}
-	}
+	ParseCommandLineArguments();
 	_wsetlocale(LC_ALL, L"Korean");
 	MiniDump::Begin();
 
@@ -45,4 +37,29 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	}
 
 	MiniDump::End();
+}
+
+void ParseCommandLineArguments()
+{
+	int argc;
+	LPWSTR* argv;
+	argv = CommandLineToArgvW(::GetCommandLine(), &argc);
+	for (size_t i = 0; i < argc; i++)
+	{
+		if (wcscmp(argv[i], L"log") == 0)
+		{
+			LogInstance.Enable();
+		}
+		if (wcscmp(argv[i], L"lang") == 0)
+		{
+			//ENGLISH, 0
+			//KOREAN, 1 
+			//CHINESE, 2 
+			//JAPANESE 3
+			if (i + 1 < argc)
+				Language.SetLanguage(LANGUAGE(_wtoi(argv[i + 1])));
+		}
+	}
+
+	::LocalFree(argv);
 }

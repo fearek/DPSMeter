@@ -342,6 +342,9 @@
     <ClInclude Include="Soulworker Packet\SWCPing.h">
       <Filter>SWCPacket</Filter>
     </ClInclude>
+    <ClInclude Include="LanguageManager.h">
+      <Filter>Language</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -547,6 +550,9 @@
     </ClCompile>
     <ClCompile Include="Log.cpp">
       <Filter>Utiliry\소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="LanguageManager.cpp">
+      <Filter>Language</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

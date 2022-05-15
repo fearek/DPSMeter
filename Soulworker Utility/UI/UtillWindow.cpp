@@ -37,7 +37,7 @@ VOID UtillWindow::Update()
 	//	ImGui::End();
 	//}
 
-	if (ImGui::BeginTabItem(STR_UTILWINDOW_COMBATLOG))
+	if (ImGui::BeginTabItem(Language.GetText(STR_UTILWINDOW_COMBATLOG).c_str()))
 	{
 		ImGui::BeginChild("Scrolling");
 		std::list<std::string>::iterator it;
