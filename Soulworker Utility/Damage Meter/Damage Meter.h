@@ -78,21 +78,21 @@ public:
 	UINT64 _avgABSum = 0;
 	UINT64 _avgABPreviousTime = 0;
 
-	BOOL _gear90Started = false;
+	BOOL _gear90EffectStarted = false;
 	UINT64 _gear90Sum = 0;
-	UINT64 _gear90PreviousTime = 0;
+	UINT64 _gear90EffectStartedTime = 0;
 
-	BOOL _gear50Started = false;
+	BOOL _gear50EffectStarted = false;
 	UINT64 _gear50Sum = 0;
-	UINT64 _gear50PreviousTime = 0;
+	UINT64 _gear50EffectStartedTime = 0;
 
-	BOOL _acc01Started = false;
+	BOOL _acc01EffectStarted = false;
 	UINT64 _acc01Sum = 0;
-	UINT64 _acc01PreviousTime = 0;
+	UINT64 _acc01EffectStartedTime = 0;
 
-	BOOL _acc02Started = false;
+	BOOL _acc02EffectStarted = false;
 	UINT64 _acc02Sum = 0;
-	UINT64 _acc02PreviousTime = 0;
+	UINT64 _acc02EffectStartedTime = 0;
 
 	DOUBLE _losedHp = 0;
 
@@ -177,38 +177,44 @@ public:
 				UINT64 calculatedAvgAB = (_avgABSum + avgTimeDifference * currentAB);
 				(*player)->SetHistoryAvgAB((DOUBLE)calculatedAvgAB / currentTime);
 
-				// 기어90 저장
-				if (_gear90Started) {
-					UINT64 gear90TimeDiff = currentTime - _gear90PreviousTime;
+				// Need to add ongoing effect to sum before save it to history
+				// Add ongoing BS 3 Gear Set Effect
+				if (_gear90EffectStarted) {
+					UINT64 gear90TimeDiff = currentTime - _gear90EffectStartedTime;
 					gear90TimeDiff = (gear90TimeDiff >= 5000) ? 5000 : gear90TimeDiff;
 					_gear90Sum += gear90TimeDiff * 500;
-					(*player)->setHistoryBS(90, (DOUBLE)_gear90Sum / currentTime);
+					_gear90EffectStarted = false;
 				}
 
-				// 기어50 저장
-				if (_gear50Started) {
-					UINT64 gear50TimeDiff = currentTime - _gear50PreviousTime;
+				// Add ongoing BS 4 Gear Set Effect
+				if (_gear50EffectStarted) {
+					UINT64 gear50TimeDiff = currentTime - _gear50EffectStartedTime;
 					gear50TimeDiff = (gear50TimeDiff >= 5000) ? 5000 : gear50TimeDiff;
 					_gear50Sum += gear50TimeDiff * 1000;
-					(*player)->setHistoryBS(50, (DOUBLE)_gear50Sum / currentTime);
+					_gear50EffectStarted = false;
 				}
 
-				//악세1 저장
-				if (_acc01Started) {
-					UINT64 acc01TimeDiff = currentTime - _acc01PreviousTime;
+				// Add ongoing BS Acc I Effect
+				if (_acc01EffectStarted) {
+					UINT64 acc01TimeDiff = currentTime - _acc01EffectStartedTime;
 					acc01TimeDiff = (acc01TimeDiff >= 2000) ? 2000 : acc01TimeDiff;
 					_acc01Sum += acc01TimeDiff * 1200;
-					(*player)->setHistoryBS(1, (DOUBLE)_acc01Sum / currentTime);
+					_acc01EffectStarted = false;
 				}
 
-				// 악세2 저장
-				if (_acc02Started)
-				{
-					UINT64 acc02TimeDiff = currentTime - _acc02PreviousTime;
+				// Add ongoing BS Acc II Effect
+				if (_acc02EffectStarted) {
+					UINT64 acc02TimeDiff = currentTime - _acc02EffectStartedTime;
 					acc02TimeDiff = (acc02TimeDiff >= 10000) ? 10000 : acc02TimeDiff;
 					_acc02Sum += acc02TimeDiff * 3000;
-					(*player)->setHistoryBS(2, (DOUBLE)_acc02Sum / currentTime);
+					_acc02EffectStarted = false;
 				}
+
+				// Save all to history
+				(*player)->setHistoryBS(90, (DOUBLE)_gear90Sum / currentTime);
+				(*player)->setHistoryBS(50, (DOUBLE)_gear50Sum / currentTime);
+				(*player)->setHistoryBS(1, (DOUBLE)_acc01Sum / currentTime);
+				(*player)->setHistoryBS(2, (DOUBLE)_acc02Sum / currentTime);
 			}
 
 
@@ -220,60 +226,181 @@ public:
 		_avgABSum = 0;
 		_avgABPreviousTime = 0;
 
-		_gear90Started = false;
+		_gear90EffectStarted = false;
 		_gear90Sum = 0;
-		_gear90PreviousTime = 0;
+		_gear90EffectStartedTime = 0;
 
-		_gear50Started = false;
+		_gear50EffectStarted = false;
 		_gear50Sum = 0;
-		_gear50PreviousTime = 0;
+		_gear50EffectStartedTime = 0;
 
-		_acc01Started = false;
+		_acc01EffectStarted = false;
 		_acc01Sum = 0;
-		_acc01PreviousTime = 0;
+		_acc01EffectStartedTime = 0;
 
-		_acc02Started = false;
+		_acc02EffectStarted = false;
 		_acc02Sum = 0;
-		_acc02PreviousTime = 0;
+		_acc02EffectStartedTime = 0;
 	}
 
 	VOID HitEnemy() {
 		if (!DAMAGEMETER.isRun()) {
 			return;
 		}
-		UINT64 time = DAMAGEMETER.GetTime();
-		DOUBLE hpPercent = (DOUBLE)_currentHP / (DOUBLE)_maxHP * 100;
+		UINT64 currentTime = DAMAGEMETER.GetTime();
+		CalBsGear3Set(true, currentTime);
+		CalBsGear4Set(true, currentTime);
+		CalBsAccSet1(true, currentTime);
+		CalBsAccSet2(true, currentTime);
+	}
 
-		if (hpPercent >= 90.0) {
-			_gear90Started = true;
-			UINT64 _gear90TimeDifference = time - _gear90PreviousTime;
-			_gear90TimeDifference = (_gear90TimeDifference >= 5000) ? 5000 : _gear90TimeDifference;
-			_gear90Sum += _gear90TimeDifference * 500;
-			_gear90PreviousTime = time;
+	// Add to sum if duration of effect is finished or effect duration is updated
+	// If duration is not finished, calculate it based on table time
+	UINT64 CalBsGear3Set(bool hit, UINT64 currentTime) {
+		const double HP_CONDITION = 90.0;
+		const int DURATION = 5000;
+		const int ATK = 500;
+
+		const DOUBLE hpPercent = (DOUBLE)_currentHP / (DOUBLE)_maxHP * 100;
+		UINT64 _gear90TimeLapse = currentTime - _gear90EffectStartedTime;
+
+		if ((hpPercent >= HP_CONDITION) && hit && !_gear90EffectStarted) { // new start
+			_gear90EffectStarted = true;
+			_gear90EffectStartedTime = currentTime;
 		}
-
-		if (hpPercent >= 50.0) {
-			_gear50Started = true;
-			UINT64 _gear50TimeDifference = time - _gear50PreviousTime;
-			_gear50TimeDifference = (_gear50TimeDifference >= 5000) ? 5000 : _gear50TimeDifference;
-			_gear50Sum += _gear50TimeDifference * 1000;
-			_gear50PreviousTime = time;
+		else if ((hpPercent >= HP_CONDITION) && hit && _gear90EffectStarted) { // update effect
+			if (_gear90TimeLapse >= DURATION) {
+				_gear90TimeLapse = DURATION;
+			}
+			_gear90Sum += _gear90TimeLapse * ATK;
+			_gear90EffectStartedTime = currentTime;
 		}
-
-		if (hpPercent >= 85.0) {
-			_acc01Started = true;
-			UINT64 _acc01TimeDiff = time - _acc01PreviousTime;
-			_acc01TimeDiff = (_acc01TimeDiff >= 2000) ? 2000 : _acc01TimeDiff;
-			_acc01Sum += _acc01TimeDiff * 1200;
-			_acc01PreviousTime = time;
+		else if ((hpPercent < HP_CONDITION) && hit && _gear90EffectStarted) { // end effect
+			if (_gear90TimeLapse >= DURATION) {
+				_gear90TimeLapse = DURATION;
+				_gear90Sum += _gear90TimeLapse * ATK;
+				_gear90EffectStarted = false;
+			}
 		}
+		else if (!hit && !_gear90EffectStarted) { // PlayerTable
+			return 0;
+		}
+		else if (!hit && _gear90EffectStarted && (_gear90TimeLapse >= 0)) { // PlayerTable
+			if (_gear90TimeLapse >= DURATION) {
+				_gear90TimeLapse = DURATION;
+			}
+			return _gear90TimeLapse * ATK;
+		}
+	}
 
-		if (hpPercent < 30.0) {
-			_acc02Started = true;
-			UINT64 _acc02TimeDiff = time - _acc02PreviousTime;
-			_acc02TimeDiff = (_acc02TimeDiff >= 10000) ? 10000 : _acc02TimeDiff;
-			_acc02Sum += _acc02TimeDiff * 3000;
-			_acc02PreviousTime = time;
+	UINT64 CalBsGear4Set(bool hit, UINT64 currentTime) {
+		const double HP_CONDITION = 50.0;
+		const int DURATION = 5000;
+		const int ATK = 1000;
+
+		const DOUBLE hpPercent = (DOUBLE)_currentHP / (DOUBLE)_maxHP * 100;
+		UINT64 _gear50TimeLapse = currentTime - _gear50EffectStartedTime;
+
+		if ((hpPercent >= HP_CONDITION) && hit && !_gear50EffectStarted) { // new start
+			_gear50EffectStarted = true;
+			_gear50EffectStartedTime = currentTime;
+		}
+		else if ((hpPercent >= HP_CONDITION) && hit && _gear50EffectStarted) { // update effect
+			if (_gear50TimeLapse >= DURATION) {
+				_gear50TimeLapse = DURATION;
+			}
+			_gear50Sum += _gear50TimeLapse * ATK;
+			_gear50EffectStartedTime = currentTime;
+		}
+		else if ((hpPercent < HP_CONDITION) && hit && _gear50EffectStarted) { // end effect
+			if (_gear50TimeLapse >= DURATION) {
+				_gear50TimeLapse = DURATION;
+				_gear50Sum += _gear50TimeLapse * ATK;
+				_gear50EffectStarted = false;
+			}
+		}
+		else if (!hit && !_gear50EffectStarted) { // PlayerTable
+			return 0;
+		}
+		else if (!hit && _gear50EffectStarted && (_gear50TimeLapse >= 0)) { // PlayerTable
+			if (_gear50TimeLapse >= DURATION) {
+				_gear50TimeLapse = DURATION;
+			}
+			return _gear50TimeLapse * ATK;
+		}
+	}
+
+	UINT64 CalBsAccSet1(bool hit, UINT64 currentTime) {
+		const double HP_CONDITION = 85.0;
+		const int DURATION = 2000;
+		const int ATK = 1200;
+
+		const DOUBLE hpPercent = (DOUBLE)_currentHP / (DOUBLE)_maxHP * 100;
+		UINT64 _acc01TimeLapse = currentTime - _acc01EffectStartedTime;
+
+		if ((hpPercent >= HP_CONDITION) && hit && !_acc01EffectStarted) { // new start
+			_acc01EffectStarted = true;
+			_acc01EffectStartedTime = currentTime;
+		}
+		else if ((hpPercent >= HP_CONDITION) && hit && _acc01EffectStarted) { // update effect
+			if (_acc01TimeLapse >= DURATION) {
+				_acc01TimeLapse = DURATION;
+			}
+			_acc01Sum += _acc01TimeLapse * ATK;
+			_acc01EffectStartedTime = currentTime;
+		}
+		else if ((hpPercent < HP_CONDITION) && hit && _acc01EffectStarted) { // end effect
+			if (_acc01TimeLapse >= DURATION) {
+				_acc01TimeLapse = DURATION;
+				_acc01Sum += _acc01TimeLapse * ATK;
+				_acc01EffectStarted = false;
+			}
+		}
+		else if (!hit && !_acc01EffectStarted) { // PlayerTable
+			return 0;
+		}
+		else if (!hit && _acc01EffectStarted && (_acc01TimeLapse >= 0)) { // PlayerTable
+			if (_acc01TimeLapse >= DURATION) {
+				_acc01TimeLapse = DURATION;
+			}
+			return _acc01TimeLapse * ATK;
+		}
+	}
+
+	UINT64 CalBsAccSet2(bool hit, UINT64 currentTime) {
+		const double HP_CONDITION = 30.0;
+		const int DURATION = 10000;
+		const int ATK = 3000;
+
+		const DOUBLE hpPercent = (DOUBLE)_currentHP / (DOUBLE)_maxHP * 100;
+		UINT64 _acc02TimeLapse = currentTime - _acc02EffectStartedTime;
+
+		if ((hpPercent < HP_CONDITION) && hit && !_acc02EffectStarted) { // new start
+			_acc02EffectStarted = true;
+			_acc02EffectStartedTime = currentTime;
+		}
+		else if ((hpPercent < HP_CONDITION) && hit && _acc02EffectStarted) { // update effect
+			if (_acc02TimeLapse >= DURATION) {
+				_acc02TimeLapse = DURATION;
+			}
+			_acc02Sum += _acc02TimeLapse * ATK;
+			_acc02EffectStartedTime = currentTime;
+		}
+		else if ((hpPercent >= HP_CONDITION) && hit && _acc02EffectStarted) { // end effect
+			if (_acc02TimeLapse >= DURATION) {
+				_acc02TimeLapse = DURATION;
+				_acc02Sum += _acc02TimeLapse * ATK;
+				_acc02EffectStarted = false;
+			}
+		}
+		else if (!hit && !_acc02EffectStarted) { // PlayerTable
+			return 0;
+		}
+		else if (!hit && _acc02EffectStarted && (_acc02TimeLapse >= 0)) { // PlayerTable
+			if (_acc02TimeLapse >= DURATION) {
+				_acc02TimeLapse = DURATION;
+			}
+			return _acc02TimeLapse * ATK;
 		}
 	}
 
