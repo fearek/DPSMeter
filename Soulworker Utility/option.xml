@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SDM>
+    <Option IsTopMost="1" GlobalScale="1" TableScale="1" ColumnScale="1" K="0" M="0" IsSoloMode="0" DoHideName="0" CellPaddingX="0" CellPaddingY="0" BorderSize="1" WindowWidth="800" RefreshTime="0.30000001" WinPosX="356" WinPosY="335"/>
+    <TextColor r="1" g="1" b="1" a="1"/>
+    <WindowBgColor r="0.059999999" g="0.059999999" b="0.059999999" a="0.94"/>
+    <OutlineColor r="0" g="0" b="0" a="1"/>
+    <ActiveColor r="0.16" g="0.28999999" b="0.47999999" a="1"/>
+    <InActiveColor r="0.039999999" g="0.039999999" b="0.039999999" a="1"/>
+    <JobColor0 r="0.60000002" g="0.60000002" b="0.60000002" a="1"/>
+    <JobColor1 r="0.96862751" g="0.55686277" b="0.23137257" a="1"/>
+    <JobColor2 r="0.23137257" g="0.57647061" b="0.96862751" a="1"/>
+    <JobColor3 r="0.96862751" g="0.23137257" b="0.61176473" a="1"/>
+    <JobColor4 r="0.96862751" g="0.74509805" b="0.23137257" a="1"/>
+    <JobColor5 r="0.63137257" g="0.23137257" b="0.96862751" a="1"/>
+    <JobColor6 r="0.87450987" g="0.0039215689" b="0.0039215689" a="1"/>
+    <JobColor7 r="0.5411765" g="0.0078431377" b="0.015686275" a="1"/>
+    <JobColor8 r="0.46274513" g="0.80784321" b="0.61960787" a="1"/>
+    <JobColor9 r="0.50196081" g="0.50196081" b="0.25098041" a="1"/>
+    <HOTKEY0 key1="29" key2="211" key3="-1">Clear</HOTKEY0>
+</SDM>

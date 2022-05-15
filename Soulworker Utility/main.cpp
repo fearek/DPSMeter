@@ -35,7 +35,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	else {
 		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Init UIWINDOW Failed")));
 	}
-
 	MiniDump::End();
 }
 
