@@ -294,7 +294,7 @@ const CHAR* SWDamageMeter::GetPlayerName(UINT32 id) {
 
 	auto search = _playerMetadata.find(id);
 	if (search == _playerMetadata.end()) {
-		return PLAYER_NAME_CANT_FIND;
+		return Language.GetText(PLAYER_NAME_CANT_FIND).c_str();
 	}
 	return search->second->_name;
 }
@@ -319,7 +319,7 @@ VOID SWDamageMeter::UpdateStat(UINT32 id, USHORT statType, FLOAT statValue)
 	if (search == _playerMetadata.end()) {
 		metaData = new SW_PLAYER_METADATA;
 		metaData->_id = id;
-		strcpy_s(metaData->_name, MAX_NAME_LEN, PLAYER_NAME_CANT_FIND);
+		strcpy_s(metaData->_name, MAX_NAME_LEN, Language.GetText(PLAYER_NAME_CANT_FIND).c_str());
 		metaData->_job = PLAYER_JOB_CANT_FIND;
 		_playerMetadata[id] = metaData;
 	}

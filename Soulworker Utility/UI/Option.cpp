@@ -30,22 +30,22 @@ BOOL UiOption::ShowFontSelector() {
 
 	ImFont* font_current = ImGui::GetFont();
 
-	ImGui::Text(STR_OPTION_FONTSCALE_DESC);
-	ImGui::DragFloat(STR_OPTION_FONTSCALE, &_fontScale, 0.005f, 0.3f, 2.0f, "%.1f");
+	ImGui::Text(Language.GetText(STR_OPTION_FONTSCALE_DESC).c_str());
+	ImGui::DragFloat(Language.GetText(STR_OPTION_FONTSCALE).c_str(), &_fontScale, 0.005f, 0.3f, 2.0f, "%.1f");
 
 	font_current->Scale = _fontScale;
 
-	if (ImGui::Checkbox(STR_OPTION_UNIT_1K, (bool*)&_is1K)) {
+	if (ImGui::Checkbox(Language.GetText(STR_OPTION_UNIT_1K).c_str(), (bool*)&_is1K)) {
 		if (_is1M)
 			_is1M = FALSE;
 	}
 
-	if (ImGui::Checkbox(STR_OPTION_UNIT_1M, (bool*)&_is1M)) {
+	if (ImGui::Checkbox(Language.GetText(STR_OPTION_UNIT_1M).c_str(), (bool*)&_is1M)) {
 		if (_is1K)
 			_is1K = FALSE;
 	}
-	ImGui::Checkbox(STR_OPTION_SOLO_MODE, (bool*)&_isSoloMode);
-	ImGui::Checkbox(STR_OPTION_HIDE_NAME, (bool*)&_hideName);
+	ImGui::Checkbox(Language.GetText(STR_OPTION_SOLO_MODE).c_str(), (bool*)&_isSoloMode);
+	ImGui::Checkbox(Language.GetText(STR_OPTION_HIDE_NAME).c_str(), (bool*)&_hideName);
 
 	return TRUE;
 }
@@ -54,14 +54,14 @@ BOOL UiOption::ShowTableOption() {
 
 	ImGuiStyle& style = ImGui::GetStyle();
 
-	ImGui::SliderFloat(STR_OPTION_WINDOW_BORDER_SIZE, &_windowBorderSize, 0.0f, 1.0f, "%.0f");
+	ImGui::SliderFloat(Language.GetText(STR_OPTION_WINDOW_BORDER_SIZE).c_str(), &_windowBorderSize, 0.0f, 1.0f, "%.0f");
 	style.WindowBorderSize = _windowBorderSize;
-	ImGui::SliderFloat2(STR_OPTION_CELL_PADDING, (float*)&_cellPadding, 0.0f, 20.0f, "%.0f");
+	ImGui::SliderFloat2(Language.GetText(STR_OPTION_CELL_PADDING).c_str(), (float*)&_cellPadding, 0.0f, 20.0f, "%.0f");
 	style.CellPadding = _cellPadding;
-	ImGui::DragFloat(STR_OPTION_COLUMN_FONT_SCALE, &_columnFontScale, 0.005f, 0.3f, 2.0f, "%.1f");
-	ImGui::DragFloat(STR_OPTION_TABLE_FONT_SCALE, &_tableFontScale, 0.005f, 0.3f, 2.0f, "%.1f");
+	ImGui::DragFloat(Language.GetText(STR_OPTION_COLUMN_FONT_SCALE).c_str(), &_columnFontScale, 0.005f, 0.3f, 2.0f, "%.1f");
+	ImGui::DragFloat(Language.GetText(STR_OPTION_TABLE_FONT_SCALE).c_str(), &_tableFontScale, 0.005f, 0.3f, 2.0f, "%.1f");
 	ImGui::Separator();
-	ImGui::DragFloat(STR_OPTION_TABLE_REFRESH_TIME, &_refreshTime, 0.005f, 0.1f, 1.0f, "%.1f");
+	ImGui::DragFloat(Language.GetText(STR_OPTION_TABLE_REFRESH_TIME).c_str(), &_refreshTime, 0.005f, 0.1f, 1.0f, "%.1f");
 	ImGui::Separator();
 	ImGui::ColorEdit4("##ColorText", (FLOAT*)&_textColor, ImGuiColorEditFlags_None); 
 	ImGui::SameLine(); 	ImGui::Text(ImGui::GetStyleColorName(0));
@@ -70,11 +70,11 @@ BOOL UiOption::ShowTableOption() {
 	ImGui::SameLine();	ImGui::Text(ImGui::GetStyleColorName(2));
 	style.Colors[2] = _windowBg;
 	ImGui::ColorEdit4("##ColorOutline", (FLOAT*)&_outlineColor, ImGuiColorEditFlags_None);
-	ImGui::SameLine();	ImGui::Text(STR_OPTION_TEXT_OUTLINE_COLOR);
+	ImGui::SameLine();	ImGui::Text(Language.GetText(STR_OPTION_TEXT_OUTLINE_COLOR).c_str());
 	ImGui::ColorEdit4("##ColorActiveColor", (FLOAT*)&_activeColor[1], ImGuiColorEditFlags_None);
-	ImGui::SameLine();	ImGui::Text(STR_OPTION_ACTIVE_COLOR);
+	ImGui::SameLine();	ImGui::Text(Language.GetText(STR_OPTION_ACTIVE_COLOR).c_str());
 	ImGui::ColorEdit4("##ColorInActiveColor", (FLOAT*)&_activeColor[0], ImGuiColorEditFlags_None);
-	ImGui::SameLine();	ImGui::Text(STR_OPTION_INACTIVE_COLOR);
+	ImGui::SameLine();	ImGui::Text(Language.GetText(STR_OPTION_INACTIVE_COLOR).c_str());
 
 	const char job[10][32] = { {STR_CHAR_UNKNOWN}, {STR_CHAR_HARU}, {STR_CHAR_ERWIN}, {STR_CHAR_LILY}, {STR_CHAR_JIN}, {STR_CHAR_STELLA},{STR_CHAR_IRIS}, {STR_CHAR_CHII}, {STR_CHAR_Ephnel}, {STR_CHAR_NABI} };
 
@@ -85,7 +85,7 @@ BOOL UiOption::ShowTableOption() {
 
 		if (memcmp(&_jobColor[i], &_jobBasicColor[i], sizeof(ImVec4)) != 0) {
 			ImGui::SameLine(0.0f, style.ItemInnerSpacing.x); 
-			if (ImGui::Button(STR_OPTION_RESTORE_DEFAULT_COLOR)) {
+			if (ImGui::Button(Language.GetText(STR_OPTION_RESTORE_DEFAULT_COLOR).c_str())) {
 				_jobColor[i] = _jobBasicColor[i];
 			}
 		}
@@ -98,14 +98,14 @@ BOOL UiOption::ShowTableOption() {
 
 BOOL UiOption::ShowHotkeySetting() {
 
-	const char* text =
-		STR_OPTION_HOTKEY_DESC_1
-		STR_OPTION_HOTKEY_DESC_2
-		STR_OPTION_HOTKEY_DESC_3
-		STR_OPTION_HOTKEY_DESC_4
-		STR_OPTION_HOTKEY_DESC_5;
+	std::string text =
+		Language.GetText(STR_OPTION_HOTKEY_DESC_1) + "\n" +
+		Language.GetText(STR_OPTION_HOTKEY_DESC_2) + "\n" +
+		Language.GetText(STR_OPTION_HOTKEY_DESC_3) + "\n" +
+		Language.GetText(STR_OPTION_HOTKEY_DESC_4) + "\n" +
+		Language.GetText(STR_OPTION_HOTKEY_DESC_5);
 
-	ImGui::Text(text);
+	ImGui::Text(text.c_str());
 
 	return TRUE;
 }
@@ -116,11 +116,11 @@ VOID UiOption::OpenOption() {
 	_open = TRUE;
 
 
-	ImGui::Begin(STR_OPTION_WINDOWS_NAME, 0, ImGuiWindowFlags_None);
+	ImGui::Begin(Language.GetText(STR_OPTION_WINDOWS_NAME).c_str(), 0, ImGuiWindowFlags_None);
 
 		ImGui::SameLine(); 		
 		
-		if (ImGui::Button(STR_OPTION_SAVE_AND_EXIT)) {
+		if (ImGui::Button(Language.GetText(STR_OPTION_SAVE_AND_EXIT).c_str())) {
 			SaveOption();
 			if (DAMAGEMETER.GetWorldID() == 20011) {
 				DAMAGEMETER.SetWorldID(0);
@@ -140,14 +140,14 @@ VOID UiOption::OpenOption() {
 		ImGui::PopItemWidth();
 
 		if (ImGui::BeginTabBar("##tabs")) {
-			if (ImGui::BeginTabItem(STR_OPTION_TAB_TABLE_SETTING)) {
+			if (ImGui::BeginTabItem(Language.GetText(STR_OPTION_TAB_TABLE_SETTING).c_str())) {
 				ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.5f);
 				ShowTableOption();
 				ImGui::PopItemWidth();
 				ImGui::EndTabItem();
 			}
 
-			if (ImGui::BeginTabItem(STR_OPTION_TAB_HOTKEY_SETTING)) {
+			if (ImGui::BeginTabItem(Language.GetText(STR_OPTION_TAB_HOTKEY_SETTING).c_str())) {
 				// 귀찮구만
 				ShowHotkeySetting();
 				ImGui::EndTabItem();

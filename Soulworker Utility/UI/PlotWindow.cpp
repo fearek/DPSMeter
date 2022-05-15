@@ -87,7 +87,7 @@ VOID PlotWindow::Update()
 {
 	if (_isOpen) {
 
-		ImGui::Begin(STR_UTILWINDOW_MEOW, &_isOpen, ImGuiWindowFlags_None);
+		ImGui::Begin(Language.GetText(STR_UTILWINDOW_MEOW).c_str(), &_isOpen, ImGuiWindowFlags_None);
 
 		if (ImGui::BeginTabBar(u8"테스트2"))
 		{
@@ -102,7 +102,7 @@ VOID PlotWindow::Update()
 
 VOID PlotWindow::UpdatePlotTab()
 {
-	if (ImGui::BeginTabItem(STR_UTILWINDOW_DPSGRAPH))
+	if (ImGui::BeginTabItem(Language.GetText(STR_UTILWINDOW_DPSGRAPH).c_str()))
 	{
 		if (timeList.size() > 0) {
 			UINT32 firstId = metaInfos.front()->_id;
@@ -147,7 +147,7 @@ VOID PlotWindow::UpdatePlotTab()
 			}
 		}
 
-		if (ImPlot::BeginPlot(STR_UTILWINDOW_DPSGRAPH, STR_UTILWINDOW_DPSGRAPH_TIME_SEC, "dps", ImVec2(-1, 0), ImPlotFlags_AntiAliased, ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit)) {
+		if (ImPlot::BeginPlot(Language.GetText(STR_UTILWINDOW_DPSGRAPH).c_str(), Language.GetText(STR_UTILWINDOW_DPSGRAPH_TIME_SEC).c_str(), "dps", ImVec2(-1, 0), ImPlotFlags_AntiAliased, ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit)) {
 			auto it = metaInfos.begin();
 			for (; it != metaInfos.end(); it++) {
 				UINT32 id = (*it)->_id;
@@ -164,7 +164,7 @@ VOID PlotWindow::UpdatePlotTab()
 
 VOID PlotWindow::UpdateAbPlotTab()
 {
-	if (ImGui::BeginTabItem(STR_UTILWINDOW_ABGRAPH))
+	if (ImGui::BeginTabItem(Language.GetText(STR_UTILWINDOW_ABGRAPH).c_str()))
 	{
 		UINT32 currentSize = _abTimeList.size();
 
@@ -181,7 +181,7 @@ VOID PlotWindow::UpdateAbPlotTab()
 			ImPlot::SetNextPlotLimitsX(startX, endX, ImGuiCond_Always);
 		}
 		ImPlot::SetNextPlotLimitsY(0.0, 100.0, ImGuiCond_Always);
-		if (ImPlot::BeginPlot(STR_UTILWINDOW_ABGRAPH, STR_UTILWINDOW_ABGRAPH_TIME_SEC, "ab", ImVec2(-1, 0), ImPlotFlags_AntiAliased, ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
+		if (ImPlot::BeginPlot(Language.GetText(STR_UTILWINDOW_ABGRAPH).c_str(), Language.GetText(STR_UTILWINDOW_ABGRAPH_TIME_SEC).c_str(), "ab", ImVec2(-1, 0), ImPlotFlags_AntiAliased, ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
 			ImPlot::PlotLine(u8"YOU", _abTimeList.data(), _abList.data(), _abList.size());
 			auto itr = _annonXList.begin();
 			for (; itr != _annonXList.end(); itr++) {
@@ -196,7 +196,7 @@ VOID PlotWindow::UpdateAbPlotTab()
 
 VOID PlotWindow::UpdateJqPlotTab()
 {
-	if (ImGui::BeginTabItem(STR_UTILWINDOW_JQGRAPH))
+	if (ImGui::BeginTabItem(Language.GetText(STR_UTILWINDOW_JQGRAPH).c_str()))
 	{
 		UINT32 currentSize = _jqTimeList.size();
 		DOUBLE startX = 0.0;
@@ -211,7 +211,7 @@ VOID PlotWindow::UpdateJqPlotTab()
 			ImPlot::SetNextPlotLimitsX(startX, endX, ImGuiCond_Always);
 		}
 		ImPlot::SetNextPlotLimitsY(0, 4, ImGuiCond_Always);
-		if (ImPlot::BeginPlot(STR_UTILWINDOW_JQGRAPH, STR_UTILWINDOW_JQGRAOH_TIME_SEC, "stack", ImVec2(-1, 0), ImPlotFlags_AntiAliased, ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
+		if (ImPlot::BeginPlot(Language.GetText(STR_UTILWINDOW_JQGRAPH).c_str(), Language.GetText(STR_UTILWINDOW_JQGRAOH_TIME_SEC).c_str(), "stack", ImVec2(-1, 0), ImPlotFlags_AntiAliased, ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
 			ImPlot::PlotLine(u8"YOU", _jqTimeList.data(), _jqList.data(), _jqList.size());
 			ImPlot::EndPlot();
 		}
