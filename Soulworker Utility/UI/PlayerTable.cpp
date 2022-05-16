@@ -75,7 +75,7 @@ VOID PlayerTable::Update() {
 		_accumulatedTime += UIWINDOW.GetDeltaTime();
 
 		if (_accumulatedTime > UIOPTION.GetRefreshTime()) {
-			_tableTime = DAMAGEMETER.GetTime() / 1000;
+			_tableTime = ((DOUBLE)DAMAGEMETER.GetTime()) / 1000;
 			_accumulatedTime = 0;
 		}
 
@@ -651,12 +651,13 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 
 		ImGui::TableNextColumn();
 
-		// 기어90 테스트
+		// BS accessory comparison
 		static DOUBLE gear90savedResult = 0.0;
 		static DOUBLE gear50savedResult = 0.0;
 		static DOUBLE acc01savedResult = 0.0;
 		static DOUBLE acc02savedResult = 0.0;
 
+		// Display none it is not YOU or meter is reseted
 		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
 			sprintf_s(label, 128, "-");
 			TextCommma(label, comma);
@@ -674,68 +675,60 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 			ImGui::TableNextColumn();
 		}
 
+		// Read saved result if it is history mode
 		else if (DAMAGEMETER.isHistoryMode()) {
-			DOUBLE gearSum = (*itr)->GetHistoryBS(90) + (*itr)->GetHistoryBS(50);
+			DOUBLE gearSavedResultSum = (*itr)->GetHistoryBS(90) + (*itr)->GetHistoryBS(50);
 			acc01savedResult = (*itr)->GetHistoryBS(1);
 			acc02savedResult = (*itr)->GetHistoryBS(2);
 
-			sprintf_s(label, 128, "%.0f", gearSum + (*itr)->GetHistoryBS(1));
+			sprintf_s(label, 128, "%.0f", gearSavedResultSum + (*itr)->GetHistoryBS(1));
 			TextCommma(label, comma);
 			ImGui::Text(comma);
 			ImGui::TableNextColumn();
 
-			sprintf_s(label, 128, "%.0f", gearSum + (*itr)->GetHistoryBS(2));
+			sprintf_s(label, 128, "%.0f", gearSavedResultSum + (*itr)->GetHistoryBS(2));
 			TextCommma(label, comma);
 			ImGui::Text(comma);
 			ImGui::TableNextColumn();
 
-			sprintf_s(label, 128, "%.0f", gearSum + 650);
+			sprintf_s(label, 128, "%.0f", gearSavedResultSum + 650);
 			TextCommma(label, comma);
 			ImGui::Text(comma);
 			ImGui::TableNextColumn();
 		}
+
 		else {
 
-			if (playerMetaData->_gear90Started == false) {
-				gear90savedResult = 0.0;
+			UINT64 bs3GearOngoing = playerMetaData->CalBsGear3Set(false, milliTableTime);
+			if (bs3GearOngoing != 0 && _accumulatedTime == 0) {
+				gear90savedResult = (DOUBLE)(playerMetaData->_gear90Sum + bs3GearOngoing) / milliTableTime;
 			}
-			else if ((INT64)(milliTableTime - playerMetaData->_gear90PreviousTime) >= 0) {
-				UINT64 gear90TimeDiff = (milliTableTime - playerMetaData->_gear90PreviousTime);
-				gear90TimeDiff = (gear90TimeDiff >= 5000) ? 5000 : gear90TimeDiff;
-				UINT64 gear90Sum = (playerMetaData->_gear90Sum + gear90TimeDiff * 500);
-				gear90savedResult = (DOUBLE)gear90Sum / milliTableTime;
+			if (bs3GearOngoing == 0 && _accumulatedTime == 0) {
+				gear90savedResult = (DOUBLE)playerMetaData->_gear90Sum / milliTableTime;
 			}
 
-			if (playerMetaData->_gear50Started == false) {
-				gear50savedResult = 0.0;
+			UINT64 bs4GearOngoing = playerMetaData->CalBsGear4Set(false, milliTableTime);
+			if (bs4GearOngoing != 0 && _accumulatedTime == 0) {
+				gear50savedResult = (DOUBLE)(playerMetaData->_gear50Sum + bs4GearOngoing) / milliTableTime;
 			}
-			else if ((INT64)(milliTableTime - playerMetaData->_gear50PreviousTime) >= 0) {
-				UINT64 gear50TimeDiff = (milliTableTime - playerMetaData->_gear50PreviousTime);
-				gear50TimeDiff = (gear50TimeDiff >= 5000) ? 5000 : gear50TimeDiff;
-				UINT64 gear50Sum = (playerMetaData->_gear50Sum + gear50TimeDiff * 1000);
-				gear50savedResult = (DOUBLE)gear50Sum / milliTableTime;
+			if (bs4GearOngoing == 0 && _accumulatedTime == 0) {
+				gear50savedResult = (DOUBLE)(playerMetaData->_gear50Sum) / milliTableTime;
 			}
 
-			// 악세
-			if (playerMetaData->_acc01Started == false) {
-				acc01savedResult = 0.0;
+			UINT64 bsAcc1Ongoing = playerMetaData->CalBsAccSet1(false, milliTableTime);
+			if (bsAcc1Ongoing != 0 && _accumulatedTime == 0) {
+				acc01savedResult = (DOUBLE)(playerMetaData->_acc01Sum + bsAcc1Ongoing) / milliTableTime;
 			}
-			else if ((INT64)(milliTableTime - playerMetaData->_acc01PreviousTime) >= 0) {
-				UINT64 acc01TimeDiff = (milliTableTime - playerMetaData->_acc01PreviousTime);
-				acc01TimeDiff = (acc01TimeDiff >= 2000) ? 2000 : acc01TimeDiff;
-				UINT64 acc01Sum = (playerMetaData->_acc01Sum + acc01TimeDiff * 1200);
-				acc01savedResult = (DOUBLE)acc01Sum / milliTableTime;
+			if (bsAcc1Ongoing == 0 && _accumulatedTime == 0) {
+				acc01savedResult = (DOUBLE)(playerMetaData->_acc01Sum) / milliTableTime;
 			}
 
-			// 악세
-			if (playerMetaData->_acc02Started == false) {
-				acc02savedResult = 0.0;
+			UINT bsAcc2Ongoing = playerMetaData->CalBsAccSet2(false, milliTableTime);
+			if (bsAcc2Ongoing != 0 && _accumulatedTime == 0) {
+				acc02savedResult = (DOUBLE)(playerMetaData->_acc02Sum + bsAcc2Ongoing) / milliTableTime;
 			}
-			else if ((INT64)(milliTableTime - playerMetaData->_acc02PreviousTime) >= 0) {
-				UINT64 acc02TimeDiff = (milliTableTime - playerMetaData->_acc02PreviousTime);
-				acc02TimeDiff = (acc02TimeDiff >= 10000) ? 10000 : acc02TimeDiff;
-				UINT64 acc02Sum = (playerMetaData->_acc02Sum + acc02TimeDiff * 3000);
-				acc02savedResult = (DOUBLE)acc02Sum / milliTableTime;
+			if (bsAcc2Ongoing == 0 && _accumulatedTime == 0) {
+				acc02savedResult = (DOUBLE)(playerMetaData->_acc02Sum) / milliTableTime;
 			}
 
 			DOUBLE gearSum = gear50savedResult + gear90savedResult;
