@@ -49,7 +49,34 @@ BOOL UiOption::ShowFontSelector() {
 
 	return TRUE;
 }
-
+std::string getCharName(int id)
+{
+	switch (id)
+	{
+	case 0:
+		return Language.GetText(STR_CHAR_UNKNOWN);
+	case 1:
+		return Language.GetText(STR_CHAR_HARU);
+	case 2:
+		return Language.GetText(STR_CHAR_ERWIN);
+	case 3:
+		return Language.GetText(STR_CHAR_LILY);
+	case 4:
+		return Language.GetText(STR_CHAR_JIN);
+	case 5:
+		return Language.GetText(STR_CHAR_STELLA);
+	case 6:
+		return Language.GetText(STR_CHAR_IRIS);
+	case 7:
+		return Language.GetText(STR_CHAR_CHII);
+	case 8:
+		return Language.GetText(STR_CHAR_Ephnel);
+	case 9:
+		return Language.GetText(STR_CHAR_NABI);
+	default:
+		return Language.GetText(STR_CHAR_UNKNOWN);
+	}
+}
 BOOL UiOption::ShowTableOption() {
 
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -76,12 +103,13 @@ BOOL UiOption::ShowTableOption() {
 	ImGui::ColorEdit4("##ColorInActiveColor", (FLOAT*)&_activeColor[0], ImGuiColorEditFlags_None);
 	ImGui::SameLine();	ImGui::Text(Language.GetText(STR_OPTION_INACTIVE_COLOR).c_str());
 
-	const char job[10][32] = { {STR_CHAR_UNKNOWN}, {STR_CHAR_HARU}, {STR_CHAR_ERWIN}, {STR_CHAR_LILY}, {STR_CHAR_JIN}, {STR_CHAR_STELLA},{STR_CHAR_IRIS}, {STR_CHAR_CHII}, {STR_CHAR_Ephnel}, {STR_CHAR_NABI} };
+	//const char* job[10][32] = { {Language.GetText(STR_CHAR_UNKNOWN).c_str()}, {Language.GetText(STR_CHAR_HARU).c_str()}, {Language.GetText(STR_CHAR_ERWIN).c_str()}, {Language.GetText(STR_CHAR_LILY).c_str()}, {Language.GetText(STR_CHAR_JIN).c_str()}, {Language.GetText(STR_CHAR_STELLA).c_str()},{Language.GetText(STR_CHAR_IRIS).c_str()}, {Language.GetText(STR_CHAR_CHII).c_str()}, {Language.GetText(STR_CHAR_Ephnel).c_str()}, {Language.GetText(STR_CHAR_NABI).c_str()}};
 
 	for (int i = 0; i < 10; i++) {
 		ImGui::PushID(i);
 		ImGui::ColorEdit4("##Color", (FLOAT*)&_jobColor[i], ImGuiColorEditFlags_None);
-		ImGui::SameLine();	ImGui::Text(job[i]);
+		std::string charName = getCharName(i);
+		ImGui::SameLine();	ImGui::Text(charName.c_str());
 
 		if (memcmp(&_jobColor[i], &_jobBasicColor[i], sizeof(ImVec4)) != 0) {
 			ImGui::SameLine(0.0f, style.ItemInnerSpacing.x); 

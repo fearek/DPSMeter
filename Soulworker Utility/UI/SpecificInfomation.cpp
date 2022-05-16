@@ -40,7 +40,7 @@ VOID SpecificInformation::Update(BOOL* open) {
 
 	CHAR title[128] = { 0 };
 
-	sprintf_s(title, 128, "%s %s", DAMAGEMETER.GetPlayerName(_playerID), STR_DETAIL_DETAIL);
+	sprintf_s(title, 128, "%s %s", DAMAGEMETER.GetPlayerName(_playerID), Language.GetText(STR_DETAIL_DETAIL).c_str());
 	ImGui::Begin(title, (bool*)open, ImGuiWindowFlags_None);
 	{
 		sprintf_s(title, 128, "##tab%d", _playerID);
@@ -97,7 +97,7 @@ VOID SpecificInformation::UpdateSkillTotalInfo()
 			if (ImGui::BeginTable(table, 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Reorderable)) {
 
 				ImGui::TableSetupColumn(Language.GetText(STR_TABLE_NAME).c_str(), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
-				ImGui::TableSetupColumn(u8"시전횟수", ImGuiTableColumnFlags_WidthFixed, -1);
+				ImGui::TableSetupColumn(u8"Casts", ImGuiTableColumnFlags_WidthFixed, -1);
 				ImGui::TableHeadersRow();
 
 				CHAR comma[128] = { 0 }; CHAR label[128] = { 0 };
