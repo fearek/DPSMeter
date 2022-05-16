@@ -76,15 +76,15 @@ BOOL UiOption::ShowTableOption() {
 	ImGui::ColorEdit4("##ColorInActiveColor", (FLOAT*)&_activeColor[0], ImGuiColorEditFlags_None);
 	ImGui::SameLine();	ImGui::Text(Language.GetText(STR_OPTION_INACTIVE_COLOR).c_str());
 
-	const char job[10][32] = { {STR_CHAR_UNKNOWN}, {STR_CHAR_HARU}, {STR_CHAR_ERWIN}, {STR_CHAR_LILY}, {STR_CHAR_JIN}, {STR_CHAR_STELLA},{STR_CHAR_IRIS}, {STR_CHAR_CHII}, {STR_CHAR_Ephnel}, {STR_CHAR_NABI} };
+	std::string job[10] = { Language.GetText(STR_CHAR_UNKNOWN), Language.GetText(STR_CHAR_HARU), Language.GetText(STR_CHAR_ERWIN), Language.GetText(STR_CHAR_LILY), Language.GetText(STR_CHAR_JIN), Language.GetText(STR_CHAR_STELLA), Language.GetText(STR_CHAR_IRIS), {Language.GetText(STR_CHAR_CHII).c_str()}, Language.GetText(STR_CHAR_Ephnel), Language.GetText(STR_CHAR_NABI) };
 
 	for (int i = 0; i < 10; i++) {
 		ImGui::PushID(i);
 		ImGui::ColorEdit4("##Color", (FLOAT*)&_jobColor[i], ImGuiColorEditFlags_None);
-		ImGui::SameLine();	ImGui::Text(job[i]);
+		ImGui::SameLine();	ImGui::Text(job[i].c_str());
 
 		if (memcmp(&_jobColor[i], &_jobBasicColor[i], sizeof(ImVec4)) != 0) {
-			ImGui::SameLine(0.0f, style.ItemInnerSpacing.x); 
+			ImGui::SameLine(0.0f, style.ItemInnerSpacing.x);
 			if (ImGui::Button(Language.GetText(STR_OPTION_RESTORE_DEFAULT_COLOR).c_str())) {
 				_jobColor[i] = _jobBasicColor[i];
 			}

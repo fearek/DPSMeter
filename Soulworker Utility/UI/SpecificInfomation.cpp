@@ -40,7 +40,7 @@ VOID SpecificInformation::Update(BOOL* open) {
 
 	CHAR title[128] = { 0 };
 
-	sprintf_s(title, 128, "%s %s", DAMAGEMETER.GetPlayerName(_playerID), STR_DETAIL_DETAIL);
+	sprintf_s(title, 128, "%s %s", DAMAGEMETER.GetPlayerName(_playerID), Language.GetText(STR_DETAIL_DETAIL).c_str());
 	ImGui::Begin(title, (bool*)open, ImGuiWindowFlags_None);
 	{
 		sprintf_s(title, 128, "##tab%d", _playerID);
