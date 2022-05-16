@@ -64,7 +64,7 @@ DICTIONARY_t Language =
 
     {STR_OPTION_FONTSCALE, {{KOREAN, u8"폰트 크기"}, {ENGLISH, u8"Font Scale"}, {CHINESE, u8"文字放大倍率"}, {JAPANESE, u8"フォントスケール"}}},
     {STR_OPTION_FONTSCALE_DESC, {{KOREAN, u8"폰트 크기를 조정하여 테이블 크기를 조정 할 수 있습니다."}, {ENGLISH, u8"You can scale Table Size by adjusting Font Scale."}, {CHINESE, u8"可根據視窗大小調整文字放大倍率"}, {JAPANESE, u8"You can scale 表 Size by adjusting フォントスケール."}}},
-    {STR_OPTION_UNIT_1K, {{KOREAN, u8"단위 설정(1K)"}, {ENGLISH, u8"Unit - 1K"}, {CHINESE, u8"以千單位顯示(K)"}, {JAPANESE, u8"回避使用"}}},
+    {STR_OPTION_UNIT_1K, {{KOREAN, u8"단위 설정(1K)"}, {ENGLISH, u8"Unit - 1K"}, {CHINESE, u8"以千單位顯示(K)"}, {JAPANESE, u8"單位 - 1K"}}},
     {STR_OPTION_UNIT_1M, {{KOREAN, u8"단위 설정(1M)"}, {ENGLISH, u8"Unit - 1M"}, {CHINESE, u8"以百萬單位顯示(M)"}, {JAPANESE, u8"單位 - 1M"}}},
     {STR_OPTION_SOLO_MODE, {{KOREAN, u8"1인 모드"}, {ENGLISH, u8"Solo Mode"}, {CHINESE, u8"單人模式 (只顯示自己的數據)"}, {JAPANESE, u8"ソロモード"}}},
     {STR_OPTION_HIDE_NAME, {{KOREAN, u8"이름 숨기기"}, {ENGLISH, u8"Hide Name"}, {CHINESE, u8"隱藏名稱"}, {JAPANESE, u8"名前未表示"}}},
