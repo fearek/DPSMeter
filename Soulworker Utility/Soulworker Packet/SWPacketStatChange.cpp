@@ -27,7 +27,7 @@ VOID SWPacketStatChange::Do() {
 		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER) + 14;
 #endif
 #if defined(SERVER_STEAM)
-		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER);
+		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER) + 14;
 #endif
 #if defined(SERVER_JAPAN)
 		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER) + 14; // same as KR server
