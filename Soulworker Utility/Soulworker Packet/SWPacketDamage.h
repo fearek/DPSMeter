@@ -40,14 +40,16 @@ static std::unordered_set<UINT32> pauseIdList({
 	31309102, // 루나폴 - 에드가
 	31301001, // 바썬 - 플레마 1페
 	31301002, // 바썬 - 플레마 2페
-	31310101 // 브세노말 - 테네브리스 1페
+	31310101, // 브세노말 - 테네브리스 1페
+	31310103 // BS Hard Phase 1
 	// 702 // 일시정지 테스트용 트센몹
 	});
 static std::unordered_set<UINT32> endIdList({
 	31308001, // 히하 - 라파쿰바
 	31309151, // 루나폴 - 정크 퀸
 	31301003, // 바썬 - 플레마 3페
-	31310102 // 브세노말 - 테네브리스 2페
+	31310102, // 브세노말 - 테네브리스 2페
+	31310107 // BS Hard Phase 2
 	});
 
 class SWPacketDamage : public SWPacket {
