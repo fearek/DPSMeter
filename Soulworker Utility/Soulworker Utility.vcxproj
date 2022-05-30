@@ -190,6 +190,7 @@
     <ClInclude Include="Packet Capture\MyWinDivert.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SimpleIni.h" />
     <ClInclude Include="Soulworker Packet\PacketInfo.h" />
     <ClInclude Include="Soulworker Packet\PacketType.h" />
     <ClInclude Include="Soulworker Packet\SWCPacket.h" />

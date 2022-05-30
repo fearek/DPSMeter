@@ -4,18 +4,74 @@
 #include ".\UI\UiWindow.h"
 #include ".\Damage Meter\MySQLite.h"
 #include <shellapi.h>
+#include "SimpleIni.h"
 
 #pragma locale ("Korean")
 
 #if defined(DEBUG) || defined(_DEBUG)
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console" )
 #endif
-
-//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd) 
-void ParseCommandLineArguments();
+void getconfig(CSimpleIniA& ini, int sec)
+{
+	if (sec == 1) //meter
+	{
+		bool shouldLog = ini.GetBoolValue("Meter","LogFile",false);
+		if (shouldLog)
+		{
+			LogInstance.Enable();
+		}
+		long language = ini.GetLongValue("Meter", "Language", 0);
+		Language.SetLanguage(LANGUAGE(language));
+		return;
+	}
+}
+CSimpleIniA ini;
+bool configloaded = false;
+bool createconfig()
+{
+	ini.SetBoolValue("Loader", "XignCheck", true);
+	ini.SetBoolValue("Loader", "OpenMeterOnInjection", true);
+	ini.SetLongValue("Meter", "Language", 0);
+	ini.SetBoolValue("Meter", "LogFile", false);
+	SI_Error rc = ini.SaveFile("meterconfig.ini");
+	if (rc < 0) {
+		MessageBoxA(NULL,"Something is wrong with your system, cant make config file.","ERROR", MB_OK | MB_ICONERROR);
+		return false;
+	}
+	return true;
+}
+void loadconfig()
+{
+	ini.SetUnicode();
+	SI_Error rc = ini.LoadFile("meterconfig.ini");
+	if (rc < 0)
+	{
+		bool test = createconfig();
+		if (test == false) return;
+	}
+	SI_Error rc2 = ini.LoadFile("meterconfig.ini");
+	if (rc2 < 0)
+	{
+		MessageBoxA(NULL,"Loading config failed for some reason?","ERROR", MB_OK | MB_ICONERROR);
+		return;
+	}
+	configloaded = true;
+	CSimpleIniA::TNamesDepend sections;
+	CSimpleIniA::TNamesDepend::const_iterator it;
+	ini.GetAllSections(sections);
+	for (it = sections.begin(); it != sections.end(); ++it)
+	{
+		if (!std::strcmp(it->pItem, "Meter"))
+		{
+			getconfig(ini, 1);
+		}
+	}
+	return;
+}
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ PSTR szCmdLine, _In_ int iCmdShow) {
-	ParseCommandLineArguments();
+	//ParseCommandLineArguments();
+	loadconfig();
 	_wsetlocale(LC_ALL, L"Korean");
 	MiniDump::Begin();
 
