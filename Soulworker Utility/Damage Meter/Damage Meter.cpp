@@ -86,7 +86,7 @@ VOID SWDamageMeter::AddDamage(UINT32 id, UINT64 totalDMG, UINT64 soulstoneDMG, S
 
 VOID SWDamageMeter::AddPlayerGetDamage(UINT32 playerId, UINT64 totalDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, UINT32 monsterID, UINT32 skillID)
 {
-	if (_mazeEnd || GetTime() == 0)
+	if (!isRun() || GetTime() == 0)
 		return;
 
 	auto itr = _playerInfo.begin();
@@ -107,7 +107,7 @@ VOID SWDamageMeter::AddPlayerGetDamage(UINT32 playerId, UINT64 totalDMG, SWPACKE
 
 VOID SWDamageMeter::AddEnlighten(UINT32 playerId, FLOAT value)
 {
-	if (_mazeEnd || GetTime() == 0)
+	if (!isRun() || GetTime() == 0)
 		return;
 
 	auto itr = _playerInfo.begin();
@@ -129,7 +129,7 @@ VOID SWDamageMeter::AddEnlighten(UINT32 playerId, FLOAT value)
 VOID SWDamageMeter::AddSkillUsed(UINT32 playerId, UINT32 skillId)
 {
 
-	if (_mazeEnd || GetTime() == 0)
+	if (!isRun() || GetTime() == 0)
 		return;
 
 	// counts only skill that can proc enlighten (example : not right click)
@@ -160,7 +160,7 @@ VOID SWDamageMeter::AddSkillUsed(UINT32 playerId, UINT32 skillId)
 
 VOID SWDamageMeter::AddDodgeUsed(UINT32 playerId)
 {
-	if (_mazeEnd || GetTime() == 0)
+	if (!isRun() || GetTime() == 0)
 		return;
 
 	auto itr = _playerInfo.begin();
@@ -179,7 +179,7 @@ VOID SWDamageMeter::AddDodgeUsed(UINT32 playerId)
 
 VOID SWDamageMeter::AddDeath(UINT32 playerId)
 {
-	if (_mazeEnd || GetTime() == 0)
+	if (!isRun() || GetTime() == 0)
 		return;
 
 	auto itr = _playerInfo.begin();
