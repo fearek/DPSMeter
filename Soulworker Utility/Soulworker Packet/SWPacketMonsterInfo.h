@@ -5,9 +5,8 @@
 #pragma pack(push, 1)
 
 typedef struct _SWPACKETMONSTERINFO {
-	BYTE _unknown01;
 	UINT32 _id;
-	BYTE _unknown02[41];
+	BYTE _trash[41];
 #ifdef SERVER_KOREA
 	BYTE _unknown02[17];
 #endif
@@ -19,7 +18,7 @@ typedef struct _SWPACKETMONSTERINFO {
 #endif
 	UINT32 _realDB2;
 	UINT32 _owner_id;
-	BYTE _unknown03[142];
+	BYTE _trash2[142];
 }SWPACKETMONSTERINFO;
 
 #pragma pack(pop)
