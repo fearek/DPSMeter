@@ -84,7 +84,9 @@ VOID SWPacketMaker::CreateSWPacket(std::vector<unsigned char>& packet) {
 			case OPcode::OBJECTCREATE:
 				swpacket = new SWPacketObjectCreate(swheader, data);
 				break;
-
+			case OPcode::MONSTER_INFO:
+				swpacket = new SWPacketMonsterInfo(swheader,data);
+				break;
 				/*0x05 these aint used so why are they here lol */
 			//case OPcode::STARTMOVE:
 			//	swpacket = new SWPacketStartMove(swheader, data);

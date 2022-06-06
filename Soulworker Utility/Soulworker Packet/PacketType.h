@@ -11,7 +11,7 @@
 #include ".\Soulworker Packet\SWPacketMazeStart.h"
 #include ".\Soulworker Packet\SWPacketSpawnedCharInfo.h"
 #include ".\Soulworker Packet\SWPacketObjectCreate.h"
-
+#include ".\Soulworker Packet\SWPacketMonsterInfo.h"
 /* 0x05 */
 #include ".\Soulworker Packet\SWPacketStartMove.h"
 // stopMove
@@ -73,7 +73,7 @@ enum OPcode {
 	MAZESTART = 0x0408,
 	SPAWNED_CHARINFO = 0x0411,
 	OBJECTCREATE = 0x0415,	
-
+	MONSTER_INFO = 0x0423,
 	STARTMOVE = 0x0502,
 	STOPMOVE = 0x0504,
 	JUMP = 0x0506,

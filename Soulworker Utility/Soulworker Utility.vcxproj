@@ -223,6 +223,7 @@
     <ClInclude Include="Soulworker Packet\SWSPacket.h" />
     <ClInclude Include="Soulworker Packet\SWSPacketMyDodgeUsed.h" />
     <ClInclude Include="Soulworker Packet\SWSPacketMySkillUsed.h" />
+    <ClInclude Include="Soulworker Packet\SWPacketMonsterInfo.h" />
     <ClInclude Include="Third Party\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="Third Party\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="Third Party\imgui\Custom.h" />
@@ -294,6 +295,7 @@
     <ClCompile Include="Soulworker Packet\SWSPacket.cpp" />
     <ClCompile Include="Soulworker Packet\SWSPacketMyDodgeUsed.cpp" />
     <ClCompile Include="Soulworker Packet\SWSPacketMySkillUsed.cpp" />
+    <ClCompile Include="Soulworker Packet\SWPacketMonsterInfo.cpp" />
     <ClCompile Include="Third Party\imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="Third Party\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="Third Party\imgui\Custom.cpp" />

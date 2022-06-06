@@ -348,6 +348,9 @@
     <ClInclude Include="SimpleIni.h">
       <Filter>Utiliry\헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWPacketMonsterInfo.h">
+      <Filter>SWPacket\Packet\0x04 World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -556,6 +559,9 @@
     </ClCompile>
     <ClCompile Include="LanguageManager.cpp">
       <Filter>Language</Filter>
+    </ClCompile>
+    <ClCompile Include="Soulworker Packet\SWPacketMonsterInfo.cpp">
+      <Filter>SWPacket\Packet\0x04 World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
