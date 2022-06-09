@@ -47,7 +47,7 @@ VOID SWDamageMeter::InsertPlayerInfo(UINT32 id, UINT64 totalDMG, UINT64 soulston
 			return;
 		}
 	}
-	LogInstance.WriteLog("Insert playerinfo: ID:%d", id);
+	//LogInstance.WriteLog("Insert playerinfo: ID:%d", id);
 	_playerInfo.push_back(new SWDamagePlayer(id, totalDMG, soulstoneDMG, damageType, maxCombo, monsterID, skillID));
 }
 
