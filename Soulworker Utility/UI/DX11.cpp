@@ -36,7 +36,7 @@ BOOL DX11::CreateDevice() {
 	);
 
 	if (FAILED(hr)) {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DirectX11] [CreateDevice FAILED]\n")));
+		LogInstance.WriteLog("[DirectX11] [CreateDevice FAILED]\n");
 		return FALSE;
 	}
 

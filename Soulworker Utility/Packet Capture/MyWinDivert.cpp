@@ -14,13 +14,13 @@ bool getBytes(std::vector<unsigned char>& buffer, unsigned int size)
 		if (just_read == 0)
 		{
 			new_socket = INVALID_SOCKET;
-			LogInstance.WriteLog(const_cast<LPTSTR>(_T("Module disconnected")));
+			LogInstance.WriteLog("Module disconnected");
 			return false;
 		}
 		if (just_read == -1)
 		{
 			new_socket = INVALID_SOCKET;
-			LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in recv: %d")), WSAGetLastError());
+			LogInstance.WriteLog("Error in recv: %d", WSAGetLastError());
 			return false;
 		}
 		else {
@@ -37,14 +37,14 @@ DWORD MyWinDivert::Init() {
 	//init connection
 	int iResult = WSAStartup(MAKEWORD(2, 2),&wsaData);
 	if (iResult != 0) {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("WSAStartup failed: %d")), iResult);
+		LogInstance.WriteLog("WSAStartup failed: %d", iResult);
 		return iResult;
 	}
 	main_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (main_socket == INVALID_SOCKET)
 	{
 		int error = WSAGetLastError();
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Socket failed: %d")), error);
+		LogInstance.WriteLog("Socket failed: %d", error);
 		return error;
 	};
 	int opt = TRUE;
@@ -52,7 +52,7 @@ DWORD MyWinDivert::Init() {
 	if (iResult != 0)
 	{
 		int error = WSAGetLastError();
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("setsockopt failed: %d")), error);
+		LogInstance.WriteLog("setsockopt failed: %d", error);
 		return error;
 	}
 	address.sin_family = AF_INET;
@@ -62,26 +62,26 @@ DWORD MyWinDivert::Init() {
 	if(iResult != 0)
 	{
 		int error = WSAGetLastError();
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("bind failed: %d")), error);
+		LogInstance.WriteLog("bind failed: %d", error);
 		return error;
 	}
 	iResult = listen(main_socket, 1);
 	if (iResult != 0)
 	{
 		int error = WSAGetLastError();
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("listen failed: %d")), error);
+		LogInstance.WriteLog("listen failed: %d", error);
 		return error;
 	}
 	HANDLE thread = CreateThread(NULL, 0, ReceiveCallback, this, 0, NULL);
 	if (thread != NULL)
 	{
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Module Listener Init")));
+		LogInstance.WriteLog("Module Listener Init");
 		return ERROR_SUCCESS;
 		}
 	else
 	{
 		DWORD error = GetLastError();
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("CreateThread failed: %d")),error);
+		LogInstance.WriteLog("CreateThread failed: %d",error);
 		return error;
 	}
 }
@@ -100,7 +100,7 @@ DWORD MyWinDivert::ReceiveCallback(LPVOID prc) {
 			if (activity == SOCKET_ERROR)
 			{
 				DWORD error = WSAGetLastError();
-				LogInstance.WriteLog(const_cast<LPTSTR>(_T("select failed: %d")), error);
+				LogInstance.WriteLog("select failed: %d", error);
 				exit(-1);
 			}
 			if (FD_ISSET(main_socket, &readfds))
@@ -110,10 +110,10 @@ DWORD MyWinDivert::ReceiveCallback(LPVOID prc) {
 				if (new_socket == INVALID_SOCKET)
 				{
 					int error = WSAGetLastError();
-					LogInstance.WriteLog(const_cast<LPTSTR>(_T("Socket in thread failed: %d")), error);
+					LogInstance.WriteLog("Socket in thread failed: %d", error);
 					exit(-1);
 				}
-				LogInstance.WriteLog(const_cast<LPTSTR>(_T("Module connected")));
+				LogInstance.WriteLog("Module connected");
 			}
 			Sleep(100);
 		}

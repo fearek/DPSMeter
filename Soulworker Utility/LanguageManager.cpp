@@ -142,7 +142,7 @@ void DICTIONARY_t::SetLanguage(LANGUAGE lang)
     else
     {
         _lang = ENGLISH;
-        LogInstance.WriteLog(const_cast<LPTSTR>(_T("Set a wrong language")));
+        LogInstance.WriteLog("Set a wrong language");
     }
 
 }

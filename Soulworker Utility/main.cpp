@@ -76,12 +76,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	MiniDump::Begin();
 
 	if (!SWDB.Init()) {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("InitDB Failed")));
+		LogInstance.WriteLog("InitDB Failed");
 		exit(-1);
 	}
 
 	if (WINDIVERT.Init()) {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Init Module Listener Failed")));
+		LogInstance.WriteLog("Init Module Listener Failed");
 		exit(-1);
 	}
 
@@ -89,7 +89,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		UIWINDOW.Run();
 	}
 	else {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Init UIWINDOW Failed")));
+		LogInstance.WriteLog("Init UIWINDOW Failed");
 	}
 	MiniDump::End();
 }

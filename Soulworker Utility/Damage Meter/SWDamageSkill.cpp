@@ -13,7 +13,7 @@ SWDamageSkill::SWDamageSkill(UINT32 id, UINT64 damage, UINT64 critDamage, USHORT
 	SWDB.GetSkillName(id, _name, SKILL_NAME_LEN);
 
 #if DEBUG_DAMAGE_SKILL == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("\t\t[SKILL] [ID = %d] [NAME = %s] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d]")), _id, _name,_damage, _critDamage, _hitCount, _critHitCount);
+	LogInstance.WriteLog("\t\t[SKILL] [ID = %d] [NAME = %s] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d]", _id, _name,_damage, _critDamage, _hitCount, _critHitCount);
 #endif
 }
 
@@ -28,7 +28,7 @@ VOID SWDamageSkill::AddDamage(UINT64 damage, UINT64 critDamage, USHORT hitCount,
 	_critHitCount += critHitCount;
 
 #if DEBUG_DAMAGE_SKILL == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("\t\t[SKILL] [ID = %d] [NAME = %s] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d]")), _id, _name, _damage, _critDamage, _hitCount, _critHitCount);
+	LogInstance.WriteLog("\t\t[SKILL] [ID = %d] [NAME = %s] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d]", _id, _name, _damage, _critDamage, _hitCount, _critHitCount);
 #endif
 }
 

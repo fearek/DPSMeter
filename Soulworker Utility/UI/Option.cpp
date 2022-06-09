@@ -804,7 +804,7 @@ VOID UiOption::Update() {
 
 #if DEBUG_COLUMN_WIDTH == 1
 	for (INT i = 0; i < 8; i++)
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [Column Width] [%d] [%f]")), i, UIOPTION[i]);
+		LogInstance.WriteLog("[DEBUG] [Column Width] [%d] [%f]", i, UIOPTION[i]);
 #endif
 }
 

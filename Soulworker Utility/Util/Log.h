@@ -3,9 +3,21 @@
 class Log
 {
 private:
+    FILE* file;
     bool shouldLog = false;
 public:
-        BOOL WriteLog(LPTSTR data, ...);
+        ~Log()
+        {
+            if (file)
+            {
+                fclose(file);
+            }
+        }
+        Log()
+        {
+
+        }
+        BOOL WriteLog(char* data, ...);
         BOOL WriteLogA(char* data, ...);
         BOOL WriteLogNoDate(LPTSTR data, ...);
         VOID MyLog(const _TCHAR* data, ...);

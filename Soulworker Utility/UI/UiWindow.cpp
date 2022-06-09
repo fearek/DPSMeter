@@ -67,12 +67,12 @@ BOOL UiWindow::Init(UINT x, UINT y, UINT width, UINT height) {
 	}
 	
 	if (!RegisterClassEx(&wc)) {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in RegisterClassEx")));
+		LogInstance.WriteLog("Error in RegisterClassEx");
 		return FALSE;
 	}
 
-	if ((_hWnd = CreateWindowEx(WS_EX_TOPMOST, wc.lpszClassName, _T("Soulworker Utility"), WS_POPUP, x, y, width, height, NULL, NULL, _hInst, NULL)) == NULL) {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in CreateWindowEx : %x")), GetLastError());
+	if ((_hWnd = CreateWindowEx(WS_EX_TOPMOST, wc.lpszClassName, _T("SoulMeter"), WS_POPUP, x, y, width, height, NULL, NULL, _hInst, NULL)) == NULL) {
+		LogInstance.WriteLog("Error in CreateWindowEx : %x", GetLastError());
 		return FALSE;
 	}
 //	SetLayeredWindowAttributes(_hWnd, 0, 180, LWA_ALPHA);
@@ -85,27 +85,27 @@ BOOL UiWindow::Init(UINT x, UINT y, UINT width, UINT height) {
 	UpdateWindow(_hWnd);
 
 	if (!DIRECTX11.Init()) {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in DirectX Init")));
+		LogInstance.WriteLog("Error in DirectX Init");
 		return FALSE;
 	}
 
 	if (!DXINPUT.Init(_hInst, _hWnd)) {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in Direct Input Init")));
+		LogInstance.WriteLog("Error in Direct Input Init");
 		return FALSE;
 	}
 
 	if ((_swapChain = DIRECTX11.CreateSwapChain(_hWnd)) == nullptr) {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in CreateSwapChain")));
+		LogInstance.WriteLog("Error in CreateSwapChain");
 		return FALSE;
 	}
 
 	if ((_renderTargetView = DIRECTX11.CreateRenderTarget(_swapChain)) == nullptr) {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in CreateRenderTarget")));
+		LogInstance.WriteLog("Error in CreateRenderTarget");
 		return FALSE;
 	}
 	
 	if (!InitImGUI()) {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in Init ImGUI")));
+		LogInstance.WriteLog("Error in Init ImGUI");
 		return FALSE;
 	}
 	
@@ -286,7 +286,7 @@ VOID UiWindow::OnResize() {
 	_swapChain->ResizeBuffers(0, _width, _height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 
 	if ((_renderTargetView = DIRECTX11.CreateRenderTarget(_swapChain)) == nullptr) {
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in CreateRenderTarget")));
+		LogInstance.WriteLog("Error in CreateRenderTarget");
 		exit(-1);
 	}
 }

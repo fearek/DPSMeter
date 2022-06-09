@@ -47,7 +47,7 @@ VOID SWDamageMeter::InsertPlayerInfo(UINT32 id, UINT64 totalDMG, UINT64 soulston
 			return;
 		}
 	}
-
+	LogInstance.WriteLog("Insert playerinfo: ID:%d", id);
 	_playerInfo.push_back(new SWDamagePlayer(id, totalDMG, soulstoneDMG, damageType, maxCombo, monsterID, skillID));
 }
 
@@ -235,7 +235,7 @@ VOID SWDamageMeter::InsertOwnerID(UINT32 id, UINT32 owner_id) {
 	for (; itr != _ownerInfo.end(); itr++) {
 		if ((*itr)->_id == id) {
 #if DEBUG_DAMAGEMETER_OWNER_ID == 1
-			LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [INSERT OWNER] [MODIFY] [ID = %08x] [OWNER = %08x]")), id, owner_id);
+			LogInstance.WriteLog("[DEBUG] [INSERT OWNER] [MODIFY] [ID = %08x] [OWNER = %08x]", id, owner_id);
 #endif
 			(*itr)->_owner_id = owner_id;
 			return;
@@ -247,7 +247,7 @@ VOID SWDamageMeter::InsertOwnerID(UINT32 id, UINT32 owner_id) {
 	obj->_owner_id = owner_id;
 
 #if DEBUG_DAMAGEMETER_OWNER_ID == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [INSERT OWNER] [NEW] [ID = %08x] [OWNER = %08x]")), obj->_id, obj->_owner_id);
+	LogInstance.WriteLog("[DEBUG] [INSERT OWNER] [NEW] [ID = %08x] [OWNER = %08x]", obj->_id, obj->_owner_id);
 #endif
 
 	_ownerInfo.push_back(obj);
@@ -343,7 +343,7 @@ VOID SWDamageMeter::InsertDB(UINT32 id, UINT32 db2) {
 	for (; itr != _dbInfo.end(); itr++) {
 		if ((*itr)->_id == id) {
 #if DEBUG_DAMAGEMETER_DB == 1
-			LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [INSERT DB] [MODIFY] [ID = %08x] [DB1 = %d] [DB2 = %d]")), id, GetWorldID(), db2);
+			LogInstance.WriteLog("[DEBUG] [INSERT DB] [MODIFY] [ID = %08x] [DB1 = %d] [DB2 = %d]", id, GetWorldID(), db2);
 #endif
 			(*itr)->_db2 = db2;
 			return;
@@ -355,7 +355,7 @@ VOID SWDamageMeter::InsertDB(UINT32 id, UINT32 db2) {
 	db->_db2 = db2;
 
 #if DEBUG_DAMAGEMETER_DB == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [INSERT DB] [NEW] [ID = %08x] [DB1 = %d] [DB2 = %d]")), db->_id, db->_db1, db->_db2);
+	LogInstance.WriteLog("[DEBUG] [INSERT DB] [NEW] [ID = %08x] [DB1 = %d] [DB2 = %d]", db->_id, db->_db1, db->_db2);
 #endif
 
 	_dbInfo.push_back(db);
@@ -376,7 +376,7 @@ VOID SWDamageMeter::SetWorldID(USHORT worldID) {
 	_worldID = worldID;
 
 #if DEBUG_DAMAGEMETER_WORLD == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [Set World] [World ID = %d]")), _worldID);
+	LogInstance.WriteLog("[DEBUG] [Set World] [World ID = %d]", _worldID);
 #endif
 }
 UINT32 SWDamageMeter::GetPing()
@@ -439,7 +439,7 @@ VOID SWDamageMeter::SetMyID(UINT32 id) {
 	_myID = id;
 
 #if DEBUG_DAMAGEMETER_MYID == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [Set MyID] [My ID = %08x]")), _myID);
+	LogInstance.WriteLog("[DEBUG] [Set MyID] [My ID = %08x]", _myID);
 #endif
 }
 
