@@ -3,6 +3,7 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacketMonsterInfo.h"
 #include ".\Damage Meter\MySQLite.h"
+#include <sstream>
 SWPacketMonsterInfo::SWPacketMonsterInfo(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
@@ -26,16 +27,25 @@ VOID SWPacketMonsterInfo::Do() {
 	for (size_t i = 0; i < monsterAmount; i++)
 	{
 		SWPACKETMONSTERINFO* obj_create = (SWPACKETMONSTERINFO*)(_data + sizeof(SWHEADER) + offset);
-		//LogInstance.WriteLog("Monster id: %u realid: %u owner: %X\n",obj_create->_id,obj_create->_realDB2,obj_create->_owner_id);
 		offset += sizeof(SWPACKETMONSTERINFO);
+		std::stringstream ss;
 		for (size_t ii = 0; ii < obj_create->statamount; ii++)
 		{
 			unsigned char statid = *(unsigned char*)(_data+sizeof(SWHEADER) + offset);
 			offset += 1;
 			float statvalue = *(float*)(_data +sizeof(SWHEADER) + offset);
 			offset += 4;
+			ss << SWDB.GetStatName(statid) << ": "<<statvalue<<"\n";
 		}
-		offset += 21;
+		if (DAMAGEMETER.shouldLogMstrStats) {
+			char name[256] = { 0 };
+			SWDB.GetMonsterName(obj_create->_realDB2, &name[0], 255);
+			LogInstance.WriteLog("Name: %s Monster id: %u realid: %u owner: %X\nStats:\n", name, obj_create->_id, obj_create->_realDB2, obj_create->_owner_id);
+			LogInstance.WriteLog("%s", ss.str().c_str());
+		}
+		offset += 20;
+		uint8_t unknownDataCount = *(uint8_t*)(_data+sizeof(SWHEADER)+ offset);
+		offset += unknownDataCount * 14;
 		DAMAGEMETER.InsertOwnerID(obj_create->_id, obj_create->_owner_id);
 		DAMAGEMETER.InsertDB(obj_create->_id, obj_create->_realDB2);
 	}

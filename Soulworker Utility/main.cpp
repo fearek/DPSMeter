@@ -22,6 +22,8 @@ void getconfig(CSimpleIniA& ini, int sec)
 		}
 		long language = ini.GetLongValue("Meter", "Language", 0);
 		Language.SetLanguage(LANGUAGE(language));
+		bool shouldLogMonsterStats = ini.GetBoolValue("Meter","LogMonsterStats",true);
+		DAMAGEMETER.shouldLogMstrStats = shouldLogMonsterStats;
 		return;
 	}
 }
@@ -33,6 +35,7 @@ bool createconfig()
 	ini.SetBoolValue("Loader", "OpenMeterOnInjection", true);
 	ini.SetLongValue("Meter", "Language", 0);
 	ini.SetBoolValue("Meter", "LogFile", false);
+	ini.SetBoolValue("Meter", "LogMonsterStats",true);
 	SI_Error rc = ini.SaveFile("meterconfig.ini");
 	if (rc < 0) {
 		MessageBoxA(NULL,"Something is wrong with your system, cant make config file.","ERROR", MB_OK | MB_ICONERROR);

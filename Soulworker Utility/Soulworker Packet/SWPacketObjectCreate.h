@@ -6,7 +6,7 @@
 
 typedef struct _SWPACKETOBJECTCREATE {
 	BYTE _unknown01;
-	UINT32 _id;
+	/*UINT32 _id;
 	FLOAT _locationX;
 	FLOAT _locationY;
 	FLOAT _locationZ;
@@ -25,7 +25,24 @@ typedef struct _SWPACKETOBJECTCREATE {
 	UINT32 _realDB2;
 	UINT32 _owner_id;
 	BYTE _unknown03[54];
-	UINT32 _db2;
+	UINT32 _db2;*/
+	unsigned int _id;
+	float _locationX;
+	float _locationY;
+	float _locationZ;
+	float _unknownFloat1;
+	float _unknownFloat2;
+	float _unknownFloat3;
+	unsigned char _unknown02[17];
+	unsigned int _realDB2;
+	unsigned int _owner_id;
+	unsigned int spawnBoxID;
+	unsigned int motionClass;
+	unsigned char battlePos;
+	float curSuperArmor;
+	float maxSuperArmor;
+	char bullshit[8];
+	unsigned char statamount; //thats not all, the rest of the struct is read in cpp file
 }SWPACKETOBJECTCREATE;
 
 #pragma pack(pop)

@@ -49,7 +49,9 @@ static std::unordered_set<UINT32> endIdList({
 	31309151, // 루나폴 - 정크 퀸
 	31301003, // 바썬 - 플레마 3페
 	31310102, // 브세노말 - 테네브리스 2페
-	31310107 // BS Hard Phase 2
+	31310107, // BS Hard Phase 2
+	32308101, //raphakumba HH
+	32301001, //flemma solo
 	});
 
 class SWPacketDamage : public SWPacket {

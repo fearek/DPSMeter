@@ -1,7 +1,7 @@
 #include "pch.h"
 #include ".\Language\Region.h"
 #include ".\Damage Meter\MySQLite.h"
-
+#include <map>
 MySQL::MySQL() : _db(nullptr), _memdb(nullptr) {
 
 }
@@ -330,5 +330,65 @@ BOOL MySQL::GetBuffName(UINT32 buffId, CHAR* out_buffer, SIZE_T out_buffer_lengt
 	}
 
 	return TRUE;
+}
+std::map<unsigned int,std::string> stats =
+{
+	{1, "CURRENT_HEALTH" },
+	{2, "CURRENT_SG" },
+	{3,"CURRENT_STAMINA"},
+	{10,"HEALTH"},
+	{12,"STAMINA_PERCENT"},
+	{14,"STAMINA_MAX"},
+	{15,"STAMINA_REGEN"},
+	{16,"CURRENT_SOULVAPOR"},
+	{18,"MOVE_SPEED"},
+	{19,"ATTACK_SPEED"},
+	{20,"ATTACK_MIN"},
+	{21,"ATTACK_MAX"},
+	{24,"DEFENCE"},
+	{26,"ACCUARCY"},
+	{29,"CRIT_CHANCE"},
+	{31,"CRIT_RESIST"},
+	{35,"CRIT_DAMAGE"},
+	{38,"DAMAGE_REDUCTION"},
+	{43,"EVASION"},
+	{49,"FIRE_RESISTANCE"},
+	{50,"POISEN_RESISTANCE"},
+	{51,"ELECTRIC_RESISTANCE"},
+	{52,"BLEED_RESISTANCE"},
+	{53,"STUN_RESISTANCE"},
+	{54,"PARALYSIS_RESISTANCE"},
+	{55,"SLEEP_RESISTANCE"},
+	{56,"FROZEN_RESISTANCE"},
+	{57,"SILENCE_RESISTANCE"},
+	{58,"VULN_RESISTANCE"},
+	{59,"FASCINATION_RESISTANCE"},
+	{60,"CONFUSED_RESISTANCE"},
+	{63,"LIGHT_DAMAGE"},
+	{64,"SPITE_DAMAGE"},
+	{65,"GRACE_DAMAGE"},
+	{66,"HATRED_DAMAGE"},
+	{67,"CURE_DAMAGE"},
+	{68,"TORMENT_DAMAGE"},
+	{69,"LIGHT_RESISTANCE"},
+	{70,"SPITE_RESISTANCE"},
+	{71,"GRACE_RESISTANCE"},
+	{72,"HATRED_RESISTANCE"},
+	{73,"CURE_RESISTANCE"},
+	{74,"TORMENT_RESISTANCE"},
+	{75,"MANIAC_DAMAGE"},
+	{76,"MANIAC_BALANCE"},
+	{255,"IF_VICTORY_HP_REGEN"}
+};
+std::string MySQL::GetStatName(unsigned int statid)
+{
+	if (stats.find(statid) == stats.end())
+	{
+		return std::to_string(statid);
+	}
+	else
+	{
+		return stats.at(statid);
+	}
 }
 

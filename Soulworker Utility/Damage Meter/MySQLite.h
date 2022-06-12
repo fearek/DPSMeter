@@ -37,4 +37,5 @@ public:
 	BOOL GetMonsterName(UINT32 DB2, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length);
 	BOOL GetMapName(UINT32 mapId, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length);
 	BOOL GetBuffName(UINT32 buffId, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length);
+	std::string GetStatName(unsigned int statid);
 };
