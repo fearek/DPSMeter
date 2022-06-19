@@ -125,7 +125,7 @@ public:
 			if (DAMAGEMETER.isRun()) {
 				UINT64 time = DAMAGEMETER.GetTime();
 				FLOAT correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
-				_avgABSum += (time - _avgABPreviousTime) * correctedAB;
+				_avgABSum += static_cast<UINT64>((time - _avgABPreviousTime) * correctedAB);
 				_avgABPreviousTime = time;
 			}
 			_armorBreak = statValue;
@@ -156,7 +156,7 @@ public:
 		UINT64 currentTime = DAMAGEMETER.GetTime();
 
 		FLOAT correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
-		_avgABSum += (currentTime - _avgABPreviousTime) * correctedAB;
+		_avgABSum += static_cast<UINT64>((currentTime - _avgABPreviousTime) * correctedAB);
 		_avgABPreviousTime = currentTime;
 
 
@@ -174,7 +174,7 @@ public:
 				UINT64 avgTimeDifference = currentTime - _avgABPreviousTime;
 				DOUBLE currentAB = GetStat(StatType::ArmorBreak);
 				currentAB = currentAB > 100.0 ? 100.0 : currentAB; // 방관 100 초과시 100으로 설정
-				UINT64 calculatedAvgAB = (_avgABSum + avgTimeDifference * currentAB);
+				UINT64 calculatedAvgAB = static_cast<UINT64>((_avgABSum + avgTimeDifference * currentAB));
 				(*player)->SetHistoryAvgAB((DOUBLE)calculatedAvgAB / currentTime);
 
 				// Need to add ongoing effect to sum before save it to history
