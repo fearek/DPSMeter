@@ -599,7 +599,7 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 				UINT64 timeDifference = (milliTableTime - playerMetaData->_avgABPreviousTime);
 				DOUBLE currentAB = playerMetaData->GetStat(StatType::ArmorBreak);
 				currentAB = currentAB > 100.0 ? 100.0 : currentAB; // 방관 100 초과시 100으로 설정
-				UINT64 calculatedAvgAB = (playerMetaData->_avgABSum + timeDifference * currentAB);
+				UINT64 calculatedAvgAB = static_cast<UINT64>((playerMetaData->_avgABSum + timeDifference * currentAB));
 
 				savedResult = (DOUBLE)calculatedAvgAB / milliTableTime;
 				sprintf_s(label, 128, "%.1f", savedResult);
