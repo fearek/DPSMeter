@@ -105,6 +105,7 @@ public:
 	}
 
 	VOID UpdateStat(USHORT statType, FLOAT statValue) {
+		LogInstance.WriteLog("StatType: %d statValue: %f",statType,statValue);
 		switch (statType) {
 		case StatType::SG:
 			_sg = statValue;
