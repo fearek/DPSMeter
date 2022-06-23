@@ -23,7 +23,29 @@ typedef struct _SWPACKETMONSTERINFO {
 	char bullshit[8];
 	unsigned char statamount; //thats not all, the rest of the struct is read in cpp file
 }SWPACKETMONSTERINFO;
+typedef struct _SWPACKETSTATINFO {
 
+	BYTE type;
+	FLOAT val;
+
+}SWPACKETMONSTERSTATINFO;
+typedef struct _SWPACKETMONSTERINFOFOOTER {
+
+	ULONG64 unk01;
+	ULONG64 unk02;
+	FLOAT unk03;
+	BYTE unknownCount;
+
+}SWPACKETMONSTERINFOFOOTER;
+typedef struct _SWPACKETMONSTERINFOUNKNOWN {
+
+	UINT32 unk01;
+	FLOAT unk02;
+	BYTE unk03;
+	UINT32 unk04;
+	BYTE unk05;
+
+}SWPACKETMONSTERINFOUNKNOWN;
 #pragma pack(pop)
 
 class SWPacketMonsterInfo : public SWPacket {

@@ -228,17 +228,35 @@ BOOL MySQL::GetSkillName(UINT32 skillId, CHAR* out_buffer, SIZE_T out_buffer_len
 	sqlite3_reset(_skill_stmt);
 
 	sqlite3_bind_int(_skill_stmt, 1, skillId);
-	INT step = sqlite3_step(_skill_stmt);
-
+	INT step;
+	do {
+		step = sqlite3_step(_skill_stmt);
+	} while(step == SQLITE_BUSY || step == SQLITE_LOCKED);
+	if (step == SQLITE_DONE)
+	{
+		strncpy(out_buffer, "FailToGetName", out_buffer_length - 2);
+		out_buffer[out_buffer_length - 1] = 0x00;
+		return FALSE;
+	}
 	if (step == SQLITE_ROW) {
 		const CHAR* result = (const CHAR*)sqlite3_column_text(_skill_stmt, 0);
 
-		if (result == nullptr || strlen(result) > out_buffer_length)
+		if (result == nullptr)
+		{
+			strncpy(out_buffer, "FailToGetName", out_buffer_length - 2);
+			out_buffer[out_buffer_length - 1] = 0x00;
 			return FALSE;
+		}
+		if (strlen(result) > out_buffer_length)
+		{
+			strncpy(out_buffer, result, out_buffer_length - 2);
+			out_buffer[out_buffer_length - 1] = 0x00;
+			return FALSE;
+		}
 
 		strcpy_s(out_buffer, out_buffer_length, result);
 	}
-
+	
 	return TRUE;
 }
 
@@ -257,15 +275,31 @@ BOOL MySQL::GetMonsterName(UINT32 DB2, CHAR* out_buffer, SIZE_T out_buffer_lengt
 	sqlite3_reset(_monster_stmt);
 
 	sqlite3_bind_int(_monster_stmt, 1, DB2);
-
-	INT step = sqlite3_step(_monster_stmt);
-
+	INT step;
+	do {
+		step = sqlite3_step(_monster_stmt);
+	} while(step == SQLITE_BUSY || step == SQLITE_LOCKED);
+	if (step == SQLITE_DONE)
+	{
+		strncpy(out_buffer, "FailToGetName", out_buffer_length - 2);
+		out_buffer[out_buffer_length - 1] = 0x00;
+		return FALSE;
+	}
 	if (step == SQLITE_ROW) {
 		const CHAR* result = (const CHAR*)sqlite3_column_text(_monster_stmt, 0);
 
-		if (result == nullptr || strlen(result) > out_buffer_length)
+		if (result == nullptr)
+		{
+			strncpy(out_buffer,"FailToGetName",out_buffer_length-2);
+			out_buffer[out_buffer_length-1] = 0x00;
 			return FALSE;
-
+		}
+		if (strlen(result) > out_buffer_length)
+		{
+			strncpy(out_buffer,result,out_buffer_length-2);
+			out_buffer[out_buffer_length-1] = 0x00;
+			return FALSE;
+		}
 		strcpy_s(out_buffer, out_buffer_length, result);
 	}
 
@@ -288,13 +322,25 @@ BOOL MySQL::GetMapName(UINT32 mapID, CHAR* out_buffer, SIZE_T out_buffer_length)
 
 	sqlite3_bind_int(_map_stmt, 1, mapID);
 
-	INT step = sqlite3_step(_map_stmt);
-
+	INT step;
+	do {
+		step = sqlite3_step(_map_stmt);
+	} while (step == SQLITE_BUSY || step == SQLITE_LOCKED);
 	if (step == SQLITE_ROW) {
 		const CHAR* result = (const CHAR*)sqlite3_column_text(_map_stmt, 0);
 
-		if (result == nullptr || strlen(result) > out_buffer_length)
+		if (result == nullptr)
+		{
+			strncpy(out_buffer, "FailToGetName", out_buffer_length - 2);
+			out_buffer[out_buffer_length - 1] = 0x00;
 			return FALSE;
+		}
+		if (strlen(result) > out_buffer_length)
+		{
+			strncpy(out_buffer, result, out_buffer_length - 2);
+			out_buffer[out_buffer_length - 1] = 0x00;
+			return FALSE;
+		}
 
 		strcpy_s(out_buffer, out_buffer_length, result);
 	}
@@ -318,13 +364,25 @@ BOOL MySQL::GetBuffName(UINT32 buffId, CHAR* out_buffer, SIZE_T out_buffer_lengt
 
 	sqlite3_bind_int(_buff_stmt, 1, buffId);
 
-	INT step = sqlite3_step(_buff_stmt);
-
+	INT step;
+	do {
+		step = sqlite3_step(_buff_stmt);
+	} while (step == SQLITE_BUSY || step == SQLITE_LOCKED);
 	if (step == SQLITE_ROW) {
 		const CHAR* result = (const CHAR*)sqlite3_column_text(_buff_stmt, 0);
 
-		if (result == nullptr || strlen(result) > out_buffer_length)
+		if (result == nullptr)
+		{
+			strncpy(out_buffer, "FailToGetName", out_buffer_length - 2);
+			out_buffer[out_buffer_length - 1] = 0x00;
 			return FALSE;
+		}
+		if (strlen(result) > out_buffer_length)
+		{
+			strncpy(out_buffer, result, out_buffer_length - 2);
+			out_buffer[out_buffer_length - 1] = 0x00;
+			return FALSE;
+		}
 
 		strcpy_s(out_buffer, out_buffer_length, result);
 	}

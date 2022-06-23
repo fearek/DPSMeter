@@ -31,23 +31,33 @@ VOID SWPacketMonsterInfo::Do() {
 		std::stringstream ss;
 		for (size_t ii = 0; ii < obj_create->statamount; ii++)
 		{
-			unsigned char statid = *(unsigned char*)(_data+sizeof(SWHEADER) + offset);
-			offset += 1;
-			float statvalue = *(float*)(_data +sizeof(SWHEADER) + offset);
-			offset += 4;
-			ss << SWDB.GetStatName(statid) << ": "<<statvalue<<"\n";
+			SWPACKETMONSTERSTATINFO* stat = (SWPACKETMONSTERSTATINFO*)(_data+sizeof(SWHEADER)+offset);
+			offset += sizeof(SWPACKETMONSTERSTATINFO);
+			if (DAMAGEMETER.shouldLogMstrStats) {
+				ss << SWDB.GetStatName(stat->type) << ": " << stat->val << "\n";
+			}
 		}
+		SWPACKETMONSTERINFOFOOTER* footer = (SWPACKETMONSTERINFOFOOTER*)(_data+sizeof(SWHEADER)+offset);
+		offset += sizeof(SWPACKETMONSTERINFOFOOTER);
+		if (DAMAGEMETER.shouldLogMstrStats) {
+			ss << "Unknown:\n";
+		}
+		for (size_t ii = 0; ii < footer->unknownCount; ii++)
+		{
+			SWPACKETMONSTERINFOUNKNOWN* unknown = (SWPACKETMONSTERINFOUNKNOWN*)(_data+sizeof(SWHEADER)+offset);
+			offset += sizeof(SWPACKETMONSTERINFOUNKNOWN);
+			if (DAMAGEMETER.shouldLogMstrStats) {
+				ss << ii << ": [" << unknown->unk01 << "," << unknown->unk02 << "," << unknown->unk03 << "," << unknown->unk04 << "," << unknown->unk05 << "]\n";
+			}
+		}
+		DAMAGEMETER.InsertOwnerID(obj_create->_id, obj_create->_owner_id);
+		DAMAGEMETER.InsertDB(obj_create->_id, obj_create->_realDB2);
 		if (DAMAGEMETER.shouldLogMstrStats) {
 			char name[256] = { 0 };
 			SWDB.GetMonsterName(obj_create->_realDB2, &name[0], 255);
 			LogInstance.WriteLog("Name: %s Monster id: %u realid: %u owner: %X\nStats:\n", name, obj_create->_id, obj_create->_realDB2, obj_create->_owner_id);
 			LogInstance.WriteLog("%s", ss.str().c_str());
 		}
-		offset += 20;
-		uint8_t unknownDataCount = *(uint8_t*)(_data+sizeof(SWHEADER)+ offset);
-		offset += unknownDataCount * 14;
-		DAMAGEMETER.InsertOwnerID(obj_create->_id, obj_create->_owner_id);
-		DAMAGEMETER.InsertDB(obj_create->_id, obj_create->_realDB2);
 	}
 }
 
