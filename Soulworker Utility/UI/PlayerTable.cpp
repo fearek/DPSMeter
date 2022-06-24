@@ -583,8 +583,7 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 		// average armor break
 		static DOUBLE savedResultAB = 0;
 
-	//	if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
-		if(_tableTime == 0) {
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
 			sprintf_s(label, 128, "-");
 		}
 
