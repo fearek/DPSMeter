@@ -73,6 +73,7 @@ private:
 	USHORT _deathCounts = 0;
 
 	DOUBLE _historyAvgAB = 0.0;
+	DOUBLE _historyAvgBD = 0.0;
 
 	DOUBLE _historygear90 = 0.0;
 	DOUBLE _historygear50 = 0.0;
@@ -127,6 +128,9 @@ public:
 
 	VOID SetHistoryAvgAB(DOUBLE historyAvgAB);
 	DOUBLE GetHistoryAvgAB();
+
+	VOID SWDamagePlayer::SetHistoryAvgBD(DOUBLE historyAvgBD);
+	DOUBLE GetHistoryAvgBD();
 
 	VOID setHistoryBS(int type, DOUBLE value);
 	DOUBLE GetHistoryBS(int type);

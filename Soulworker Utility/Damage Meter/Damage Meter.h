@@ -71,12 +71,23 @@ private:
 	FLOAT _currentHP = 0.0;
 	FLOAT _maxAttack = 0.0;
 	FLOAT _critDamage = 0.0;
+	FLOAT _cooldownreduction = 0.0;
+	FLOAT _pvpdamage = 0.0;
+	FLOAT _pvpdamagereduction = 0.0;
+	FLOAT _damagenormal = 0.0;
+	FLOAT _damageboss = 0.0;
+	FLOAT _damagenormalreduction = 0.0;
+	FLOAT _damagebossreduction = 0.0;
+	FLOAT _sgcostreduction = 0.0;
+	FLOAT _superarmorbreak = 0.0;
 public:
 	UINT32 _id = 0;
 	CHAR _name[MAX_NAME_LEN];
 	BYTE _job = 0;
 	UINT64 _avgABSum = 0;
 	UINT64 _avgABPreviousTime = 0;
+	UINT64 _avgBDSum = 0;
+	UINT64 _avgBDPreviousTime = 0;
 
 	BOOL _gear90EffectStarted = false;
 	UINT64 _gear90Sum = 0;
@@ -102,10 +113,11 @@ public:
 		_job = 0;
 		_avgABSum = 0;
 		_avgABPreviousTime = 0;
+		_avgBDSum = 0;
+		_avgBDPreviousTime = 0;
 	}
 
 	VOID UpdateStat(USHORT statType, FLOAT statValue) {
-		LogInstance.WriteLog("StatType: %d statValue: %f",statType,statValue);
 		switch (statType) {
 		case StatType::SG:
 			_sg = statValue;
@@ -123,13 +135,13 @@ public:
 			_partialDamage = statValue;
 			break;
 		case StatType::ArmorBreak:
+			_armorBreak = statValue;
 			if (DAMAGEMETER.isRun()) {
 				UINT64 time = DAMAGEMETER.GetTime();
 				FLOAT correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
 				_avgABSum += static_cast<UINT64>((time - _avgABPreviousTime) * correctedAB);
 				_avgABPreviousTime = time;
 			}
-			_armorBreak = statValue;
 			break;
 		case StatType::CurrentHP:
 			if (_currentHP > 0.0 && _currentHP > statValue) {
@@ -153,13 +165,71 @@ public:
 			break;
 		}
 	}
+	VOID UpdateSpecialStat(USHORT statType, FLOAT statValue) {
+		switch (statType) {
+		case SpecialStatType::CooldownReduction:
+			{
+				_cooldownreduction = statValue;
+				break;
+			}
+		case SpecialStatType::PVPDamage:
+			{
+				_pvpdamage = statValue;
+				break;
+			}
+		case SpecialStatType::PVPDamageReduction:
+			{
+				_pvpdamagereduction = statValue;
+				break;
+			}
+		case SpecialStatType::DamageNormal:
+		{
+			_damagenormal = statValue;
+			break;
+		}
+		case SpecialStatType::DamageBoss:
+		{
+			_damageboss = statValue;
+			if (DAMAGEMETER.isRun()) {
+				UINT64 time = DAMAGEMETER.GetTime();
+				_avgBDSum += static_cast<UINT64>((time - _avgBDPreviousTime) * _damageboss);
+				_avgBDPreviousTime = time;
+			}
+			break;
+		}
+		case SpecialStatType::DamageNormalReduction:
+		{
+			_damagenormalreduction = statValue;
+			break;
+		}
+		case SpecialStatType::DamageBossReduction:
+		{
+			_damagebossreduction = statValue;
+			break;
+		}
+		case SpecialStatType::SGCostReduction:
+		{
+			_sgcostreduction = statValue;
+			break;
+		}
+		case SpecialStatType::SuperArmorBreak:
+		{
+			_superarmorbreak = statValue;
+			break;
+		}
+		//left out expgain, dzgain,svgain because why someone would need it
+		default:
+			break;
+		}
+	}
 	VOID MeterSuspended() {
 		UINT64 currentTime = DAMAGEMETER.GetTime();
 
 		FLOAT correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
 		_avgABSum += static_cast<UINT64>((currentTime - _avgABPreviousTime) * correctedAB);
 		_avgABPreviousTime = currentTime;
-
+		_avgBDSum += static_cast<UINT64>((currentTime - _avgBDPreviousTime) * _damageboss);
+		_avgBDPreviousTime = currentTime;
 
 	}
 	VOID MeterReseted() {
@@ -172,12 +242,15 @@ public:
 				// 평균방관 저장
 				UINT64 currentTime = DAMAGEMETER.GetTime();
 
-				UINT64 avgTimeDifference = currentTime - _avgABPreviousTime;
+				UINT64 avgTimeDifferenceAB = currentTime - _avgABPreviousTime;
+				UINT64 avgTimeDifferenceBD = currentTime - _avgBDPreviousTime;
 				DOUBLE currentAB = GetStat(StatType::ArmorBreak);
+				DOUBLE currentBD = GetSpecialStat(SpecialStatType::DamageBoss);
 				currentAB = currentAB > 100.0 ? 100.0 : currentAB; // 방관 100 초과시 100으로 설정
-				UINT64 calculatedAvgAB = static_cast<UINT64>((_avgABSum + avgTimeDifference * currentAB));
+				UINT64 calculatedAvgAB = static_cast<UINT64>((_avgABSum + avgTimeDifferenceAB * currentAB));
+				UINT64 calculatedAvgBD = static_cast<UINT64>((_avgBDSum + avgTimeDifferenceBD * currentBD));
 				(*player)->SetHistoryAvgAB((DOUBLE)calculatedAvgAB / currentTime);
-
+				(*player)->SetHistoryAvgBD((DOUBLE)calculatedAvgBD / currentTime);
 				// Need to add ongoing effect to sum before save it to history
 				// Add ongoing BS 3 Gear Set Effect
 				if (_gear90EffectStarted) {
@@ -226,6 +299,9 @@ public:
 
 		_avgABSum = 0;
 		_avgABPreviousTime = 0;
+
+		_avgBDSum = 0;
+		_avgBDPreviousTime = 0;
 
 		_gear90EffectStarted = false;
 		_gear90Sum = 0;
@@ -451,6 +527,48 @@ public:
 
 		return -1;
 	}
+	FLOAT GetSpecialStat(USHORT statType) {
+		switch (statType) {
+			case SpecialStatType::CooldownReduction:
+			{
+				return _cooldownreduction;
+			}
+			case SpecialStatType::PVPDamage:
+			{
+				return _pvpdamage;
+			}
+			case SpecialStatType::PVPDamageReduction:
+			{
+				return _pvpdamagereduction;
+			}
+			case SpecialStatType::DamageNormal:
+			{
+				return _damagenormal;
+			}
+			case SpecialStatType::DamageBoss:
+			{
+				return _damageboss;
+			}
+			case SpecialStatType::DamageNormalReduction:
+			{
+				return _damagenormalreduction;
+			}
+			case SpecialStatType::DamageBossReduction:
+			{
+				return _damagebossreduction;
+			}
+			case SpecialStatType::SGCostReduction:
+			{
+				return _sgcostreduction;
+			}
+			case SpecialStatType::SuperArmorBreak:
+			{
+				return _superarmorbreak;
+			}
+
+		}
+		return -1;
+	}
 
 }SW_PLAYER_METADATA;
 private:
@@ -517,6 +635,7 @@ public:
 	BYTE GetPlayerJob(UINT32 id);
 
 	VOID UpdateStat(UINT32 id, USHORT statType, FLOAT statValue);
+	VOID UpdateSpecialStat(UINT32 id, USHORT statType, FLOAT statValue);
 
 	VOID SetMyID(UINT32 id);
 

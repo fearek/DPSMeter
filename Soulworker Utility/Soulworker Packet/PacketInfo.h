@@ -57,6 +57,20 @@ enum StatType {
 	// 0x45 ~ 0x4A : soulstone resist
 
 };
+enum SpecialStatType {
+	CooldownReduction = 0,
+	PVPDamage = 1,
+	PVPDamageReduction = 2,
+	DamageNormal = 3,
+	DamageBoss = 4,
+	DamageNormalReduction = 9,
+	DamageBossReduction = 10,
+	SGCostReduction = 14,
+	EXPGain = 15,
+	DZGain = 16,
+	SVGain = 17,
+	SuperArmorBreak = 31
+};
 #pragma pack(push, 1)
 typedef struct _SWPACKETDAMAGE_DAMAGETYPE {
 	unsigned int MISS : 1; // 감나빗 0x01

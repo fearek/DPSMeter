@@ -64,6 +64,10 @@ VOID SWPacketMaker::CreateSWPacket(std::vector<unsigned char>& packet) {
 			//	break;
 
 				/*0x03*/
+			case OPcode::SPECIALSTATCHANGE:
+				swpacket = new SWPacketSpecialStatChange(swheader,data);
+				break;
+
 			case OPcode::STATCHANGE:
 				swpacket = new SWPacketStatChange(swheader, data);
 				break;

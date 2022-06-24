@@ -41,6 +41,7 @@ DICTIONARY_t Language =
     {STR_TABLE_SOULSTONE_PROC, {{KOREAN, u8"돌확률%"}, {ENGLISH, u8"Stone Proc"}, {CHINESE, u8"重設排序"}, {JAPANESE, u8"Reset order"}}},
     {STR_TABLE_SOULSTONE_DAMAGE, {{KOREAN, u8"돌데미지%"}, {ENGLISH, u8"Stone DMG"}, {CHINESE,u8"靈魂石傷(%)"}, {JAPANESE, u8"Stone DMG"}}},
     {STR_TABLE_AVERAGE_AB, {{KOREAN, u8"평균방관"}, {ENGLISH, u8"Avg.AB"}, {CHINESE, u8"均貫"}, {JAPANESE, u8"平均貫通"}}},
+    {STR_TABLE_AVERAGE_BD, {{KOREAN, u8"평균 BD"}, {ENGLISH, u8"Avg.BD"}, {CHINESE, u8"Avg.BD"}, {JAPANESE, u8"Avg.BD"}}},
     {STR_TABLE_MiSS, {{KOREAN, u8"Miss"}, {ENGLISH, u8"Miss"}, {CHINESE, u8"Miss"}, {JAPANESE, u8"Miss"}}},
     {STR_TABLE_MISS_RATE, {{KOREAN, u8"Miss%"}, {ENGLISH, u8"Miss%"}, {CHINESE, u8"Miss%"}, {JAPANESE, u8"Miss%"}}},
     {STR_TABLE_PARTIAL, {{KOREAN, u8"Partial"}, {ENGLISH, u8"Partial"}, {CHINESE, u8"失敗傷"}, {JAPANESE, u8"Miss時ダメージ%"}}},

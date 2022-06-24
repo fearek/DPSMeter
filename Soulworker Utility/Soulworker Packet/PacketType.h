@@ -5,6 +5,7 @@
 
 /* 0x03 */
 #include ".\Soulworker Packet\SWPacketStatChange.h"
+#include ".\Soulworker Packet\SWPacketSpecialStatChange.h"
 #include ".\Soulworker Packet\SWPacketDead.h"
 /* 0x04 */
 #include ".\Soulworker Packet\SWPacketWorldChange.h"
@@ -65,7 +66,7 @@
 
 enum OPcode {
 	HEARTBEAT = 0x0106,
-
+	SPECIALSTATCHANGE = 0x0347,
 	STATCHANGE = 0x0334,
 	DEAD = 0x0341,
 

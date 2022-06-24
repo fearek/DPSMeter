@@ -229,7 +229,7 @@ VOID PlayerTable::SetupTable() {
 	ImGuiTableFlags tableFlags = ImGuiTableFlags_None;
 	tableFlags |= (ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Resizable);
 
-	if (ImGui::BeginTable("###Player Table", 36, tableFlags)) {
+	if (ImGui::BeginTable("###Player Table", 37, tableFlags)) {
 
 		ImGuiTableColumnFlags columnFlags = ImGuiTableColumnFlags_None;
 		columnFlags |= ImGuiTableColumnFlags_NoSort;
@@ -256,6 +256,7 @@ VOID PlayerTable::SetupTable() {
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_SOULSTONE_PROC).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_SOULSTONE_DAMAGE).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_AVERAGE_AB).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_AVERAGE_BD).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_MiSS).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_MISS_RATE).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_PARTIAL).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
@@ -579,21 +580,22 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 		ImGui::Text(label);
 		ImGui::TableNextColumn();
 
-		// 평균방관
-		static DOUBLE savedResult = 0;
+		// average armor break
+		static DOUBLE savedResultAB = 0;
 
-		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
+	//	if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
+		if(_tableTime == 0) {
 			sprintf_s(label, 128, "-");
 		}
 
 		else if (DAMAGEMETER.isHistoryMode()) {
-			savedResult = (*itr)->GetHistoryAvgAB();
-			sprintf_s(label, 128, "%.1f", savedResult);
+			savedResultAB = (*itr)->GetHistoryAvgAB();
+			sprintf_s(label, 128, "%.1f", savedResultAB);
 		}
 		else {
 
 			if ((INT64)(milliTableTime - playerMetaData->_avgABPreviousTime) < 0) {
-				sprintf_s(label, 128, "%.1f", savedResult);
+				sprintf_s(label, 128, "%.1f", savedResultAB);
 			}
 			else {
 				UINT64 timeDifference = (milliTableTime - playerMetaData->_avgABPreviousTime);
@@ -601,8 +603,37 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 				currentAB = currentAB > 100.0 ? 100.0 : currentAB; // 방관 100 초과시 100으로 설정
 				UINT64 calculatedAvgAB = static_cast<UINT64>((playerMetaData->_avgABSum + timeDifference * currentAB));
 
-				savedResult = (DOUBLE)calculatedAvgAB / milliTableTime;
-				sprintf_s(label, 128, "%.1f", savedResult);
+				savedResultAB = (DOUBLE)calculatedAvgAB / milliTableTime;
+				sprintf_s(label, 128, "%.1f", savedResultAB);
+			}
+		}
+
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+		//average boss damage
+		static DOUBLE savedResultBD = 0;
+
+		//	if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
+		if (_tableTime == 0) {
+			sprintf_s(label, 128, "-");
+		}
+
+		else if (DAMAGEMETER.isHistoryMode()) {
+			savedResultBD = (*itr)->GetHistoryAvgBD();
+			sprintf_s(label, 128, "%.1f", savedResultBD);
+		}
+		else {
+
+			if ((INT64)(milliTableTime - playerMetaData->_avgBDPreviousTime) < 0) {
+				sprintf_s(label, 128, "%.1f", savedResultBD);
+			}
+			else {
+				UINT64 timeDifference = (milliTableTime - playerMetaData->_avgBDPreviousTime);
+				DOUBLE currentBD = playerMetaData->GetSpecialStat(SpecialStatType::DamageBoss);
+				UINT64 calculatedAvgBD = static_cast<UINT64>((playerMetaData->_avgBDSum + timeDifference * currentBD));
+
+				savedResultBD = (DOUBLE)calculatedAvgBD / milliTableTime;
+				sprintf_s(label, 128, "%.1f", savedResultBD);
 			}
 		}
 

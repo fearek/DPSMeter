@@ -233,10 +233,17 @@ VOID SWDamagePlayer::SetHistoryAvgAB(DOUBLE historyAvgAB)
 {
 	_historyAvgAB = historyAvgAB;
 }
-
+VOID SWDamagePlayer::SetHistoryAvgBD(DOUBLE historyAvgBD)
+{
+	_historyAvgBD = historyAvgBD;
+}
 DOUBLE SWDamagePlayer::GetHistoryAvgAB()
 {
 	return _historyAvgAB;
+}
+DOUBLE SWDamagePlayer::GetHistoryAvgBD()
+{
+	return _historyAvgBD;
 }
 
 FLOAT SWDamagePlayer::GetEnlightenSum()

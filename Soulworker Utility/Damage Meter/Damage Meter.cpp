@@ -330,7 +330,28 @@ VOID SWDamageMeter::UpdateStat(UINT32 id, USHORT statType, FLOAT statValue)
 	metaData->UpdateStat(statType, statValue);
 	return;
 }
+VOID SWDamageMeter::UpdateSpecialStat(UINT32 id, USHORT statType, FLOAT statValue)
+{
+	//if (_historyMode) {
+	//	return;
+	//}
+	SW_PLAYER_METADATA* metaData;
 
+	auto search = _playerMetadata.find(id);
+	if (search == _playerMetadata.end()) {
+		metaData = new SW_PLAYER_METADATA;
+		metaData->_id = id;
+		strcpy_s(metaData->_name, MAX_NAME_LEN, Language.GetText(PLAYER_NAME_CANT_FIND).c_str());
+		metaData->_job = PLAYER_JOB_CANT_FIND;
+		_playerMetadata[id] = metaData;
+	}
+	else {
+		metaData = search->second;
+	}
+
+	metaData->UpdateSpecialStat(statType, statValue);
+	return;
+}
 
 VOID SWDamageMeter::Sort() {
 	sort(_playerInfo.begin(), _playerInfo.end(), SWDamagePlayer::SortFunction);
