@@ -229,7 +229,7 @@ VOID PlayerTable::SetupTable() {
 	ImGuiTableFlags tableFlags = ImGuiTableFlags_None;
 	tableFlags |= (ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Resizable);
 
-	if (ImGui::BeginTable("###Player Table", 37, tableFlags)) {
+	if (ImGui::BeginTable("###Player Table", 38, tableFlags)) {
 
 		ImGuiTableColumnFlags columnFlags = ImGuiTableColumnFlags_None;
 		columnFlags |= ImGuiTableColumnFlags_NoSort;
@@ -250,6 +250,7 @@ VOID PlayerTable::SetupTable() {
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_SOUL_GAUGE).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_ATTACK_SPEED).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_ARMOR_BREAK).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_BOSS_DAMAGE).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_STAMINA).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_SOUL_VAPOR).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_SOULSTONE_PERCENT).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
@@ -528,6 +529,12 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 			PLOTWINDOW.AddAbData(playerMetaData->GetStat(StatType::ArmorBreak), _tableTime);
 			ImGui::Text(label);
 			
+			ImGui::TableNextColumn();
+			//boss damage
+			sprintf_s(label, 128, "%.1f", playerMetaData->GetSpecialStat(SpecialStatType::DamageBoss));
+			PLOTWINDOW.AddBdData(playerMetaData->GetSpecialStat(SpecialStatType::DamageBoss), _tableTime);
+			ImGui::Text(label);
+
 			ImGui::TableNextColumn();
 			// stamina
 			sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::Stamina));

@@ -59,7 +59,16 @@ VOID PlotWindow::AddAbData(DOUBLE DPS, DOUBLE time)
 	_abList.push_back(DPS);
 	_abTimeList.push_back(time);
 }
+VOID PlotWindow::AddBdData(DOUBLE DPS, DOUBLE time)
+{
+	if (_bdLastTime == time) {
+		return;
+	}
+	_bdLastTime = time;
 
+	_bdList.push_back(DPS);
+	_bdTimeList.push_back(time);
+}
 VOID PlotWindow::AddJqData(BYTE stack, DOUBLE time)
 {
 	if (_jqLastTime == time) {
@@ -77,7 +86,12 @@ VOID PlotWindow::AddAnnonation(std::string content)
 	_annonYList.push_back(_abList.back());
 	_annonContentList.push_back(content);
 }
-
+VOID PlotWindow::AddAnnonationBD(std::string content)
+{
+	_annonXListBD.push_back(_bdTimeList.back());
+	_annonYListBD.push_back(_bdList.back());
+	_annonContentListBD.push_back(content);
+}
 VOID PlotWindow::OpenWindow()
 {
 	_isOpen = true;
@@ -93,6 +107,7 @@ VOID PlotWindow::Update()
 		{
 			UpdatePlotTab();
 			UpdateAbPlotTab();
+			UpdateBdPlotTab();
 			UpdateJqPlotTab();
 			UTILLWINDOW.Update();
 		}
@@ -193,7 +208,37 @@ VOID PlotWindow::UpdateAbPlotTab()
 		ImGui::EndTabItem();
 	}
 }
+VOID PlotWindow::UpdateBdPlotTab()
+{
+	if (ImGui::BeginTabItem(Language.GetText(STR_UTILWINDOW_BDGRAPH).c_str()))
+	{
+		UINT32 currentSize = _bdTimeList.size();
 
+		DOUBLE startX = 0.0;
+		DOUBLE endX = 5.0;
+		if (currentSize > 45) {
+			startX = _bdTimeList.at(currentSize - 45);
+		}
+		if (currentSize > 0) {
+			endX = _bdTimeList.back();
+		}
+
+		if (!_end) {
+			ImPlot::SetNextPlotLimitsX(startX, endX, ImGuiCond_Always);
+		}
+		ImPlot::SetNextPlotLimitsY(0.0, 100.0, ImGuiCond_Always);
+		if (ImPlot::BeginPlot(Language.GetText(STR_UTILWINDOW_BDGRAPH).c_str(), Language.GetText(STR_UTILWINDOW_BDGRAPH_TIME_SEC).c_str(), "ab", ImVec2(-1, 0), ImPlotFlags_AntiAliased, ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
+			ImPlot::PlotLine(u8"YOU", _bdTimeList.data(), _bdList.data(), _bdList.size());
+			auto itr = _annonXListBD.begin();
+			for (; itr != _annonXListBD.end(); itr++) {
+				int currentIndex = itr - _annonXList.begin();
+				ImPlot::Annotate(_annonXListBD.at(currentIndex), _annonYListBD.at(currentIndex), ImVec2(15, 15), ImVec4(0.30f, 0.30f, 0.30f, 0.84f), _annonContentListBD.at(currentIndex).c_str());
+			}
+			ImPlot::EndPlot();
+		}
+		ImGui::EndTabItem();
+	}
+}
 VOID PlotWindow::UpdateJqPlotTab()
 {
 	if (ImGui::BeginTabItem(Language.GetText(STR_UTILWINDOW_JQGRAPH).c_str()))
@@ -235,12 +280,14 @@ VOID PlotWindow::Clear()
 
 	_abList.clear();
 	_abTimeList.clear();
-
+	_bdList.clear();
+	_bdTimeList.clear();
 	_jqList.clear();
 	_jqTimeList.clear();
 
 	_lastTime = -1.0;
 	_abLastTime = -1.0;
+	_bdLastTime = -1.0;
 	_jqLastTime = -1.0;
 	// TODO : new로 생성한건 delete인가 해야됨
 }

@@ -35,6 +35,7 @@ DICTIONARY_t Language =
     {STR_TABLE_SOUL_GAUGE, {{KOREAN, u8"SG"}, {ENGLISH, u8"SG"}, {CHINESE, u8"SG"}, {JAPANESE, u8"SG"}}},
     {STR_TABLE_ATTACK_SPEED, {{KOREAN, u8"공속"}, {ENGLISH, u8"AS"}, {CHINESE,  u8"攻速"}, {JAPANESE, u8"攻撃速度"}}},
     {STR_TABLE_ARMOR_BREAK, {{KOREAN, u8"방관"}, {ENGLISH, u8"AB"}, {CHINESE, u8"貫穿"}, {JAPANESE, u8"貫通"}}},
+    {STR_TABLE_BOSS_DAMAGE, {{KOREAN, u8"BD"}, {ENGLISH, u8"BD"}, {CHINESE, u8"BD"}, {JAPANESE, u8"BD"}}},
     {STR_TABLE_STAMINA, {{KOREAN, u8"스태"}, {ENGLISH, u8"Stam"}, {CHINESE, u8"耐力"}, {JAPANESE, u8"スタミナ"}}},
     {STR_TABLE_SOUL_VAPOR, {{KOREAN, u8"SV"}, {ENGLISH, u8"SV"}, {CHINESE, u8"SV"}, {JAPANESE, u8"SV"}}},
     {STR_TABLE_SOULSTONE_PERCENT, {{KOREAN, u8"돌전체비중%"}, {ENGLISH, u8"Stone DMG Rate"}, {CHINESE, u8"靈魂石機率"}, {JAPANESE, u8"Stone Proc"}}},
@@ -116,6 +117,8 @@ DICTIONARY_t Language =
     {STR_UTILWINDOW_DPSGRAPH_TIME_SEC, {{KOREAN, u8"시간(초)"}, {ENGLISH, u8"Time(sec)"}, {CHINESE, u8"Time(sec)"}, {JAPANESE, u8"時間(秒)"}}},
     {STR_UTILWINDOW_ABGRAPH, {{KOREAN, u8"방관 그래프"}, {ENGLISH, u8"AB Graph"}, {CHINESE, u8"貫穿變化圖"}, {JAPANESE, u8"貫通 グラフ"}}},
     {STR_UTILWINDOW_ABGRAPH_TIME_SEC, {{KOREAN, u8"시간(초)"}, {ENGLISH, u8"Time(sec)"}, {CHINESE, u8"Time(sec)"}, {JAPANESE, u8"時間(秒)"}}},
+    { STR_UTILWINDOW_BDGRAPH, {{KOREAN, u8"BD Graph"}, {ENGLISH, u8"BD Graph"}, {CHINESE, u8"BD Graph"}, {JAPANESE, u8"BD Graph"}} },
+    { STR_UTILWINDOW_BDGRAPH_TIME_SEC, {{KOREAN, u8"시간(초)"}, {ENGLISH, u8"Time(sec)"}, {CHINESE, u8"Time(sec)"}, {JAPANESE, u8"時間(秒)"}} },
     {STR_UTILWINDOW_JQGRAPH, {{KOREAN, u8"정퀸 스택 그래프"}, {ENGLISH, u8"JQ Stack Graph"}, {CHINESE, u8"女王層數變化圖"}, {JAPANESE, u8"クイーン スタック グラフ"}}},
     {STR_UTILWINDOW_JQGRAOH_TIME_SEC, {{KOREAN, u8"시간(초)"}, {ENGLISH, u8"Time(sec)"}, {CHINESE,u8"Time(sec)"}, {JAPANESE, u8"時間(秒)"}}},
 

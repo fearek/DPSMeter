@@ -36,6 +36,10 @@ private:
 	std::vector<double> _abTimeList;
 	double _abLastTime = -1;
 
+	std::vector<double> _bdList;
+	std::vector<double> _bdTimeList;
+	double _bdLastTime = -1;
+
 	std::vector<double> _jqList;
 	std::vector<double> _jqTimeList;
 	double _jqLastTime = -1;
@@ -44,16 +48,23 @@ private:
 	std::vector<double> _annonYList;
 	std::vector<std::string> _annonContentList;
 
+	std::vector<double> _annonXListBD;
+	std::vector<double> _annonYListBD;
+	std::vector<std::string> _annonContentListBD;
+
 	bool _end = false;
 
 	VOID UpdatePlotTab();
 	VOID UpdateAbPlotTab();
 	VOID UpdateJqPlotTab();
+	VOID UpdateBdPlotTab();
 public:
 	VOID AddData(UINT32 id, std::string name, DOUBLE DPS, DOUBLE time, bool isFirstElement);
 	VOID AddAbData(DOUBLE DPS, DOUBLE time);
+	VOID AddBdData(DOUBLE DPS, DOUBLE time);
 	VOID AddJqData(BYTE stack, DOUBLE time);
-	VOID AddAnnonation(std::string content);
+	VOID AddAnnonation(std::string content); //armor break
+	VOID AddAnnonationBD(std::string content);
 	VOID OpenWindow();
 	VOID Update();
 	VOID End();
