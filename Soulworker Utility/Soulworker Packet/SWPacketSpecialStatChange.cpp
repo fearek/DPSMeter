@@ -19,10 +19,10 @@ VOID SWPacketSpecialStatChange::Do() {
 
 	BYTE* p_data;
 		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSPECIALSTATCHANGE_HEADER);
-		LogInstance.WriteLog("Stats count: %d",stat_header->_statsCount);
+		//LogInstance.WriteLog("Stats count: %d",stat_header->_statsCount);
 	for (int i = 0; i < stat_header->_statsCount; i++) {
 		SWPACKETSPECIALSTATCHANGE_DATA* stat_data = (SWPACKETSPECIALSTATCHANGE_DATA*)p_data;
-		LogInstance.WriteLog("[DEBUG] SPECIALSTAT[ID %08x] [statType = %x], [statValue = %f]\n", stat_header->_playerID, stat_data->_statType, stat_data->_statValue);
+		//LogInstance.WriteLog("[DEBUG] SPECIALSTAT[ID %08x] [statType = %x], [statValue = %f]\n", stat_header->_playerID, stat_data->_statType, stat_data->_statValue);
 		DAMAGEMETER.UpdateSpecialStat(stat_header->_playerID, stat_data->_statType, stat_data->_statValue);
 		p_data += sizeof(SWPACKETSPECIALSTATCHANGE_DATA);
 	}

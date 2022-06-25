@@ -100,7 +100,7 @@ VOID PlayerTable::Update() {
 		//and if 3 then do nothing basically so we display all to 999
 		std::string milisecondsstring = std::to_string(miliseconds);
 		//turning it into a string before so we dont display leading 0's so timer is more readable
-		sprintf_s(title, 128, "%s : %02d:%02d:%s [v1.2.9.5_%s] Ping: %d https://discord.com/invite/H7jZpcVJhq ###DamageMeter", DAMAGEMETER.GetWorldName(),(UINT)DAMAGEMETER.GetTime() / 60000, ((UINT)DAMAGEMETER.GetTime() / 1000)%60, milisecondsstring.c_str(), SWPACKETMAKER.GetKeyInfo(), DAMAGEMETER.GetPing());
+		sprintf_s(title, 128, "%s : %02d:%02d:%s [v1.3.0.0_%s] Ping: %d https://discord.com/invite/H7jZpcVJhq ###DamageMeter", DAMAGEMETER.GetWorldName(),(UINT)DAMAGEMETER.GetTime() / 60000, ((UINT)DAMAGEMETER.GetTime() / 1000)%60, milisecondsstring.c_str(), SWPACKETMAKER.GetKeyInfo(), DAMAGEMETER.GetPing());
 		ImGui::Begin(title, 0, windowFlag);
 		{
 			if (!UIOPTION.isOption() || _tableResize)
@@ -493,7 +493,7 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 			ImGui::TableNextColumn();
 			//boss damage
 			sprintf_s(label, 128, "%.1f", playerMetaData->GetSpecialStat(SpecialStatType::DamageBoss));
-			PLOTWINDOW.AddBdData(playerMetaData->GetSpecialStat(SpecialStatType::DamageBoss), _tableTime);
+			//PLOTWINDOW.AddBdData(playerMetaData->GetSpecialStat(SpecialStatType::DamageBoss), _tableTime);
 			ImGui::Text(label);
 
 			ImGui::TableNextColumn();
@@ -625,29 +625,28 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 		ImGui::Text(label);
 		ImGui::TableNextColumn();
 		//average boss damage
-		static DOUBLE savedResultBD = 0;
+		//static DOUBLE savedResultBD = 0;
 
-		//	if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
 		if (_tableTime == 0) {
 			sprintf_s(label, 128, "-");
 		}
 
 		else if (DAMAGEMETER.isHistoryMode()) {
-			savedResultBD = (*itr)->GetHistoryAvgBD();
-			sprintf_s(label, 128, "%.1f", savedResultBD);
+			playerMetaData->savedResultBD = (*itr)->GetHistoryAvgBD();
+			sprintf_s(label, 128, "%.1f", playerMetaData->savedResultBD);
 		}
 		else {
 
 			if ((INT64)(milliTableTime - playerMetaData->_avgBDPreviousTime) < 0) {
-				sprintf_s(label, 128, "%.1f", savedResultBD);
+				sprintf_s(label, 128, "%.1f", playerMetaData->savedResultBD);
 			}
 			else {
 				UINT64 timeDifference = (milliTableTime - playerMetaData->_avgBDPreviousTime);
 				DOUBLE currentBD = playerMetaData->GetSpecialStat(SpecialStatType::DamageBoss);
 				UINT64 calculatedAvgBD = static_cast<UINT64>((playerMetaData->_avgBDSum + timeDifference * currentBD));
 
-				savedResultBD = (DOUBLE)calculatedAvgBD / milliTableTime;
-				sprintf_s(label, 128, "%.1f", savedResultBD);
+				playerMetaData->savedResultBD = (DOUBLE)calculatedAvgBD / milliTableTime;
+				sprintf_s(label, 128, "%.1f", playerMetaData->savedResultBD);
 			}
 		}
 

@@ -88,6 +88,7 @@ public:
 	UINT64 _avgABPreviousTime = 0;
 	UINT64 _avgBDSum = 0;
 	UINT64 _avgBDPreviousTime = 0;
+	DOUBLE savedResultBD = 0;
 
 	BOOL _gear90EffectStarted = false;
 	UINT64 _gear90Sum = 0;
@@ -585,7 +586,6 @@ private:
 	USHORT _historyWorldID;
 	FLOAT _historyTime;
 	UINT32 _historyPing;
-
 	UINT32 _aggroedId;
 
 	BOOL _mazeEnd;

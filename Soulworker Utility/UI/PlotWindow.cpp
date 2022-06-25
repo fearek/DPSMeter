@@ -226,8 +226,8 @@ VOID PlotWindow::UpdateBdPlotTab()
 		if (!_end) {
 			ImPlot::SetNextPlotLimitsX(startX, endX, ImGuiCond_Always);
 		}
-		ImPlot::SetNextPlotLimitsY(0.0, 100.0, ImGuiCond_Always);
-		if (ImPlot::BeginPlot(Language.GetText(STR_UTILWINDOW_BDGRAPH).c_str(), Language.GetText(STR_UTILWINDOW_BDGRAPH_TIME_SEC).c_str(), "ab", ImVec2(-1, 0), ImPlotFlags_AntiAliased, ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
+		ImPlot::SetNextPlotLimitsY(0.0, 300.0, ImGuiCond_Always);
+		if (ImPlot::BeginPlot(Language.GetText(STR_UTILWINDOW_BDGRAPH).c_str(), Language.GetText(STR_UTILWINDOW_BDGRAPH_TIME_SEC).c_str(), "BD", ImVec2(-1, 0), ImPlotFlags_AntiAliased, ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
 			ImPlot::PlotLine(u8"YOU", _bdTimeList.data(), _bdList.data(), _bdList.size());
 			auto itr = _annonXListBD.begin();
 			for (; itr != _annonXListBD.end(); itr++) {
