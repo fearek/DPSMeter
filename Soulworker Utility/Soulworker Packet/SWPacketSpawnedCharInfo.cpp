@@ -20,14 +20,14 @@ VOID SWPacketSpawnedCharInfo::Do() {
 	WCHAR utf16[MAX_NAME_LEN] = { 0 };
 	memcpy_s(utf16, MAX_NAME_LEN * sizeof(WCHAR), p_data, spawned_header->_nameSize);
 
-	CHAR utf8[MAX_NAME_LEN] = { 0 };
+	/*CHAR utf8[MAX_NAME_LEN] = {0};
 	if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
 		//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketPos : UTF16toUTF8 FAILED")));
 		return;
-	}
+	}*/
 
 
-	//DAMAGEMETER.InsertPlayerMetadata(spawned_header->_playerId, utf8, job);
+	//DAMAGEMETER.InsertPlayerMetadata(spawned_header->_playerId, utf16, job);
 
 	//LogInstance.MyLog(_T("id : %d / nameSize : %u / name : %s / job : %u\n"), spawned_header->_playerId, spawned_header->_nameSize, utf16, job);
 
