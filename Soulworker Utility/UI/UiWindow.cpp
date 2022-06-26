@@ -152,45 +152,13 @@ BOOL UiWindow::InitImGUI() {
 
 BOOL UiWindow::SetFontList() {
 
-	_finddata_t fd;
-	const char* path = ".\\Font\\";
-	const char* filter = "*.ttf";
-
-	std::string fontDir(path);
-	fontDir.append(filter);
-	
-	auto handle = _findfirst(fontDir.c_str(), &fd);
-
-	if (handle == -1)
+	if(DAMAGEMETER.selectedFont.path.empty())
 		return FALSE;
-
 	ImGuiIO& io = ImGui::GetIO();
 	ImFontConfig config;
 	config.OversampleH = 1;
 	config.OversampleV = 1;
-
-	do {
-		char fontPath[MAX_BUFFER_LENGTH] = { 0 };
-		strcat_s(fontPath, path);
-		strcat_s(fontPath, fd.name);
-//#ifdef SERVER_KOREA
-		//io.Fonts->AddFontFromFileTTF(fontPath, 32, &config, io.Fonts->GetGlyphRangesKorean());
-//#endif
-//#ifdef SERVER_STEAM
-		io.Fonts->AddFontFromFileTTF(fontPath, 32, &config, io.Fonts->GetGlyphRangesChineseAndKoreaFull());
-//#endif
-#ifdef SERVER_JAPAN
-		/* GetGlyphRangesJapanese() doesn't contain CJK Ideograms, so it can't display "肆" at "猫刀・肆の型：月斬" */
-		// io.Fonts->AddFontFromFileTTF(fontPath, 32, &config, io.Fonts->GetGlyphRangesJapanese());
-		io.Fonts->AddFontFromFileTTF(fontPath, 32, &config, io.Fonts->GetGlyphRangesChineseFull());
-#endif
-
-
-		
-	} while (_findnext(handle, &fd) != -1);
-	
-	_findclose(handle);
-
+	ImFont* font = io.Fonts->AddFontFromFileTTF(DAMAGEMETER.selectedFont.path.c_str(), 32, &config, io.Fonts->GetGlyphRangesChineseAndKoreaFull());
 	return TRUE;
 }
 
@@ -212,6 +180,23 @@ VOID UiWindow::Run() {
 }
 
 VOID UiWindow::Update() {
+	if (DAMAGEMETER.shouldRebuildAtlas)
+	{
+		DAMAGEMETER.shouldRebuildAtlas = false;
+		ImGuiIO& io = ImGui::GetIO();
+		ImFontConfig config;
+		config.OversampleH = 1;
+		config.OversampleV = 1;
+		io.Fonts->Clear();
+		ImFont* font = io.Fonts->AddFontFromFileTTF(DAMAGEMETER.selectedFont.path.c_str(), 32, &config, io.Fonts->GetGlyphRangesChineseAndKoreaFull());
+		if (font == nullptr)
+		{
+			LogInstance.WriteLog("Failed setting font.");
+			return;
+		}
+		ImGui_ImplDX11_InvalidateDeviceObjects();
+		LogInstance.WriteLog("Set font to %s",DAMAGEMETER.selectedFont.filename.c_str());
+	}
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();

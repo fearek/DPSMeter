@@ -5,7 +5,7 @@
 #include ".\UI\PlayerTable.h"
 #include ".\UI\UiWindow.h"
 #include ".\Damage Meter\Damage Meter.h"
-
+#include <filesystem>
 UiOption::UiOption()  : _open(0), _framerate(1), _windowBorderSize(1), _fontScale(1), _columnFontScale(1), _tableFontScale(1), _is1K(0), _is1M(0), _isSoloMode(0), _hideName(0), _isTopMost(true), _cellPadding(0,0), _windowWidth(800), _refreshTime(0.3)  {
 	_jobBasicColor[0] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(153, 153, 153, 255)));	// Unknown
 	_jobBasicColor[1] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(247, 142, 59, 255)));	// 하루
@@ -26,10 +26,60 @@ UiOption::~UiOption() {
 	
 }
 
+std::vector<ImFontObj> fonts;
+void UpdateFontList()
+{
+	fonts.clear();
+	std::wstring path(L"Font/");
+	try {
+		for (auto& p : std::filesystem::recursive_directory_iterator(path))
+		{
+			if (p.path().extension() == ".ttf" || p.path().extension() == ".ttc")
+			{
+				ImFontObj font;
+				font.path = p.path().generic_u8string();
+				font.filename = p.path().filename().stem().generic_u8string();
+				fonts.emplace_back(font);
+			}
+		}
+	}
+	catch (std::exception e)
+	{
+		LogInstance.WriteLog("Update font failed: %s",e.what());
+	}
+}
+void SetFont()
+{
+	if(DAMAGEMETER.selectedFont.path.empty())
+		return;
+	DAMAGEMETER.shouldRebuildAtlas = true;
+	LogInstance.WriteLog("Trying to set font to: %s",DAMAGEMETER.selectedFont.path.c_str());
+}
 BOOL UiOption::ShowFontSelector() {
 
 	ImFont* font_current = ImGui::GetFont();
-
+	float width = ImGui::CalcItemWidth();
+	ImGui::PushItemWidth(width+100.0);
+	if (ImGui::ListBoxHeader("Font",3))
+	{
+		for (ImFontObj font : fonts)
+		{
+			if(ImGui::Selectable(font.filename.c_str(), font.selectable))
+			{
+				DAMAGEMETER.selectedFont = font;
+			}
+		}
+		ImGui::ListBoxFooter();
+	}
+	if (ImGui::Button("Refresh fonts"))
+	{
+		UpdateFontList();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Set font"))
+	{
+		SetFont();
+	}
 	ImGui::Text(Language.GetText(STR_OPTION_FONTSCALE_DESC).c_str());
 	ImGui::DragFloat(Language.GetText(STR_OPTION_FONTSCALE).c_str(), &_fontScale, 0.005f, 0.3f, 2.0f, "%.1f");
 
@@ -162,6 +212,8 @@ VOID UiOption::OpenOption() {
 		if (ImGui::Button("STOP TIMER")) {
 			DAMAGEMETER.Suspend();
 		}*/
+		float width = ImGui::CalcItemWidth();
+		ImGui::PushItemWidth(width-200.0);
 		ImGui::SliderInt("Timer accuarcy", &mswideness, 1, 3);
 		ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.2f);
 		ShowFontSelector();
@@ -611,6 +663,11 @@ BOOL UiOption::GetOption() {
 }
 
 BOOL UiOption::SaveOption() {
+	DAMAGEMETER.ini.SetValue("Meter", "DefaultFont", DAMAGEMETER.selectedFont.path.c_str());
+	SI_Error rc = DAMAGEMETER.ini.SaveFile("meterconfig.ini");
+	if (rc < 0) {
+		MessageBoxA(NULL, "Something is wrong with your system, cant make config file.", "ERROR", MB_OK | MB_ICONERROR);
+	}
 	tinyxml2::XMLDocument doc;
 
 	tinyxml2::XMLDeclaration* dec = doc.NewDeclaration();

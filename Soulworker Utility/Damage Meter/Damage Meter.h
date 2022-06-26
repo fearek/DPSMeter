@@ -3,6 +3,7 @@
 #include ".\Language\Region.h"
 #include ".\Damage Meter\Timer.h"
 #include ".\Damage Meter\SWDamagePlayer.h"
+#include "SimpleIni.h"
 #include <unordered_map>
 
 #define MAX_NAME_LEN 64
@@ -34,7 +35,12 @@ typedef struct _SW_DB2_STRUCT {
 	//	USHORT _db1;
 	UINT32 _db2;
 }SW_DB2_STRUCT;
-
+struct ImFontObj
+{
+	std::string path;
+	std::string filename;
+	bool selectable = false;
+};
 
 static std::unordered_set<UINT32> resumeIgnoreIdList({
 	/* 기타 */
@@ -600,7 +606,10 @@ private:
 	std::mutex _mutex;
 
 public:
+	bool shouldRebuildAtlas = false;
 	bool shouldLogMstrStats = true;
+	ImFontObj selectedFont;
+	CSimpleIniA ini;
 	SWDamageMeter() : _myID(0), _worldID(0), _mazeEnd(0), _historyMode(0), _historyWorldID(0), _historyTime(0) {}
 	~SWDamageMeter();
 

@@ -4,7 +4,6 @@
 #include ".\UI\UiWindow.h"
 #include ".\Damage Meter\MySQLite.h"
 #include <shellapi.h>
-#include "SimpleIni.h"
 
 #pragma locale ("Korean")
 
@@ -23,20 +22,36 @@ void getconfig(CSimpleIniA& ini, int sec)
 		long language = ini.GetLongValue("Meter", "Language", 0);
 		Language.SetLanguage(LANGUAGE(language));
 		bool shouldLogMonsterStats = ini.GetBoolValue("Meter","LogMonsterStats",true);
+		const char* font = ini.GetValue("Meter","DefaultFont");
+		if (font)
+		{
+			DAMAGEMETER.selectedFont.filename = font;
+			DAMAGEMETER.selectedFont.path = font;
+		}
 		DAMAGEMETER.shouldLogMstrStats = shouldLogMonsterStats;
 		return;
 	}
 }
-CSimpleIniA ini;
 bool configloaded = false;
+bool savefont()
+{
+	DAMAGEMETER.ini.SetValue("Meter", "DefaultFont", DAMAGEMETER.selectedFont.path.c_str());
+	SI_Error rc = DAMAGEMETER.ini.SaveFile("meterconfig.ini");
+	if (rc < 0) {
+		MessageBoxA(NULL, "Something is wrong with your system, cant make config file.", "ERROR", MB_OK | MB_ICONERROR);
+		return false;
+	}
+	return true;
+}
 bool createconfig()
 {
-	ini.SetBoolValue("Loader", "XignCheck", true);
-	ini.SetBoolValue("Loader", "OpenMeterOnInjection", true);
-	ini.SetLongValue("Meter", "Language", 0);
-	ini.SetBoolValue("Meter", "LogFile", false);
-	ini.SetBoolValue("Meter", "LogMonsterStats",true);
-	SI_Error rc = ini.SaveFile("meterconfig.ini");
+	DAMAGEMETER.ini.SetBoolValue("Loader", "XignCheck", true);
+	DAMAGEMETER.ini.SetBoolValue("Loader", "OpenMeterOnInjection", true);
+	DAMAGEMETER.ini.SetLongValue("Meter", "Language", 0);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "LogFile", false);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "LogMonsterStats",true);
+	DAMAGEMETER.ini.SetValue("Meter", "DefaultFont","");
+	SI_Error rc = DAMAGEMETER.ini.SaveFile("meterconfig.ini");
 	if (rc < 0) {
 		MessageBoxA(NULL,"Something is wrong with your system, cant make config file.","ERROR", MB_OK | MB_ICONERROR);
 		return false;
@@ -45,14 +60,14 @@ bool createconfig()
 }
 void loadconfig()
 {
-	ini.SetUnicode();
-	SI_Error rc = ini.LoadFile("meterconfig.ini");
+	DAMAGEMETER.ini.SetUnicode();
+	SI_Error rc = DAMAGEMETER.ini.LoadFile("meterconfig.ini");
 	if (rc < 0)
 	{
 		bool test = createconfig();
 		if (test == false) return;
 	}
-	SI_Error rc2 = ini.LoadFile("meterconfig.ini");
+	SI_Error rc2 = DAMAGEMETER.ini.LoadFile("meterconfig.ini");
 	if (rc2 < 0)
 	{
 		MessageBoxA(NULL,"Loading config failed for some reason?","ERROR", MB_OK | MB_ICONERROR);
@@ -61,12 +76,12 @@ void loadconfig()
 	configloaded = true;
 	CSimpleIniA::TNamesDepend sections;
 	CSimpleIniA::TNamesDepend::const_iterator it;
-	ini.GetAllSections(sections);
+	DAMAGEMETER.ini.GetAllSections(sections);
 	for (it = sections.begin(); it != sections.end(); ++it)
 	{
 		if (!std::strcmp(it->pItem, "Meter"))
 		{
-			getconfig(ini, 1);
+			getconfig(DAMAGEMETER.ini, 1);
 		}
 	}
 	return;
