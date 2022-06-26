@@ -6,12 +6,12 @@
 #include <unordered_map>
 
 struct metaInfo {
-	metaInfo(UINT32 id, std::wstring name) {
+	metaInfo(UINT32 id, std::string name) {
 		_id = id;
 		_name = name;
 	}
 	UINT32 _id;
-	std::wstring _name;
+	std::string _name;
 };
 
 struct damageInfo {
@@ -59,7 +59,7 @@ private:
 	VOID UpdateJqPlotTab();
 	VOID UpdateBdPlotTab();
 public:
-	VOID AddData(UINT32 id, std::wstring name, DOUBLE DPS, DOUBLE time, bool isFirstElement);
+	VOID AddData(UINT32 id, std::string name, DOUBLE DPS, DOUBLE time, bool isFirstElement);
 	VOID AddAbData(DOUBLE DPS, DOUBLE time);
 	VOID AddBdData(DOUBLE DPS, DOUBLE time);
 	VOID AddJqData(BYTE stack, DOUBLE time);

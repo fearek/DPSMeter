@@ -82,7 +82,7 @@ private:
 	FLOAT _superarmorbreak = 0.0;
 public:
 	UINT32 _id = 0;
-	wchar_t _name[MAX_NAME_LEN];
+	CHAR _name[MAX_NAME_LEN];
 	BYTE _job = 0;
 	UINT64 _avgABSum = 0;
 	UINT64 _avgABPreviousTime = 0;
@@ -630,8 +630,8 @@ public:
 	VOID SetAggro(UINT32 id, UINT32 targetedId);
 	UINT32 GetAggro();
 
-	VOID InsertPlayerMetadata(UINT32 id, wchar_t* str, BYTE job);
-	const wchar_t* GetPlayerName(UINT32 id);
+	VOID InsertPlayerMetadata(UINT32 id, CHAR* str, BYTE job);
+	const CHAR* GetPlayerName(UINT32 id);
 	BYTE GetPlayerJob(UINT32 id);
 
 	VOID UpdateStat(UINT32 id, USHORT statType, FLOAT statValue);

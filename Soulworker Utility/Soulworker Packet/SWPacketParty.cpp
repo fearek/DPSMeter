@@ -21,13 +21,13 @@ VOID SWPacketParty::Do() {
 		WCHAR utf16[MAX_NAME_LEN] = { 0 };
 		memcpy_s(utf16, MAX_NAME_LEN * sizeof(WCHAR), p_data + sizeof(SWPACKETPARTY_DATA), party_data->_nickSize);
 
-		/*CHAR utf8[MAX_NAME_LEN] = {0};
+		CHAR utf8[MAX_NAME_LEN] = {0};
 		if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
-			//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
+			LogInstance.WriteLog("Error in SWPacketParty : UTF16toUTF8 FAILED");
 			return;
-		}*/
+		}
 
-		DAMAGEMETER.InsertPlayerMetadata(party_data->_playerID, utf16, job);
+		DAMAGEMETER.InsertPlayerMetadata(party_data->_playerID, utf8, job);
 
 		p_data += sizeof(SWPACKETPARTY_DATA) + party_data->_nickSize + SWPACKETPARTY_DUMMY;
 	}

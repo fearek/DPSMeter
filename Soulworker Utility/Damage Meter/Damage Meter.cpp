@@ -265,7 +265,7 @@ UINT32 SWDamageMeter::GetOwnerID(UINT32 id) {
 	return 0xffffffff;
 }
 
-VOID SWDamageMeter::InsertPlayerMetadata(UINT32 id, wchar_t* str, BYTE job) {
+VOID SWDamageMeter::InsertPlayerMetadata(UINT32 id, CHAR* str, BYTE job) {
 
 	auto search = _playerMetadata.find(id);
 
@@ -273,14 +273,14 @@ VOID SWDamageMeter::InsertPlayerMetadata(UINT32 id, wchar_t* str, BYTE job) {
 		SW_PLAYER_METADATA* metaData = new SW_PLAYER_METADATA;
 		metaData->_id = id;
 		metaData->_job = job;
-		wcscpy_s(metaData->_name, MAX_NAME_LEN, str);
+		strcpy_s(metaData->_name, MAX_NAME_LEN, str);
 		_playerMetadata[id] = metaData;
 		return;
 	}
 	SW_PLAYER_METADATA* metaData = search->second;
 	metaData->_id = id;
 	metaData->_job = job;
-	wcscpy_s(metaData->_name, MAX_NAME_LEN, str);
+	strcpy_s(metaData->_name, MAX_NAME_LEN, str);
 
 	//#if DEBUG_DAMAGEMETER_PLAYERMETA == 1
 	//	LogInstance.WriteLogA(const_cast<CHAR*>("[DEBUG] [INSERT PLAYER META] [NEW] [ID = %08x] [NAME = %s] [JOB = %x]"), metadata->_id, metadata->_name, metadata->_job);
@@ -288,15 +288,13 @@ VOID SWDamageMeter::InsertPlayerMetadata(UINT32 id, wchar_t* str, BYTE job) {
 
 }
 
-const wchar_t* SWDamageMeter::GetPlayerName(UINT32 id) {
+const CHAR* SWDamageMeter::GetPlayerName(UINT32 id) {
 	if (id == _myID)
-		return L"YOU";
+		return "YOU";
 
 	auto search = _playerMetadata.find(id);
 	if (search == _playerMetadata.end()) {
-		std::string text = Language.GetText(PLAYER_NAME_CANT_FIND);
-		std::wstring widestr = std::wstring(text.begin(), text.end());
-		return widestr.c_str();
+		return Language.GetText(PLAYER_NAME_CANT_FIND).c_str();
 	}
 	return search->second->_name;
 }
@@ -321,9 +319,7 @@ VOID SWDamageMeter::UpdateStat(UINT32 id, USHORT statType, FLOAT statValue)
 	if (search == _playerMetadata.end()) {
 		metaData = new SW_PLAYER_METADATA;
 		metaData->_id = id;
-		std::string str = Language.GetText(PLAYER_NAME_CANT_FIND);
-		std::wstring widestr = std::wstring(str.begin(), str.end());
-		wcscpy_s(metaData->_name, MAX_NAME_LEN,widestr.c_str());
+		strcpy_s(metaData->_name, MAX_NAME_LEN, Language.GetText(PLAYER_NAME_CANT_FIND).c_str());
 		metaData->_job = PLAYER_JOB_CANT_FIND;
 		_playerMetadata[id] = metaData;
 	}
@@ -345,9 +341,7 @@ VOID SWDamageMeter::UpdateSpecialStat(UINT32 id, USHORT statType, FLOAT statValu
 	if (search == _playerMetadata.end()) {
 		metaData = new SW_PLAYER_METADATA;
 		metaData->_id = id;
-		std::string str = Language.GetText(PLAYER_NAME_CANT_FIND);
-		std::wstring widestr = std::wstring(str.begin(), str.end());
-		wcscpy_s(metaData->_name, MAX_NAME_LEN,widestr.c_str());
+		strcpy_s(metaData->_name, MAX_NAME_LEN, Language.GetText(PLAYER_NAME_CANT_FIND).c_str());
 		metaData->_job = PLAYER_JOB_CANT_FIND;
 		_playerMetadata[id] = metaData;
 	}

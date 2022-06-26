@@ -4,7 +4,7 @@
 #include <vector>
 #include ".\Language\Region.h"
 
-VOID PlotWindow::AddData(UINT32 id, std::wstring name, DOUBLE DPS, DOUBLE time, bool isFirstElement)
+VOID PlotWindow::AddData(UINT32 id, std::string name, DOUBLE DPS, DOUBLE time, bool isFirstElement)
 {
 	if (isFirstElement) {
 		if (_lastTime == time) {
@@ -166,9 +166,8 @@ VOID PlotWindow::UpdatePlotTab()
 			auto it = metaInfos.begin();
 			for (; it != metaInfos.end(); it++) {
 				UINT32 id = (*it)->_id;
-				std::wstring name = (*it)->_name;
-				std::string sname(name.begin(),name.end());
-				ImPlot::PlotLine(sname.c_str(), timeList[id].data(), dpsList[id].data(), dpsList[id].size());
+				std::string name = (*it)->_name;
+				ImPlot::PlotLine(name.c_str(), timeList[id].data(), dpsList[id].data(), dpsList[id].size());
 			}
 
 			ImPlot::EndPlot();

@@ -299,7 +299,7 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 	for (auto itr = DAMAGEMETER.begin(); itr != DAMAGEMETER.end(); itr++) {
 
 		// 솔로모드이면 닉넴이 YOU일경우에만 그림
-		if (UIOPTION.isSoloMode() && DAMAGEMETER.GetPlayerName((*itr)->GetID()) != L"YOU") {
+		if (UIOPTION.isSoloMode() && DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU") {
 			continue;
 		}
 
@@ -322,9 +322,9 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 		UINT64 milliTableTime = (UINT64)((DOUBLE)_tableTime * 1000);
 
 		// NAME
-		const wchar_t* playerName = DAMAGEMETER.GetPlayerName((*itr)->GetID());
-		if (UIOPTION.doHideName() && playerName != L"YOU") {
-			playerName = L"";
+		const CHAR* playerName = DAMAGEMETER.GetPlayerName((*itr)->GetID());
+		if (UIOPTION.doHideName() && playerName != "YOU") {
+			playerName = "";
 		}
 
 		ImGuiStyle& style = ImGui::GetStyle();
@@ -339,9 +339,7 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 		}
 		
 		//colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 0.95f);
-		std::wstring name(playerName);
-		std::string sname(name.begin(),name.end());
-		if (ImGui::Selectable(sname.c_str(), false, ImGuiSelectableFlags_SpanAllColumns))
+		if (ImGui::Selectable(playerName, false, ImGuiSelectableFlags_SpanAllColumns))
 			ToggleSelectInfo((*itr)->GetID());
 
 		ImGui::TableNextColumn();
@@ -472,7 +470,7 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 			continue;
 		}
 
-		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != L"YOU" || _tableTime == 0) {
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
 			//// 공치합
 			sprintf_s(label, 128, "-");
 			ImGui::Text(label);
@@ -598,7 +596,7 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 		// average armor break
 		static DOUBLE savedResultAB = 0;
 
-		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != L"YOU" || _tableTime == 0) {
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
 			sprintf_s(label, 128, "-");
 		}
 
@@ -702,7 +700,7 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 		static DOUBLE acc02savedResult = 0.0;
 
 		// Display none it is not YOU or meter is reseted
-		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != L"YOU" || _tableTime == 0) {
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
 			sprintf_s(label, 128, "-");
 			TextCommma(label, comma);
 			ImGui::Text(comma);
@@ -835,7 +833,7 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 
 
 		// 인라들
-		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != L"YOU" || _tableTime == 0) {
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
 			sprintf_s(label, 128, "-");
 			ImGui::Text(label);
 			ImGui::TableNextColumn();
@@ -878,7 +876,7 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 		ImGui::TableNextColumn();
 
 		// 회피기 사용횟수
-		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != L"YOU" || _tableTime == 0) {
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0) {
 			sprintf_s(label, 128, "-");
 			ImGui::Text(label);
 			ImGui::TableNextColumn();
