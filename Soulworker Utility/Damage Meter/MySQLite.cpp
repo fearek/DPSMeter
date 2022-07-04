@@ -299,8 +299,6 @@ BOOL MySQL::GetMonsterName(UINT32 DB2, CHAR* out_buffer, SIZE_T out_buffer_lengt
 	}
 	else
 	{
-		sprintf_s(out_buffer, out_buffer_length - 2, "FailToGetName(%u)", DB2);
-		out_buffer[out_buffer_length - 1] = 0x00;
 		return FALSE;
 	}
 	return TRUE;
@@ -315,7 +313,7 @@ BOOL MySQL::GetMapName(UINT32 mapID, CHAR* out_buffer, SIZE_T out_buffer_length)
 		strcpy_s(out_buffer, out_buffer_length, Language.GetText(STR_WORLD_NO_INFORMATION).c_str());
 		return TRUE;
 	}
-	sprintf_s(out_buffer, out_buffer_length, "%d", mapID);
+	sprintf_s(out_buffer, out_buffer_length, "%u", mapID);
 
 	sqlite3_reset(_map_stmt);
 
@@ -345,8 +343,6 @@ BOOL MySQL::GetMapName(UINT32 mapID, CHAR* out_buffer, SIZE_T out_buffer_length)
 	}
 	else
 	{
-		strncpy(out_buffer, "FailToGetName", out_buffer_length - 2);
-		out_buffer[out_buffer_length - 1] = 0x00;
 		return FALSE;
 	}
 	return TRUE;
@@ -362,7 +358,7 @@ BOOL MySQL::GetBuffName(UINT32 buffId, CHAR* out_buffer, SIZE_T out_buffer_lengt
 		return TRUE;
 	}
 
-	sprintf_s(out_buffer, out_buffer_length, "%d", buffId);
+	sprintf_s(out_buffer, out_buffer_length, "%u", buffId);
 
 	sqlite3_reset(_buff_stmt);
 
@@ -392,8 +388,6 @@ BOOL MySQL::GetBuffName(UINT32 buffId, CHAR* out_buffer, SIZE_T out_buffer_lengt
 	}
 	else
 	{
-		strncpy(out_buffer, "FailToGetName", out_buffer_length - 2);
-		out_buffer[out_buffer_length - 1] = 0x00;
 		return FALSE;
 	}
 	return TRUE;
