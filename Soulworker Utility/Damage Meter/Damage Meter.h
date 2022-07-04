@@ -610,6 +610,7 @@ public:
 	bool shouldLogMstrStats = true;
 	ImFontObj selectedFont;
 	CSimpleIniA ini;
+	int mswideness;
 	SWDamageMeter() : _myID(0), _worldID(0), _mazeEnd(0), _historyMode(0), _historyWorldID(0), _historyTime(0) {}
 	~SWDamageMeter();
 
@@ -624,7 +625,7 @@ public:
 	VOID AddDeath(UINT32 playerId);
 	VOID BuffIn(UINT32 playerId, USHORT buffId, BYTE stack, UINT32 giverId);
 	VOID BuffOut(UINT32 playerId, USHORT buffId);
-
+	uint64_t GetStartTime();
 	VOID InsertOwnerID(UINT32 id, UINT32 owner_id);
 	UINT32 GetOwnerID(UINT32 id);
 	UINT32 GetPing();

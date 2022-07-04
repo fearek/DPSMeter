@@ -118,6 +118,9 @@
     <Filter Include="SWCPacket">
       <UniqueIdentifier>{679669da-3ae9-452e-9612-33b8341efd2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="discord">
+      <UniqueIdentifier>{9e092d9d-8396-4953-82ce-4bc4ae40c420}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -354,6 +357,63 @@
     <ClInclude Include="Soulworker Packet\SWPacketSpecialStatChange.h">
       <Filter>SWPacket\Packet\0x03</Filter>
     </ClInclude>
+    <ClInclude Include="Third Party\discord\activity_manager.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\application_manager.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\core.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\discord.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\event.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\ffi.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\image_manager.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\lobby_manager.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\network_manager.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\overlay_manager.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\relationship_manager.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\storage_manager.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\store_manager.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\types.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\user_manager.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\voice_manager.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\achievement_manager.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Third Party\discord\DiscordPresence.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWCPresence.h">
+      <Filter>SWCPacket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -568,6 +628,54 @@
     </ClCompile>
     <ClCompile Include="Soulworker Packet\SWPacketSpecialStatChange.cpp">
       <Filter>SWPacket\Packet\0x03</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\activity_manager.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\application_manager.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\core.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\image_manager.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\lobby_manager.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\network_manager.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\overlay_manager.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\relationship_manager.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\storage_manager.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\store_manager.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\types.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\user_manager.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\voice_manager.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\achievement_manager.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\discord\DiscordPresence.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Soulworker Packet\SWCPresence.cpp">
+      <Filter>SWCPacket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -190,6 +190,9 @@ VOID SWPacketMaker::CreateSWPacket(std::vector<unsigned char>& packet) {
 			case 0x0101:
 				swpacket = new SWCPing(swheader,data);
 				break;
+			case 0x0102:
+				swpacket = new SWCPresence(swheader,data);
+				break;
 			}
 		}
 		else

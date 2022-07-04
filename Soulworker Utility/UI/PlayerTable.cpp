@@ -48,7 +48,6 @@ VOID PlayerTable::SetupFontScale() {
 VOID PlayerTable::ResizeTalbe() {
 	_tableResize = TRUE;
 }
-int mswideness = 1;
 VOID PlayerTable::Update() {
 
 	DAMAGEMETER.GetLock();
@@ -89,11 +88,11 @@ VOID PlayerTable::Update() {
 
 		CHAR title[128] = { 0 };
 		unsigned int miliseconds = ((UINT)DAMAGEMETER.GetTime() % 1000);
-		if (mswideness == 1)
+		if (DAMAGEMETER.mswideness == 1)
 		{
 			miliseconds = miliseconds / 100;
 		}
-		else if (mswideness == 2)
+		else if (DAMAGEMETER.mswideness == 2)
 		{
 			miliseconds = miliseconds / 10;
 		}

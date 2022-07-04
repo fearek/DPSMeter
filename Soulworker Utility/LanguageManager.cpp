@@ -8,7 +8,7 @@
 DICTIONARY_t Language =
 {
     {STR_WORLD_NO_INFORMATION, {{KOREAN, u8"상세정보"}, {ENGLISH, u8"No Info"}, {CHINESE, u8"未知地區"}, {JAPANESE, u8"情報なし"}}},
-    {PLAYER_NAME_CANT_FIND, {{KOREAN, u8"너 누구야?"}, {ENGLISH, u8"Unknown?"}, {CHINESE, u8"未知玩家?"}, {JAPANESE, u8"不明"}}},
+    {PLAYER_NAME_CANT_FIND, {{KOREAN, u8"UnknownPlayer"}, {ENGLISH, u8"UnknownPlayer"}, {CHINESE, u8"UnknownPlayer"}, {JAPANESE, u8"UnknownPlayer"}}},
 
     {STR_MENU_RESUME, {{KOREAN, u8"시작/정지"}, {ENGLISH, u8"Start/Pause"}, {CHINESE, u8"開始/暫停"}, {JAPANESE, u8"開始/一時停止"}}},
     {STR_MENU_RESET, {{KOREAN, u8"초기화"}, {ENGLISH, u8"Reset"}, {CHINESE, u8"清除"}, {JAPANESE, u8"リセット"}}},

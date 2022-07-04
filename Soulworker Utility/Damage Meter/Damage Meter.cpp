@@ -580,7 +580,9 @@ VOID SWDamageMeter::Toggle() {
 	else
 		Start();
 }
-
+uint64_t SWDamageMeter::GetStartTime() {
+	return _timer._startTimePoint;
+}
 uint64_t SWDamageMeter::GetTime() {
 
 	if (!_historyMode)

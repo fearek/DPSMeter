@@ -2,7 +2,7 @@
 // encoding utf-8 (ㅇㅅㅇ)
 //https://i.imgur.com/dT4XLuh.png
 #define STR_WORLD_NO_INFORMATION u8"No Info"
-#define PLAYER_NAME_CANT_FIND u8"Unknown?"
+#define PLAYER_NAME_CANT_FIND u8"UnknownPlayer"
 
 //https://i.imgur.com/phiBmly.png
 #define STR_MENU_RESUME u8"Start/Pause"

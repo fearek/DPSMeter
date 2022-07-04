@@ -2,7 +2,7 @@
 
 //https://i.imgur.com/dT4XLuh.png
 #define STR_WORLD_NO_INFORMATION u8"공백"
-#define PLAYER_NAME_CANT_FIND u8"너 누구야?"
+#define PLAYER_NAME_CANT_FIND u8"UnknownPlayer"
 
 //https://i.imgur.com/phiBmly.png
 #define STR_MENU_RESUME u8"시작/정지"

@@ -26,17 +26,11 @@ BOOL SWDamagePlayer::SortFunction(SWDamagePlayer* playerA, SWDamagePlayer* playe
 	return playerA->GetDamage() > playerB->GetDamage();
 }
 
-VOID SWDamagePlayer::InsertMonsterInfo(UINT32 monsterID, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount, UINT32 skillID) {
+VOID SWDamagePlayer::InsertMonsterInfo(UINT32 monsterID,UINT32 db2, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount, UINT32 skillID) {
 
 	auto itr = _monsterInfo.begin();
 
-	SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(monsterID);
 
-	UINT32 db2 = 0;
-
-	if (db != nullptr) {
-		db2 = db->_db2;
-	}
 
 	for (; itr != _monsterInfo.end(); itr++) {
 		if (db2 == (*itr)->GetDB2()) {
@@ -123,7 +117,7 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 	LogInstance.WriteLog("[PLAYER] [ID = %d] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d] [maxCombo = %d]", _id, _damage, _critDamage, _hitCount, _critHitCount, _maxCombo);
 #endif
 
-	InsertMonsterInfo(monsterID, totalDMG, soulstoneDMG, 1, damageType.CRIT, skillID);
+	InsertMonsterInfo(monsterID,db2, totalDMG, soulstoneDMG, 1, damageType.CRIT, skillID);
 	Sort();
 }
 

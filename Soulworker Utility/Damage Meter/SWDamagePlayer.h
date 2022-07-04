@@ -84,7 +84,7 @@ private:
 	BYTE _JqStack = 0;
 
 	std::vector<SWDamageMonster*> _monsterInfo;
-	VOID InsertMonsterInfo(UINT32 monsterID, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount, UINT32 skillID);
+	VOID InsertMonsterInfo(UINT32 monsterID,UINT32 db2, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount, UINT32 skillID);
 	VOID Sort();
 
 protected:

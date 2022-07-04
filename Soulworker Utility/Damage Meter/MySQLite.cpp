@@ -270,7 +270,7 @@ BOOL MySQL::GetMonsterName(UINT32 DB2, CHAR* out_buffer, SIZE_T out_buffer_lengt
 	//	return TRUE;
 	//}
 
-	sprintf_s(out_buffer, out_buffer_length, "%d", DB2);
+	sprintf_s(out_buffer, out_buffer_length, "%u", DB2);
 
 	sqlite3_reset(_monster_stmt);
 
@@ -279,18 +279,13 @@ BOOL MySQL::GetMonsterName(UINT32 DB2, CHAR* out_buffer, SIZE_T out_buffer_lengt
 	do {
 		step = sqlite3_step(_monster_stmt);
 	} while(step == SQLITE_BUSY || step == SQLITE_LOCKED);
-	if (step == SQLITE_DONE)
-	{
-		strncpy(out_buffer, "FailToGetName", out_buffer_length - 2);
-		out_buffer[out_buffer_length - 1] = 0x00;
-		return FALSE;
-	}
 	if (step == SQLITE_ROW) {
 		const CHAR* result = (const CHAR*)sqlite3_column_text(_monster_stmt, 0);
 
 		if (result == nullptr)
 		{
-			strncpy(out_buffer,"FailToGetName",out_buffer_length-2);
+			//strncpy(out_buffer,"FailToGetName",out_buffer_length-2);
+			sprintf_s(out_buffer,out_buffer_length-2,"FailToGetName(%u)",DB2);
 			out_buffer[out_buffer_length-1] = 0x00;
 			return FALSE;
 		}
@@ -302,7 +297,12 @@ BOOL MySQL::GetMonsterName(UINT32 DB2, CHAR* out_buffer, SIZE_T out_buffer_lengt
 		}
 		strcpy_s(out_buffer, out_buffer_length, result);
 	}
-
+	else
+	{
+		sprintf_s(out_buffer, out_buffer_length - 2, "FailToGetName(%u)", DB2);
+		out_buffer[out_buffer_length - 1] = 0x00;
+		return FALSE;
+	}
 	return TRUE;
 }
 
@@ -315,7 +315,6 @@ BOOL MySQL::GetMapName(UINT32 mapID, CHAR* out_buffer, SIZE_T out_buffer_length)
 		strcpy_s(out_buffer, out_buffer_length, Language.GetText(STR_WORLD_NO_INFORMATION).c_str());
 		return TRUE;
 	}
-
 	sprintf_s(out_buffer, out_buffer_length, "%d", mapID);
 
 	sqlite3_reset(_map_stmt);
@@ -344,7 +343,12 @@ BOOL MySQL::GetMapName(UINT32 mapID, CHAR* out_buffer, SIZE_T out_buffer_length)
 
 		strcpy_s(out_buffer, out_buffer_length, result);
 	}
-
+	else
+	{
+		strncpy(out_buffer, "FailToGetName", out_buffer_length - 2);
+		out_buffer[out_buffer_length - 1] = 0x00;
+		return FALSE;
+	}
 	return TRUE;
 }
 
@@ -386,7 +390,12 @@ BOOL MySQL::GetBuffName(UINT32 buffId, CHAR* out_buffer, SIZE_T out_buffer_lengt
 
 		strcpy_s(out_buffer, out_buffer_length, result);
 	}
-
+	else
+	{
+		strncpy(out_buffer, "FailToGetName", out_buffer_length - 2);
+		out_buffer[out_buffer_length - 1] = 0x00;
+		return FALSE;
+	}
 	return TRUE;
 }
 std::map<unsigned int,std::string> stats =
@@ -414,7 +423,7 @@ std::map<unsigned int,std::string> stats =
 	{21,"ATTACK_MAX"},
 	{24,"DEFENCE"},
 	{25,"MAGIC_DEFENCE"},
-	{26,"ACCUARCY"},
+	{26,"ACCURACY"},
 	{27,"MAGIC_ACCURACY"},
 	{28,"PARTIAL_DAMAGE"},
 	{29,"CRIT_CHANCE"},

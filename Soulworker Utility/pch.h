@@ -20,6 +20,8 @@
 #include <algorithm>
 #include <codecvt>
 
+// DISCORD
+#include "discord\discord.h"
 // IMGUI
 #include "imgui\imgui.h"
 #include "imgui\backends\imgui_impl_win32.h"
@@ -34,9 +36,6 @@
 // DirectX
 #include <d3d11.h>
 #include <dinput.h>
-
-// WinDivert
-#include "Windivert\include\windivert.h"
 
 // SQLite3
 #include "SQLite\include\sqlite3.h"

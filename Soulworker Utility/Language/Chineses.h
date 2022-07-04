@@ -1,7 +1,7 @@
 ﻿#pragma once
 //https://i.imgur.com/dT4XLuh.png
 #define STR_WORLD_NO_INFORMATION u8"未知地區"
-#define PLAYER_NAME_CANT_FIND u8"未知玩家?"
+#define PLAYER_NAME_CANT_FIND u8"UnknownPlayer"
 
 //https://i.imgur.com/phiBmly.png
 #define STR_MENU_RESUME u8"開始/暫停"

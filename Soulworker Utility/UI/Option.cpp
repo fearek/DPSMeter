@@ -5,6 +5,7 @@
 #include ".\UI\PlayerTable.h"
 #include ".\UI\UiWindow.h"
 #include ".\Damage Meter\Damage Meter.h"
+#include ".\discord\DiscordPresence.h"
 #include <filesystem>
 UiOption::UiOption()  : _open(0), _framerate(1), _windowBorderSize(1), _fontScale(1), _columnFontScale(1), _tableFontScale(1), _is1K(0), _is1M(0), _isSoloMode(0), _hideName(0), _isTopMost(true), _cellPadding(0,0), _windowWidth(800), _refreshTime(0.3)  {
 	_jobBasicColor[0] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(153, 153, 153, 255)));	// Unknown
@@ -96,7 +97,13 @@ BOOL UiOption::ShowFontSelector() {
 	}
 	ImGui::Checkbox(Language.GetText(STR_OPTION_SOLO_MODE).c_str(), (bool*)&_isSoloMode);
 	ImGui::Checkbox(Language.GetText(STR_OPTION_HIDE_NAME).c_str(), (bool*)&_hideName);
-
+	if (ImGui::Checkbox("Rich presence", &DISCORD.shouldUpdate))
+	{
+		if (!DISCORD.shouldUpdate)
+		{
+			DISCORD.ClearPresence();
+		}
+	}
 	return TRUE;
 }
 std::string getCharName(int id)
@@ -214,7 +221,7 @@ VOID UiOption::OpenOption() {
 		}*/
 		float width = ImGui::CalcItemWidth();
 		ImGui::PushItemWidth(width-200.0);
-		ImGui::SliderInt("Timer accuarcy", &mswideness, 1, 3);
+		ImGui::SliderInt("Timer accuracy", &DAMAGEMETER.mswideness, 1, 3);
 		ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.2f);
 		ShowFontSelector();
 		ImGui::PopItemWidth();
@@ -664,6 +671,8 @@ BOOL UiOption::GetOption() {
 
 BOOL UiOption::SaveOption() {
 	DAMAGEMETER.ini.SetValue("Meter", "DefaultFont", DAMAGEMETER.selectedFont.path.c_str());
+	DAMAGEMETER.ini.SetLongValue("Meter", "TimerAcc", DAMAGEMETER.mswideness);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "RichPresence", DISCORD.shouldUpdate);
 	SI_Error rc = DAMAGEMETER.ini.SaveFile("meterconfig.ini");
 	if (rc < 0) {
 		MessageBoxA(NULL, "Something is wrong with your system, cant make config file.", "ERROR", MB_OK | MB_ICONERROR);

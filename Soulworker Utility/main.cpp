@@ -1,4 +1,5 @@
 #include "pch.h"
+#include ".\Third Party/discord/DiscordPresence.h"
 #include ".\Packet Capture/MyWinDivert.h"
 #include ".\Damage Meter/Damage Meter.h"
 #include ".\UI\UiWindow.h"
@@ -22,6 +23,13 @@ void getconfig(CSimpleIniA& ini, int sec)
 		long language = ini.GetLongValue("Meter", "Language", 0);
 		Language.SetLanguage(LANGUAGE(language));
 		bool shouldLogMonsterStats = ini.GetBoolValue("Meter","LogMonsterStats",true);
+		bool presence = ini.GetBoolValue("Meter","RichPresence",true);
+		DISCORD.shouldLoad = presence;
+		DISCORD.shouldUpdate = presence;
+		int wideness = ini.GetLongValue("Meter","TimerAcc",1);
+		if (wideness < 0 || wideness > 3)
+			wideness = 1;
+		DAMAGEMETER.mswideness = wideness;
 		const char* font = ini.GetValue("Meter","DefaultFont");
 		if (font)
 		{
@@ -33,16 +41,6 @@ void getconfig(CSimpleIniA& ini, int sec)
 	}
 }
 bool configloaded = false;
-bool savefont()
-{
-	DAMAGEMETER.ini.SetValue("Meter", "DefaultFont", DAMAGEMETER.selectedFont.path.c_str());
-	SI_Error rc = DAMAGEMETER.ini.SaveFile("meterconfig.ini");
-	if (rc < 0) {
-		MessageBoxA(NULL, "Something is wrong with your system, cant make config file.", "ERROR", MB_OK | MB_ICONERROR);
-		return false;
-	}
-	return true;
-}
 bool createconfig()
 {
 	DAMAGEMETER.ini.SetBoolValue("Loader", "XignCheck", true);
@@ -50,6 +48,8 @@ bool createconfig()
 	DAMAGEMETER.ini.SetLongValue("Meter", "Language", 0);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "LogFile", false);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "LogMonsterStats",true);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "RichPresence", true);
+	DAMAGEMETER.ini.SetLongValue("Meter", "TimerAcc",1);
 	DAMAGEMETER.ini.SetValue("Meter", "DefaultFont","");
 	SI_Error rc = DAMAGEMETER.ini.SaveFile("meterconfig.ini");
 	if (rc < 0) {
@@ -93,6 +93,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_wsetlocale(LC_ALL, L"Korean");
 	MiniDump::Begin();
 
+	if (!DISCORD.Init())
+	{
+		LogInstance.WriteLog("Discord init failed");
+	}
 	if (!SWDB.Init()) {
 		LogInstance.WriteLog("InitDB Failed");
 		exit(-1);

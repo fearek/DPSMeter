@@ -9,6 +9,7 @@
 #include ".\UI\UtillWindow.h"
 #include ".\UI\PlotWindow.h"
 #include ".\Damage Meter\Damage Meter.h"
+#include ".\discord\DiscordPresence.h"
 #include <io.h>
 #include <chrono>
 #include <thread>
@@ -180,6 +181,10 @@ VOID UiWindow::Run() {
 }
 
 VOID UiWindow::Update() {
+	if (DISCORD.isCoreCreated)
+	{
+		DISCORD.RunCallbacks();
+	}
 	if (DAMAGEMETER.shouldRebuildAtlas)
 	{
 		DAMAGEMETER.shouldRebuildAtlas = false;
