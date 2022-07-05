@@ -332,13 +332,16 @@ BOOL MySQL::GetMapName(UINT32 mapID, CHAR* out_buffer, SIZE_T out_buffer_length)
 			out_buffer[out_buffer_length - 1] = 0x00;
 			return FALSE;
 		}
+		if (strcmp(result, "UNKNOWN") == 0)
+		{
+			return FALSE;
+		}
 		if (strlen(result) > out_buffer_length)
 		{
 			strncpy(out_buffer, result, out_buffer_length - 2);
 			out_buffer[out_buffer_length - 1] = 0x00;
 			return FALSE;
 		}
-
 		strcpy_s(out_buffer, out_buffer_length, result);
 	}
 	else
