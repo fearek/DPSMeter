@@ -34,9 +34,9 @@ VOID SWDamageMeterHistory::ClearHistory(INT index) {
 }
 
 VOID SWDamageMeterHistory::push_back(std::vector<SWDamagePlayer*>& playerInfo) {
-
 	ClearHistory(_curIndex % HISTORY_SIZE);
-	_historys[_curIndex++ % HISTORY_SIZE].Setup(playerInfo, DAMAGEMETER.GetWorldID(), DAMAGEMETER.GetTime(),DAMAGEMETER.GetPing());
+	_historys[_curIndex % HISTORY_SIZE].Setup(playerInfo, DAMAGEMETER.GetWorldID(), DAMAGEMETER.GetTime(),DAMAGEMETER.GetPing());
+	_curIndex++;
 }
 
 const HISTORY_INFO& SWDamageMeterHistory::operator[](INT index) {
@@ -49,7 +49,7 @@ const HISTORY_INFO& SWDamageMeterHistory::operator[](INT index) {
 
 SIZE_T SWDamageMeterHistory::size() {
 
-	if (_curIndex > HISTORY_SIZE)
+	if (_curIndex >= HISTORY_SIZE)
 		return HISTORY_SIZE;
 	else
 		return _curIndex % HISTORY_SIZE;

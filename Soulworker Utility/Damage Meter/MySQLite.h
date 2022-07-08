@@ -26,6 +26,7 @@ private:
 	sqlite3_stmt* _skill_stmt;
 	sqlite3_stmt* _monster_stmt;
 	sqlite3_stmt* _map_stmt;
+	sqlite3_stmt* _map_stmt_eng;
 	sqlite3_stmt* _buff_stmt;
 
 public:
@@ -34,8 +35,10 @@ public:
 
 	BOOL Init();
 	BOOL GetSkillName(UINT32 skillId, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length);
+	BOOL GetMonsterType(UINT32 DB2, INT32* type);
 	BOOL GetMonsterName(UINT32 DB2, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length);
 	BOOL GetMapName(UINT32 mapId, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length);
+	BOOL GetMapNameENG(UINT32 mapId, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length);
 	BOOL GetBuffName(UINT32 buffId, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length);
 	std::string GetStatName(unsigned int statid);
 };

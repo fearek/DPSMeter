@@ -34,6 +34,7 @@ typedef struct _SW_DB2_STRUCT {
 	UINT32 _id;
 	//	USHORT _db1;
 	UINT32 _db2;
+	INT32 _type;
 }SW_DB2_STRUCT;
 struct ImFontObj
 {

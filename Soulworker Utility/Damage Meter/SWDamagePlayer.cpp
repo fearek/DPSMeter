@@ -91,17 +91,22 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 
 	// 화이트리스트 제도
 	// 브세일 경우 보스몹만 데미지에 추가함
+	BOOL bypassCheck = false;
+	// BS
 	if (worldID == 21018) {
 		if (db2 == 31310101 || db2 == 31310102) {
-			_damage += totalDMG;
-			_soulstoneDamage += soulstoneDMG;
-			_damageForSoulstone += totalDMG;
-			_soulstoneDamageForSoulstone += soulstoneDMG;
+			bypassCheck = true;
+		}
+	}
+	// BS Solo
+	if (worldID == 24018) {
+		if (db2 == 32320101 || db2 == 32320102) {
+			bypassCheck = true;
 		}
 	}
 	// 이하 블랙리스트 제도
 	// 제외목록에 들어가있지 않다면 데미지 합산
-	else if (dpsIgnoreIdList.find(db2) == dpsIgnoreIdList.end()) {
+	if (bypassCheck || (dpsIgnoreIdList.find(db2) == dpsIgnoreIdList.end() && db->_type != 6)) {
 		_damage += totalDMG;
 		_soulstoneDamage += soulstoneDMG;
 
@@ -109,8 +114,6 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 			_damageForSoulstone += totalDMG;
 			_soulstoneDamageForSoulstone += soulstoneDMG;
 		}
-	}
-	else {
 	}
 
 #if DEBUG_DAMAGE_PLAYER == 1

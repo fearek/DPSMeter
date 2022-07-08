@@ -87,14 +87,14 @@ BOOL MiniDump::Begin(VOID)
 {
     SetErrorMode(SEM_FAILCRITICALERRORS);
 
-    PreviousExceptionFilter = SetUnhandledExceptionFilter(UnHandledExceptionFilter);
+    AddVectoredExceptionHandler(1,UnHandledExceptionFilter);
 
     return true;
 }
 
 BOOL MiniDump::End(VOID)
 {
-    SetUnhandledExceptionFilter(PreviousExceptionFilter);
+   // SetUnhandledExceptionFilter(PreviousExceptionFilter);
 
     return true;
 }

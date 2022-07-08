@@ -37,21 +37,49 @@ typedef struct _SWPACKETDAMAGE_PLAYER {
 	
 #pragma pack(pop)
 static std::unordered_set<UINT32> pauseIdList({
-	31309102, // 루나폴 - 에드가
-	31301001, // 바썬 - 플레마 1페
-	31301002, // 바썬 - 플레마 2페
-	31310101, // 브세노말 - 테네브리스 1페
-	31310103 // BS Hard Phase 1
-	// 702 // 일시정지 테스트용 트센몹
+	702, // Trainning Master
+
+	/* LF */
+	31309102, // Azure Force. Edgar
+
+	/* VS */
+	31301001, // Flemma P1
+	31301002, // Flemma P2
+
+	/* VS Solo */
+	33301001, // Flemma P1
+	33301002, // Flemma P2
+
+	/* BS */
+	31310101, // Tenebris P1
+	31310103, // BS Hard Phase 1
+
+	/* BS Solo */
+	32320101, // Tenebris P1
 	});
 static std::unordered_set<UINT32> endIdList({
-	31308001, // 히하 - 라파쿰바
-	31309151, // 루나폴 - 정크 퀸
-	31301003, // 바썬 - 플레마 3페
-	31310102, // 브세노말 - 테네브리스 2페
-	31310107, // BS Hard Phase 2
-	32308101, //raphakumba HH
-	32301001, //flemma solo
+	/* HH */
+	31308001, // Raphakumba
+
+	/* LF */
+	31309151, // Junk Queen
+
+	/* VS */
+	31301003, // Flemma P3
+
+	/* VS Solo */
+	33301003, // Flemma P3
+
+	/* BS */
+	31310102, // Tenebris P2
+	31310107, // Tenebris Hard P2
+
+	/* BS Solo */
+	32320102, // Tenebris P2
+
+	/* RANK */
+	32308101, // Raphakumba Rank
+	32301001, // Flemma Rank
 	});
 
 class SWPacketDamage : public SWPacket {

@@ -77,6 +77,12 @@ VOID SWDamageMeter::AddDamage(UINT32 id, UINT64 totalDMG, UINT64 soulstoneDMG, S
 				return; 
 			}
 		}
+		else if (GetWorldID() == 24018) // BS Solo
+		{
+			if ((monsterId != 32320101) && (monsterId != 32320102)) {
+				return;
+			}
+		}
 	}
 
 	Start();
@@ -370,11 +376,12 @@ VOID SWDamageMeter::InsertDB(UINT32 id, UINT32 db2) {
 			return;
 		}
 	}
-
+	INT32 type = -1;
+	SWDB.GetMonsterType(db2, &type);
 	SW_DB2_STRUCT* db = new SW_DB2_STRUCT;
 	db->_id = id;
 	db->_db2 = db2;
-
+	db->_type = type;
 #if DEBUG_DAMAGEMETER_DB == 1
 	LogInstance.WriteLog("[DEBUG] [INSERT DB] [NEW] [ID = %08x] [DB1 = %d] [DB2 = %d]", db->_id, db->_db1, db->_db2);
 #endif
