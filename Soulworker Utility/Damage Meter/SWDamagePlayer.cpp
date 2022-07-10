@@ -95,18 +95,24 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 	// BS
 	if (worldID == 21018) {
 		if (db2 == 31310101 || db2 == 31310102) {
-			bypassCheck = true;
+			_damage += totalDMG;
+			_soulstoneDamage += soulstoneDMG;
+			_damageForSoulstone += totalDMG;
+			_soulstoneDamageForSoulstone += soulstoneDMG;
 		}
 	}
 	// BS Solo
-	if (worldID == 24018) {
+	else if (worldID == 24018) {
 		if (db2 == 32320101 || db2 == 32320102) {
-			bypassCheck = true;
+			_damage += totalDMG;
+			_soulstoneDamage += soulstoneDMG;
+			_damageForSoulstone += totalDMG;
+			_soulstoneDamageForSoulstone += soulstoneDMG;
 		}
 	}
 	// 이하 블랙리스트 제도
 	// 제외목록에 들어가있지 않다면 데미지 합산
-	if (bypassCheck || (dpsIgnoreIdList.find(db2) == dpsIgnoreIdList.end() && db->_type != 6)) {
+	else if (dpsIgnoreIdList.find(db2) == dpsIgnoreIdList.end() && db->_type != 6) {
 		_damage += totalDMG;
 		_soulstoneDamage += soulstoneDMG;
 
@@ -115,8 +121,13 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 			_soulstoneDamageForSoulstone += soulstoneDMG;
 		}
 	}
-
 #if DEBUG_DAMAGE_PLAYER == 1
+	else if (db->_type == 6)
+	{
+
+		LogInstance.WriteLog("Ignored damage to %d, type 6",db2);
+
+	}
 	LogInstance.WriteLog("[PLAYER] [ID = %d] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d] [maxCombo = %d]", _id, _damage, _critDamage, _hitCount, _critHitCount, _maxCombo);
 #endif
 
