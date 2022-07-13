@@ -270,7 +270,7 @@ VOID PlayerTable::SetupTable() {
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_EVADE_RATE_B).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_GIGA_ENLIGHTEN).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_TERA_ENLIGHTEN).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_LOSED_HP).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_LOST_HP).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_DODGE_COUNT).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn("Death", columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		//ImGuiTableColumnFlags_WidthStretch

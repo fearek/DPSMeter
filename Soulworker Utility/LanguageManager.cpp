@@ -57,7 +57,7 @@ DICTIONARY_t Language =
     {STR_TABLE_EVADE_RATE_B, {{KOREAN, u8"회피율B"}, {ENGLISH, u8"Evade Rate B"}, {CHINESE, u8"迴避率 B"}, {JAPANESE, u8"回避発動率 B"}}},
     {STR_TABLE_GIGA_ENLIGHTEN, {{KOREAN, u8"기가인라"}, {ENGLISH, u8"Giga.Enli"}, {CHINESE, u8"Giga啟蒙"}, {JAPANESE, u8"ギガ.エンラ"}}},
     {STR_TABLE_TERA_ENLIGHTEN, {{KOREAN, u8"테라인라"}, {ENGLISH, u8"Tera.Enli"}, {CHINESE, u8"Tera啟蒙"}, {JAPANESE, u8"テラ.エンラ"}}},
-    {STR_TABLE_LOSED_HP, {{KOREAN, u8"잃은HP"}, {ENGLISH, u8"Losed HP"}, {CHINESE, u8"損失HP"}, {JAPANESE, u8"失ったHP"}}},
+    {STR_TABLE_LOST_HP, {{KOREAN, u8"잃은HP"}, {ENGLISH, u8"Losed HP"}, {CHINESE, u8"損失HP"}, {JAPANESE, u8"失ったHP"}}},
     {STR_TABLE_DODGE_COUNT, {{KOREAN, u8"회피기"}, {ENGLISH, u8"Dodge"}, {CHINESE, u8"Dodge"}, {JAPANESE, u8"回避使用"}}},
 
     {STR_TABLE_DURATION, {{KOREAN,u8"지속시간"}, {ENGLISH, u8"DURATION"}, {CHINESE, u8"持續時間"}, {JAPANESE, u8"持続時間"}}},

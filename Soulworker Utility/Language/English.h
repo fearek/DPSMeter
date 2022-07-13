@@ -52,7 +52,7 @@
 #define STR_TABLE_EVADE_RATE_B u8"Evade Rate B"
 #define STR_TABLE_GIGA_ENLIGHTEN u8"Giga.Enli"
 #define STR_TABLE_TERA_ENLIGHTEN u8"Tera.Enli"
-#define STR_TABLE_LOSED_HP u8"Losed HP"
+#define STR_TABLE_LOST_HP u8"Lost HP"
 #define STR_TABLE_DODGE_COUNT u8"Dodge"
 
 #define STR_TABLE_DURATION u8"DURATION" // buff,debuff
@@ -74,7 +74,7 @@
 #define STR_OPTION_TABLE_REFRESH_TIME u8"Table RefreshTime"
 #define STR_OPTION_TEXT_OUTLINE_COLOR u8"Text Outline Color"
 #define STR_OPTION_ACTIVE_COLOR u8"Active Color"
-#define STR_OPTION_INACTIVE_COLOR u8"InActive Color"
+#define STR_OPTION_INACTIVE_COLOR u8"Inactive Color"
 
 #define STR_CHAR_UNKNOWN u8"Unknown"
 #define STR_CHAR_HARU u8"Haru"

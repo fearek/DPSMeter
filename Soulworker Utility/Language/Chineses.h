@@ -51,7 +51,7 @@
 #define STR_TABLE_EVADE_RATE_B u8"迴避率 B"
 #define STR_TABLE_GIGA_ENLIGHTEN u8"Giga啟蒙"
 #define STR_TABLE_TERA_ENLIGHTEN u8"Tera啟蒙"
-#define STR_TABLE_LOSED_HP u8"損失HP"
+#define STR_TABLE_LOST_HP u8"損失HP"
 #define STR_TABLE_DODGE_COUNT u8"Dodge"
 
 #define STR_TABLE_DURATION u8"持續時間" // buff,debuff
