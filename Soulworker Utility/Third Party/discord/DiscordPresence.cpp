@@ -8,7 +8,7 @@ DWORD DiscordCustomPresence::Init()
 	{
 		return TRUE;
 	}
-	auto result = discord::Core::Create(766705016081612810, DiscordCreateFlags_Default, &core);
+	auto result = discord::Core::Create(766705016081612810, DiscordCreateFlags_NoRequireDiscord, &core);
 	if (result != discord::Result::Ok)
 	{
 		return FALSE;
@@ -25,7 +25,14 @@ DWORD DiscordCustomPresence::Init()
 }
 VOID DiscordCustomPresence::RunCallbacks()
 {
-	core->RunCallbacks();
+	try {
+		core->RunCallbacks();
+	}
+	catch (std::exception e)
+	{
+		LogInstance.WriteLog("Discord exception: %s",e.what());
+		auto result = discord::Core::Create(766705016081612810, DiscordCreateFlags_NoRequireDiscord, &core);
+	}
 	return;
 }
 std::string getCharacterName(int id)
