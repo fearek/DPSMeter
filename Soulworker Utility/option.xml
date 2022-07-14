@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SDM>
-    <Option IsTopMost="1" GlobalScale="1" TableScale="1" ColumnScale="1" K="0" M="0" IsSoloMode="0" DoHideName="0" CellPaddingX="0" CellPaddingY="0" BorderSize="1" WindowWidth="800" RefreshTime="0.30000001" WinPosX="356" WinPosY="335"/>
+    <Option IsTopMost="1" GlobalScale="1" TableScale="1" ColumnScale="1" K="0" M="0" IsSoloMode="0" DoHideName="0" CellPaddingX="0" CellPaddingY="0" BorderSize="1" WindowWidth="800" RefreshTime="0.30000001" WinPosX="-1098" WinPosY="641"/>
     <TextColor r="1" g="1" b="1" a="1"/>
     <WindowBgColor r="0.059999999" g="0.059999999" b="0.059999999" a="0.94"/>
     <OutlineColor r="0" g="0" b="0" a="1"/>

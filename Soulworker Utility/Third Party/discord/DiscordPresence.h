@@ -12,5 +12,4 @@ public:
 	bool shouldLoad = true;
 	bool shouldUpdate = true;
 	bool isInitialized = false;
-	bool isCoreCreated = false;
 };
