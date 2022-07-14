@@ -181,10 +181,7 @@ VOID UiWindow::Run() {
 }
 
 VOID UiWindow::Update() {
-	if (DISCORD.isCoreCreated)
-	{
-		DISCORD.RunCallbacks();
-	}
+	DISCORD.RunCallbacks();
 	if (DAMAGEMETER.shouldRebuildAtlas)
 	{
 		DAMAGEMETER.shouldRebuildAtlas = false;

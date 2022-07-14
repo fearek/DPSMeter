@@ -2,18 +2,28 @@
 #include "DiscordPresence.h"
 #include ".\Damage Meter\MySQLite.h"
 #include ".\Damage Meter\Damage Meter.h"
+void LogProblemsFunction(discord::LogLevel level, const char * message)
+{
+	LogInstance.WriteLog("Discord[%d] - %s",level,message);
+}
 DWORD DiscordCustomPresence::Init()
 {
 	if (isInitialized || !shouldLoad)
 	{
 		return TRUE;
 	}
+	if (core)
+	{
+		core->~Core();
+		delete core;
+		core = nullptr;
+	}
 	auto result = discord::Core::Create(766705016081612810, DiscordCreateFlags_NoRequireDiscord, &core);
 	if (result != discord::Result::Ok)
 	{
 		return FALSE;
 	}
-	isCoreCreated = true;
+	core->SetLogHook(discord::LogLevel::Debug,LogProblemsFunction);
 	discord::Activity Activity{};
 	Activity.SetDetails("Idle");
 	Activity.SetState("discord.com/invite/H7jZpcVJhq");
@@ -26,12 +36,29 @@ DWORD DiscordCustomPresence::Init()
 VOID DiscordCustomPresence::RunCallbacks()
 {
 	try {
-		core->RunCallbacks();
+		if (core) {
+			discord::Result result = core->RunCallbacks();
+			if (result != discord::Result::Ok)
+			{
+				isInitialized = false;
+				DISCORD.Init();
+			}
+		}
+		else
+		{
+			isInitialized = false;
+			DISCORD.Init();
+		}
 	}
 	catch (std::exception e)
 	{
 		LogInstance.WriteLog("Discord exception: %s",e.what());
-		auto result = discord::Core::Create(766705016081612810, DiscordCreateFlags_NoRequireDiscord, &core);
+		return;
+	}
+	catch (const discord::Result& r)
+	{
+		LogInstance.WriteLog("Discord exception: %d", r);
+		return;
 	}
 	return;
 }
