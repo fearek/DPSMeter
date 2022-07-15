@@ -52,8 +52,8 @@ public:
 	VOID Update();
 	VOID Init();
 
-	const ImU32& GetJobColor(UINT index);
-	const ImU32& GetOutlineColor();
+	const ImU32 GetJobColor(UINT index);
+	const ImU32 GetOutlineColor();
 	const FLOAT& GetFontScale();
 	const FLOAT& GetColumnFontScale();
 	const FLOAT& GetTableFontScale();

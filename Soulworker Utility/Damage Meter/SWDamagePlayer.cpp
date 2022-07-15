@@ -299,6 +299,8 @@ DOUBLE SWDamagePlayer::GetHistoryBS(int type)
 		return _historyacc01;
 	case 2:
 		return _historyacc02;
+	default:
+		return 0;
 	}
 }
 

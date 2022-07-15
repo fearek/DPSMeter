@@ -806,7 +806,7 @@ BOOL UiOption::ToggleTopMost() {
 	return SaveOption();
 }
 
-const ImU32& UiOption::GetJobColor(UINT index) {
+const ImU32 UiOption::GetJobColor(UINT index) {
 
 	if (index < 0 || index > 9)
 		return ImGui::ColorConvertFloat4ToU32(_jobColor[0]);
@@ -814,7 +814,7 @@ const ImU32& UiOption::GetJobColor(UINT index) {
 	return ImGui::ColorConvertFloat4ToU32(_jobColor[index]);
 }
 
-const ImU32& UiOption::GetOutlineColor() {
+const ImU32 UiOption::GetOutlineColor() {
 	return ImGui::ColorConvertFloat4ToU32(_outlineColor);
 }
 

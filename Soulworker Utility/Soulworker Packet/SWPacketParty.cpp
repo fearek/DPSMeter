@@ -2,7 +2,6 @@
 #include ".\Soulworker Packet\SWPacket.h"
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacketParty.h"
-
 SWPacketParty::SWPacketParty(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
@@ -13,7 +12,6 @@ VOID SWPacketParty::Do() {
 
 	BYTE* p_data = _data;
 	p_data += sizeof(SWHEADER) + sizeof(SWPACKETPARTY_HEADER);
-
 	for (int i = 0; i < party_header->_partyPlayerCount; i++) {
 		SWPACKETPARTY_DATA* party_data = (SWPACKETPARTY_DATA*)p_data;
 		BYTE job = *(p_data + sizeof(SWPACKETPARTY_DATA) + party_data->_nickSize + 1);

@@ -2,6 +2,13 @@
 #include "DiscordPresence.h"
 #include ".\Damage Meter\MySQLite.h"
 #include ".\Damage Meter\Damage Meter.h"
+#ifndef SERVER_KOREA
+const uint64_t appId = 766705016081612810;
+const char imageLink[] = "https://cdn.discordapp.com/app-icons/766705016081612810/2e18ca8613674db1caf850a35ca8e9df.png?size=256";
+#else
+const uint64_t appId = 997228082530353242;
+const char imageLink[] = "https://cdn.discordapp.com/app-icons/997228082530353242/daed10ef3cfd4aeef5738e7dbf73d132.png?size=256";
+#endif
 void LogProblemsFunction(discord::LogLevel level, const char * message)
 {
 	LogInstance.WriteLog("Discord[%d] - %s",level,message);
@@ -18,7 +25,7 @@ DWORD DiscordCustomPresence::Init()
 		delete core;
 		core = nullptr;
 	}
-	auto result = discord::Core::Create(766705016081612810, DiscordCreateFlags_NoRequireDiscord, &core);
+	auto result = discord::Core::Create(appId, DiscordCreateFlags_NoRequireDiscord, &core);
 	if (result != discord::Result::Ok)
 	{
 		return FALSE;
@@ -28,7 +35,7 @@ DWORD DiscordCustomPresence::Init()
 	Activity.SetDetails("Idle");
 	Activity.SetState("discord.com/invite/H7jZpcVJhq");
 	Activity.SetType(discord::ActivityType::Playing);
-	Activity.GetAssets().SetLargeImage("https://cdn.discordapp.com/app-icons/766705016081612810/424794a1896ac89b9fe0d4ffe3619912.png?size=256");
+	Activity.GetAssets().SetLargeImage(imageLink);
 	core->ActivityManager().UpdateActivity(Activity, [](discord::Result callback) {if (callback == discord::Result::Ok) { LogInstance.WriteLog("Discord is initialized"); DISCORD.isInitialized = true; } else { LogInstance.WriteLog("Failed to init discord: %u", callback);}});
 	LogInstance.WriteLog("Initialized discord");
 	return TRUE;
@@ -116,7 +123,7 @@ VOID DiscordCustomPresence::UpdatePresence(std::string nick, UINT32 maze, UINT8 
 		Activity.GetTimestamps().SetStart(DAMAGEMETER.GetStartTime());
 	}
 	Activity.SetType(discord::ActivityType::Playing);
-	Activity.GetAssets().SetLargeImage("https://cdn.discordapp.com/app-icons/766705016081612810/424794a1896ac89b9fe0d4ffe3619912.png?size=256");
+	Activity.GetAssets().SetLargeImage(imageLink);
 	core->ActivityManager().UpdateActivity(Activity, [](discord::Result callback) {if (callback != discord::Result::Ok) { LogInstance.WriteLog("Failed to update presence: %u", callback); }});
 
 }
