@@ -53,7 +53,7 @@
 #define STR_TABLE_GIGA_ENLIGHTEN u8"기가인라"
 #define STR_TABLE_TERA_ENLIGHTEN u8"테라인라"
 
-#define STR_TABLE_LOSED_HP u8"잃은HP"
+#define STR_TABLE_LOST_HP u8"잃은HP"
 #define STR_TABLE_DODGE_COUNT u8"회피기"
 
 
