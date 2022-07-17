@@ -52,7 +52,7 @@
 #define STR_TABLE_EVADE_RATE_B u8"回避発動率 B"
 #define STR_TABLE_GIGA_ENLIGHTEN u8"ギガ.エンラ"
 #define STR_TABLE_TERA_ENLIGHTEN u8"テラ.エンラ"
-#define STR_TABLE_LOSED_HP u8"失ったHP"
+#define STR_TABLE_LOST_HP u8"失ったHP"
 #define STR_TABLE_DODGE_COUNT u8"回避使用"
 
 #define STR_TABLE_DURATION u8"持続時間" // buff,debuff

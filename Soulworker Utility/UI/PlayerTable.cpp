@@ -99,7 +99,7 @@ VOID PlayerTable::Update() {
 		//and if 3 then do nothing basically so we display all to 999
 		std::string milisecondsstring = std::to_string(miliseconds);
 		//turning it into a string before so we dont display leading 0's so timer is more readable
-		sprintf_s(title, 128, "%s : %02d:%02d:%s [v1.3.0.0_%s] Ping: %d https://discord.com/invite/H7jZpcVJhq ###DamageMeter", DAMAGEMETER.GetWorldName(),(UINT)DAMAGEMETER.GetTime() / 60000, ((UINT)DAMAGEMETER.GetTime() / 1000)%60, milisecondsstring.c_str(), SWPACKETMAKER.GetKeyInfo(), DAMAGEMETER.GetPing());
+		sprintf_s(title, 128, "%s : %02d:%02d:%s - Ping: %d [v1.3.0.0_%s] https://discord.com/invite/H7jZpcVJhq ###DamageMeter", DAMAGEMETER.GetWorldName(),(UINT)DAMAGEMETER.GetTime() / 60000, ((UINT)DAMAGEMETER.GetTime() / 1000)%60, milisecondsstring.c_str(), DAMAGEMETER.GetPing(), SWPACKETMAKER.GetKeyInfo());
 		ImGui::Begin(title, 0, windowFlag);
 		{
 			if (!UIOPTION.isOption() || _tableResize)
@@ -270,7 +270,7 @@ VOID PlayerTable::SetupTable() {
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_EVADE_RATE_B).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_GIGA_ENLIGHTEN).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_TERA_ENLIGHTEN).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_LOSED_HP).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_LOST_HP).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_DODGE_COUNT).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn("Death", columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		//ImGuiTableColumnFlags_WidthStretch

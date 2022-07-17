@@ -24,6 +24,7 @@
     <ProjectGuid>{b4fc54f3-38e8-4d35-86b6-d874c0ac6813}</ProjectGuid>
     <RootNamespace>SoulworkerUtility</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Soulworker DPS Meter</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
