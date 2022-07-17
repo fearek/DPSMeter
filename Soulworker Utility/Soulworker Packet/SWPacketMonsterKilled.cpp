@@ -10,6 +10,17 @@ VOID SWPacketMonsterKilled::Do() {
 
 	SWPACKETMONSTERKILLED* killed = (SWPACKETMONSTERKILLED*)(_data + sizeof(SWHEADER));
 	DAMAGEMETER.SetAggro(killed->_killedId, 0xffffffff);
+	if (DAMAGEMETER.isRun()) {
+		SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(killed->_killedId);
+		if (db == nullptr)
+			return;
+
+		// BSVH P3
+		if (DAMAGEMETER.GetWorldID() == 22018) {
+			if (db->_db2 == 31310103)
+				DAMAGEMETER.Suspend();
+		}
+	}
 }
 
 VOID SWPacketMonsterKilled::Log() {

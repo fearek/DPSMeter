@@ -19,12 +19,8 @@ DWORD DiscordCustomPresence::Init()
 	{
 		return TRUE;
 	}
-	if (core)
-	{
-		core->~Core();
-		delete core;
-		core = nullptr;
-	}
+	delete core;
+	core = nullptr;
 	auto result = discord::Core::Create(appId, DiscordCreateFlags_NoRequireDiscord, &core);
 	if (result != discord::Result::Ok)
 	{
