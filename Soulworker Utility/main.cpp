@@ -26,6 +26,10 @@ void getconfig(CSimpleIniA& ini, int sec)
 		bool presence = ini.GetBoolValue("Meter","RichPresence",true);
 		DISCORD.shouldLoad = presence;
 		DISCORD.shouldUpdate = presence;
+		bool hidename = ini.GetBoolValue("Meter", "HideName", false);
+		DISCORD.hideName = hidename;
+		bool hideclass = ini.GetBoolValue("Meter", "HideClass", false);
+		DISCORD.hideClass = hideclass;
 		int wideness = ini.GetLongValue("Meter","TimerAcc",1);
 		if (wideness < 0 || wideness > 3)
 			wideness = 1;
@@ -49,6 +53,8 @@ bool createconfig()
 	DAMAGEMETER.ini.SetBoolValue("Meter", "LogFile", false);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "LogMonsterStats",true);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "RichPresence", true);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "HideName", false);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "HideClass", false);
 	DAMAGEMETER.ini.SetLongValue("Meter", "TimerAcc",1);
 	DAMAGEMETER.ini.SetValue("Meter", "DefaultFont","");
 	SI_Error rc = DAMAGEMETER.ini.SaveFile("meterconfig.ini");

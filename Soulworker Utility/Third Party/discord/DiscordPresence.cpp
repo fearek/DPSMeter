@@ -89,6 +89,8 @@ std::string getCharacterName(int id)
 		return "Ephnel";
 	case 9:
 		return "Nabi";
+	case 10:
+		return "Dhana";
 	default:
 		return "UNKNOWN";
 	}
@@ -104,7 +106,10 @@ VOID DiscordCustomPresence::UpdatePresence(std::string nick, UINT32 maze, UINT8 
 		char _mapName[MAX_MAP_LEN];
 		SWDB.GetMapNameENG(maze, _mapName, MAX_MAP_LEN);
 		std::string detailsString = _mapName;
-		detailsString += " | " + nick + " (" + getCharacterName(playerclass) + ")";
+		if (!hideName)
+			detailsString += " | " + nick;
+		if(!hideClass)
+			detailsString += " (" + getCharacterName(playerclass) + ")";
 		Activity.SetDetails(detailsString.c_str());
 		std::string pingString;
 		pingString += std::to_string(DAMAGEMETER.GetPing()) + "ms discord.com/invite/H7jZpcVJhq";

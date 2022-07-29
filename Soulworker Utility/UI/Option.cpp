@@ -18,7 +18,7 @@ UiOption::UiOption()  : _open(0), _framerate(1), _windowBorderSize(1), _fontScal
 	_jobBasicColor[7] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(138, 2, 4, 255)));		// 치이
 	_jobBasicColor[8] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(118, 206, 158, 255)));	// 에프넬
 	_jobBasicColor[9] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(128, 128, 64, 255)));	// 이나비
-
+	_jobBasicColor[10] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(73, 51, 116, 255)));	// 이나비
 	for (int i = 0; i < 10; i++)
 		_jobColor[i] = _jobBasicColor[i];
 }
@@ -104,6 +104,10 @@ BOOL UiOption::ShowFontSelector() {
 			DISCORD.ClearPresence();
 		}
 	}
+	ImGui::SameLine();
+	ImGui::Checkbox("Hide character name", &DISCORD.hideName);
+	ImGui::SameLine();
+	ImGui::Checkbox("Hide character class", &DISCORD.hideClass);
 	return TRUE;
 }
 std::string getCharName(int id)
@@ -130,6 +134,8 @@ std::string getCharName(int id)
 		return Language.GetText(STR_CHAR_Ephnel);
 	case 9:
 		return Language.GetText(STR_CHAR_NABI);
+	case 10:
+		return Language.GetText(STR_CHAR_DHANA);
 	default:
 		return Language.GetText(STR_CHAR_UNKNOWN);
 	}
@@ -162,7 +168,7 @@ BOOL UiOption::ShowTableOption() {
 
 	//const char* job[10][32] = { {Language.GetText(STR_CHAR_UNKNOWN).c_str()}, {Language.GetText(STR_CHAR_HARU).c_str()}, {Language.GetText(STR_CHAR_ERWIN).c_str()}, {Language.GetText(STR_CHAR_LILY).c_str()}, {Language.GetText(STR_CHAR_JIN).c_str()}, {Language.GetText(STR_CHAR_STELLA).c_str()},{Language.GetText(STR_CHAR_IRIS).c_str()}, {Language.GetText(STR_CHAR_CHII).c_str()}, {Language.GetText(STR_CHAR_Ephnel).c_str()}, {Language.GetText(STR_CHAR_NABI).c_str()}};
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 11; i++) {
 		ImGui::PushID(i);
 		ImGui::ColorEdit4("##Color", (FLOAT*)&_jobColor[i], ImGuiColorEditFlags_None);
 		std::string charName = getCharName(i);
@@ -673,6 +679,8 @@ BOOL UiOption::SaveOption() {
 	DAMAGEMETER.ini.SetValue("Meter", "DefaultFont", DAMAGEMETER.selectedFont.path.c_str());
 	DAMAGEMETER.ini.SetLongValue("Meter", "TimerAcc", DAMAGEMETER.mswideness);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "RichPresence", DISCORD.shouldUpdate);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "HideName", DISCORD.hideName);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "HideClass", DISCORD.hideClass);
 	SI_Error rc = DAMAGEMETER.ini.SaveFile("meterconfig.ini");
 	if (rc < 0) {
 		MessageBoxA(NULL, "Something is wrong with your system, cant make config file.", "ERROR", MB_OK | MB_ICONERROR);
@@ -744,7 +752,7 @@ BOOL UiOption::SaveOption() {
 	inactive_color->SetAttribute("b", _activeColor[0].z);
 	inactive_color->SetAttribute("a", _activeColor[0].w);
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 11; i++) {
 
 		char buffer[32] = { 0 };
 		sprintf_s(buffer, 32, "JobColor%d", i);
@@ -808,7 +816,7 @@ BOOL UiOption::ToggleTopMost() {
 
 const ImU32 UiOption::GetJobColor(UINT index) {
 
-	if (index < 0 || index > 9)
+	if (index < 0 || index > 10)
 		return ImGui::ColorConvertFloat4ToU32(_jobColor[0]);
 
 	return ImGui::ColorConvertFloat4ToU32(_jobColor[index]);

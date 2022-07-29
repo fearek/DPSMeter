@@ -90,7 +90,7 @@ DICTIONARY_t Language =
     {STR_CHAR_CHII, {{KOREAN, u8"치이"}, {ENGLISH, u8"Chii"}, {CHINESE, u8"琪"}, {JAPANESE, u8"チイ"}}},
     {STR_CHAR_Ephnel, {{KOREAN, u8"에프넬"}, {ENGLISH, u8"Ephnel"}, {CHINESE, u8"艾芙妮爾"}, {JAPANESE, u8"エフネル"}}},
     {STR_CHAR_NABI, {{KOREAN, u8"이나비"}, {ENGLISH, u8"Nabi"}, {CHINESE, u8"李娜飛"}, {JAPANESE, u8"ナビ"}}},
-
+    {STR_CHAR_DHANA, {{KOREAN, u8"다나"}, {ENGLISH, u8"Dhana"}, {CHINESE, u8"Dhana"}, {JAPANESE, u8"Dhana"}}},
     {STR_OPTION_RESTORE_DEFAULT_COLOR, {{KOREAN, u8"기본 색상으로 바꾸기"}, {ENGLISH, u8"Restore Default Color"}, {CHINESE, u8"恢復預設顏色"}, {JAPANESE, u8"Restore Default Color"}}},
 
     {STR_OPTION_HOTKEY_DESC_1, {{KOREAN, u8"기본 일시정지/재개 키는 CTRL + END 키입니다.\n"}, {ENGLISH, u8"Pause/Resume : Ctrl + End\n"}, {CHINESE, u8"開始/暫停 : Ctrl + End\n"}, {JAPANESE, u8"Pause/Resume : Ctrl + End\n"}}},
