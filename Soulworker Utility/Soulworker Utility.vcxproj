@@ -183,6 +183,7 @@
     <ClInclude Include="Damage Meter\SWDamageSkill.h" />
     <ClInclude Include="Damage Meter\Timer.h" />
     <ClInclude Include="Soulworker Packet\SWCPresence.h" />
+    <ClInclude Include="Soulworker Packet\SWPacketMonsterStatUpdate.h" />
     <ClInclude Include="Third Party\discord\DiscordPresence.h" />
     <ClInclude Include="LanguageManager.h" />
     <ClInclude Include="Language\Chineses.h" />
@@ -303,6 +304,7 @@
     <ClCompile Include="Soulworker Packet\SWPacketMazeEnd.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketMazeStart.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketMonsterKilled.cpp" />
+    <ClCompile Include="Soulworker Packet\SWPacketMonsterStatUpdate.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketObjectCreate.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketOtherUseSkill.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketParty.cpp" />

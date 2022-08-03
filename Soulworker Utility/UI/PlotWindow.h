@@ -52,12 +52,19 @@ private:
 	std::vector<double> _annonYListBD;
 	std::vector<std::string> _annonContentListBD;
 
+	std::unordered_map<UINT32, std::vector<double>> _bossHpList;
+	std::unordered_map<UINT32, std::vector<double>> _bossTimeList;
+	UINT32 _selectedBossHpComboID;
+
 	bool _end = false;
 
 	VOID UpdatePlotTab();
 	VOID UpdateAbPlotTab();
 	VOID UpdateJqPlotTab();
 	VOID UpdateBdPlotTab();
+	VOID UpdateBossHpPlotTab();
+	VOID UpdateBossHpPlotGraph();
+	VOID UpdateBossHpPlotCombo();
 public:
 	VOID AddData(UINT32 id, std::string name, DOUBLE DPS, DOUBLE time, bool isFirstElement);
 	VOID AddAbData(DOUBLE DPS, DOUBLE time);
@@ -65,6 +72,7 @@ public:
 	VOID AddJqData(BYTE stack, DOUBLE time);
 	VOID AddAnnonation(std::string content); //armor break
 	VOID AddAnnonationBD(std::string content);
+	VOID AddBossHpData(UINT32 id, UINT64 HP, DOUBLE time);
 	VOID OpenWindow();
 	VOID Update();
 	VOID End();

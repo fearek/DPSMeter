@@ -45,7 +45,7 @@
 /* 0x17 ?? */
 #include ".\Soulworker Packet\SWPacketMonsterKilled.h"
 #include ".\Soulworker Packet\SWPacketAggroChanged.h"
-
+#include ".\Soulworker Packet\SWPacketMonsterStatUpdate.h"
 /* 0x23 Gesture */
 #include ".\Soulworker Packet\SWPacketGestureUsed.h"
 
@@ -101,6 +101,7 @@ enum OPcode {
 	PARTY_LIST_INFO = 0x1236,
 
 	MONSTER_KILLED = 0x1711,
+	MONSTER_STAT_UPDATE = 0x1712,
 	AGGRO_CHANGED = 0x1722,
 
 	GESTURE_USED = 0x2301,

@@ -414,6 +414,9 @@
     <ClInclude Include="Soulworker Packet\SWCPresence.h">
       <Filter>SWCPacket</Filter>
     </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWPacketMonsterStatUpdate.h">
+      <Filter>SWPacket\Packet\0x17</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -676,6 +679,9 @@
     </ClCompile>
     <ClCompile Include="Soulworker Packet\SWCPresence.cpp">
       <Filter>SWCPacket</Filter>
+    </ClCompile>
+    <ClCompile Include="Soulworker Packet\SWPacketMonsterStatUpdate.cpp">
+      <Filter>SWPacket\Packet\0x17</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

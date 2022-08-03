@@ -43,7 +43,10 @@ private:
 public:
 	PlayerTable();
 	~PlayerTable();
-
+	FLOAT GetTableTime()
+	{
+		return _tableTime;
+	}
 	VOID Update();
 	VOID ClearTable();
 	VOID ResizeTalbe();

@@ -10,7 +10,7 @@
 //#define MAX_MAP_LEN 32
 #define MAX_MAP_LEN 64
 
-#define PLAYER_JOB_CANT_FIND 10
+#define PLAYER_JOB_CANT_FIND 11
 
 #define DEBUG_DAMAGEMETER_OWNER_ID 0
 #define DEBUG_DAMAGEMETER_DB 0
@@ -667,7 +667,6 @@ public:
 	std::vector<SWDamagePlayer*>::const_iterator begin();
 	std::vector<SWDamagePlayer*>::const_iterator end();
 	const SIZE_T& size();
-
 	SW_PLAYER_METADATA* GetPlayerMetaData(UINT32 id);
 
 	UINT64 GetPlayerTotalDamage();

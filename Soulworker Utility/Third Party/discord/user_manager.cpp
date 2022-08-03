@@ -1,7 +1,7 @@
 #if !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
-#include "pch.h"
+
 #include "user_manager.h"
 
 #include "core.h"
@@ -13,7 +13,7 @@ namespace discord {
 
 class UserEvents final {
 public:
-    static void OnCurrentUserUpdate(void* callbackData)
+    static void DISCORD_CALLBACK OnCurrentUserUpdate(void* callbackData)
     {
         auto* core = reinterpret_cast<Core*>(callbackData);
         if (!core) {

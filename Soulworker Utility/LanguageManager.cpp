@@ -123,6 +123,9 @@ DICTIONARY_t Language =
     {STR_UTILWINDOW_JQGRAOH_TIME_SEC, {{KOREAN, u8"시간(초)"}, {ENGLISH, u8"Time(sec)"}, {CHINESE,u8"Time(sec)"}, {JAPANESE, u8"時間(秒)"}}},
 
     {STR_UTILWINDOW_COMBATLOG, {{KOREAN, u8"전투 로그"}, {ENGLISH, u8"Combat Log"}, {CHINESE,u8"戰鬥紀錄"}, {JAPANESE, u8"戦闘ログ"}}},
+    {STR_PLOTWINDOW_BOSSHPGRAPH,{{KOREAN, u8"Boss HP Graph"}, {ENGLISH, u8"Boss HP Graph"}, {CHINESE,u8"Boss HP Graph"}, {JAPANESE, u8"Boss HP Graph"}}},
+    {STR_PLOTWINDOW_BOSSHPGRAPH_UNIT,{{KOREAN, u8"Unit(M)"}, {ENGLISH, u8"Unit(M)"}, {CHINESE,u8"Unit(M)"}, {JAPANESE, u8"Unit(M)"}}},
+    { STR_PLOTWINDOW_TIME_SEC,{{KOREAN, u8"Time(sec)"}, {ENGLISH, u8"Time(sec)"}, {CHINESE,u8"Time(sec)"}, {JAPANESE, u8"Time(sec)"}} },
 };
 
 

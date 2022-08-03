@@ -76,7 +76,7 @@ std::string getCharacterName(int id)
 	case 2:
 		return "Erwin";
 	case 3:
-		return "Lilly";
+		return "Lily";
 	case 4:
 		return "Jin";
 	case 5:

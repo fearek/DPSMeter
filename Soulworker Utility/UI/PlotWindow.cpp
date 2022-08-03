@@ -3,7 +3,7 @@
 #include "UtillWindow.h"
 #include <vector>
 #include ".\Language\Region.h"
-
+#include "Damage Meter\Damage Meter.h"
 VOID PlotWindow::AddData(UINT32 id, std::string name, DOUBLE DPS, DOUBLE time, bool isFirstElement)
 {
 	if (isFirstElement) {
@@ -48,7 +48,103 @@ VOID PlotWindow::AddData(UINT32 id, std::string name, DOUBLE DPS, DOUBLE time, b
 		timeList[id].push_back(time);
 	}
 }
+VOID PlotWindow::UpdateBossHpPlotTab()
+{
+	if (ImGui::BeginTabItem(Language.GetText(STR_PLOTWINDOW_BOSSHPGRAPH).c_str()))
+	{
+		UpdateBossHpPlotCombo();
 
+		if (_selectedBossHpComboID != -1)
+			UpdateBossHpPlotGraph();
+
+		ImGui::EndTabItem();
+	}
+}
+VOID PlotWindow::UpdateBossHpPlotCombo()
+{
+	std::unordered_map<UINT32, const CHAR*> bossInfos;
+
+	// Get all monster data
+	for (auto itr = DAMAGEMETER.begin(); itr < DAMAGEMETER.end(); itr++) {
+		for (auto itr2 = (*itr)->begin(); itr2 != (*itr)->end(); itr2++) {
+			if ((*itr2)->GetType() == 3 || (*itr2)->GetType() == 4)
+				bossInfos.emplace((*itr2)->GetID(), (*itr2)->GetName());
+		}
+	}
+
+	const CHAR* comboPreview = nullptr;
+
+	if (bossInfos.begin() != bossInfos.end()) {
+		if (_selectedBossHpComboID == -1 || bossInfos.find(_selectedBossHpComboID) == bossInfos.end())
+			_selectedBossHpComboID = bossInfos.begin()->first;
+		comboPreview = bossInfos.at(_selectedBossHpComboID);
+
+		if (ImGui::BeginCombo("BOSS", comboPreview, ImGuiComboFlags_HeightLarge)) {
+
+			for (auto itr = bossInfos.begin(); itr != bossInfos.end(); itr++) {
+
+				CHAR label[MONSTER_NAME_LEN] = { 0 };
+				sprintf_s(label, MONSTER_NAME_LEN, "%s##%d", itr->second, itr->first);
+
+				if (ImGui::Selectable(label)) {
+					_selectedBossHpComboID = itr->first;
+				}
+			}
+
+			ImGui::EndCombo();
+		}
+	}
+}
+VOID PlotWindow::AddBossHpData(UINT32 id, UINT64 HP, DOUBLE time)
+{
+	_bossHpList[id].push_back(static_cast<double>(HP / 1000000));
+	_bossTimeList[id].push_back(time);
+}
+VOID PlotWindow::UpdateBossHpPlotGraph()
+{
+	auto timeList = _bossTimeList;
+	auto bossHpList = _bossHpList;
+	if (timeList.size() > 0) {
+		size_t currentSize = timeList[_selectedBossHpComboID].size();
+
+		// 
+		DOUBLE startX = 0.0;
+		if (currentSize > 45) {
+			startX = timeList[_selectedBossHpComboID].at(currentSize - 45);
+		}
+		DOUBLE endX = timeList[_selectedBossHpComboID].at(currentSize - 1);
+		//
+		DOUBLE startY = 0;
+		DOUBLE endY = 100;
+		auto itr = bossHpList[_selectedBossHpComboID].begin();
+		if (currentSize > 45) {
+			itr += (bossHpList[_selectedBossHpComboID].size() - 1) - (45 - 1);
+		}
+		for (; itr != bossHpList[_selectedBossHpComboID].end(); itr++) {
+			if (*itr > endY) {
+				endY = *itr;
+			}
+		}
+		startY = endY - 7000;
+		if (startY <= 0) {
+			startY = 0;
+		}
+		endY += 100;
+
+		if (!_end) {
+			ImPlot::SetNextPlotLimitsX(startX, endX, ImGuiCond_Always);
+			ImPlot::SetNextPlotLimitsY(startY, endY, ImGuiCond_Always);
+		}
+	}
+
+	if (ImPlot::BeginPlot(
+		Language.GetText(STR_PLOTWINDOW_BOSSHPGRAPH).c_str(),
+		Language.GetText(STR_PLOTWINDOW_TIME_SEC).c_str(),
+		Language.GetText(STR_PLOTWINDOW_BOSSHPGRAPH).c_str(), ImVec2(-1, 0), ImPlotFlags_AntiAliased, ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit)) {
+		ImPlot::PlotLine(Language.GetText(STR_PLOTWINDOW_BOSSHPGRAPH_UNIT).c_str(), timeList[_selectedBossHpComboID].data(), bossHpList[_selectedBossHpComboID].data(), static_cast<INT>(bossHpList[_selectedBossHpComboID].size()));
+		ImPlot::EndPlot();
+	}
+}
 VOID PlotWindow::AddAbData(DOUBLE DPS, DOUBLE time)
 {
 	if (_abLastTime == time) {
@@ -103,12 +199,13 @@ VOID PlotWindow::Update()
 
 		ImGui::Begin(Language.GetText(STR_UTILWINDOW_MEOW).c_str(), &_isOpen, ImGuiWindowFlags_None);
 
-		if (ImGui::BeginTabBar(u8"테스트2"))
+		if (ImGui::BeginTabBar(u8"PlotWindowTab"))
 		{
 			UpdatePlotTab();
 			UpdateAbPlotTab();
 			UpdateBdPlotTab();
 			UpdateJqPlotTab();
+			UpdateBossHpPlotTab();
 			UTILLWINDOW.Update();
 		}
 		ImGui::End();
@@ -291,7 +388,7 @@ VOID PlotWindow::Clear()
 	// TODO : new로 생성한건 delete인가 해야됨
 }
 
-PlotWindow::PlotWindow()
+PlotWindow::PlotWindow() : _selectedBossHpComboID(-1)
 {
 }
 

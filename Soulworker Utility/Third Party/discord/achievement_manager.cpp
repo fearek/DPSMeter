@@ -1,7 +1,7 @@
 #if !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
-#include "pch.h"
+
 #include "achievement_manager.h"
 
 #include "core.h"
@@ -13,7 +13,8 @@ namespace discord {
 
 class AchievementEvents final {
 public:
-    static void OnUserAchievementUpdate(void* callbackData, DiscordUserAchievement* userAchievement)
+    static void DISCORD_CALLBACK OnUserAchievementUpdate(void* callbackData,
+                                                         DiscordUserAchievement* userAchievement)
     {
         auto* core = reinterpret_cast<Core*>(callbackData);
         if (!core) {

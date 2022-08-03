@@ -18,8 +18,8 @@ UiOption::UiOption()  : _open(0), _framerate(1), _windowBorderSize(1), _fontScal
 	_jobBasicColor[7] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(138, 2, 4, 255)));		// 치이
 	_jobBasicColor[8] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(118, 206, 158, 255)));	// 에프넬
 	_jobBasicColor[9] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(128, 128, 64, 255)));	// 이나비
-	_jobBasicColor[10] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(73, 51, 116, 255)));	// 이나비
-	for (int i = 0; i < 10; i++)
+	_jobBasicColor[10] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(73, 51, 116, 255)));	// DHANA
+	for (int i = 0; i < 11; i++)
 		_jobColor[i] = _jobBasicColor[i];
 }
 
@@ -815,7 +815,6 @@ BOOL UiOption::ToggleTopMost() {
 }
 
 const ImU32 UiOption::GetJobColor(UINT index) {
-
 	if (index < 0 || index > 10)
 		return ImGui::ColorConvertFloat4ToU32(_jobColor[0]);
 

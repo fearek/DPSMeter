@@ -4,7 +4,7 @@
 #pragma pack(push, 1)
 typedef struct _SWPACKETMONSTERKILLED {
 	UINT32 _killedId;
-	BYTE _unknown01[3];
+	BYTE _unknown01[9];
 }SWPACKETMONSTERKILLED;
 #pragma pack(pop)
 
