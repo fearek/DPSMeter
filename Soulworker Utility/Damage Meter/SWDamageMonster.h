@@ -4,7 +4,18 @@
 
 #define DEBUG_DAMAGE_MONSTER 0
 #define MONSTER_NAME_LEN 64
-
+enum MONSTER_TYPE
+{
+	MONSTER_SLAVE = 0,
+	MONSTER_NORMAL = 1,
+	MONSTER_ELETE = 2,
+	MONSTER_NAMED =3,
+	MONSTER_BOSS = 4,
+	MONSTER_RAID = 5,
+	MONSTER_OBJECT = 6,
+	MONSTER_SUMMON = 7,
+	MAX_MONSTER_RANK = 8
+};
 class SWDamageMonster : public MemoryPool<SWDamageMonster, 100> {
 private:
 	UINT32 _id;

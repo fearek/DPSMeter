@@ -67,7 +67,7 @@ VOID PlotWindow::UpdateBossHpPlotCombo()
 	// Get all monster data
 	for (auto itr = DAMAGEMETER.begin(); itr < DAMAGEMETER.end(); itr++) {
 		for (auto itr2 = (*itr)->begin(); itr2 != (*itr)->end(); itr2++) {
-			if ((*itr2)->GetType() == 3 || (*itr2)->GetType() == 4)
+			if ((*itr2)->GetType() == MONSTER_NAMED || (*itr2)->GetType() == MONSTER_BOSS)
 				bossInfos.emplace((*itr2)->GetID(), (*itr2)->GetName());
 		}
 	}
