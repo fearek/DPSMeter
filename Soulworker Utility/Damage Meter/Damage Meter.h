@@ -124,6 +124,11 @@ public:
 
 	DOUBLE _losedHp = 0;
 
+	BOOL _fullABStarted = false;
+	UINT64 _fullABStartTime = 0;
+	UINT64 _fullABEndTime = 0;
+	DOUBLE _fullABPrevTime = 0;
+	DOUBLE _fullABTime = 0;
 
 	_SW_PLAYER_METADATA() {
 		_id = 0;
@@ -133,7 +138,13 @@ public:
 		_avgBDSum = 0;
 		_avgBDPreviousTime = 0;
 	}
+	VOID CalcFullABTime(UINT64 endTime = NULL)
+	{
+		if (endTime == NULL || _armorBreak < 100)
+			endTime = _fullABEndTime;
 
+		_fullABTime = _fullABPrevTime + ((DOUBLE)(endTime - _fullABStartTime) / 1000);
+	}
 	VOID UpdateStat(USHORT statType, FLOAT statValue) {
 		switch (statType) {
 		case StatType::SG:
@@ -154,10 +165,24 @@ public:
 		case StatType::ArmorBreak:
 			_armorBreak = statValue;
 			if (DAMAGEMETER.isRun()) {
-				UINT64 time = DAMAGEMETER.GetTime();
+				UINT64 time = (UINT64)((DOUBLE)DAMAGEMETER.GetTime()); // timer time
 				FLOAT correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
 				_avgABSum += static_cast<UINT64>((time - _avgABPreviousTime) * correctedAB);
 				_avgABPreviousTime = time;
+
+				if (_armorBreak >= 100) {
+					if (!_fullABStarted) {
+						_fullABStarted = true;
+						_fullABStartTime = time;
+						_fullABPrevTime = _fullABTime;
+					}
+					_fullABEndTime = time;
+				}
+				else if (_fullABStarted) {
+					_fullABStarted = false;
+					_fullABEndTime = time;
+				}
+				CalcFullABTime();
 			}
 			break;
 		case StatType::CurrentHP:
@@ -247,7 +272,11 @@ public:
 		_avgABPreviousTime = currentTime;
 		_avgBDSum += static_cast<UINT64>((currentTime - _avgBDPreviousTime) * _damageboss);
 		_avgBDPreviousTime = currentTime;
-
+		if (_fullABStarted) {
+			_fullABStarted = false;
+			_fullABEndTime = currentTime;
+		}
+		CalcFullABTime();
 	}
 	VOID MeterReseted() {
 		auto player = DAMAGEMETER.GetPlayerInfo(_id);
@@ -268,6 +297,12 @@ public:
 				UINT64 calculatedAvgBD = static_cast<UINT64>((_avgBDSum + avgTimeDifferenceBD * currentBD));
 				(*player)->SetHistoryAvgAB((DOUBLE)calculatedAvgAB / currentTime);
 				(*player)->SetHistoryAvgBD((DOUBLE)calculatedAvgBD / currentTime);
+				if (_fullABStarted) {
+					_fullABStarted = false;
+					_fullABEndTime = currentTime;
+					CalcFullABTime();
+				}
+				(*player)->SetHistoryABTime(_fullABTime);
 				// Need to add ongoing effect to sum before save it to history
 				// Add ongoing BS 3 Gear Set Effect
 				if (_gear90EffectStarted) {
@@ -335,6 +370,12 @@ public:
 		_acc02EffectStarted = false;
 		_acc02Sum = 0;
 		_acc02EffectStartedTime = 0;
+
+		_fullABStarted = false;
+		_fullABStartTime = 0;
+		_fullABEndTime = 0;
+		_fullABPrevTime = 0;
+		_fullABTime = 0;
 	}
 
 	VOID HitEnemy() {
@@ -606,6 +647,7 @@ private:
 
 	BOOL _mazeEnd;
 	BOOL _historyMode;
+	UINT32 _historyMyID;
 
 	VOID InsertPlayerInfo(UINT32 id, UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, USHORT maxCombo, UINT32 monsterID, UINT32 skillID);
 	VOID Sort();
@@ -659,7 +701,7 @@ public:
 
 	VOID SetMyID(UINT32 id);
 
-	UINT64 GetMyID();
+	UINT64 GetMyID(BOOL useHistoryID = FALSE);
 
 	BOOL CheckPlayer(UINT32 id);
 

@@ -295,7 +295,7 @@ VOID SWDamageMeter::InsertPlayerMetadata(UINT32 id, CHAR* str, BYTE job) {
 }
 
 const CHAR* SWDamageMeter::GetPlayerName(UINT32 id) {
-	if (id == _myID)
+	if (id == _myID || (_historyMode && id == _historyMyID))
 		return "YOU";
 
 	auto search = _playerMetadata.find(id);
@@ -471,7 +471,9 @@ VOID SWDamageMeter::SetMyID(UINT32 id) {
 #endif
 }
 
-UINT64 SWDamageMeter::GetMyID() {
+UINT64 SWDamageMeter::GetMyID(BOOL useHistoryID) {
+	if (useHistoryID && _historyMode)
+		return _historyMyID;
 	return _myID;
 }
 
@@ -544,7 +546,7 @@ VOID SWDamageMeter::Suspend() {
 	for (auto itr = _playerMetadata.begin(); itr != _playerMetadata.end(); itr++) {
 		itr->second->MeterSuspended();
 	}
-
+	PLOTWINDOW.End();
 	//auto itr = _playerInfo.begin();
 	//for (; itr != _playerInfo.end(); itr++) {
 	//	(*itr)->MeterSuspended();
@@ -558,6 +560,7 @@ VOID SWDamageMeter::Start() {
 		_historyMode = FALSE;
 	}
 	_timer.Run();
+	PLOTWINDOW.Start();
 }
 
 VOID SWDamageMeter::Clear() {
@@ -622,7 +625,9 @@ VOID SWDamageMeter::SetHistory(INT index) {
 	auto history = HISTORY[index];
 	_playerInfo = history._history;
 	_historyWorldID = history._worldID;
+	//PLOTWINDOW.SetPlotInfo(history._historyData->_plotHistory);
 	_historyTime = history._time;
+	_historyMyID = history._myID;
 	_historyPing = history._ping;
 	_historyMode = TRUE;
 }

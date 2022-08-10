@@ -6,7 +6,10 @@
 
 
 #define DEBUG_DAMAGE_PLAYER 0
-
+struct SkillCount {
+	USHORT _count;
+	USHORT _in_full_ab_count;
+};
 static std::unordered_set<UINT32> dpsIgnoreIdList({
 	/* HH */
 	31308106, // Hermit
@@ -90,6 +93,7 @@ private:
 
 	DOUBLE _historyLosedHP = 0.0;
 	BYTE _JqStack = 0;
+	DOUBLE _historyABTime = 0;
 
 	std::vector<SWDamageMonster*> _monsterInfo;
 	VOID InsertMonsterInfo(UINT32 monsterID,UINT32 db2, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount, UINT32 skillID);
@@ -105,7 +109,7 @@ public:
 	SWDamagePlayer(UINT32 id);
 	~SWDamagePlayer();
 
-	std::map<UINT32, USHORT> skillCounts;
+	std::map<UINT32, SkillCount*> skillCounts;
 
 	static BOOL SortFunction(SWDamagePlayer* playerA, SWDamagePlayer* playerB);
 
@@ -133,6 +137,9 @@ public:
 	USHORT GetSkillUsed();
 	USHORT GetDodgeUsed();
 	USHORT GetDeathCount();
+
+	DOUBLE GetHistoryABTime();
+	VOID SetHistoryABTime(DOUBLE historyABTime);
 
 	VOID SetHistoryAvgAB(DOUBLE historyAvgAB);
 	DOUBLE GetHistoryAvgAB();

@@ -22,12 +22,99 @@ struct damageInfo {
 	double _dps;
 	double _time;
 };
+class PlotInfo : public MemoryPool<PlotInfo> {
+private:
+	std::vector<metaInfo*> _metaInfos;
+	std::unordered_map<UINT32, std::vector<double>> _dpsList;
+	std::unordered_map<UINT32, std::vector<double>> _timeList;
+	double _lastTime = -1;
 
+	std::vector<double> _abList;
+	std::vector<double> _abTimeList;
+	double _abLastTime = -1;
+
+	std::vector<double> _bdList;
+	std::vector<double> _bdTimeList;
+	double _bdLastTime = -1;
+
+	std::vector<double> _jqList;
+	std::vector<double> _jqTimeList;
+	double _jqLastTime = -1;
+
+	std::unordered_map<UINT32, std::vector<double>> _bossHpList;
+	std::unordered_map<UINT32, std::vector<double>> _bossTimeList;
+	double _bhLastTime = -1;
+
+	bool _allowed = false;
+
+	BOOL _isHistoryMode = FALSE;
+
+public:
+
+	VOID AddData(UINT32 id, std::string name, DOUBLE DPS, DOUBLE time, bool isFirstElement);
+	VOID AddAbData(DOUBLE DPS, DOUBLE time);
+	VOID AddBdData(DOUBLE DPS, DOUBLE time);
+	VOID AddJqData(BYTE stack, DOUBLE time);
+	VOID AddBossHpData(UINT32 id, UINT64 HP, DOUBLE time);
+	std::vector<metaInfo*> GetMetaInfo()
+	{
+		return _metaInfos;
+	}
+	std::unordered_map<UINT32, std::vector<double>> GetTimeList()
+	{
+		return _timeList;
+	}
+	std::unordered_map<UINT32, std::vector<double>> GetDPSList()
+	{
+		return _dpsList;
+	}
+	std::vector<double> GetABList()
+	{
+		return _abList;
+	}
+	std::vector<double> GetABTimeList()
+	{
+		return _abTimeList;
+	}
+	std::vector<double> GetBDList()
+	{
+		return _bdList;
+	}
+	std::vector<double> GetBDTimeList()
+	{
+		return _bdTimeList;
+	}
+	std::vector<double> GetJQList()
+	{
+		return _jqList;
+	}
+	std::vector<double> GetJQTimeList()
+	{
+		return _jqTimeList;
+	}
+	std::unordered_map<UINT32, std::vector<double>> GetBossHpList()
+	{
+		return _bossHpList;
+	}
+	std::unordered_map<UINT32, std::vector<double>> GetBossTimeList()
+	{
+		return _bossTimeList;
+	}
+
+	VOID Clear()
+	{
+		for (auto itr = _metaInfos.begin(); itr != _metaInfos.end(); itr++)
+			delete (*itr);
+	}
+
+};
 class PlotWindow : public Singleton<PlotWindow> {
 private:
 	std::vector<metaInfo*> metaInfos;
 	std::unordered_map<UINT32, std::vector<double>> dpsList;
 	std::unordered_map<UINT32, std::vector<double>> timeList;
+	PlotInfo* _pi = nullptr;
+	BOOL _historyMode = false;
 	bool _isOpen = false;
 	bool _allowed = false;
 	double _lastTime = -1;
@@ -75,9 +162,9 @@ public:
 	VOID AddBossHpData(UINT32 id, UINT64 HP, DOUBLE time);
 	VOID OpenWindow();
 	VOID Update();
+	VOID Start();
 	VOID End();
 	VOID Clear();
-
 	PlotWindow();
 	~PlotWindow();
 

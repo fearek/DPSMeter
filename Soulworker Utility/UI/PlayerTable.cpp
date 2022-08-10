@@ -228,7 +228,7 @@ VOID PlayerTable::SetupTable() {
 	ImGuiTableFlags tableFlags = ImGuiTableFlags_None;
 	tableFlags |= (ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Resizable);
 
-	if (ImGui::BeginTable("###Player Table", 38, tableFlags)) {
+	if (ImGui::BeginTable("###Player Table", 42, tableFlags)) {
 
 		ImGuiTableColumnFlags columnFlags = ImGuiTableColumnFlags_None;
 		columnFlags |= ImGuiTableColumnFlags_NoSort;
@@ -273,6 +273,10 @@ VOID PlayerTable::SetupTable() {
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_LOST_HP).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_DODGE_COUNT).c_str(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn("Death", columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn("Full AB Time", columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn("Full AB (%)", columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn("Giga Enli Skill (%)", columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn("Tera Enli Skill (%)", columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		//ImGuiTableColumnFlags_WidthStretch
 
 
@@ -893,6 +897,52 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 
 		// 그냥 잡거 (etc)
 		PLOTWINDOW.AddJqData((*itr)->GetJqStack(), _tableTime);
+		static DOUBLE savedResultFullAB = 0;
+		// full ab time
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) == "YOU") {
+			if (DAMAGEMETER.isHistoryMode()) {
+				savedResultFullAB = (*itr)->GetHistoryABTime();
+			}
+			else {
+				playerMetaData->CalcFullABTime(DAMAGEMETER.GetTime());
+				savedResultFullAB = playerMetaData->_fullABTime;
+			}
+			sprintf_s(label, 128, "%.1f", savedResultFullAB);
+		}
+		else {
+			sprintf_s(label, 128, "-");
+		}
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		// Full AB Percent
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) == "YOU") {
+			sprintf_s(label, 128, "%.0f", ((DOUBLE)(savedResultFullAB * 1000) / DAMAGEMETER.GetTime()) * 100);
+		}
+		else {
+			sprintf_s(label, 128, "-");
+		}
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+		// Enli/Skill(%)
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != "YOU" || _tableTime == 0 || (*itr)->GetSkillUsed() <= 0) {
+			sprintf_s(label, 128, "-");
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+
+			sprintf_s(label, 128, "-");
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+		}
+		else {
+			sprintf_s(label, 128, "%.0f", ((DOUBLE)(*itr)->GetGigaEnlighten() / (*itr)->GetSkillUsed()) * 100);
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+
+			sprintf_s(label, 128, "%.0f", ((DOUBLE)(*itr)->GetTeraEnlighten() / (*itr)->GetSkillUsed()) * 100);
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+		}
 	}
 }
 

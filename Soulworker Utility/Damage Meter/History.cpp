@@ -2,11 +2,12 @@
 #include ".\Damage Meter\History.h"
 #include ".\Damage Meter\Damage Meter.h"
 
-VOID _HISTORYINFO::Setup(std::vector<SWDamagePlayer*>& history, UINT32 worldID, FLOAT time, UINT32 ping) {
+VOID _HISTORYINFO::Setup(std::vector<SWDamagePlayer*>& history, UINT32 worldID, FLOAT time, UINT32 ping, UINT32 myID) {
 	_history = history;
 	_worldID = worldID;
 	_time = time;
 	_ping = ping;
+	_myID = myID;
 	GetLocalTime(&_saveTime);
 }
 
@@ -35,7 +36,7 @@ VOID SWDamageMeterHistory::ClearHistory(INT index) {
 
 VOID SWDamageMeterHistory::push_back(std::vector<SWDamagePlayer*>& playerInfo) {
 	ClearHistory(_curIndex % HISTORY_SIZE);
-	_historys[_curIndex % HISTORY_SIZE].Setup(playerInfo, DAMAGEMETER.GetWorldID(), DAMAGEMETER.GetTime(),DAMAGEMETER.GetPing());
+	_historys[_curIndex % HISTORY_SIZE].Setup(playerInfo, DAMAGEMETER.GetWorldID(), DAMAGEMETER.GetTime(),DAMAGEMETER.GetPing(),DAMAGEMETER.GetMyID());
 	_curIndex++;
 }
 

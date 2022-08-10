@@ -313,17 +313,40 @@ DOUBLE SWDamagePlayer::GetHistoryLosedHP()
 {
 	return _historyLosedHP;
 }
-
+VOID SWDamagePlayer::SetHistoryABTime(DOUBLE historyABTime)
+{
+	_historyABTime = historyABTime;
+}
+DOUBLE SWDamagePlayer::GetHistoryABTime()
+{
+	return _historyABTime;
+}
 VOID SWDamagePlayer::AddSkillUsed(UINT32 skillId)
 {
+	if (DAMAGEMETER.isHistoryMode())
+		return;
+
 	_skillCounts++;
 
+	BOOL isInFullAB = false;
+	auto metadata = DAMAGEMETER.GetPlayerMetaData(_id);
+	if (metadata != nullptr) {
+		isInFullAB = metadata->_fullABStarted;
+	}
+
 	if (skillCounts.find(skillId) == skillCounts.end()) {
-		skillCounts.insert(std::make_pair(skillId, 1));
+		SkillCount* pSc = new SkillCount;
+		pSc->_count = 1;
+		pSc->_in_full_ab_count = (isInFullAB ? 1 : 0);
+
+		skillCounts.insert({ skillId, pSc });
 		return;
 	}
 
-	skillCounts[skillId] = skillCounts[skillId] + 1;
+	SkillCount* pSc = skillCounts[skillId];
+	pSc->_count += 1;
+	if (isInFullAB)
+		pSc->_in_full_ab_count += 1;
 }
 
 VOID SWDamagePlayer::AddDodgeUsed()
