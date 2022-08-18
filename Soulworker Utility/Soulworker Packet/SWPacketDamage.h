@@ -40,7 +40,7 @@ static std::unordered_set<UINT32> pauseIdList({
 	702, // Trainning Master
 
 	/* LF */
-	31309102, // Azure Force. Edgar
+	31309102, // Azure Force. Edgar 
 
 	/* VS */
 	31301001, // Flemma P1

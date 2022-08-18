@@ -48,7 +48,7 @@ VOID SWDamagePlayer::Sort() {
 
 VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, USHORT maxCombo, UINT32 monsterID, UINT32 skillID)
 {
-	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[PLAYER] [DamageType = %d]")), damageType.CRIT);
+	//LogInstance.WriteLog("[PLAYER %u (%s)] [totalDMG %u] [monsterID %u]", _id,DAMAGEMETER.GetPlayerName(_id),totalDMG,monsterID);
 
 
 	// db부분 임의로 추가함
@@ -100,6 +100,10 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 			_damageForSoulstone += totalDMG;
 			_soulstoneDamageForSoulstone += soulstoneDMG;
 		}
+		else
+		{
+			//LogInstance.WriteLog("Rejected monster %u in 21018", db2);
+		}
 	}
 	// BS Solo
 	else if (worldID == 24018) {
@@ -108,6 +112,10 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 			_soulstoneDamage += soulstoneDMG;
 			_damageForSoulstone += totalDMG;
 			_soulstoneDamageForSoulstone += soulstoneDMG;
+		}
+		else
+		{
+			//LogInstance.WriteLog("Rejected monster %u in 24018", db2);
 		}
 	}
 	// 이하 블랙리스트 제도
@@ -128,7 +136,7 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 		LogInstance.WriteLog("Ignored damage to %d, type 6",db2);
 
 	}
-	LogInstance.WriteLog("[PLAYER] [ID = %d] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d] [maxCombo = %d]", _id, _damage, _critDamage, _hitCount, _critHitCount, _maxCombo);
+	LogInstance.WriteLog("[PLAYER] [ID = %d] [DMG = %llu] [hitCount = %d] [cirtHitCount = %d] [maxCombo = %d]", _id, _damage, _hitCount, _critHitCount, _maxCombo);
 #endif
 
 	InsertMonsterInfo(monsterID,db2, totalDMG, soulstoneDMG, 1, damageType.CRIT, skillID);

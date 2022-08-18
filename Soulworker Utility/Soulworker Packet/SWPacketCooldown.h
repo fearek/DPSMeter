@@ -5,7 +5,7 @@
 typedef struct _SWPACKETCOOLDOWN {
 	UINT32 _playerID;
 	FLOAT _value;
-	BYTE _unknown01;
+	BYTE _unknown01[5];
 }SWPACKETCOOLDOWN;
 #pragma pack(pop)
 

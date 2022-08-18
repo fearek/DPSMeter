@@ -7,10 +7,10 @@
 #define SWPACKETPARTY_DUMMY 38
 #endif
 #ifdef SERVER_STEAM
-#define SWPACKETPARTY_DUMMY 32
+#define SWPACKETPARTY_DUMMY 38
 #endif
 #ifdef SERVER_JAPAN
-#define SWPACKETPARTY_DUMMY 36 // same as KR server
+#define SWPACKETPARTY_DUMMY 36 
 #endif
 
 #pragma pack(push, 1)
