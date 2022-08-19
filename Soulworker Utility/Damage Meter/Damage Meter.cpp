@@ -83,6 +83,12 @@ VOID SWDamageMeter::AddDamage(UINT32 id, UINT64 totalDMG, UINT64 soulstoneDMG, S
 				return;
 			}
 		}
+		// BS Rank
+		else if (GetWorldID() == 23018) {
+			if (monsterId != 32310101) {
+				return;
+			}
+		}
 	}
 
 	Start();

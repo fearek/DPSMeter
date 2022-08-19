@@ -7,7 +7,7 @@
 #define SWPACKETPOS_DUMMY 36
 #endif
 #if defined(SERVER_STEAM)
-#define SWPACKETPOS_DUMMY 32
+#define SWPACKETPOS_DUMMY 36
 #endif
 #if defined(SERVER_JAPAN)
 #define SWPACKETPOS_DUMMY 36 // same as KR server? (not tested yet)
