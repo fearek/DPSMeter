@@ -16,6 +16,9 @@ _PLAYERBUFF::~_PLAYERBUFF(){
 
 VOID _PLAYERBUFF::AddBuff(USHORT buffid, BYTE stack) {
 	
+	if (_isHistoryMode)
+		return;
+
 	BOOL find = FALSE;
 
 	for (auto itr = _buffInfo.begin(); itr != _buffInfo.end(); itr++) {
@@ -34,10 +37,13 @@ VOID _PLAYERBUFF::AddBuff(USHORT buffid, BYTE stack) {
 		_buffInfo.push_back(new Buff(buffid, stack));
 }
 
-VOID _PLAYERBUFF::EndBuff(USHORT buffid) {
+VOID _PLAYERBUFF::EndBuff(USHORT buffid, BOOL endAll) {
+
+	if (_isHistoryMode)
+		return;
 
 	for (auto itr = _buffInfo.begin(); itr != _buffInfo.end(); itr++) {
-		if ((*itr)->GetBuffID() == buffid) {
+		if ((*itr)->GetBuffID() == buffid || endAll) {
 			(*itr)->InActive();
 		}
 	}
@@ -47,11 +53,11 @@ const UINT32& _PLAYERBUFF::GetPlayerID() {
 	return _playerID;
 }
 
-std::vector<Buff*>::const_iterator _PLAYERBUFF::begin() {
+vector<Buff*>::const_iterator _PLAYERBUFF::begin() {
 	return _buffInfo.begin();
 }
 
-std::vector<Buff*>::const_iterator _PLAYERBUFF::end() {
+vector<Buff*>::const_iterator _PLAYERBUFF::end() {
 	return _buffInfo.end();
 }
 
@@ -60,15 +66,32 @@ BuffMeter::BuffMeter() {
 }
 
 BuffMeter::~BuffMeter() {
+	BOOL canLock = _mutex.try_lock();
+	Clear();
+	FreeLock();
+}
 
-	for (auto itr = _playerBuffInfo.begin(); itr != _playerBuffInfo.end(); itr++)
-		delete* itr;
+VOID BuffMeter::Clear() {
+	//for (auto itr = _playerBuffInfo.begin(); itr != _playerBuffInfo.end(); itr++)
+	//	delete* itr;
 
+	_historyMode = false;
 	_playerBuffInfo.clear();
-	_mutex.unlock();
+}
+
+std::vector<PLAYERBUF*> BuffMeter::GetPlayerInfo() {
+	return _playerBuffInfo;
+}
+
+VOID BuffMeter::SetPlayerInfo(std::vector<PLAYERBUF*> it) {
+	_historyMode = true;
+	_playerBuffInfo = it;
 }
 
 VOID BuffMeter::AddBuff(UINT32 playerID, USHORT buffid, BYTE stack) {
+
+	if (_historyMode)
+		return;
 
 	for (auto itr = _playerBuffInfo.begin(); itr != _playerBuffInfo.end(); itr++) {
 		if ((*itr)->GetPlayerID() == playerID) {
@@ -80,17 +103,25 @@ VOID BuffMeter::AddBuff(UINT32 playerID, USHORT buffid, BYTE stack) {
 	_playerBuffInfo.push_back(new PLAYERBUF(playerID, buffid, stack));
 }
 
-VOID BuffMeter::EndBuff(UINT32 playerID, USHORT buffid) {
+VOID BuffMeter::EndBuff(UINT32 playerID, USHORT buffid, BOOL endAll) {
+
+	if (_historyMode)
+		return;
 
 	for (auto itr = _playerBuffInfo.begin(); itr != _playerBuffInfo.end(); itr++) {
-		if ((*itr)->GetPlayerID() == playerID) {
-			(*itr)->EndBuff(buffid);
+		if ((*itr)->GetPlayerID() == playerID || endAll) {
+			(*itr)->EndBuff(buffid, endAll);
 			return;
 		}
 	}
 }
 
-std::vector<PLAYERBUF*>::const_iterator BuffMeter::find(UINT32 playerID) {
+VOID BuffMeter::EndAllBuff() {
+
+	EndBuff(0, 0, TRUE);
+}
+
+vector<PLAYERBUF*>::const_iterator BuffMeter::find(UINT32 playerID) {
 
 	auto itr = _playerBuffInfo.begin();
 
@@ -102,11 +133,11 @@ std::vector<PLAYERBUF*>::const_iterator BuffMeter::find(UINT32 playerID) {
 	return itr;
 }
 
-std::vector<PLAYERBUF*>::const_iterator BuffMeter::begin() {
+vector<PLAYERBUF*>::const_iterator BuffMeter::begin() {
 	return _playerBuffInfo.begin();
 }
 
-std::vector<PLAYERBUF*>::const_iterator BuffMeter::end() {
+vector<PLAYERBUF*>::const_iterator BuffMeter::end() {
 	return _playerBuffInfo.end();
 }
 

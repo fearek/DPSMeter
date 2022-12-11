@@ -1,13 +1,11 @@
 #include "pch.h"
-#include ".\Third Party/discord/DiscordPresence.h"
-#include ".\Packet Capture/MyWinDivert.h"
 #include ".\Damage Meter/Damage Meter.h"
 #include ".\UI\UiWindow.h"
 #include ".\Damage Meter\MySQLite.h"
-#include <shellapi.h>
-
-#pragma locale ("Korean")
-
+#include ".\UI\PlayerTable.h"
+#include ".\Third Party/discord/DiscordPresence.h"
+#include ".\Damage Meter\SaveData.h"
+#include ".\Soulworker Packet\SWPacketMaker.h"
 #if defined(DEBUG) || defined(_DEBUG)
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console" )
 #endif
@@ -15,26 +13,28 @@ void getconfig(CSimpleIniA& ini, int sec)
 {
 	if (sec == 1) //meter
 	{
-		bool shouldLog = ini.GetBoolValue("Meter","LogFile",false);
+		bool shouldLog = ini.GetBoolValue("Meter", "LogFile", false);
 		if (shouldLog)
 		{
 			LogInstance.Enable();
 		}
-		long language = ini.GetLongValue("Meter", "Language", 0);
-		Language.SetLanguage(LANGUAGE(language));
-		bool shouldLogMonsterStats = ini.GetBoolValue("Meter","LogMonsterStats",false);
-		bool presence = ini.GetBoolValue("Meter","RichPresence",true);
+		const char* language = ini.GetValue("Meter", "Language");
+		if (language) {
+			LANGMANAGER.SetCurrentLang((CHAR*)language);
+		}
+		bool shouldLogMonsterStats = ini.GetBoolValue("Meter", "LogMonsterStats", false);
+		bool presence = ini.GetBoolValue("Meter", "RichPresence", true);
 		DISCORD.shouldLoad = presence;
 		DISCORD.shouldUpdate = presence;
 		bool hidename = ini.GetBoolValue("Meter", "HideName", false);
 		DISCORD.hideName = hidename;
 		bool hideclass = ini.GetBoolValue("Meter", "HideClass", false);
 		DISCORD.hideClass = hideclass;
-		int wideness = ini.GetLongValue("Meter","TimerAcc",1);
+		int wideness = ini.GetLongValue("Meter", "TimerAcc", 1);
 		if (wideness < 0 || wideness > 3)
 			wideness = 1;
 		DAMAGEMETER.mswideness = wideness;
-		const char* font = ini.GetValue("Meter","DefaultFont");
+		const char* font = ini.GetValue("Meter", "DefaultFont");
 		if (font)
 		{
 			DAMAGEMETER.selectedFont.filename = font;
@@ -51,15 +51,15 @@ bool createconfig()
 	DAMAGEMETER.ini.SetBoolValue("Loader", "OpenMeterOnInjection", true);
 	DAMAGEMETER.ini.SetLongValue("Meter", "Language", 0);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "LogFile", false);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "LogMonsterStats",false);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "LogMonsterStats", false);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "RichPresence", true);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "HideName", false);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "HideClass", false);
-	DAMAGEMETER.ini.SetLongValue("Meter", "TimerAcc",1);
-	DAMAGEMETER.ini.SetValue("Meter", "DefaultFont","");
+	DAMAGEMETER.ini.SetLongValue("Meter", "TimerAcc", 1);
+	DAMAGEMETER.ini.SetValue("Meter", "DefaultFont", "");
 	SI_Error rc = DAMAGEMETER.ini.SaveFile("meterconfig.ini");
 	if (rc < 0) {
-		MessageBoxA(NULL,"Something is wrong with your system, cant make config file.","ERROR", MB_OK | MB_ICONERROR);
+		MessageBoxA(NULL, "Something is wrong with your system, cant make config file.", "ERROR", MB_OK | MB_ICONERROR);
 		return false;
 	}
 	return true;
@@ -76,7 +76,7 @@ void loadconfig()
 	SI_Error rc2 = DAMAGEMETER.ini.LoadFile("meterconfig.ini");
 	if (rc2 < 0)
 	{
-		MessageBoxA(NULL,"Loading config failed for some reason?","ERROR", MB_OK | MB_ICONERROR);
+		MessageBoxA(NULL, "Loading config failed for some reason?", "ERROR", MB_OK | MB_ICONERROR);
 		return;
 	}
 	configloaded = true;
@@ -92,57 +92,75 @@ void loadconfig()
 	}
 	return;
 }
+//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd) 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ PSTR szCmdLine, _In_ int iCmdShow) {
-	//ParseCommandLineArguments();
-	loadconfig();
-	_wsetlocale(LC_ALL, L"Korean");
+
 	MiniDump::Begin();
-
-	if (!DISCORD.Init())
 	{
-		LogInstance.WriteLog("Discord init failed");
-	}
-	if (!SWDB.Init()) {
-		LogInstance.WriteLog("InitDB Failed");
-		exit(-1);
-	}
+		DWORD errorCode = ERROR_SUCCESS;
+		CHAR errorMsg[512] = { 0 };
 
-	if (WINDIVERT.Init()) {
-		LogInstance.WriteLog("Init Module Listener Failed");
-		exit(-1);
-	}
-
-	if (UIWINDOW.Init(1, 1, 1, 1)) {
-		UIWINDOW.Run();
-	}
-	else {
-		LogInstance.WriteLog("Init UIWINDOW Failed");
-	}
-	MiniDump::End();
-}
-
-void ParseCommandLineArguments()
-{
-	int argc;
-	LPWSTR* argv;
-	argv = CommandLineToArgvW(::GetCommandLine(), &argc);
-	for (size_t i = 0; i < argc; i++)
-	{
-		if (wcscmp(argv[i], L"log") == 0)
+		do
 		{
-			LogInstance.Enable();
+			const UINT codePage = GetACP();
+			switch (codePage) {
+			case 936: // ZH-CN
+			case 950: // ZH-TW
+				_wsetlocale(LC_ALL, L"zh-TW.UTF8");
+				errorCode = LANGMANAGER.SetCurrentLang("zh_tw.json");
+				break;
+			default:
+				_wsetlocale(LC_ALL, L"en-US.UTF8");
+				errorCode = LANGMANAGER.SetCurrentLang("en.json");
+				break;
+			}
+			loadconfig();
+			if (errorCode) {
+				sprintf_s(errorMsg, "Init Lang failed. err: %lu", errorCode);
+				break;
+			}
+
+
+			if (!SWDB.Init()) {
+				sprintf_s(errorMsg, "Init database failed.");
+				break;
+			}
+
+			if (UIWINDOW.Init(1, 1, 1, 1)) {
+				if ((errorCode = SWPACKETMAKER.Init())) {
+					sprintf_s(errorMsg, "Init PacketCapture failed, err: %lu", errorCode);
+					break;
+				}
+				if (UIOPTION.isUseSaveData())
+				{
+					if ((errorCode = SAVEDATA.Init())) {
+						sprintf_s(errorMsg, "Init SaveData failed, err: %lu", errorCode);
+						if (errorCode == ERROR_FILE_CORRUPT) {
+							ANSItoUTF8(LANGMANAGER.GetText("STR_SAVEDATA_VERSION_ERROR"), errorMsg, sizeof(errorMsg));
+						}
+						else if (errorCode == ERROR_FILE_SYSTEM_LIMITATION) {
+							ANSItoUTF8(LANGMANAGER.GetText("STR_SAVEDATA_MULTIPLE_ERROR"), errorMsg, sizeof(errorMsg));
+						}
+						break;
+					}
+				}
+				UIWINDOW.Run();
+			}
+			else {
+				sprintf_s(errorMsg, "Init UI failed.");
+				break;
+			}
+
+		} while (false);
+
+		if (errorCode != ERROR_SUCCESS) {
+			MessageBoxA(NULL, errorMsg, "SoulMeter", MB_ICONERROR | MB_OK | MB_TOPMOST);
+			LogInstance.WriteLog(errorMsg);
 		}
-		if (wcscmp(argv[i], L"lang") == 0)
-		{
-			//ENGLISH, 0
-			//KOREAN, 1 
-			//CHINESE, 2 
-			//JAPANESE 3
-			if (i + 1 < argc)
-				Language.SetLanguage(LANGUAGE(_wtoi(argv[i + 1])));
-		}
+
+		MiniDump::End();
 	}
 
-	::LocalFree(argv);
+	ShowWindow(UIWINDOW.GetHWND(), 0);
 }

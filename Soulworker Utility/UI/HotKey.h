@@ -1,10 +1,11 @@
 #pragma once
 
-
 #define HOTKEY HotKey::getInstance()
 typedef std::function<VOID(VOID)> HOTKEYCALLBACK;
 
+#ifdef _DEBUG
 #define DEBUG_HOTKEY 0
+#endif
 #define AUTO_HOTKEY_NAME_LEN 32
 
 struct AutoHotKey {

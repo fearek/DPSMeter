@@ -49,7 +49,7 @@ AutoHotKey::AutoHotKey(const INT key1, INT key2, const CHAR* name, INT callback_
 	va_start(va, callback);
 
 	for (INT i = 0; i < callback_num; i++) {
-		_callbacks.push_back(move(*callback));
+		_callbacks.push_back(std::move(*callback));
 		callback = va_arg(va, HOTKEYCALLBACK*);
 	}
 
@@ -67,7 +67,7 @@ AutoHotKey::AutoHotKey(const INT key1, const CHAR* name, INT callback_num, HOTKE
 	va_start(va, callback);
 
 	for (INT i = 0; i < callback_num; i++) {
-		_callbacks.push_back(move(*callback));
+		_callbacks.push_back(std::move(*callback));
 		callback = va_arg(va, HOTKEYCALLBACK*);
 	}
 
@@ -138,7 +138,7 @@ VOID HotKey::CheckKey() {
 				if (*itr == i) {
 
 #if DEBUG_HOTKEY == 1
-					LogInstance.WriteLogA(const_cast<char*>("Release Key - %d"), i);
+					LogInstance.WriteLog(const_cast<char*>("Release Key - %d"), i);
 #endif
 					_pressedKey.erase(itr);
 					break;
@@ -150,7 +150,7 @@ VOID HotKey::CheckKey() {
 	for (UINT i = 0; i < DXINPUT.GetStateSize(); i++) {
 		if (DXINPUT.isKeyDown(i)) {
 #if DEBUG_HOTKEY == 1
-			LogInstance.WriteLogA(const_cast<char*>("Down Key - %d"), i);
+			LogInstance.WriteLog(const_cast<char*>("Down Key - %d"), i);
 #endif
 			_pressedKey.push_back(i);
 		}

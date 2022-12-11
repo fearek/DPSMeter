@@ -1,5 +1,4 @@
 #pragma once
-#include ".\Language\Region.h"
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacket.h"
 
@@ -7,7 +6,7 @@
 
 typedef struct _SWPACKET_PING {
 	UINT32 _ping;
-	
+
 }SWPACKET_PING;
 
 #pragma pack(pop)

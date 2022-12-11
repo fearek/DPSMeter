@@ -1,30 +1,44 @@
 #include "pch.h"
-#include <type_traits>
-#include ".\Language\Region.h"
+#include <winsock2.h>
+#include <ws2ipdef.h>
+#include <iphlpapi.h>
+#include <stdio.h>
 #include ".\UI\Option.h"
 #include ".\UI\HotKey.h"
 #include ".\UI\PlayerTable.h"
 #include ".\UI\UiWindow.h"
 #include ".\Damage Meter\Damage Meter.h"
+#include ".\Buff Meter\Buff Meter.h"
+#include ".\Damage Meter\MySQLite.h"
 #include ".\discord\DiscordPresence.h"
-#include <filesystem>
-UiOption::UiOption()  : _open(0), _framerate(1), _windowBorderSize(1), _fontScale(1), _columnFontScale(1), _tableFontScale(1), _is1K(0), _is1M(0), _isSoloMode(0), _hideName(0), _isTopMost(true), _cellPadding(0,0), _windowWidth(800), _refreshTime(0.3)  {
+
+UiOption::UiOption()  : 
+	_open(0), _framerate(1), _windowBorderSize(1), _fontScale(1), _columnFontScale(1), _tableFontScale(1), 
+	_is1K(0), _is1M(0), _isSoloMode(0), _hideName(0), _isTopMost(true), _teamTA_LF(false), _isSoloRankMode(FALSE), _isUseSaveData(FALSE),
+	_isDontSaveUnfinishedMaze(false),
+	_cellPadding(0, 0), _windowWidth(800), _refreshTime((FLOAT)0.3), _oriIsUseSaveData(FALSE),
+	_selectedInterface("ALL")
+{
+	
 	_jobBasicColor[0] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(153, 153, 153, 255)));	// Unknown
-	_jobBasicColor[1] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(247, 142, 59, 255)));	// 하루
-	_jobBasicColor[2] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(59, 147, 247, 255)));	// 어윈
-	_jobBasicColor[3] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(247, 59, 156, 255)));	// 릴리
-	_jobBasicColor[4] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(247, 190, 59, 255)));	// 진
-	_jobBasicColor[5] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(161, 59, 247, 255)));	// 스텔라
-	_jobBasicColor[6] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(223, 1, 1, 255)));	// 이리스
-	_jobBasicColor[7] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(138, 2, 4, 255)));		// 치이
-	_jobBasicColor[8] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(118, 206, 158, 255)));	// 에프넬
-	_jobBasicColor[9] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(128, 128, 64, 255)));	// 이나비
-	_jobBasicColor[10] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(73, 51, 116, 255)));	// DHANA
-	for (int i = 0; i < 11; i++)
+	_jobBasicColor[1] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(247, 142, 59, 255)));	// haru
+	_jobBasicColor[2] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(59, 147, 247, 255)));	// owin
+	_jobBasicColor[3] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(247, 59, 156, 255)));	// lily
+	_jobBasicColor[4] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(247, 190, 59, 255)));	// kin
+	_jobBasicColor[5] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(161, 59, 247, 255)));	// stella
+	_jobBasicColor[6] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(223, 1, 1, 255)));	// iris
+	_jobBasicColor[7] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(138, 2, 4, 255)));		// chii
+	_jobBasicColor[8] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(118, 206, 158, 255)));	// eph
+	_jobBasicColor[9] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(128, 128, 64, 255)));	// nabi
+
+	for (int i = 0; i < 10; i++)
 		_jobColor[i] = _jobBasicColor[i];
+
+	strcpy_s(_selectedLang, LANGMANAGER.GetCurrentLang());
 }
 
-UiOption::~UiOption() {
+UiOption::~UiOption() 
+{
 	
 }
 
@@ -47,26 +61,26 @@ void UpdateFontList()
 	}
 	catch (std::exception e)
 	{
-		LogInstance.WriteLog("Update font failed: %s",e.what());
+		LogInstance.WriteLog("Update font failed: %s", e.what());
 	}
 }
 void SetFont()
 {
-	if(DAMAGEMETER.selectedFont.path.empty())
+	if (DAMAGEMETER.selectedFont.path.empty())
 		return;
 	DAMAGEMETER.shouldRebuildAtlas = true;
-	LogInstance.WriteLog("Trying to set font to: %s",DAMAGEMETER.selectedFont.path.c_str());
+	LogInstance.WriteLog("Trying to set font to: %s", DAMAGEMETER.selectedFont.path.c_str());
 }
 BOOL UiOption::ShowFontSelector() {
 
 	ImFont* font_current = ImGui::GetFont();
 	float width = ImGui::CalcItemWidth();
-	ImGui::PushItemWidth(width+100.0);
-	if (ImGui::ListBoxHeader("Font",3))
+	ImGui::PushItemWidth(width + 100.0);
+	if (ImGui::ListBoxHeader("Font", 3))
 	{
 		for (ImFontObj font : fonts)
 		{
-			if(ImGui::Selectable(font.filename.c_str(), font.selectable))
+			if (ImGui::Selectable(font.filename.c_str(), font.selectable))
 			{
 				DAMAGEMETER.selectedFont = font;
 			}
@@ -82,22 +96,23 @@ BOOL UiOption::ShowFontSelector() {
 	{
 		SetFont();
 	}
-	ImGui::Text(Language.GetText(STR_OPTION_FONTSCALE_DESC).c_str());
-	ImGui::DragFloat(Language.GetText(STR_OPTION_FONTSCALE).c_str(), &_fontScale, 0.005f, 0.3f, 2.0f, "%.1f");
-
+	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_FONTSCALE_DESC"));
+	ImGui::DragFloat(LANGMANAGER.GetText("STR_OPTION_FONTSCALE"), &_fontScale, 0.005f, 0.3f, 2.0f, " % .1f");
+	if (_fontScale < 0.1f) _fontScale = 0.3f;
+	if (_fontScale > 2.0f) _fontScale = 2.0f;
 	font_current->Scale = _fontScale;
 
-	if (ImGui::Checkbox(Language.GetText(STR_OPTION_UNIT_1K).c_str(), (bool*)&_is1K)) {
+	if (ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_UNIT_1K"), (bool*)&_is1K)) {
 		if (_is1M)
 			_is1M = FALSE;
 	}
 
-	if (ImGui::Checkbox(Language.GetText(STR_OPTION_UNIT_1M).c_str(), (bool*)&_is1M)) {
+	if (ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_UNIT_1M"), (bool*)&_is1M)) {
 		if (_is1K)
 			_is1K = FALSE;
 	}
-	ImGui::Checkbox(Language.GetText(STR_OPTION_SOLO_MODE).c_str(), (bool*)&_isSoloMode);
-	ImGui::Checkbox(Language.GetText(STR_OPTION_HIDE_NAME).c_str(), (bool*)&_hideName);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_SOLO_MODE"), (bool*)&_isSoloMode);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_HIDE_NAME"), (bool*)&_hideName);
 	if (ImGui::Checkbox("Rich presence", &DISCORD.shouldUpdate))
 	{
 		if (!DISCORD.shouldUpdate)
@@ -111,48 +126,21 @@ BOOL UiOption::ShowFontSelector() {
 	ImGui::Checkbox("Hide character class", &DISCORD.hideClass);
 	return TRUE;
 }
-std::string getCharName(int id)
-{
-	switch (id)
-	{
-	case 0:
-		return Language.GetText(STR_CHAR_UNKNOWN);
-	case 1:
-		return Language.GetText(STR_CHAR_HARU);
-	case 2:
-		return Language.GetText(STR_CHAR_ERWIN);
-	case 3:
-		return Language.GetText(STR_CHAR_LILY);
-	case 4:
-		return Language.GetText(STR_CHAR_JIN);
-	case 5:
-		return Language.GetText(STR_CHAR_STELLA);
-	case 6:
-		return Language.GetText(STR_CHAR_IRIS);
-	case 7:
-		return Language.GetText(STR_CHAR_CHII);
-	case 8:
-		return Language.GetText(STR_CHAR_Ephnel);
-	case 9:
-		return Language.GetText(STR_CHAR_NABI);
-	case 10:
-		return Language.GetText(STR_CHAR_DHANA);
-	default:
-		return Language.GetText(STR_CHAR_UNKNOWN);
-	}
-}
+
 BOOL UiOption::ShowTableOption() {
 
 	ImGuiStyle& style = ImGui::GetStyle();
-
-	ImGui::SliderFloat(Language.GetText(STR_OPTION_WINDOW_BORDER_SIZE).c_str(), &_windowBorderSize, 0.0f, 1.0f, "%.0f");
+	float width = ImGui::CalcItemWidth();
+	ImGui::PushItemWidth(width - 200.0);
+	ImGui::SliderInt("Timer accuracy", &DAMAGEMETER.mswideness, 1, 3);
+	ImGui::SliderFloat(LANGMANAGER.GetText("STR_OPTION_WINDOW_BORDER_SIZE"), &_windowBorderSize, 0.0f, 1.0f, "%.0f");
 	style.WindowBorderSize = _windowBorderSize;
-	ImGui::SliderFloat2(Language.GetText(STR_OPTION_CELL_PADDING).c_str(), (float*)&_cellPadding, 0.0f, 20.0f, "%.0f");
+	ImGui::SliderFloat2(LANGMANAGER.GetText("STR_OPTION_CELL_PADDING"), (float*)&_cellPadding, 0.0f, 20.0f, "%.0f");
 	style.CellPadding = _cellPadding;
-	ImGui::DragFloat(Language.GetText(STR_OPTION_COLUMN_FONT_SCALE).c_str(), &_columnFontScale, 0.005f, 0.3f, 2.0f, "%.1f");
-	ImGui::DragFloat(Language.GetText(STR_OPTION_TABLE_FONT_SCALE).c_str(), &_tableFontScale, 0.005f, 0.3f, 2.0f, "%.1f");
+	ImGui::DragFloat(LANGMANAGER.GetText("STR_OPTION_COLUMN_FONT_SCALE"), &_columnFontScale, 0.005f, 0.3f, 2.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+	ImGui::DragFloat(LANGMANAGER.GetText("STR_OPTION_TABLE_FONT_SCALE"), &_tableFontScale, 0.005f, 0.3f, 2.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 	ImGui::Separator();
-	ImGui::DragFloat(Language.GetText(STR_OPTION_TABLE_REFRESH_TIME).c_str(), &_refreshTime, 0.005f, 0.1f, 1.0f, "%.1f");
+	ImGui::DragFloat(LANGMANAGER.GetText("STR_OPTION_TABLE_REFRESH_TIME"), &_refreshTime, 0.005f, 0.1f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 	ImGui::Separator();
 	ImGui::ColorEdit4("##ColorText", (FLOAT*)&_textColor, ImGuiColorEditFlags_None); 
 	ImGui::SameLine(); 	ImGui::Text(ImGui::GetStyleColorName(0));
@@ -161,23 +149,33 @@ BOOL UiOption::ShowTableOption() {
 	ImGui::SameLine();	ImGui::Text(ImGui::GetStyleColorName(2));
 	style.Colors[2] = _windowBg;
 	ImGui::ColorEdit4("##ColorOutline", (FLOAT*)&_outlineColor, ImGuiColorEditFlags_None);
-	ImGui::SameLine();	ImGui::Text(Language.GetText(STR_OPTION_TEXT_OUTLINE_COLOR).c_str());
+	ImGui::SameLine();	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_TEXT_OUTLINE_COLOR"));
 	ImGui::ColorEdit4("##ColorActiveColor", (FLOAT*)&_activeColor[1], ImGuiColorEditFlags_None);
-	ImGui::SameLine();	ImGui::Text(Language.GetText(STR_OPTION_ACTIVE_COLOR).c_str());
+	ImGui::SameLine();	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_ACTIVE_COLOR"));
 	ImGui::ColorEdit4("##ColorInActiveColor", (FLOAT*)&_activeColor[0], ImGuiColorEditFlags_None);
-	ImGui::SameLine();	ImGui::Text(Language.GetText(STR_OPTION_INACTIVE_COLOR).c_str());
+	ImGui::SameLine();	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_INACTIVE_COLOR"));
 
-	//const char* job[10][32] = { {Language.GetText(STR_CHAR_UNKNOWN).c_str()}, {Language.GetText(STR_CHAR_HARU).c_str()}, {Language.GetText(STR_CHAR_ERWIN).c_str()}, {Language.GetText(STR_CHAR_LILY).c_str()}, {Language.GetText(STR_CHAR_JIN).c_str()}, {Language.GetText(STR_CHAR_STELLA).c_str()},{Language.GetText(STR_CHAR_IRIS).c_str()}, {Language.GetText(STR_CHAR_CHII).c_str()}, {Language.GetText(STR_CHAR_Ephnel).c_str()}, {Language.GetText(STR_CHAR_NABI).c_str()}};
+	const char* job[10][32] = { 
+		{(const char*)LANGMANAGER.GetText("STR_CHAR_UNKNOWN")},
+		{(const char*)LANGMANAGER.GetText("STR_CHAR_HARU")},
+		{(const char*)LANGMANAGER.GetText("STR_CHAR_ERWIN")},
+		{(const char*)LANGMANAGER.GetText("STR_CHAR_LILY")},
+		{(const char*)LANGMANAGER.GetText("STR_CHAR_JIN")},
+		{(const char*)LANGMANAGER.GetText("STR_CHAR_STELLA")},
+		{(const char*)LANGMANAGER.GetText("STR_CHAR_IRIS")},
+		{(const char*)LANGMANAGER.GetText("STR_CHAR_CHII")},
+		{(const char*)LANGMANAGER.GetText("STR_CHAR_EPHNEL")},
+		{(const char*)LANGMANAGER.GetText("STR_CHAR_NABI")}
+	};
 
-	for (int i = 0; i < 11; i++) {
+	for (int i = 0; i < 10; i++) {
 		ImGui::PushID(i);
 		ImGui::ColorEdit4("##Color", (FLOAT*)&_jobColor[i], ImGuiColorEditFlags_None);
-		std::string charName = getCharName(i);
-		ImGui::SameLine();	ImGui::Text(charName.c_str());
+		ImGui::SameLine();	ImGui::Text(*job[i]);
 
 		if (memcmp(&_jobColor[i], &_jobBasicColor[i], sizeof(ImVec4)) != 0) {
 			ImGui::SameLine(0.0f, style.ItemInnerSpacing.x); 
-			if (ImGui::Button(Language.GetText(STR_OPTION_RESTORE_DEFAULT_COLOR).c_str())) {
+			if (ImGui::Button(LANGMANAGER.GetText("STR_OPTION_RESTORE_DEFAULT_COLOR"))) {
 				_jobColor[i] = _jobBasicColor[i];
 			}
 		}
@@ -190,59 +188,214 @@ BOOL UiOption::ShowTableOption() {
 
 BOOL UiOption::ShowHotkeySetting() {
 
-	std::string text =
-		Language.GetText(STR_OPTION_HOTKEY_DESC_1) + "\n" +
-		Language.GetText(STR_OPTION_HOTKEY_DESC_2) + "\n" +
-		Language.GetText(STR_OPTION_HOTKEY_DESC_3) + "\n" +
-		Language.GetText(STR_OPTION_HOTKEY_DESC_4) + "\n" +
-		Language.GetText(STR_OPTION_HOTKEY_DESC_5);
+	char text[4096] = { 0 };
+	sprintf_s(text, "%s%s%s%s%s",
+		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_1"),
+		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_2"),
+		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_3"),
+		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_4"),
+		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_5")
+	);
 
-	ImGui::Text(text.c_str());
+	ImGui::Text(text);
 
 	return TRUE;
 }
 
+VOID UiOption::Helper() {
+
+	static UINT32 helper = 1;
+	CHAR name[128] = { 0 };
+
+	UINT monster[4] = { 604, 605, 10000206, 10194613 };
+	UINT skill[4] = { 72000233, 72000331, 72000433, 72000638 };
+	UINT buff[4] = { 10001, 10111, 10222, 10333 };
+
+	if (DAMAGEMETER.GetWorldID() == 0) {
+		DAMAGEMETER.SetWorldID(20011);
+	}
+
+	DAMAGEMETER.InsertDB(0, monster[0]);
+	DAMAGEMETER.InsertDB(1, monster[1]);
+	DAMAGEMETER.InsertDB(2, monster[2]);
+	DAMAGEMETER.InsertDB(3, monster[3]);
+	DAMAGEMETER.InsertDB(4, monster[0]);
+	DAMAGEMETER.InsertDB(5, monster[1]);
+	DAMAGEMETER.InsertDB(6, monster[2]);
+	DAMAGEMETER.InsertDB(7, monster[3]);
+
+	for (INT i = 0; i < 4; i++) {
+		sprintf_s(name, 128, "%s %d", LANGMANAGER.GetText("STR_OPTION_TEST_VALUE_PLAYER"), helper);
+		
+		UINT32 id;
+		if (helper == 3) {
+			id = DAMAGEMETER.GetMyID();
+		}
+		else {
+			id = helper;
+			DAMAGEMETER.InsertPlayerMetadata(id, name, helper % 10);
+		}
+
+		//DAMAGEMETER.InsertPlayerMetadata(id, name, helper % 10);
+		DAMAGEMETER.AddDamage(id, helper * 10000, helper * 5000, 4, helper * 2, i % 4, skill[i % 4]);
+		DAMAGEMETER.AddDamage(id, helper * 20000, helper * 5000, 4, helper * 3, (i + 1) % 4, skill[(i + 1) % 4]);
+		DAMAGEMETER.AddDamage(id, helper * 30000, helper * 5000, 4, helper * 4, (i + 2) % 4, skill[(i + 2) % 4]);
+		DAMAGEMETER.AddDamage(id, helper * 40000, helper * 5000, 4, helper * 5, (i + 3) % 4, skill[(i + 3) % 4]);
+		DAMAGEMETER.AddDamage(id, helper * 20000, helper * 5000, 4, helper * 3, (i + 4) % 4, skill[(i + 1) % 4]);
+		DAMAGEMETER.AddDamage(id, helper * 30000, helper * 5000, 4, helper * 4, (i + 5) % 4, skill[(i + 2) % 4]);
+		DAMAGEMETER.AddDamage(id, helper * 40000, helper * 5000, 4, helper * 5, (i + 6) % 4, skill[(i + 3) % 4]);
+		DAMAGEMETER.AddDamage(id, helper * 40000, helper * 5000, 4, helper * 5, (i + 7) % 4, skill[(i + 3) % 4]);
+
+		BUFFMETER.AddBuff(id, buff[id % 4], 1 + id);
+		helper++;
+	}
+
+	DAMAGEMETER.SetTestMode();
+}
+
+VOID UiOption::ShowLangSelector() {
+	const CHAR* comboPreview = LANGMANAGER.GetText("STR_LANG_NAME");
+
+	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_COMBO_LANG"));
+	if (ImGui::BeginCombo(u8"###OptionLangSelector", comboPreview, ImGuiComboFlags_HeightLarge)) {
+
+		INT32 i = 0;
+		for (auto itr = _allLangList.begin(); itr != _allLangList.end(); itr++)
+		{
+
+			CHAR label[MONSTER_NAME_LEN] = { 0 };
+			sprintf_s(label, MONSTER_NAME_LEN, "%s##%d", itr->second.c_str(), i);
+
+			if (ImGui::Selectable(label, strcmp(_selectedLang, itr->first.c_str()) == 0)) {
+				strcpy_s(_selectedLang, itr->first.c_str());
+				ChangeLang();
+			}
+
+			i++;
+		}
+
+		ImGui::EndCombo();
+	}
+}
+
+VOID UiOption::ChangeLang()
+{
+	DAMAGEMETER.GetLock();
+	{
+		LANGMANAGER.SetCurrentLang(_selectedLang);
+		// need reload sql command
+		SWDB.Init();
+	}
+	DAMAGEMETER.FreeLock();
+}
+
+VOID UiOption::ShowTeamTALFSelector()
+{
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_TEAMTA_LUNARFALL"), (bool*)&_teamTA_LF);
+	const CHAR* comboPreview = nullptr;
+	if (_teamTA_LF_Mode == 1)
+		comboPreview = LANGMANAGER.GetText("STR_OPTION_TEAMTA_OPTION_1");
+	else
+		comboPreview = LANGMANAGER.GetText("STR_OPTION_TEAMTA_OPTION_2");
+	if (ImGui::BeginCombo(u8"###OptionTALF", comboPreview, ImGuiComboFlags_HeightLargest))
+	{
+
+		CHAR label[128] = { 0 };
+
+		for (INT32 i = 1; i <= 2; i++)
+		{
+			if (i == 1)
+				sprintf_s(label, 128, "%s##OptionTALF1", LANGMANAGER.GetText("STR_OPTION_TEAMTA_OPTION_1"));
+			else
+				sprintf_s(label, 128, "%s##OptionTALF2", LANGMANAGER.GetText("STR_OPTION_TEAMTA_OPTION_2"));
+			if (ImGui::Selectable(label, _teamTA_LF_Mode == i)) {
+				_teamTA_LF_Mode = i;
+			}
+		}
+
+		ImGui::EndCombo();
+	}
+}
+
+VOID UiOption::ShowFeatures()
+{
+	if (ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_UNIT_1K"), (bool*)&_is1K)) {
+		if (_is1M)
+			_is1M = FALSE;
+	}
+
+	if (ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_UNIT_1M"), (bool*)&_is1M)) {
+		if (_is1K)
+			_is1K = FALSE;
+	}
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_SOLO_MODE"), (bool*)&_isSoloMode);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_HIDE_NAME"), (bool*)&_hideName);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_SOLO_RANK_MODE"), (bool*)&_isSoloRankMode); ImGui::SameLine(); ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_DONT_SAVE_UNFINISHED_MAZE"), (bool*)&_isDontSaveUnfinishedMaze);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_USE_SAVEDATA"), (bool*)&_isUseSaveData);
+}
 
 VOID UiOption::OpenOption() {
 
+
 	_open = TRUE;
 
+	if (DAMAGEMETER.size() < 1) {
+		Helper();
+		PLAYERTABLE.ResizeTalbe();
+	}
 
-	ImGui::Begin(Language.GetText(STR_OPTION_WINDOWS_NAME).c_str(), 0, ImGuiWindowFlags_None);
+	CHAR label[128] = { 0 };
+	sprintf_s(label, "%s###Option", LANGMANAGER.GetText("STR_OPTION_WINDOWS_NAME"));
+
+	ImGui::Begin(label, 0, ImGuiWindowFlags_None);
+
+		if (ImGui::Button(LANGMANAGER.GetText("STR_OPTION_ADD_TEST_VALUE"))) {
+			Helper();
+		}
 
 		ImGui::SameLine(); 		
 		
-		if (ImGui::Button(Language.GetText(STR_OPTION_SAVE_AND_EXIT).c_str())) {
+		if (ImGui::Button(LANGMANAGER.GetText("STR_OPTION_SAVE_AND_EXIT"))) {
 			SaveOption();
 			if (DAMAGEMETER.GetWorldID() == 20011) {
 				DAMAGEMETER.SetWorldID(0);
 			}
 			_open = FALSE;
 		}
-		/*if (ImGui::Button("START TIMER")) {
+
+#ifdef _DEBUG
+		if (ImGui::Button("START TIMER")) {
 			DAMAGEMETER.Start();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("STOP TIMER")) {
 			DAMAGEMETER.Suspend();
-		}*/
-		float width = ImGui::CalcItemWidth();
-		ImGui::PushItemWidth(width-200.0);
-		ImGui::SliderInt("Timer accuracy", &DAMAGEMETER.mswideness, 1, 3);
-		ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.2f);
-		ShowFontSelector();
-		ImGui::PopItemWidth();
-
+		}
+#endif
+		ShowLangSelector();
 		if (ImGui::BeginTabBar("##tabs")) {
-			if (ImGui::BeginTabItem(Language.GetText(STR_OPTION_TAB_TABLE_SETTING).c_str())) {
+			CHAR label[128] = {0};
+			sprintf_s(label, "%s###TabFeatures", LANGMANAGER.GetText("STR_OPTION_TAB_TABLE_FEATURES"));
+			if (ImGui::BeginTabItem(label)) {
 				ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.5f);
+				ShowFeatures();
+				ShowTeamTALFSelector();
+				ImGui::PopItemWidth();
+				ImGui::EndTabItem();
+			}
+
+			sprintf_s(label, "%s###TabTable", LANGMANAGER.GetText("STR_OPTION_TAB_TABLE_SETTING"));
+			if (ImGui::BeginTabItem(label)) {
+				ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.5f);
+				ShowFontSelector();
+
 				ShowTableOption();
 				ImGui::PopItemWidth();
 				ImGui::EndTabItem();
 			}
 
-			if (ImGui::BeginTabItem(Language.GetText(STR_OPTION_TAB_HOTKEY_SETTING).c_str())) {
-				// 귀찮구만
+			sprintf_s(label, "%s###TabHotKey", LANGMANAGER.GetText("STR_OPTION_TAB_HOTKEY_SETTING"));
+			if (ImGui::BeginTabItem(label)) {
 				ShowHotkeySetting();
 				ImGui::EndTabItem();
 			}
@@ -330,8 +483,6 @@ BOOL UiOption::GetOption() {
 
 	attr->QueryIntValue(&_is1M);
 
-
-
 	attr = ele->FindAttribute("IsSoloMode");
 	if (attr == nullptr)
 		return FALSE;
@@ -346,6 +497,41 @@ BOOL UiOption::GetOption() {
 	if (attr == nullptr)
 		return FALSE;
 	attr->QueryIntValue(&_isTopMost);
+
+	attr = ele->FindAttribute("TeamTA_LF");
+	if (attr != nullptr)
+		attr->QueryIntValue(&_teamTA_LF);
+
+	attr = ele->FindAttribute("TeamTA_LF_Mode");
+	if (attr != nullptr)
+		attr->QueryIntValue(&_teamTA_LF_Mode);
+
+
+	auto attr2 = ele->FirstChildElement("UseLangFile");
+	if (attr2 != nullptr) {
+		strcpy_s(_selectedLang, attr2->GetText());
+		ChangeLang();
+	}
+
+	attr = ele->FindAttribute("IsSoloRankMode");
+	if (attr != nullptr)
+		attr->QueryIntValue(&_isSoloRankMode);
+
+	attr = ele->FindAttribute("IsUseSaveData");
+	if (attr != nullptr) {
+		attr->QueryIntValue(&_isUseSaveData);
+		attr->QueryIntValue(&_oriIsUseSaveData);
+	}
+
+	attr2 = ele->FirstChildElement("UseInterface");
+	if (attr2 != nullptr) {
+		strcpy_s(_selectedInterface, attr2->GetText());
+	}
+
+	
+	attr = ele->FindAttribute("IsDontSaveUnfinishedMaze");
+	if (attr != nullptr)
+		attr->QueryIntValue(&_isDontSaveUnfinishedMaze);
 
 #if DEBUG_READ_XML == 1
 	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read 1M = %d")), _is1M);
@@ -426,7 +612,7 @@ BOOL UiOption::GetOption() {
 		attr->QueryFloatValue(&winY);
 
 		//SetWindowPos(UIWINDOW.GetHWND(), HWND_NOTOPMOST, winX, winY, 0, 0, SWP_NOSIZE);
-		SetWindowPos(UIWINDOW.GetHWND(), HWND_TOPMOST, winX, winY, 0, 0, SWP_NOSIZE);
+		SetWindowPos(UIWINDOW.GetHWND(), HWND_TOPMOST, static_cast<INT>(winX), static_cast<INT>(winY), 0, 0, SWP_NOSIZE);
 
 #if DEBUG_READ_XML == 1
 		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read WinPos(X,Y) = (%f, %f)")), winX, winY);
@@ -666,9 +852,9 @@ BOOL UiOption::GetOption() {
 		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read Hotkey %s, key1 = %d, key2 = %d, key3 = %d")), name2, key[0], key[1], key[2]);
 #endif
 		
-		if (strcmp(name2, "Toogle") == 0)
+		if (strcmp(name2, u8"Toogle") == 0)
 			HOTKEY.InsertHotkeyToogle(key[0], key[1], key[2]);
-		else if (strcmp(name2, "Clear") == 0)
+		else if (strcmp(name2, u8"Clear") == 0)
 			HOTKEY.InsertHotkeyStop(key[0], key[1], key[2]);
 		
 	} while (TRUE);
@@ -676,16 +862,11 @@ BOOL UiOption::GetOption() {
 	return TRUE;
 }
 
-BOOL UiOption::SaveOption() {
-	DAMAGEMETER.ini.SetValue("Meter", "DefaultFont", DAMAGEMETER.selectedFont.path.c_str());
-	DAMAGEMETER.ini.SetLongValue("Meter", "TimerAcc", DAMAGEMETER.mswideness);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "RichPresence", DISCORD.shouldUpdate);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "HideName", DISCORD.hideName);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "HideClass", DISCORD.hideClass);
-	SI_Error rc = DAMAGEMETER.ini.SaveFile("meterconfig.ini");
-	if (rc < 0) {
-		MessageBoxA(NULL, "Something is wrong with your system, cant make config file.", "ERROR", MB_OK | MB_ICONERROR);
-	}
+BOOL UiOption::SaveOption(BOOL skipWarning) {
+
+	if (!_inited)
+		return false;
+
 	tinyxml2::XMLDocument doc;
 
 	tinyxml2::XMLDeclaration* dec = doc.NewDeclaration();
@@ -706,12 +887,23 @@ BOOL UiOption::SaveOption() {
 	option->SetAttribute("M", _is1M);
 	option->SetAttribute("IsSoloMode", _isSoloMode);
 	option->SetAttribute("DoHideName", _hideName);
+	option->SetAttribute("TeamTA_LF", _teamTA_LF);
+	option->SetAttribute("TeamTA_LF_Mode", _teamTA_LF_Mode);
+	option->SetAttribute("IsSoloRankMode", _isSoloRankMode);
+	option->SetAttribute("IsUseSaveData", _isUseSaveData);
+
 	option->SetAttribute("CellPaddingX", _cellPadding.x);
 	option->SetAttribute("CellPaddingY", _cellPadding.y);
 	option->SetAttribute("BorderSize", _windowBorderSize);
 	option->SetAttribute("WindowWidth", _windowWidth);
 	option->SetAttribute("RefreshTime", _refreshTime);
 
+
+	option->InsertNewChildElement("UseLangFile")->SetText(_selectedLang);
+
+	option->InsertNewChildElement("UseInterface")->SetText(_selectedInterface);
+
+	option->SetAttribute("IsDontSaveUnfinishedMaze", _isDontSaveUnfinishedMaze);
 
 	RECT rect;
 	GetWindowRect(UIWINDOW.GetHWND(), &rect);
@@ -753,7 +945,7 @@ BOOL UiOption::SaveOption() {
 	inactive_color->SetAttribute("b", _activeColor[0].z);
 	inactive_color->SetAttribute("a", _activeColor[0].w);
 
-	for (int i = 0; i < 11; i++) {
+	for (int i = 0; i < 10; i++) {
 
 		char buffer[32] = { 0 };
 		sprintf_s(buffer, 32, "JobColor%d", i);
@@ -783,6 +975,15 @@ BOOL UiOption::SaveOption() {
 
 	doc.SaveFile(OPTION_FILE_NAME);
 
+	if (!skipWarning)
+	{
+		if (_oriIsUseSaveData != _isUseSaveData) {
+			CHAR tmp[256] = { 0 };
+			ANSItoUTF8(LANGMANAGER.GetText("STR_OPTION_SAVE_WARNING"), tmp, 256);
+			MessageBoxA(UIWINDOW.GetHWND(), tmp, "WARNING", MB_ICONWARNING | MB_TOPMOST);
+		}
+	}
+
 	return TRUE;
 }
 
@@ -802,11 +1003,13 @@ BOOL UiOption::SetBasicOption() {
 	HOTKEY.InsertHotkeyToogle(DIK_LCONTROL, DIK_END, -1);
 	HOTKEY.InsertHotkeyStop(DIK_LCONTROL, DIK_DELETE, -1);
 
+	Helper();
 	PLAYERTABLE.ResizeTalbe();
 	_open = TRUE;
 
 	return TRUE;
 }
+
 
 BOOL UiOption::ToggleTopMost() {
 
@@ -816,7 +1019,8 @@ BOOL UiOption::ToggleTopMost() {
 }
 
 const ImU32 UiOption::GetJobColor(UINT index) {
-	if (index < 0 || index > 10)
+
+	if (index < 0 || index > 9)
 		return ImGui::ColorConvertFloat4ToU32(_jobColor[0]);
 
 	return ImGui::ColorConvertFloat4ToU32(_jobColor[index]);
@@ -868,6 +1072,32 @@ const BOOL& UiOption::isTopMost()
 	return _isTopMost;
 }
 
+const BOOL& UiOption::isTeamTALF()
+{
+	return _teamTA_LF;
+}
+
+const INT32& UiOption::TeamTALFMode()
+{
+	return _teamTA_LF_Mode;
+}
+
+const BOOL& UiOption::isSoloRankMode() {
+	return _isSoloRankMode;
+}
+
+const BOOL& UiOption::isUseSaveData()
+{
+	if (_oriIsUseSaveData != _isUseSaveData)
+		return _oriIsUseSaveData;
+	return _isUseSaveData;
+}
+
+const BOOL& UiOption::isDontSaveUnfinishedMaze()
+{
+	return _isDontSaveUnfinishedMaze;
+}
+
 VOID UiOption::Update() {
 
 	ImFont* font = ImGui::GetFont();
@@ -878,7 +1108,7 @@ VOID UiOption::Update() {
 
 #if DEBUG_COLUMN_WIDTH == 1
 	for (INT i = 0; i < 8; i++)
-		LogInstance.WriteLog("[DEBUG] [Column Width] [%d] [%f]", i, UIOPTION[i]);
+		LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [Column Width] [%d] [%f]")), i, UIOPTION[i]);
 #endif
 }
 
@@ -890,7 +1120,7 @@ const FLOAT& UiOption::GetFramerate() {
 	return _framerate;
 }
 
-VOID UiOption::SetFramerate(UINT i) {
+VOID UiOption::SetFramerate(FLOAT i) {
 
 	if (i < 0)
 		i = 0;
@@ -914,4 +1144,8 @@ VOID UiOption::SetWindowWidth(const FLOAT& width) {
 
 const FLOAT& UiOption::GetRefreshTime() {
 	return _refreshTime;
+}
+
+const CHAR* UiOption::GetUseInterface() {
+	return _selectedInterface;
 }

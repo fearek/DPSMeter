@@ -1,22 +1,14 @@
 #pragma once
-#include ".\Language\Region.h"
+
 #include ".\Soulworker Packet\SWPacket.h"
 #include ".\Damage Meter\Damage Meter.h"
 
-#ifdef SERVER_KOREA
-#define SWPACKETPARTY_DUMMY 38
-#endif
-#ifdef SERVER_STEAM
-#define SWPACKETPARTY_DUMMY 36
-#endif
-#ifdef SERVER_JAPAN
-#define SWPACKETPARTY_DUMMY 36 
-#endif
+#define SWPACKETPARTY_DUMMY 38 //0512
 
 #pragma pack(push, 1)
 
 typedef struct _SWPACKETPARTY_HEADER {
-	BYTE _unknown01[4];
+	BYTE _unknown01[4]; //0430new
 	UINT32 _partyHostID;
 	BYTE _unknown02[10];
 	BYTE _partyPlayerCount;

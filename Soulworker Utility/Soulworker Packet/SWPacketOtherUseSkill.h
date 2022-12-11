@@ -11,7 +11,7 @@ typedef struct _SWPACKET_OTHERUSESKILL {
 	FLOAT _locationY;
 	FLOAT _locationZ;
 	FLOAT _direction;
-	BYTE _unknown01[18];
+	//BYTE _unknown01[19]; // 0430new
 }SWPACKET_OTHERUSESKILL;
 
 #pragma pack(pop)

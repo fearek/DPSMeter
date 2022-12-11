@@ -27,23 +27,23 @@ VOID SpecificInformation::SetupFontScale() {
 	_tableFontScale = _globalFontScale * UIOPTION.GetTableFontScale();
 }
 
-VOID SpecificInformation::Update(BOOL* open) {
+VOID SpecificInformation::Update(BOOL* open, INT64 index) {
 
 	SetupFontScale();
 
 	_accumulatedTime += UIWINDOW.GetDeltaTime();
 
 	if (_accumulatedTime > UIOPTION.GetRefreshTime()) {
-		_tableTime = DAMAGEMETER.GetTime() / 1000;
+		_tableTime = static_cast<FLOAT>((DOUBLE)DAMAGEMETER.GetTime() / 1000);
 		_accumulatedTime = 0;
 	}
 
 	CHAR title[128] = { 0 };
 
-	sprintf_s(title, 128, "%s %s", DAMAGEMETER.GetPlayerName(_playerID), Language.GetText(STR_DETAIL_DETAIL).c_str());
+	sprintf_s(title, 128, "%s %s ###SpecificInformation%lld", DAMAGEMETER.GetPlayerName(_playerID), LANGMANAGER.GetText("STR_SPECIFICINFO_DETAIL"), index);
 	ImGui::Begin(title, (bool*)open, ImGuiWindowFlags_None);
 	{
-		sprintf_s(title, 128, "##tab%d", _playerID);
+		sprintf_s(title, 128, "##tab");
 
 		if(ImGui::BeginTabBar(title))
 		{
@@ -59,7 +59,10 @@ VOID SpecificInformation::Update(BOOL* open) {
 
 VOID SpecificInformation::UpdateSkillInfo() {
 	
-	if(ImGui::BeginTabItem(Language.GetText(STR_DETAIL_SKILL).c_str()))
+	CHAR label[128] = { 0 };
+	sprintf_s(label, "%s###DetailSkill", LANGMANAGER.GetText("STR_SPECIFICINFO_SKILL"));
+
+	if(ImGui::BeginTabItem(label))
 	{
 		UpdateMonsterCombo();
 		
@@ -74,6 +77,25 @@ VOID SpecificInformation::UpdateSkillInfo() {
 		ImGui::EndTabItem();
 	}
 }
+
+VOID SpecificInformation::UpdateSkillTotalInfo() {
+
+	CHAR label[128] = { 0 };
+	sprintf_s(label, "%s###SpecificinfoTotal", LANGMANAGER.GetText("STR_SPECIFICINFO_TOTAL"));
+	if (ImGui::BeginTabItem(label))
+	{
+		ImGui::OutlineText::PushOutlineText(ImGui::IMGUIOUTLINETEXT(UIOPTION.GetOutlineColor(), 1));
+		ImGui::TextAlignCenter::SetTextAlignCenter();
+		{
+			UpdateSkillTotalTable();
+		}
+		ImGui::TextAlignCenter::UnSetTextAlignCenter();
+		ImGui::OutlineText::PopOutlineText();
+
+		ImGui::EndTabItem();
+	}
+}
+
 VOID SpecificInformation::UpdateSkillTotalTable()
 {
 	auto player = DAMAGEMETER.GetPlayerInfo(_playerID);
@@ -93,9 +115,9 @@ VOID SpecificInformation::UpdateSkillTotalTable()
 
 		ImGui::SetWindowFontScale(_columnFontScale);
 
-		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_NAME).c_str(), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn("Casts", ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn("Casts (FULL AB)", ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_NAME"), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_SPECIFICINFO_USE_SKILL_COUNTS"), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_SPECIFICINFO_USE_SKILL_COUNTS_IN_FULL_AB"), ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableHeadersRow();
 
 		CHAR comma[128] = { 0 }; CHAR label[128] = { 0 };
@@ -135,21 +157,6 @@ VOID SpecificInformation::UpdateSkillTotalTable()
 	style.WindowPadding.x = prevWindowPadding.x;
 	style.WindowPadding.y = prevWindowPadding.y;
 }
-VOID SpecificInformation::UpdateSkillTotalInfo()
-{
-	if (ImGui::BeginTabItem("Total"))
-	{
-		ImGui::OutlineText::PushOutlineText(ImGui::IMGUIOUTLINETEXT(UIOPTION.GetOutlineColor(), 1));
-		ImGui::TextAlignCenter::SetTextAlignCenter();
-		{
-			UpdateSkillTotalTable();
-		}
-		ImGui::TextAlignCenter::UnSetTextAlignCenter();
-		ImGui::OutlineText::PopOutlineText();
-
-		ImGui::EndTabItem();
-	}
-}
 
 VOID SpecificInformation::UpdateMonsterCombo() {
 
@@ -166,14 +173,22 @@ VOID SpecificInformation::UpdateMonsterCombo() {
 		comboPreview = (*monster)->GetName();
 	}
 
-	if(ImGui::BeginCombo(Language.GetText(STR_DETAIL_MONSTER).c_str(), comboPreview, ImGuiComboFlags_HeightLarge)) {
+	CHAR label[128] = { 0 };
+	sprintf_s(label, "%s###DetailMonster", LANGMANAGER.GetText("STR_SPECIFICINFO_MONSTER"));
+	if(ImGui::BeginCombo(label, comboPreview, ImGuiComboFlags_HeightLarge)) {
 	
-		for (auto itr = (*player)->begin(); itr != (*player)->end(); itr++) {
-			
-			CHAR label[128] = { 0 };
-			sprintf_s(label, 128, "%s##%u", (*itr)->GetName(), (*itr)->GetID());
+		for (auto itr = (*player)->begin(); itr != (*player)->end(); itr++) 
+		{
+		
+			CHAR ext[MONSTER_NAME_LEN] = { 0 };
+#ifdef _DEBUG
+			sprintf_s(ext, "(%d)", (*itr)->GetDB2());
+#endif
 
-			if (ImGui::Selectable(label)) {
+			CHAR label[MONSTER_NAME_LEN + MONSTER_NAME_LEN] = { 0 };
+			sprintf_s(label, MONSTER_NAME_LEN + MONSTER_NAME_LEN, "%s%s##%d", (*itr)->GetName(), ext, (*itr)->GetID());
+
+			if (ImGui::Selectable(label, _monsterID_SKILL == (*itr)->GetID())) {
 				_monsterID_SKILL = (*itr)->GetID();
 			}
 		}
@@ -201,24 +216,24 @@ VOID SpecificInformation::UpdateSkillTable() {
 	style.WindowPadding.y = 0;
 
 	CHAR table[128] = { 0 };
-	sprintf_s(table, 128, "##skilltable%d", _playerID);
+	sprintf_s(table, 128, "##skilltable");
 	if(ImGui::BeginTable(table, 7, ImGuiTableFlags_Resizable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Reorderable)) {
 	
 		ImGui::SetWindowFontScale(_columnFontScale);
 
-		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_NAME).c_str(), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_DPS).c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_DAMAGE_PERCENT).c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_TOTAL_DAMAGE).c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
-		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_TOTAL_HIT).c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
-		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_CRIT_RATE).c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
-		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_HIT_PER_SECOND).c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_NAME"), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_DPS"), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_DAMAGE_PERCENT"), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_TOTAL_DAMAGE"), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_TOTAL_HIT"), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_CRIT_RATE"), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_HIT_PER_SECOND"), ImGuiTableColumnFlags_WidthFixed, -1);
 	// ImGui::TableSetupColumn(STR_TABLE_SKILL_PER_SECOND, ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableHeadersRow();
 
 		UINT64 max_Damage = 1;
 		CHAR comma[128] = { 0 }; CHAR label[128] = { 0 };
-		UINT windowWidth = ImGui::GetWindowWidth();
+		FLOAT windowWidth = ImGui::GetWindowWidth();
 
 		ImGui::SetWindowFontScale(_tableFontScale);
 
@@ -227,7 +242,7 @@ VOID SpecificInformation::UpdateSkillTable() {
 			if (itr == (*monster)->begin())
 				max_Damage = (*itr)->GetDamage();
 
-			FLOAT damage_percent = (DOUBLE)(*itr)->GetDamage() / (DOUBLE)max_Damage;
+			FLOAT damage_percent = static_cast<FLOAT>((DOUBLE)(*itr)->GetDamage() / (DOUBLE)max_Damage);
 
 			if (damage_percent > 1)
 				damage_percent = 1;
@@ -320,7 +335,9 @@ VOID SpecificInformation::UpdateBuffMeter() {
 
 	BUFFMETER.GetLock();
 	{
-		if (ImGui::BeginTabItem(Language.GetText(STR_DETAIL_BUFF_AND_DEBUFF).c_str()))
+		CHAR label[128] = { 0 };
+		sprintf_s(label, "%s###DetailBuffDeBuff", LANGMANAGER.GetText("STR_SPECIFICINFO_BUFF_AND_DEBUFF"));
+		if (ImGui::BeginTabItem(label))
 		{
 			ImGui::OutlineText::PushOutlineText(ImGui::IMGUIOUTLINETEXT(UIOPTION.GetOutlineColor(), 1));
 			ImGui::TextAlignCenter::SetTextAlignCenter();
@@ -350,22 +367,22 @@ VOID SpecificInformation::UpdateBuffTable() {
 	style.WindowPadding.y = 0;
 
 	CHAR table[128] = { 0 };
-	sprintf_s(table, 128, "##bufftable%d", _playerID);
+	sprintf_s(table, 128, "##bufftable");
 	if (ImGui::BeginTable(table, 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Reorderable)) {
 
 		ImGui::SetWindowFontScale(_columnFontScale);
 
-		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_NAME).c_str(), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(Language.GetText(STR_TABLE_DURATION).c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_SPECIFICINFO_BUFF_NAME"), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_DURATION"), ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableHeadersRow();
 
 		ImGui::SetWindowFontScale(_tableFontScale);
 
-		UINT windowWidth = ImGui::GetWindowWidth();
+		FLOAT windowWidth = ImGui::GetWindowWidth();
 		for (auto itr = (*buff)->begin(); itr != (*buff)->end(); itr++) {
 
 			CHAR label[128] = { 0 };
-			FLOAT duration_percent = (*itr)->GetTime() / DAMAGEMETER.GetTime() / 1000;
+			FLOAT duration_percent = (*itr)->GetTime() / (DAMAGEMETER.GetTime() / 1000);
 
 			if (duration_percent > 1)
 				duration_percent = 1;
@@ -377,9 +394,16 @@ VOID SpecificInformation::UpdateBuffTable() {
 
 			DrawBar(windowWidth, duration_percent, UIOPTION.GetJobColor(DAMAGEMETER.GetPlayerJob(_playerID)));
 
-			// NAME
-			ImGui::Text((*itr)->GetName());
-
+			// NAME & DESC
+			ImGui::TextAlignCenter::UnSetTextAlignCenter();
+			{
+				// Custom text align bug BRUH
+				ImGui::SetCursorPosX((ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - ImGui::CalcTextSize((*itr)->GetName()).x - ImGui::GetScrollX()) * 0.5f);
+				ImGui::Text((*itr)->GetName());
+				if (ImGui::IsItemHovered())
+					ImGui::SetTooltip((*itr)->GetDesc());
+			}
+			ImGui::TextAlignCenter::SetTextAlignCenter();
 			ImGui::TableNextColumn();
 
 			// DURATION

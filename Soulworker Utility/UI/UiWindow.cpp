@@ -1,5 +1,5 @@
 #include "pch.h"
-#include ".\Language\Region.h"
+
 #include ".\UI\DX11.h"
 #include ".\UI\DX Input.h"
 #include ".\UI\UiWindow.h"
@@ -9,10 +9,10 @@
 #include ".\UI\UtillWindow.h"
 #include ".\UI\PlotWindow.h"
 #include ".\Damage Meter\Damage Meter.h"
-#include ".\discord\DiscordPresence.h"
 #include <io.h>
 #include <chrono>
 #include <thread>
+#include ".\discord\DiscordPresence.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -25,7 +25,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 	return uiWindow->WndProc(hWnd, msg, wParam, lParam);
 }
 
-UiWindow::UiWindow() : _x(0), _y(0), _width(0), _height(0), _swapChain(nullptr), _renderTargetView(nullptr), _hInst(0), _hWnd(0), _imGuiContext(nullptr) {
+UiWindow::UiWindow() : _x(0), _y(0), _width(0), _height(0), _swapChain(nullptr), _renderTargetView(nullptr), _hInst(0), _hWnd(0), _imGuiContext(nullptr), _deltaTime(0) {
 	uiWindow = this;
 }
 
@@ -72,7 +72,7 @@ BOOL UiWindow::Init(UINT x, UINT y, UINT width, UINT height) {
 		return FALSE;
 	}
 
-	if ((_hWnd = CreateWindowEx(WS_EX_TOPMOST, wc.lpszClassName, _T("SoulMeter"), WS_POPUP, x, y, width, height, NULL, NULL, _hInst, NULL)) == NULL) {
+	if ((_hWnd = CreateWindowEx(WS_EX_TOPMOST, wc.lpszClassName, _T(""), WS_POPUP, x, y, width, height, NULL, NULL, _hInst, NULL)) == NULL) {
 		LogInstance.WriteLog("Error in CreateWindowEx : %x", GetLastError());
 		return FALSE;
 	}
@@ -153,13 +153,62 @@ BOOL UiWindow::InitImGUI() {
 
 BOOL UiWindow::SetFontList() {
 
-	if(DAMAGEMETER.selectedFont.path.empty())
-		return FALSE;
+	_finddata_t fd;
+	const char* path = ".\\Font\\";
+	const char* filter = "*.ttf";
+	vector<string> vsFontPathPool;
+
+	string fontDir(path);
+	fontDir.append(filter);
+
+	auto handle = _findfirst(fontDir.c_str(), &fd);
+
 	ImGuiIO& io = ImGui::GetIO();
 	ImFontConfig config;
 	config.OversampleH = 1;
 	config.OversampleV = 1;
-	ImFont* font = io.Fonts->AddFontFromFileTTF(DAMAGEMETER.selectedFont.path.c_str(), 32, &config, io.Fonts->GetGlyphRangesChineseAndKoreaFull());
+
+	if (handle == -1)
+	{
+		char szSysPath[MAX_PATH] = { 0 };
+		if (GetWindowsDirectoryA(szSysPath, MAX_PATH) != 0)
+		{
+			const char* szWindowsFontsDir = "\\Fonts\\";
+			string sFindDefaultFontPath(szSysPath);
+			sFindDefaultFontPath.append(szWindowsFontsDir);
+			sFindDefaultFontPath.append("msjh.*");
+
+			_finddata_t defaultFontFD;
+			auto pFont = _findfirst(sFindDefaultFontPath.c_str(), &defaultFontFD);
+
+			if (pFont != -1)
+			{
+				string fnExt = defaultFontFD.name;
+				if (fnExt.substr(fnExt.find_last_of(".") + 1) == "ttc" || fnExt.substr(fnExt.find_last_of(".") + 1) == "ttf")
+				{
+					sFindDefaultFontPath = szSysPath;
+					sFindDefaultFontPath.append(szWindowsFontsDir);
+					sFindDefaultFontPath.append(defaultFontFD.name);
+					vsFontPathPool.push_back(sFindDefaultFontPath);
+				}
+			}
+		}
+	}
+	else {
+		do {
+			char fontPath[MAX_BUFFER_LENGTH] = { 0 };
+			strcat_s(fontPath, path);
+			strcat_s(fontPath, fd.name);
+
+			vsFontPathPool.push_back(fontPath);
+		} while (_findnext(handle, &fd) != -1);
+
+		_findclose(handle);
+	}
+
+	for (auto itr = vsFontPathPool.begin(); itr != vsFontPathPool.end(); itr++)
+		io.Fonts->AddFontFromFileTTF((*itr).c_str(), 32, &config, io.Fonts->GetGlyphRangesChineseAndKoreaFull());
+
 	return TRUE;
 }
 
@@ -197,7 +246,7 @@ VOID UiWindow::Update() {
 			return;
 		}
 		ImGui_ImplDX11_InvalidateDeviceObjects();
-		LogInstance.WriteLog("Set font to %s",DAMAGEMETER.selectedFont.filename.c_str());
+		LogInstance.WriteLog("Set font to %s", DAMAGEMETER.selectedFont.filename.c_str());
 	}
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -210,6 +259,10 @@ VOID UiWindow::Update() {
 	UTILLWINDOW.Update();
 	PLOTWINDOW.Update();
 	UpdateMainTable();
+
+#ifdef _DEBUG
+	//ImGui::ShowMetricsWindow();
+#endif
 
 	ImGui::EndFrame();
 	DrawScene();
@@ -232,7 +285,7 @@ VOID UiWindow::DrawScene() {
 		ImGui::RenderPlatformWindowsDefault();
 	}
 
-	_swapChain->Present(UIOPTION.GetFramerate(), 0);
+	_swapChain->Present(static_cast<UINT>(UIOPTION.GetFramerate()), 0);
 }
 
 LRESULT UiWindow::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -252,7 +305,10 @@ LRESULT UiWindow::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	case WM_SETFOCUS:
 		UIOPTION.SetFramerate(1);
 		break;
+	case WM_QUIT:
+	case WM_CLOSE:
 	case WM_DESTROY:
+		UIOPTION.SaveOption(TRUE);
 		PostQuitMessage(0);
 		return 0;
 	}

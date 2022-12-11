@@ -17,8 +17,8 @@ VOID SWPacketMazeStart::Log() {
 VOID SWPacketMazeStart::Debug() {
 	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[TEST] [MAZE START]")));
 
-	LogInstance.MyLog(_T("Maze Start\n"));
-	for (int i = sizeof(SWHEADER); i < _swheader->_size; i++)
+	//LogInstance.MyLog(_T("Maze Start\n"));
+	/*for (int i = sizeof(SWHEADER); i < _swheader->_size; i++)
 		LogInstance.MyLog(_T("%02x "), _data[i]);
-	LogInstance.MyLog(_T("\n"));
+	LogInstance.MyLog(_T("\n"));*/
 }

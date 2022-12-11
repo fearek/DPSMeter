@@ -8,7 +8,7 @@ typedef struct _SWPACKETBUFFIN {
 	FLOAT _duration;
 	BYTE _stack;
 	UINT32 _giverID;
-	BYTE _unknown01;
+	BYTE _unknown02;
 }SWPACKETBUFFIN;
 #pragma pack(pop)
 

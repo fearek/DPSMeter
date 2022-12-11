@@ -1,5 +1,4 @@
 #pragma once
-#include ".\Language\Region.h"
 #define SWCONSTVALUE 1
 
 #pragma pack(push, 1)

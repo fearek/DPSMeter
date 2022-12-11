@@ -2,7 +2,6 @@
 #include ".\Soulworker Packet\SWPacket.h"
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacketWorldChange.h"
-#include ".\discord\DiscordPresence.h"
 
 SWPacketWorldChange::SWPacketWorldChange(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
@@ -10,7 +9,6 @@ SWPacketWorldChange::SWPacketWorldChange(SWHEADER* swheader, BYTE* data) : SWPac
 
 VOID SWPacketWorldChange::Do() {
 	
-	// 재시작시 자동 리셋
 	DAMAGEMETER.Clear();
 
 	SWPACKETWORLDCHANGE* world_change = (SWPACKETWORLDCHANGE*)(_data + sizeof(SWHEADER));
@@ -28,5 +26,5 @@ VOID SWPacketWorldChange::Log() {
 VOID SWPacketWorldChange::Debug() {
 	SWPACKETWORLDCHANGE* world_change = (SWPACKETWORLDCHANGE*)(_data + sizeof(SWHEADER));
 
-	//LogInstance.WriteLogA(const_cast<CHAR*>("[DEBUG] [World Change = %04x] [MyID = %08x]"), world_change->_worldID, world_change->_id);
+	//LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [World Change = %04x] [MyID = %08x]"), world_change->_worldID, world_change->_id);
 }

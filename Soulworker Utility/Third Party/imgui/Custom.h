@@ -1,6 +1,5 @@
 #pragma once
 
-
 #define OUTLINE_TEXT_USE_FUNCTION_SIZE_UP 0
 
 namespace ImGui {

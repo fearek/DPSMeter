@@ -2556,6 +2556,7 @@ const ImWchar*  ImFontAtlas::GetGlyphRangesChineseFull()
     };
     return &ranges[0];
 }
+
 const ImWchar* ImFontAtlas::GetGlyphRangesChineseAndKoreaFull()
 {
     static const ImWchar ranges[] =
@@ -2572,6 +2573,7 @@ const ImWchar* ImFontAtlas::GetGlyphRangesChineseAndKoreaFull()
     };
     return &ranges[0];
 }
+
 static void UnpackAccumulativeOffsetsIntoRanges(int base_codepoint, const short* accumulative_offsets, int accumulative_offsets_count, ImWchar* out_ranges)
 {
     for (int n = 0; n < accumulative_offsets_count; n++, out_ranges += 2)
@@ -3236,10 +3238,10 @@ void ImFont::RenderText(ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col
 {
     if (!text_end)
         text_end = text_begin + strlen(text_begin); // ImGui:: functions generally already provides a valid text_end, so this is merely to handle direct calls.
-
-    if (ImGui::TextAlignCenter::CheckAlignCenter()) 
-        pos.x = pos.x + (clip_rect.z - clip_rect.x - ImGui::CalcTextSize(text_begin).x) / 2;
     
+    if (ImGui::TextAlignCenter::CheckAlignCenter())
+        pos.x = pos.x + (clip_rect.z - clip_rect.x - ImGui::CalcTextSize(text_begin).x) / 2;
+
     // Align to be pixel perfect
     pos.x = IM_FLOOR(pos.x);
     pos.y = IM_FLOOR(pos.y);

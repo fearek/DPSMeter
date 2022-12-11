@@ -3,9 +3,9 @@
 
 Timer::Timer() {
 	_status = TIMER_STATUS::end;
-	_startTimePoint = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-	_suspendTimePoint = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-	_suspendedTime = 0.f;
+	_startTimePoint = GetCurrentTimeStamp();
+	_suspendTimePoint = GetCurrentTimeStamp();
+	_suspendedTime = 0;
 }
 
 Timer::~Timer() {
@@ -15,14 +15,12 @@ Timer::~Timer() {
 VOID Timer::Run() {
 	
 	if (_status == TIMER_STATUS::end) {
-		_startTimePoint = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-		_suspendedTime = 0.f;
+		_startTimePoint = GetCurrentTimeStamp();
+		_suspendedTime = 0;
 		_status = TIMER_STATUS::run;
 	}
 	else if (_status == TIMER_STATUS::suspend) {
-		uint64_t suspendedTime;
-		suspendedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - _suspendTimePoint;
-		_suspendedTime += suspendedTime;
+		_suspendedTime += GetCurrentTimeStamp() - _suspendTimePoint;
 		_status = TIMER_STATUS::run;
 	}
 	else {
@@ -33,7 +31,7 @@ VOID Timer::Run() {
 VOID Timer::Suspend() {
 
 	if (_status == TIMER_STATUS::run) {
-		_suspendTimePoint = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+		_suspendTimePoint = GetCurrentTimeStamp();
 		_status = TIMER_STATUS::suspend;
 	}
 	else {
@@ -53,12 +51,12 @@ BOOL Timer::isRun() {
 		return FALSE;
 }
 
-uint64_t Timer::GetTime() {
+ULONG64 Timer::GetTime() {
 
-	uint64_t time;
+	ULONG64 time;
 
 	if (_status == TIMER_STATUS::run) {
-		time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - _startTimePoint;
+		time = GetCurrentTimeStamp() - _startTimePoint;
 	}
 	else if (_status == TIMER_STATUS::suspend) {
 		time = _suspendTimePoint - _startTimePoint;

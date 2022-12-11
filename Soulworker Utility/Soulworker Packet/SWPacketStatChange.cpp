@@ -2,7 +2,8 @@
 #include ".\Soulworker Packet\SWPacket.h"
 #include ".\Soulworker Packet\SWPacketStatChange.h"
 #include ".\Damage Meter\Damage Meter.h"
-
+#include ".\Combat Meter\Combat.h"
+#include ".\Combat Meter\CombatMeter.h"
 
 SWPacketStatChange::SWPacketStatChange(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
@@ -10,8 +11,7 @@ SWPacketStatChange::SWPacketStatChange(SWHEADER* swheader, BYTE* data) : SWPacke
 
 VOID SWPacketStatChange::Do() {
 
-	USHORT worldID = DAMAGEMETER.GetWorldID();
-	if (worldID == 0 || worldID == 10003 || worldID == 10021 || worldID == 10031 || worldID == 10041 || worldID == 11001 || worldID == 10051 || worldID == 10061 || worldID == 20011) {
+	if (DAMAGEMETER.isTownMap()) {
 		return;
 	}
 
@@ -21,23 +21,31 @@ VOID SWPacketStatChange::Do() {
 	if (stat_header->_unknown01 == 0) {
 		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER);
 	}
-	else { // 한섭은 1이면 뭔가 안맞길래 이래해둠
+	else { // 
 		// when you entering maze, there is stat packets
-#if defined(SERVER_KOREA)
 		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER) + 14;
-#endif
-#if defined(SERVER_STEAM)
-		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER) + 14;
-#endif
-#if defined(SERVER_JAPAN)
-		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER) + 14; // same as KR server
-#endif
 	}
 
 	for (int i = 0; i < stat_header->_statsCount; i++) {
 		SWPACKETSTATCHANGE_DATA* party_data = (SWPACKETSTATCHANGE_DATA*)p_data;
-		//LogInstance.MyLog(_T("[DEBUG] [ID %08x] [statType = %x], [statValue = %f]\n"), stat_header->_playerID, party_data->_statType, party_data->_statValue);
-		DAMAGEMETER.UpdateStat(stat_header->_playerID, party_data->_statType, party_data->_statValue);
+
+		if (party_data->_statType >= StatType::END)
+		{
+#if _DEBUG
+			LogInstance.WriteLog("[SWPacketStatChange] Find Unknown statType = %x, statValue = %f", party_data->_statType, party_data->_statValue);
+#endif
+		}
+		else {
+			//LogInstance.MyLog(_T("[DEBUG] [ID %08x] [statType = %x], [statValue = %f]\n"), stat_header->_playerID, party_data->_statType, party_data->_statValue);
+			DAMAGEMETER.UpdateStat(stat_header->_playerID, party_data->_statType, party_data->_statValue);
+
+			CombatLog* pCombatLog = new CombatLog;
+			pCombatLog->_type = CombatLogType::CHANGED_STATS;
+			pCombatLog->_val1 = party_data->_statType;
+			pCombatLog->_val2 = party_data->_statValue;
+			COMBATMETER.Insert(stat_header->_playerID, CombatType::PLAYER, pCombatLog);
+		}
+
 		p_data += sizeof(SWPACKETSTATCHANGE_DATA);
 	}
 }
@@ -52,25 +60,17 @@ VOID SWPacketStatChange::Debug() {
 	BYTE* p_data;
 	if (stat_header->_unknown01 == 0) {
 		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER);
-}
-	else { // 한섭은 1이면 뭔가 안맞길래 이래해둠 (스팀섭에서 1이면 어떤지는 확인 안해봄)
+	}
+	else { // 
 		// when you entering maze, there is stat packets
-#if defined(SERVER_KOREA)
 		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER) + 14;
-#endif
-#if defined(SERVER_STEAM)
-		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER);
-#endif
-#if defined(SERVER_JAPAN)
-		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER) + 14; // same as KR server
-#endif
 	}
 
 	for (int i = 0; i < stat_header->_statsCount; i++) {
 		SWPACKETSTATCHANGE_DATA* party_data = (SWPACKETSTATCHANGE_DATA*)p_data;
 
 		DAMAGEMETER.UpdateStat(stat_header->_playerID, party_data->_statType, party_data->_statValue);
-		//LogInstance.MyLog(_T("[DEBUG] [ID %08x] [statType = %x], [statValue = %f]\n"), stat_header->_playerID, party_data->_statType, party_data->_statValue);
+		//LogInstance.WriteLog(_T("[DEBUG] [ID %08x] [statType = %x], [statValue = %f]\n"), stat_header->_playerID, party_data->_statType, party_data->_statValue);
 		p_data += sizeof(SWPACKETSTATCHANGE_DATA);
 
 	}

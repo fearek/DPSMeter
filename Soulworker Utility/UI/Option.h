@@ -1,16 +1,21 @@
 #pragma once
+#include "pch.h"
+#include <unordered_map>
 
 #define UIOPTION UiOption::getInstance()
 
 #define OPTION_FILE_NAME "option.xml"
+#define NETWORK_NAME_LEN 256
 
+#ifdef _DEBUG
 #define DEBUG_READ_XML 0
 #define DEBUG_COLUMN_WIDTH 0
+#endif
 
 class UiOption : public Singleton<UiOption> {
 private:
-	ImVec4 _jobColor[11];
-	ImVec4 _jobBasicColor[11];
+	ImVec4 _jobColor[10];
+	ImVec4 _jobBasicColor[10];
 	ImVec4 _activeColor[2];
 	ImVec4 _outlineColor;
 	ImVec4 _textColor;
@@ -18,6 +23,7 @@ private:
 
 	FLOAT _fontScale;
 	BOOL ShowFontSelector();
+	VOID ShowFeatures();
 
 	FLOAT _columnFontScale;
 	FLOAT _tableFontScale;
@@ -31,17 +37,34 @@ private:
 	FLOAT _windowWidth;
 	FLOAT _refreshTime;
 	BOOL _isTopMost;
+	BOOL _teamTA_LF;
+	INT32 _teamTA_LF_Mode = 1;
+	CHAR _selectedLang[128] = { 0 };
+	BOOL _isSoloRankMode;
+	BOOL _isUseSaveData;
+	BOOL _oriIsUseSaveData;
+	CHAR _selectedInterface[MAX_PATH] = { 0 };
+	BOOL _isDontSaveUnfinishedMaze;
+
 	BOOL ShowTableOption();
-
 	BOOL ShowHotkeySetting();
+	VOID ShowLangSelector();
+	VOID ChangeLang();
 
+	VOID ShowTeamTALFSelector();
+
+	VOID Helper();
 
 	BOOL GetOption();
-	BOOL SaveOption();
 	BOOL SetBasicOption();
-	
 
 	BOOL _open;
+
+	BOOL _inited = false;
+
+	std::unordered_map<std::string, std::string> _allLangList = LANGMANAGER.GetAllLangFile();
+
+	std::map<std::string, std::string> _interfaceList;
 
 public:
 	UiOption();
@@ -65,14 +88,23 @@ public:
 	const BOOL& isSoloMode();
 	const BOOL& doHideName();
 	const BOOL& isTopMost();
+	const BOOL& isTeamTALF();
+	const INT32& TeamTALFMode();
+	const BOOL& isSoloRankMode();
+	const INT32& GetCaptureMode();
+	const BOOL& isUseSaveData();
+	const CHAR* GetUseInterface();
+	const BOOL& isDontSaveUnfinishedMaze();
 
 	BOOL ToggleTopMost();
 
 	const FLOAT& GetFramerate();
-	VOID SetFramerate(UINT i);
+	VOID SetFramerate(FLOAT i);
 
 	const FLOAT& GetWindowWidth();
 	VOID SetWindowWidth(const FLOAT& width);
 
 	const FLOAT& GetRefreshTime();
+
+	BOOL SaveOption(BOOL skipWarning = FALSE);
 };

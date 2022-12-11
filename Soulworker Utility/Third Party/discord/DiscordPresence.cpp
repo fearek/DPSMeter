@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "DiscordPresence.h"
+#include ".\DiscordPresence.h"
 #include ".\Damage Meter\MySQLite.h"
 #include ".\Damage Meter\Damage Meter.h"
 #ifndef SERVER_KOREA

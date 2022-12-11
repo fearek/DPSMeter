@@ -4,13 +4,13 @@
 #include ".\Damage Meter\Damage Meter.h"
 
 SWPacketCooldown::SWPacketCooldown(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
-	SWPACKETCOOLDOWN* cooldown = (SWPACKETCOOLDOWN*)(_data + sizeof(SWHEADER));
-
-	DAMAGEMETER.AddEnlighten(cooldown->_playerID, cooldown->_value);
+	
 }
 
 VOID SWPacketCooldown::Do() {
+	SWPACKETCOOLDOWN* cooldown = (SWPACKETCOOLDOWN*)(_data + sizeof(SWHEADER));
 
+	DAMAGEMETER.AddEnlighten(cooldown->_playerID, cooldown->_value);
 }
 
 VOID SWPacketCooldown::Log() {

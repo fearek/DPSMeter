@@ -14,20 +14,19 @@ VOID SWPacketSpawnedCharInfo::Do() {
 	BYTE* p_data = _data;
 	p_data += sizeof(SWHEADER) + sizeof(SWPACKETSPAWNEDCHARINFO_HEADER);
 
-	// !!!!! 이거 job 아니였음; 나는 7로 뜨는데 다른사람은 전부 1로 뜸
 	BYTE job = *(p_data + spawned_header->_nameSize + 1);
 
 	WCHAR utf16[MAX_NAME_LEN] = { 0 };
 	memcpy_s(utf16, MAX_NAME_LEN * sizeof(WCHAR), p_data, spawned_header->_nameSize);
 
-	/*CHAR utf8[MAX_NAME_LEN] = {0};
+	CHAR utf8[MAX_NAME_LEN] = { 0 };
 	if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
 		//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketPos : UTF16toUTF8 FAILED")));
 		return;
-	}*/
+	}
 
 
-	//DAMAGEMETER.InsertPlayerMetadata(spawned_header->_playerId, utf16, job);
+	//DAMAGEMETER.InsertPlayerMetadata(spawned_header->_playerId, utf8, job);
 
 	//LogInstance.MyLog(_T("id : %d / nameSize : %u / name : %s / job : %u\n"), spawned_header->_playerId, spawned_header->_nameSize, utf16, job);
 
@@ -54,9 +53,9 @@ VOID SWPacketSpawnedCharInfo::Debug() {
 	//	LogInstance.MyLog(_T("%02x "), obj_create->_unknown03[i]);
 	//LogInstance.MyLog(_T("\n"));
 
-	//LogInstance.WriteLogA(const_cast<CHAR*>("[DEBUG] [Created Object] [X = %f] [Y = %f] [Z = %f]"), obj_create->_locationX, obj_create->_locationY, obj_create->_locationZ);
-	//LogInstance.WriteLogA(const_cast<CHAR*>("[DEBUG] [Created Object] [X = %f] [Y = %f] [Z = %f]"), obj_create->_unknownFloat1, obj_create->_unknownFloat2, obj_create->_unknownFloat3);
+	//LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [Created Object] [X = %f] [Y = %f] [Z = %f]"), obj_create->_locationX, obj_create->_locationY, obj_create->_locationZ);
+	//LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [Created Object] [X = %f] [Y = %f] [Z = %f]"), obj_create->_unknownFloat1, obj_create->_unknownFloat2, obj_create->_unknownFloat3);
 
 
-	//LogInstance.WriteLogA(const_cast<CHAR*>("[DEBUG] [Created Object] [ID = %08x] [Owner ID = %08x] [DB2 = %u] [RealDB2 = %u]"), obj_create->_id, obj_create->_owner_id, obj_create->_db2, obj_create->_realDB2);
+	//LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [Created Object] [ID = %08x] [Owner ID = %08x] [DB2 = %u] [RealDB2 = %u]"), obj_create->_id, obj_create->_owner_id, obj_create->_db2, obj_create->_realDB2);
 }

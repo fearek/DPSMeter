@@ -9,11 +9,11 @@ typedef enum {
 class Timer {
 private:
 	TIMER_STATUS _status;
-	uint64_t _suspendTimePoint;
-	uint64_t _suspendedTime;
+	ULONG64 _suspendTimePoint;
+	ULONG64 _suspendedTime;
 
 public:
-	uint64_t _startTimePoint;
+	ULONG64 _startTimePoint;
 	Timer();
 	~Timer();
 
@@ -22,5 +22,5 @@ public:
 	VOID Stop();
 	BOOL isRun();
 
-	uint64_t GetTime();
+	ULONG64 GetTime();
 };

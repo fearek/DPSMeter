@@ -6,22 +6,19 @@ private:
     FILE* file;
     bool shouldLog = false;
 public:
-        ~Log()
+    ~Log()
+    {
+        if (file)
         {
-            if (file)
-            {
-                fclose(file);
-            }
+            fclose(file);
         }
-        Log()
-        {
+    }
+    Log()
+    {
 
-        }
-        BOOL WriteLog(char* data, ...);
-        BOOL WriteLogA(char* data, ...);
-        BOOL WriteLogNoDate(LPTSTR data, ...);
-        VOID MyLog(const _TCHAR* data, ...);
-        VOID MyLog(const char* data, ...);
-        void Enable();
+    }
+    BOOL WriteLog(char* data, ...);
+    BOOL WriteLogNoDate(LPTSTR data, ...);
+    void Enable();
 };
 extern Log LogInstance;

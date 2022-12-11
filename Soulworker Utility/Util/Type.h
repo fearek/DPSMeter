@@ -3,6 +3,9 @@
 #include <codecvt>
 #include <locale>
 #include <string>
+using std::chrono::duration_cast;
+using std::chrono::milliseconds;
+using std::chrono::system_clock;
 
 typedef std::chrono::system_clock::time_point timePoint;
 
@@ -24,7 +27,8 @@ inline BOOL UTF16toUTF8(_In_ WCHAR* src, _Out_ CHAR* dest, _In_ SIZE_T destLen) 
 
 	return TRUE;
 }
-inline BOOL ANSItoUTF8(_In_ CHAR* src, _Out_ CHAR* dest, _In_ SIZE_T destLen) {
+
+inline BOOL ANSItoUTF8(_In_ CHAR* src, _Out_ CHAR* dest, _In_ INT32 destLen) {
 
 	if (src == nullptr || dest == nullptr)
 		return FALSE;
@@ -50,13 +54,14 @@ inline BOOL ANSItoUTF8(_In_ CHAR* src, _Out_ CHAR* dest, _In_ SIZE_T destLen) {
 
 	return TRUE;
 }
+
 inline BOOL TextCommma(_In_ CHAR* src, _Out_ CHAR* dest) {
 
 	if (src == nullptr || dest == nullptr) {
 		return FALSE;
 	}
 
-	INT len = strlen(src);
+	size_t len = strlen(src);
 
 	while (*src) {
 		*dest++ = *src++;
@@ -65,6 +70,48 @@ inline BOOL TextCommma(_In_ CHAR* src, _Out_ CHAR* dest) {
 			*dest++ = ',';
 	}
 	*dest++ = 0;
+
+	return TRUE;
+}
+
+inline BOOL TextCommmaIncludeDecimal(_In_ DOUBLE src, _In_ size_t destLen, _Out_ CHAR* dest) 
+{
+	if (dest == nullptr) {
+		return FALSE;
+	}
+
+	char tmp[128] = { 0 };
+	char comma[128] = { 0 };
+	DOUBLE whole = floor(src);
+	DOUBLE decimal = (src - whole) * 10;
+
+	sprintf_s(tmp, "%.0f", whole);
+	TextCommma(tmp, comma);
+	sprintf_s(dest, destLen, "%s.%.0f", comma, decimal);
+
+	return TRUE;
+}
+
+inline ULONG64 GetCurrentTimeStamp() {
+	return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+}
+
+static BOOL file_contents(const std::filesystem::path& path, std::string* str)
+{
+	if (!std::filesystem::is_regular_file(path))
+		return FALSE;
+
+	std::ifstream file(path, std::ios::in | std::ios::binary);
+	if (!file.is_open())
+		return FALSE;
+
+	std::string content{ std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>() };
+
+	file.close();
+
+	*str = content;
+
+	return TRUE;
 }
 
 #define MAX_BUFFER_LENGTH 1024
@@ -79,32 +126,32 @@ typedef struct _ETHERNETHEADER {
 
 typedef struct _IPHEADER {
 	//little endian begin
-	USHORT len : 4;					//버전
-	USHORT version : 4;				//헤더 길이
+	USHORT len : 4;					//
+	USHORT version : 4;				//
 	// little endian end
-	USHORT tos : 8;					// 서비스 유형
-	USHORT length;					// 전체 길이
-	USHORT id;						// 16 비트 아이디
+	USHORT tos : 8;					// 
+	USHORT length;					// 
+	USHORT id;						// 16 
 	//little endian begin
-	USHORT fragment_offset1 : 5;	// 단편화 옵셋
+	USHORT fragment_offset1 : 5;	// 
 	USHORT flags : 3;				// flag
-	USHORT fragment_offset2 : 8;	// 단편화 옵셋
+	USHORT fragment_offset2 : 8;	// 
 	//little endian end
 	USHORT ttl : 8;					// ttl
 	USHORT protocol : 8;			// protocol tcp==06
-	USHORT checksum;				// 헤더 첵섬
-	ULONG src_ip;					// 출발지 IP
-	ULONG dest_ip;					// 목적지 IP
+	USHORT checksum;				// 
+	ULONG src_ip;					//  IP
+	ULONG dest_ip;					//  IP
 }IPHEADER;
 
 typedef struct _TCPHEADER {
-	USHORT src_port;				// 출발지 port
-	USHORT dest_port;				// 목적지 port
-	ULONG sqc_number;				// 시컨스 넘버
-	ULONG ack_number;				// ack 넘버
-	//little endian begin
+	USHORT src_port;				//  port
+	USHORT dest_port;				//  port
+	ULONG seq_number;				//  
+	ULONG ack_number;				// ack 
+	//little endian begin 18
 	USHORT reserved1 : 4;			// reserved
-	USHORT length : 4;				// 헤더 길이
+	USHORT length : 4;				// 
 	USHORT fin : 1;					// FIN
 	USHORT syn : 1;					// SYN
 	USHORT rst : 1;					// RST
@@ -113,17 +160,20 @@ typedef struct _TCPHEADER {
 	USHORT urg : 1;					// URG
 	USHORT reserved2 : 2;			// reserved
 	//little endian end
-	USHORT window_size;				// 윈도우 크기
+	USHORT window_size;				// 
 	USHORT tcp_checksum;			// TCP checksum
-	USHORT urg_point;				//긴급 포인터
+	USHORT urg_point;				//
 }TCPHEADER;
 
 typedef struct _IPV4PACKET {
-	ETHERNETHEADER* _ethernetHeader;
-	IPHEADER* _ipHeader;
-	TCPHEADER* _tcpHeader;
-	const UCHAR* _data;
-	USHORT _datalength;
+	ETHERNETHEADER* _ethernetHeader; // options
+	IPHEADER* _ipHeader; // options
+	TCPHEADER* _tcpHeader; // options
+	const uint8_t* _pkt; // save packet origin ptr
+	uint8_t* _data;
+	size_t _datalength;
+	BOOL _isRecv;
+	UINT64 _ts;
 }IPv4Packet;
 
 #pragma pack(pop)

@@ -1,6 +1,6 @@
 #pragma once
 #include ".\UI\SpecificInfomation.h"
-extern int mswideness;
+
 typedef struct _SELECTED_PLAYER {
 	
 	UINT32 _playerID;
@@ -43,11 +43,18 @@ private:
 public:
 	PlayerTable();
 	~PlayerTable();
+
+	VOID Update();
+	VOID ClearTable();
+	VOID ResizeTalbe();
+
+	LONG64 _lastSendTimestamp = 0;
+	UINT32 _tick = 0;
+	BOOL _isNewestVersion = TRUE;
+
 	FLOAT GetTableTime()
 	{
 		return _tableTime;
 	}
-	VOID Update();
-	VOID ClearTable();
-	VOID ResizeTalbe();
+
 };

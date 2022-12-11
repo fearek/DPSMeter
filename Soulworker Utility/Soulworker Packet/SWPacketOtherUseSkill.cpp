@@ -4,6 +4,7 @@
 #include ".\Damage Meter\MySQLite.h"
 #include ".\Soulworker Packet\SWPacketOtherUseSkill.h"
 #include ".\UI\UtillWindow.h"
+#include ".\Combat Meter\CombatMeter.h"
 
 SWPacketOtherUseSkill::SWPacketOtherUseSkill(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
@@ -18,7 +19,33 @@ VOID SWPacketOtherUseSkill::Do() {
 
 	DAMAGEMETER.AddSkillUsed(otherSkill->_playerId, otherSkill->_skillId);
 
+	// check id
 	UINT32 userId = otherSkill->_playerId;
+	BOOL isPlayer = TRUE;
+	if (!DAMAGEMETER.CheckPlayer(userId)) {
+		// is summon
+		UINT32 ownerId = DAMAGEMETER.GetOwnerID(userId);
+
+		// is mob
+		if (!DAMAGEMETER.CheckPlayer(ownerId))
+		{
+			SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(userId);
+			if (db != nullptr) {
+				isPlayer = FALSE;
+				userId = db->_db2;
+			}
+		}
+		else {
+			userId = ownerId;
+		}
+	}
+
+	CombatLog* pCombatLog = new CombatLog;
+	pCombatLog->_type = CombatLogType::USED_SKILL;
+	pCombatLog->_val1 = otherSkill->_skillId;
+	COMBATMETER.Insert(userId, isPlayer ? CombatType::PLAYER : CombatType::MONSTER, pCombatLog);
+
+	/*UINT32 userId = otherSkill->_playerId;
 	if (!DAMAGEMETER.CheckPlayer(userId)) {
 		UINT32 ownerId = DAMAGEMETER.GetOwnerID(userId);
 		if (!DAMAGEMETER.CheckPlayer(ownerId)) {
@@ -34,14 +61,14 @@ VOID SWPacketOtherUseSkill::Do() {
 			//	LogInstance.MyLog(_T("2"));
 				SWDB.GetSkillName(otherSkill->_skillId, _skillName, SKILL_NAME_LEN);
 				//LogInstance.MyLog(_T("3"));
-				std::string test = "테네브리스가 [";
+				string test = u8" [";
 				test.append(_skillName);
-				test.append("]를 사용");
+				test.append(u8"]");
 				UTILLWINDOW.AddLog(test);
 				//LogInstance.MyLog(test.c_str());
 			}
 		}
-	}
+	}*/
 
 
 }

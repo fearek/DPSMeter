@@ -1,8 +1,10 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include ".\Damage Meter\SWDamageMonster.h"
 #include ".\Damage Meter\SWDamagePlayer.h"
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\PacketInfo.h"
+#include ".\MySQLite.h"
+#include ".\UI\Option.h"
 
 SWDamagePlayer::SWDamagePlayer(UINT32 id, UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, USHORT maxCombo, UINT32 monsterID, UINT32 skillID) {
 	_id = id;
@@ -18,19 +20,30 @@ SWDamagePlayer::~SWDamagePlayer() {
 	for (auto itr = _monsterInfo.begin(); itr != _monsterInfo.end(); itr++) {
 		delete (*itr);
 	}
-
 	_monsterInfo.clear();
+
+	for (auto itr = skillCounts.begin(); itr != skillCounts.end(); itr++)
+		delete itr->second;
+
+	skillCounts.clear();
 }
 
 BOOL SWDamagePlayer::SortFunction(SWDamagePlayer* playerA, SWDamagePlayer* playerB) {
 	return playerA->GetDamage() > playerB->GetDamage();
 }
 
-VOID SWDamagePlayer::InsertMonsterInfo(UINT32 monsterID,UINT32 db2, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount, UINT32 skillID) {
+VOID SWDamagePlayer::InsertMonsterInfo(UINT32 monsterID, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount, UINT32 skillID) {
 
 	auto itr = _monsterInfo.begin();
 
+	SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(monsterID);
+	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[Monster] [MonsterID = %d] [DB2 = %d]")), monsterID, db->_db2);
 
+	UINT32 db2 = 0;
+
+	if (db != nullptr) {
+		db2 = db->_db2;
+	}
 
 	for (; itr != _monsterInfo.end(); itr++) {
 		if (db2 == (*itr)->GetDB2()) {
@@ -48,17 +61,20 @@ VOID SWDamagePlayer::Sort() {
 
 VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, USHORT maxCombo, UINT32 monsterID, UINT32 skillID)
 {
-	//LogInstance.WriteLog("[PLAYER %u (%s)] [totalDMG %u] [monsterID %u]", _id,DAMAGEMETER.GetPlayerName(_id),totalDMG,monsterID);
+	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[PLAYER] [DamageType = %d]")), damageType.CRIT);
 
+	if (DAMAGEMETER.isHistoryMode())
+		return;
 
-	// db부분 임의로 추가함
+	// Skip not in db monster
 	SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(monsterID);
 	UINT32 db2 = 0;
-	if (db != nullptr) {
-		db2 = db->_db2;
+	if (db == nullptr) {
+		return;
 	}
+	db2 = db->_db2;
 
-	// 악세셋옵 계산용
+	// 
 	if (!damageType.MISS && _id == DAMAGEMETER.GetMyID()) {
 		auto metadata = DAMAGEMETER.GetPlayerMetaData(_id);
 		if (metadata != nullptr) {
@@ -68,7 +84,7 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 
 	_hitCount += 1;
 	_critHitCount += damageType.CRIT;
-	// 옥타곤 같은게 아니라면 치확 계산에 포함 (소울스톤 데미지는 밑에 잡몹도 제외한 버전에서 포함함)
+	// 
 	if (totalDMG >= 200) {
 		_hitCountForCritRate += 1;
 		_critHitCountForCritRate += damageType.CRIT;
@@ -89,38 +105,18 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 
 	USHORT worldID = DAMAGEMETER.GetWorldID();
 
-	// 화이트리스트 제도
-	// 브세일 경우 보스몹만 데미지에 추가함
-	BOOL bypassCheck = false;
-	// BS
-	if (worldID == 21018) {
-		if (db2 == 31310101 || db2 == 31310102) {
-			_damage += totalDMG;
-			_soulstoneDamage += soulstoneDMG;
-			_damageForSoulstone += totalDMG;
-			_soulstoneDamageForSoulstone += soulstoneDMG;
-		}
-		else
-		{
-			//LogInstance.WriteLog("Rejected monster %u in 21018", db2);
-		}
+	auto stList = StrictModeList.find(worldID);
+	BOOL isStrictMode = false;
+	if (stList != StrictModeList.end())
+	{
+		auto& vec = (*stList).second;
+		auto find = std::find(vec.begin(), vec.end(), db2);
+		if (find == vec.end())
+			return;
+		isStrictMode = true;
 	}
-	// BS Solo
-	else if (worldID == 24018) {
-		if (db2 == 32320101 || db2 == 32320102) {
-			_damage += totalDMG;
-			_soulstoneDamage += soulstoneDMG;
-			_damageForSoulstone += totalDMG;
-			_soulstoneDamageForSoulstone += soulstoneDMG;
-		}
-		else
-		{
-			//LogInstance.WriteLog("Rejected monster %u in 24018", db2);
-		}
-	}
-	// 이하 블랙리스트 제도
-	// 제외목록에 들어가있지 않다면 데미지 합산
-	else if (dpsIgnoreIdList.find(db2) == dpsIgnoreIdList.end() && db->_type != 6) {
+	// Ignore object
+	if (isStrictMode || (!isStrictMode && dpsIgnoreIdList.find(db2) == dpsIgnoreIdList.end() && db->_type != 6)) {
 		_damage += totalDMG;
 		_soulstoneDamage += soulstoneDMG;
 
@@ -129,17 +125,12 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 			_soulstoneDamageForSoulstone += soulstoneDMG;
 		}
 	}
+
 #if DEBUG_DAMAGE_PLAYER == 1
-	else if (db->_type == 6)
-	{
-
-		LogInstance.WriteLog("Ignored damage to %d, type 6",db2);
-
-	}
-	LogInstance.WriteLog("[PLAYER] [ID = %d] [DMG = %llu] [hitCount = %d] [cirtHitCount = %d] [maxCombo = %d]", _id, _damage, _hitCount, _critHitCount, _maxCombo);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[PLAYER] [ID = %d] [MonsterID = %04x] [DMG = %llu] [hitCount = %d] [cirtHitCount = %d] [maxCombo = %d]")), _id, monsterID, _damage, _hitCount, _critHitCount, _maxCombo);
 #endif
 
-	InsertMonsterInfo(monsterID,db2, totalDMG, soulstoneDMG, 1, damageType.CRIT, skillID);
+	InsertMonsterInfo(monsterID, totalDMG, soulstoneDMG, 1, damageType.CRIT, skillID);
 	Sort();
 }
 
@@ -245,21 +236,64 @@ std::vector<SWDamageMonster*>::const_iterator SWDamagePlayer::GetMonsterInfo(UIN
 	return itr;
 }
 
+DOUBLE SWDamagePlayer::GetHistoryABTime()
+{
+	return _historyABTime;
+}
+
+VOID SWDamagePlayer::SetHistoryABTime(DOUBLE historyABTime)
+{
+	_historyABTime = historyABTime;
+}
+
 VOID SWDamagePlayer::SetHistoryAvgAB(DOUBLE historyAvgAB)
 {
 	_historyAvgAB = historyAvgAB;
 }
-VOID SWDamagePlayer::SetHistoryAvgBD(DOUBLE historyAvgBD)
-{
-	_historyAvgBD = historyAvgBD;
-}
+
 DOUBLE SWDamagePlayer::GetHistoryAvgAB()
 {
 	return _historyAvgAB;
 }
+
+VOID SWDamagePlayer::SetHistoryAvgBD(DOUBLE historyAvgBD)
+{
+	_historyAvgBD = historyAvgBD;
+}
+
 DOUBLE SWDamagePlayer::GetHistoryAvgBD()
 {
 	return _historyAvgBD;
+}
+
+DOUBLE SWDamagePlayer::GetHistoryAggroTime()
+{
+	return _historyAggroTime;
+}
+
+VOID SWDamagePlayer::SetHistoryAggroTime(DOUBLE t)
+{
+	_historyAggroTime = t;
+}
+
+DOUBLE SWDamagePlayer::GetHistoryASTime()
+{
+	return _historyASTime;
+}
+
+VOID SWDamagePlayer::SetHistoryASTime(DOUBLE d)
+{
+	_historyASTime = d;
+}
+
+VOID SWDamagePlayer::SetHistoryAvgAS(DOUBLE d)
+{
+	_historyAvgAS = d;
+}
+
+DOUBLE SWDamagePlayer::GetHistoryAvgAS()
+{
+	return _historyAvgAS;
 }
 
 FLOAT SWDamagePlayer::GetEnlightenSum()
@@ -307,9 +341,8 @@ DOUBLE SWDamagePlayer::GetHistoryBS(int type)
 		return _historyacc01;
 	case 2:
 		return _historyacc02;
-	default:
-		return 0;
 	}
+	return 0;
 }
 
 VOID SWDamagePlayer::setHistoryLosedHP(DOUBLE losedHP)
@@ -321,14 +354,7 @@ DOUBLE SWDamagePlayer::GetHistoryLosedHP()
 {
 	return _historyLosedHP;
 }
-VOID SWDamagePlayer::SetHistoryABTime(DOUBLE historyABTime)
-{
-	_historyABTime = historyABTime;
-}
-DOUBLE SWDamagePlayer::GetHistoryABTime()
-{
-	return _historyABTime;
-}
+
 VOID SWDamagePlayer::AddSkillUsed(UINT32 skillId)
 {
 	if (DAMAGEMETER.isHistoryMode())
@@ -372,7 +398,8 @@ VOID SWDamagePlayer::AddGetDamage(UINT64 totalDMG, SWPACKETDAMAGE_DAMAGETYPE dam
 	_getHitAll++;
 	if (totalDMG > 0) {
 		_getHit++;
-		// 검은 장판, 미니종복의 종복 (둘다 경직 없음)
+		// 검은 장판, 미니종복의 중복 (둘다 경직 없음)
+		// Tenebris black water and unk
 		if (skillID != 1313101016 && skillID != 1313101113) {
 			_getHitBS++;
 		}
@@ -431,6 +458,6 @@ std::vector<SWDamageMonster*>::const_iterator SWDamagePlayer::end() {
 	return _monsterInfo.end();
 }
 
-const SIZE_T& SWDamagePlayer::size() {
+const SIZE_T SWDamagePlayer::size() {
 	return _monsterInfo.size();
 }

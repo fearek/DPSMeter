@@ -7397,7 +7397,6 @@ ImVec2 ImGui::GetFontTexUvWhitePixel()
 
 void ImGui::SetWindowFontScale(float scale)
 {
-    IM_ASSERT(scale > 0.0f);
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
     window->FontWindowScale = scale;

@@ -5,8 +5,13 @@
 #include ".\UI\PlotWindow.h"
 #include ".\Damage Meter\History.h"
 #include ".\Damage Meter\MySQLite.h"
+#include ".\Combat Meter\CombatMeter.h"
+#include ".\UI\UtillWindow.h"
+#include ".\Damage Meter\MapList.h"
 
 SWDamageMeter::~SWDamageMeter() {
+
+	BOOL canLock = _mutex.try_lock();
 
 	if (_historyMode)
 		Restore();
@@ -17,8 +22,7 @@ SWDamageMeter::~SWDamageMeter() {
 	for (auto itr = _ownerInfo.begin(); itr != _ownerInfo.end(); itr++)
 		delete (*itr);
 
-	for (auto itr = _dbInfo.begin(); itr != _dbInfo.end(); itr++)
-		delete (*itr);
+	ClearDB();
 
 	for (auto itr = _playerMetadata.begin(); itr != _playerMetadata.end(); itr++)
 		delete (itr->second);
@@ -28,7 +32,13 @@ SWDamageMeter::~SWDamageMeter() {
 	_dbInfo.clear();
 	_playerMetadata.clear();
 
-	_mutex.unlock();
+	_historyPlayerInfo.clear();
+	_historyDbInfo.clear();
+	_historyPlayerMetadata.clear();
+
+	_playerUseAwaken.clear();
+
+	FreeLock();
 }
 
 VOID SWDamageMeter::GetLock() {
@@ -47,7 +57,7 @@ VOID SWDamageMeter::InsertPlayerInfo(UINT32 id, UINT64 totalDMG, UINT64 soulston
 			return;
 		}
 	}
-	//LogInstance.WriteLog("Insert playerinfo: ID:%d", id);
+
 	_playerInfo.push_back(new SWDamagePlayer(id, totalDMG, soulstoneDMG, damageType, maxCombo, monsterID, skillID));
 }
 
@@ -55,14 +65,26 @@ VOID SWDamageMeter::AddDamage(UINT32 id, UINT64 totalDMG, UINT64 soulstoneDMG, S
 	if (_mazeEnd)
 		return;
 
+	USHORT usWorldID = GetWorldID();
 	// Meter must know mazeId to work correctly
-	if (GetWorldID() == 0)
+	if (usWorldID == 0)
 		return;
 
 	SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(monsterID);
 	UINT32 monsterId = 0;
+	bool bIsListBoss = false, bIsListMap = false;
 	if (db != nullptr) {
 		monsterId = db->_db2;
+	}
+
+	auto stList = StrictModeList.find(usWorldID);
+	if (stList != StrictModeList.end())
+	{
+		auto& vec = (*stList).second;
+		auto find = std::find(vec.begin(), vec.end(), monsterId);
+		if (find != vec.end())
+			bIsListBoss = true;
+		bIsListMap = true;
 	}
 
 	if (!isRun()) {
@@ -71,21 +93,27 @@ VOID SWDamageMeter::AddDamage(UINT32 id, UINT64 totalDMG, UINT64 soulstoneDMG, S
 			return;
 		}
 
-		// If it is BS normal, only damage to Boss can start/resume timer.
-		if (GetWorldID() == 21018) {
-			if ((monsterId != 31310101) && (monsterId != 31310102)) {
-				return; 
-			}
-		}
-		else if (GetWorldID() == 24018) // BS Solo
+		// only damage in list Boss can start/resume timer.
+		if (bIsListMap && !bIsListBoss)
+			return;
+	}
+
+	if (totalDMG > 0)
+	{
+		CombatLog* pCombatLog = new CombatLog;
+		pCombatLog->_type = COMBATMETER.ConvertDamageTypeForGiveDamage(damageType);
+		pCombatLog->_val1 = static_cast<DOUBLE>(totalDMG);
+		pCombatLog->_val2 = static_cast<DOUBLE>(soulstoneDMG);
+		COMBATMETER.Insert(id, CombatType::PLAYER, pCombatLog);
+	}
+	else {
+		// ignore if rank map
+		if (rankMap.find(usWorldID) == rankMap.end())
 		{
-			if ((monsterId != 32320101) && (monsterId != 32320102)) {
-				return;
-			}
-		}
-		// BS Rank
-		else if (GetWorldID() == 23018) {
-			if (monsterId != 32310101) {
+			// suspend by boss is god mode
+			if ((bIsListMap && bIsListBoss) || (db != NULL && db->_type == 4))
+			{
+				DAMAGEMETER.Suspend();
 				return;
 			}
 		}
@@ -100,6 +128,26 @@ VOID SWDamageMeter::AddPlayerGetDamage(UINT32 playerId, UINT64 totalDMG, SWPACKE
 {
 	if (!isRun() || GetTime() == 0)
 		return;
+
+	if (CheckPlayer(playerId))
+	{
+		UINT32 monsterDB2 = 0;
+		SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(monsterID);
+		if (db != nullptr) {
+			monsterDB2 = db->_db2;
+		}
+
+		CombatLog* pCombatLog = new CombatLog;
+		pCombatLog->_type = COMBATMETER.ConvertDamageTypeForTakeDamage(damageType);
+		pCombatLog->_val1 = static_cast<DOUBLE>(totalDMG);
+		COMBATMETER.Insert(playerId, CombatType::PLAYER, pCombatLog);
+
+		pCombatLog = new CombatLog;
+		pCombatLog->_type = COMBATMETER.ConvertDamageTypeForGiveDamage(damageType);
+		pCombatLog->_val1 = static_cast<DOUBLE>(totalDMG);
+		pCombatLog->_val2 = playerId;
+		COMBATMETER.Insert(monsterDB2, CombatType::MONSTER, pCombatLog);
+	}
 
 	auto itr = _playerInfo.begin();
 
@@ -155,8 +203,12 @@ VOID SWDamageMeter::AddSkillUsed(UINT32 playerId, UINT32 skillId)
 		return;
 	}
 
-	auto itr = _playerInfo.begin();
+	if (std::find(_dwSkills.begin(), _dwSkills.end(), skillId) != _dwSkills.end())
+	{
+		DAMAGEMETER.AddAwakenPlayer(playerId);
+	}
 
+	auto itr = _playerInfo.begin();
 	for (; itr != _playerInfo.end(); itr++) {
 		if (playerId == (*itr)->GetID()) {
 			(*itr)->AddSkillUsed(skillId);
@@ -167,7 +219,6 @@ VOID SWDamageMeter::AddSkillUsed(UINT32 playerId, UINT32 skillId)
 	SWDamagePlayer* newPlayer = new SWDamagePlayer(playerId);
 	newPlayer->AddSkillUsed(skillId);
 	_playerInfo.push_back(newPlayer);
-
 }
 
 VOID SWDamageMeter::AddDodgeUsed(UINT32 playerId)
@@ -228,6 +279,7 @@ VOID SWDamageMeter::BuffOut(UINT32 playerId, USHORT buffId)
 {
 	if (_mazeEnd)
 		return;
+	// The Real Army 
 	if (buffId != 60228)
 		return;
 
@@ -247,7 +299,7 @@ VOID SWDamageMeter::InsertOwnerID(UINT32 id, UINT32 owner_id) {
 	for (; itr != _ownerInfo.end(); itr++) {
 		if ((*itr)->_id == id) {
 #if DEBUG_DAMAGEMETER_OWNER_ID == 1
-			LogInstance.WriteLog("[DEBUG] [INSERT OWNER] [MODIFY] [ID = %08x] [OWNER = %08x]", id, owner_id);
+			LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [INSERT OWNER] [MODIFY] [ID = %08x] [OWNER = %08x]")), id, owner_id);
 #endif
 			(*itr)->_owner_id = owner_id;
 			return;
@@ -259,7 +311,7 @@ VOID SWDamageMeter::InsertOwnerID(UINT32 id, UINT32 owner_id) {
 	obj->_owner_id = owner_id;
 
 #if DEBUG_DAMAGEMETER_OWNER_ID == 1
-	LogInstance.WriteLog("[DEBUG] [INSERT OWNER] [NEW] [ID = %08x] [OWNER = %08x]", obj->_id, obj->_owner_id);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [INSERT OWNER] [NEW] [ID = %08x] [OWNER = %08x]")), obj->_id, obj->_owner_id);
 #endif
 
 	_ownerInfo.push_back(obj);
@@ -287,51 +339,47 @@ VOID SWDamageMeter::InsertPlayerMetadata(UINT32 id, CHAR* str, BYTE job) {
 		metaData->_job = job;
 		strcpy_s(metaData->_name, MAX_NAME_LEN, str);
 		_playerMetadata[id] = metaData;
+
+#if DEBUG_DAMAGEMETER_PLAYERMETA == 1
+		LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [INSERT PLAYER META] [NEW] [ID = %08x] [NAME = %s] [JOB = %x]"), id, str, job);
+#endif
 		return;
 	}
 	SW_PLAYER_METADATA* metaData = search->second;
 	metaData->_id = id;
 	metaData->_job = job;
 	strcpy_s(metaData->_name, MAX_NAME_LEN, str);
-
-	//#if DEBUG_DAMAGEMETER_PLAYERMETA == 1
-	//	LogInstance.WriteLogA(const_cast<CHAR*>("[DEBUG] [INSERT PLAYER META] [NEW] [ID = %08x] [NAME = %s] [JOB = %x]"), metadata->_id, metadata->_name, metadata->_job);
-	//#endif
-
 }
 
 const CHAR* SWDamageMeter::GetPlayerName(UINT32 id) {
-	if (id == _myID || (_historyMode && id == _historyMyID))
-		return "YOU";
+	if ((_historyMode && id == _historyMyID) || (!_historyMode && id == _myID))
+		return LANGMANAGER.GetText("STR_TABLE_YOU");
 
-	auto search = _playerMetadata.find(id);
-	if (search == _playerMetadata.end()) {
-		return Language.GetText(PLAYER_NAME_CANT_FIND).c_str();
+	auto search = GetPlayerMetaDataByHistory()->find(id);
+	if (search == GetPlayerMetaDataByHistory()->end()) {
+		return LANGMANAGER.GetText("PLAYER_NAME_CANT_FIND");
 	}
 	return search->second->_name;
 }
 
 BYTE SWDamageMeter::GetPlayerJob(UINT32 id) {
 
-	auto search = _playerMetadata.find(id);
-	if (search == _playerMetadata.end()) {
+	auto search = GetPlayerMetaDataByHistory()->find(id);
+	if (search == GetPlayerMetaDataByHistory()->end()) {
 		return PLAYER_JOB_CANT_FIND;
 	}
 	return search->second->_job;
 }
 
-VOID SWDamageMeter::UpdateStat(UINT32 id, USHORT statType, FLOAT statValue)
+SWDamageMeter::SW_PLAYER_METADATA* SWDamageMeter::GetPlayerMetaDataIfNotExistsCreate(UINT32 id)
 {
-	//if (_historyMode) {
-	//	return;
-	//}
 	SW_PLAYER_METADATA* metaData;
 
 	auto search = _playerMetadata.find(id);
 	if (search == _playerMetadata.end()) {
 		metaData = new SW_PLAYER_METADATA;
 		metaData->_id = id;
-		strcpy_s(metaData->_name, MAX_NAME_LEN, Language.GetText(PLAYER_NAME_CANT_FIND).c_str());
+		strcpy_s(metaData->_name, MAX_NAME_LEN, LANGMANAGER.GetText("PLAYER_NAME_CANT_FIND"));
 		metaData->_job = PLAYER_JOB_CANT_FIND;
 		_playerMetadata[id] = metaData;
 	}
@@ -339,57 +387,58 @@ VOID SWDamageMeter::UpdateStat(UINT32 id, USHORT statType, FLOAT statValue)
 		metaData = search->second;
 	}
 
-	metaData->UpdateStat(statType, statValue);
-	return;
+	return metaData;
 }
+
 VOID SWDamageMeter::UpdateSpecialStat(UINT32 id, USHORT statType, FLOAT statValue)
 {
+	UpdateStat(id, statType, statValue, TRUE);
+}
+
+VOID SWDamageMeter::UpdateStat(UINT32 id, USHORT statType, FLOAT statValue, BOOL isSpecial)
+{
 	//if (_historyMode) {
 	//	return;
 	//}
-	SW_PLAYER_METADATA* metaData;
+	
+	SW_PLAYER_METADATA* metaData = GetPlayerMetaDataIfNotExistsCreate(id);
 
-	auto search = _playerMetadata.find(id);
-	if (search == _playerMetadata.end()) {
-		metaData = new SW_PLAYER_METADATA;
-		metaData->_id = id;
-		strcpy_s(metaData->_name, MAX_NAME_LEN, Language.GetText(PLAYER_NAME_CANT_FIND).c_str());
-		metaData->_job = PLAYER_JOB_CANT_FIND;
-		_playerMetadata[id] = metaData;
-	}
-	else {
-		metaData = search->second;
-	}
+	if (isSpecial)
+		metaData->UpdateSpecialStat(statType, statValue);
+	else
+		metaData->UpdateStat(statType, statValue);
 
-	metaData->UpdateSpecialStat(statType, statValue);
 	return;
 }
+
 
 VOID SWDamageMeter::Sort() {
 	sort(_playerInfo.begin(), _playerInfo.end(), SWDamagePlayer::SortFunction);
 }
 
 VOID SWDamageMeter::InsertDB(UINT32 id, UINT32 db2) {
-
 	auto itr = _dbInfo.begin();
 
 	for (; itr != _dbInfo.end(); itr++) {
 		if ((*itr)->_id == id) {
 #if DEBUG_DAMAGEMETER_DB == 1
-			LogInstance.WriteLog("[DEBUG] [INSERT DB] [MODIFY] [ID = %08x] [DB1 = %d] [DB2 = %d]", id, GetWorldID(), db2);
+			LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [INSERT DB] [MODIFY] [ID = %04x] [DB1 = %d] [DB2 = %d]")), id, GetWorldID(), db2);
 #endif
 			(*itr)->_db2 = db2;
 			return;
 		}
 	}
+
 	INT32 type = -1;
 	SWDB.GetMonsterType(db2, &type);
+
 	SW_DB2_STRUCT* db = new SW_DB2_STRUCT;
 	db->_id = id;
 	db->_db2 = db2;
 	db->_type = type;
+
 #if DEBUG_DAMAGEMETER_DB == 1
-	LogInstance.WriteLog("[DEBUG] [INSERT DB] [NEW] [ID = %08x] [DB1 = %d] [DB2 = %d]", db->_id, db->_db1, db->_db2);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [INSERT DB] [NEW] [ID = %04x] [DB2 = %d]")), db->_id, db->_db2);
 #endif
 
 	_dbInfo.push_back(db);
@@ -398,6 +447,9 @@ VOID SWDamageMeter::InsertDB(UINT32 id, UINT32 db2) {
 SW_DB2_STRUCT* SWDamageMeter::GetMonsterDB(UINT32 id) {
 
 	for (auto itr = _dbInfo.begin(); itr != _dbInfo.end(); itr++) {
+#if DEBUG_DAMAGEMETER_DB == 1
+		LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [GetMonsterDB] [FIND ID = %04x] [ID = %04x] [DB2 = %d]")), id, (*itr)->_id, (*itr)->_db2);
+#endif
 		if ((*itr)->_id == id) {
 			return *itr;
 		}
@@ -410,26 +462,21 @@ VOID SWDamageMeter::SetWorldID(USHORT worldID) {
 	_worldID = worldID;
 
 #if DEBUG_DAMAGEMETER_WORLD == 1
-	LogInstance.WriteLog("[DEBUG] [Set World] [World ID = %d]", _worldID);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [Set World] [World ID = %d]")), _worldID);
 #endif
 }
-UINT32 SWDamageMeter::GetPing()
-{
-	if (!_historyMode)
-		return _ping;
-	else
-		return _historyPing;
-}
-void SWDamageMeter::SetPing(UINT32 ping)
-{
-	_ping = ping;
-}
+
 USHORT SWDamageMeter::GetWorldID() {
 
 	if (!_historyMode)
 		return _worldID;
 	else
 		return _historyWorldID;
+}
+
+BOOL SWDamageMeter::isTownMap() {
+
+	return townMap.find(_worldID) != townMap.end();
 }
 
 const CHAR* SWDamageMeter::GetWorldName() {
@@ -449,18 +496,17 @@ VOID SWDamageMeter::SetAggro(UINT32 id, UINT32 targetedId)
 	}
 
 	SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(id);
-	UINT32 db2 = 0;
 	if (db != nullptr) {
-		db2 = db->_db2;
-	}
-	//LogInstance.MyLog("db2 : %u\n", db2);
+		UINT32 db2 = db->_db2;
 
-	if (bossMonsterList.find(db2) != bossMonsterList.end()) {
-		//LogInstance.MyLog("id is registered");
-		_aggroedId = targetedId;
-	}
-	else {
-		//LogInstance.MyLog("id is not registered;");
+		// usually type 4 only 1 monster
+		if (changeAggroIdList.find(db2) != changeAggroIdList.end() || db->_type == 4) {
+			_aggroedId = targetedId;
+
+			SW_PLAYER_METADATA* metaData = GetPlayerMetaData(targetedId);
+			for (auto itr = _playerMetadata.begin(); itr != _playerMetadata.end(); itr++)
+				itr->second->UpdateAggroTime(metaData == itr->second);
+		}
 	}
 }
 
@@ -473,31 +519,35 @@ VOID SWDamageMeter::SetMyID(UINT32 id) {
 	_myID = id;
 
 #if DEBUG_DAMAGEMETER_MYID == 1
-	LogInstance.WriteLog("[DEBUG] [Set MyID] [My ID = %08x]", _myID);
+	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [Set MyID] [My ID = %08x]")), _myID);
 #endif
 }
 
-UINT64 SWDamageMeter::GetMyID(BOOL useHistoryID) {
+UINT32 SWDamageMeter::GetMyID(BOOL useHistoryID) {
 	if (useHistoryID && _historyMode)
 		return _historyMyID;
 	return _myID;
 }
 
 BOOL SWDamageMeter::CheckPlayer(UINT32 id) {
-	//if (id < 1073741824) 가장 처음에 있던값
-	//if (id > 0)
-	//if (id < 500000000) // 대충 살펴보고 500,000,000로 해둠
-	if (id < 10000000) // 10,000,000로 바꿨고 2021-08-09 기준 6,039,072개의 캐릭터가 생성되기전까지는 안전함
+	if (id < 10000000)
 		return TRUE;
 	else
 		return FALSE;
 }
 
-std::vector<SWDamagePlayer*>::const_iterator SWDamageMeter::GetPlayerInfo(UINT32 id) {
+vector<SWDamagePlayer*>* SWDamageMeter::GetPlayerInfoByHistory()
+{
+	if (_historyMode)
+		return &_historyPlayerInfo;
+	else
+		return &_playerInfo;
+}
 
-	auto itr = _playerInfo.begin();
+vector<SWDamagePlayer*>::const_iterator SWDamageMeter::GetPlayerInfo(UINT32 id) {
 
-	for (; itr != _playerInfo.end(); itr++) {
+	auto itr = GetPlayerInfoByHistory()->begin();
+	for (; itr != GetPlayerInfoByHistory()->end(); itr++) {
 		if ((*itr)->GetID() == id) {
 			return itr;
 		}
@@ -510,29 +560,37 @@ UINT64 SWDamageMeter::GetPlayerTotalDamage() {
 
 	UINT64 playerTotalDamage = 0;
 
-	for (auto itr = _playerInfo.begin(); itr != _playerInfo.end(); itr++) {
+	for (auto itr = GetPlayerInfoByHistory()->begin(); itr != GetPlayerInfoByHistory()->end(); itr++) {
 		playerTotalDamage += (*itr)->GetDamage();
 	}
 
 	return playerTotalDamage;
 }
 
-std::vector<SWDamagePlayer*>::const_iterator SWDamageMeter::begin() {
-	return _playerInfo.begin();
+vector<SWDamagePlayer*>::const_iterator SWDamageMeter::begin() {
+	return GetPlayerInfoByHistory()->begin();
 }
 
-std::vector<SWDamagePlayer*>::const_iterator SWDamageMeter::end() {
-	return _playerInfo.end();
+vector<SWDamagePlayer*>::const_iterator SWDamageMeter::end() {
+	return GetPlayerInfoByHistory()->end();
 }
 
-const SIZE_T& SWDamageMeter::size() {
-	return _playerInfo.size();
+const SIZE_T SWDamageMeter::size() {
+	return GetPlayerInfoByHistory()->size();
+}
+
+unordered_map<UINT32, SWDamageMeter::SW_PLAYER_METADATA*>* SWDamageMeter::GetPlayerMetaDataByHistory()
+{
+	if (_historyMode)
+		return &_historyPlayerMetadata;
+	else
+		return &_playerMetadata;
 }
 
 SWDamageMeter::SW_PLAYER_METADATA* SWDamageMeter::GetPlayerMetaData(UINT32 id)
 {
-	auto search = _playerMetadata.find(id);
-	if (search == _playerMetadata.end()) {
+	auto search = GetPlayerMetaDataByHistory()->find(id);
+	if (search == GetPlayerMetaDataByHistory()->end()) {
 		return nullptr;
 	}
 	return search->second;
@@ -541,22 +599,34 @@ SWDamageMeter::SW_PLAYER_METADATA* SWDamageMeter::GetPlayerMetaData(UINT32 id)
 BOOL SWDamageMeter::isRun() {
 	return _timer.isRun();
 }
-
+uint64_t SWDamageMeter::GetStartTime() {
+	return _timer._startTimePoint;
+}
+UINT32 SWDamageMeter::GetPing()
+{
+	if (!_historyMode)
+		return _ping;
+	else
+		return _historyPing;
+}
+void SWDamageMeter::SetPing(UINT32 ping)
+{
+	_ping = ping;
+}
 VOID SWDamageMeter::Suspend() {
 
 	if (_historyMode) {
 		Restore();
 		_historyMode = FALSE;
 	}
+
 	_timer.Suspend();
+
 	for (auto itr = _playerMetadata.begin(); itr != _playerMetadata.end(); itr++) {
 		itr->second->MeterSuspended();
 	}
+
 	PLOTWINDOW.End();
-	//auto itr = _playerInfo.begin();
-	//for (; itr != _playerInfo.end(); itr++) {
-	//	(*itr)->MeterSuspended();
-	//}
 }
 
 VOID SWDamageMeter::Start() {
@@ -570,14 +640,70 @@ VOID SWDamageMeter::Start() {
 }
 
 VOID SWDamageMeter::Clear() {
-
+	BOOL clearOwnerAndDB = true;
 	if (!_historyMode) {
 		if (_playerInfo.size() > 0) {
-			HISTORY.push_back(_playerInfo);
+			unordered_map<UINT32, SW_PLAYER_METADATA*> newHistoryPlayerMeta;
+			vector<SW_DB2_STRUCT*> newDB;
 			for (auto itr = _playerMetadata.begin(); itr != _playerMetadata.end(); itr++) {
 				itr->second->MeterReseted();
+
+				// copy this time player to history
+				for (auto itr2 = _playerInfo.begin(); itr2 != _playerInfo.end(); itr2++) {
+					if ((*itr2)->GetID() == itr->first) {
+						SW_PLAYER_METADATA* newMeta = new SW_PLAYER_METADATA;
+						memcpy_s(newMeta, sizeof(SW_PLAYER_METADATA), itr->second, sizeof(SW_PLAYER_METADATA));
+						newHistoryPlayerMeta.emplace(itr->first, newMeta);
+						break;
+					}
+				}
 			}
-			_playerInfo.clear();
+			for (auto itr2 = _dbInfo.begin(); itr2 != _dbInfo.end(); itr2++)
+			{
+				SW_DB2_STRUCT* newStruct = new SW_DB2_STRUCT;
+				memcpy_s(newStruct, sizeof(SW_DB2_STRUCT), *itr2, sizeof(SW_DB2_STRUCT));
+				newDB.push_back(newStruct);
+			}
+
+			BUFFMETER.EndAllBuff();
+
+			HISTORY_DATA* hd = new HISTORY_DATA;
+			hd->_playerHistory = _playerInfo;
+			hd->_dbHistory = newDB;
+			hd->_buffHistory = BUFFMETER.GetPlayerInfo();
+			hd->_plotHistory = PLOTWINDOW.GetPlotInfo();
+			hd->_playerMetadata = newHistoryPlayerMeta;
+			hd->_combatIF = COMBATMETER.Get();
+
+			HISTORY_INFO* pHI = new HISTORY_INFO;
+			pHI->Setup(hd, DAMAGEMETER.GetWorldID(), DAMAGEMETER.GetTime(), DAMAGEMETER.GetMyID(), _testMode, nullptr, _realClearTime);
+
+			if (_testMode)
+			{
+				ClearInfo(FALSE);
+				pHI->Clear();
+				delete pHI;
+			}
+			else {
+				HISTORY.push_back(pHI);
+
+				if (UIOPTION.isTeamTALF() && GetWorldID() == 22061) {
+					ClearDB();
+
+					for (auto itr = hd->_dbHistory.begin(); itr != hd->_dbHistory.end(); itr++) {
+						SW_DB2_STRUCT* newDB = new SW_DB2_STRUCT;
+						memcpy_s(newDB, sizeof(SW_DB2_STRUCT), *itr, sizeof(SW_DB2_STRUCT));
+						_dbInfo.push_back(newDB);
+					}
+
+					clearOwnerAndDB = false;
+				}
+				ClearInfo(clearOwnerAndDB);
+			}
+		}
+		else {
+			// not player data
+			COMBATMETER.Clear(TRUE);
 		}
 		_mazeEnd = FALSE;
 	}
@@ -585,8 +711,8 @@ VOID SWDamageMeter::Clear() {
 		Restore();
 		_historyMode = FALSE;
 	}
+	_testMode = FALSE;
 	_timer.Stop();
-	PLOTWINDOW.Clear();
 }
 
 VOID SWDamageMeter::Toggle() {
@@ -596,10 +722,8 @@ VOID SWDamageMeter::Toggle() {
 	else
 		Start();
 }
-uint64_t SWDamageMeter::GetStartTime() {
-	return _timer._startTimePoint;
-}
-uint64_t SWDamageMeter::GetTime() {
+
+ULONG64 SWDamageMeter::GetTime() {
 
 	if (!_historyMode)
 		return _timer.GetTime();
@@ -611,6 +735,7 @@ VOID SWDamageMeter::SetMazeState(BOOL end) {
 	_mazeEnd = end;
 	if (end) {
 		PLOTWINDOW.End();
+		BUFFMETER.EndAllBuff();
 	}
 }
 
@@ -619,22 +744,69 @@ VOID SWDamageMeter::Restore() {
 	if (!_historyMode)
 		return;
 
-	_playerInfo.clear();
+	_currentHistoryId = -1;
+	ClearInfo();
 }
 
-VOID SWDamageMeter::SetHistory(INT index) {
+VOID SWDamageMeter::ClearInfo(BOOL clear)
+{
+	if (!_historyMode) {
+		_playerInfo.clear();
+	}
+
+	if (clear) {
+		_ownerInfo.clear();
+		ClearDB();
+	}
+
+	_playerUseAwaken.clear();
+	PLOTWINDOW.Clear();
+	BUFFMETER.Clear();
+	COMBATMETER.End();
+	COMBATMETER.Clear();
+	UTILLWINDOW.ClearCombatTemp();
+
+	_aggroedId = 0;
+	_currentHistoryId = -1;
+	_historyHI = nullptr;
+	_realClearTime = 0;
+}
+
+VOID SWDamageMeter::ClearDB()
+{
+	for (auto itr2 = _dbInfo.begin(); itr2 != _dbInfo.end(); itr2++)
+	{
+		delete (*itr2);
+	}
+	_dbInfo.clear();
+}
+
+VOID SWDamageMeter::SetHistory(LPVOID pHi) {
+
+	if (pHi == nullptr)
+		return;
+
+	HISTORY_INFO* hi = (HISTORY_INFO*)pHi;
 
 	if (!_historyMode) {
 		Clear();
 	}
 
-	auto history = HISTORY[index];
-	_playerInfo = history._history;
-	_historyWorldID = history._worldID;
-	//PLOTWINDOW.SetPlotInfo(history._historyData->_plotHistory);
-	_historyTime = history._time;
-	_historyMyID = history._myID;
-	_historyPing = history._ping;
+	if (std::find(HISTORY.begin(), HISTORY.end(), hi) == HISTORY.end())
+		return;
+
+	_historyPlayerInfo = hi->_historyData->_playerHistory;
+	_historyPlayerMetadata = hi->_historyData->_playerMetadata;
+	_historyDbInfo = hi->_historyData->_dbHistory;
+	BUFFMETER.SetPlayerInfo(hi->_historyData->_buffHistory);
+	PLOTWINDOW.SetPlotInfo(hi->_historyData->_plotHistory);
+	COMBATMETER.Set(hi->_historyData->_combatIF);
+
+	_historyWorldID = hi->_worldID;
+	_historyTime = hi->_time;
+	_historyMyID = hi->_myID;
+	_historyHI = hi;
+
 	_historyMode = TRUE;
 }
 
