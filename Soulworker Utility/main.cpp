@@ -22,7 +22,7 @@ void getconfig(CSimpleIniA& ini, int sec)
 		}
 		long language = ini.GetLongValue("Meter", "Language", 0);
 		Language.SetLanguage(LANGUAGE(language));
-		bool shouldLogMonsterStats = ini.GetBoolValue("Meter","LogMonsterStats",true);
+		bool shouldLogMonsterStats = ini.GetBoolValue("Meter","LogMonsterStats",false);
 		bool presence = ini.GetBoolValue("Meter","RichPresence",true);
 		DISCORD.shouldLoad = presence;
 		DISCORD.shouldUpdate = presence;
@@ -51,7 +51,7 @@ bool createconfig()
 	DAMAGEMETER.ini.SetBoolValue("Loader", "OpenMeterOnInjection", true);
 	DAMAGEMETER.ini.SetLongValue("Meter", "Language", 0);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "LogFile", false);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "LogMonsterStats",true);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "LogMonsterStats",false);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "RichPresence", true);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "HideName", false);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "HideClass", false);

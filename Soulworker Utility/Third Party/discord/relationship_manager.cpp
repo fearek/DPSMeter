@@ -5,7 +5,7 @@
 #include "relationship_manager.h"
 
 #include "core.h"
-
+#include "pch.h"
 #include <cstring>
 #include <memory>
 

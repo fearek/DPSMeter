@@ -34,9 +34,9 @@ VOID SWPacketOtherUseSkill::Do() {
 			//	LogInstance.MyLog(_T("2"));
 				SWDB.GetSkillName(otherSkill->_skillId, _skillName, SKILL_NAME_LEN);
 				//LogInstance.MyLog(_T("3"));
-				std::string test = u8"테네브리스가 [";
+				std::string test = "테네브리스가 [";
 				test.append(_skillName);
-				test.append(u8"]를 사용");
+				test.append("]를 사용");
 				UTILLWINDOW.AddLog(test);
 				//LogInstance.MyLog(test.c_str());
 			}

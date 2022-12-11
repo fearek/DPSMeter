@@ -425,7 +425,7 @@ BOOL MySQL::GetBuffName(UINT32 buffId, CHAR* out_buffer, SIZE_T out_buffer_lengt
 		return FALSE;
 
 	if (buffId == 0) {
-		strcpy_s(out_buffer, out_buffer_length, const_cast<CHAR*>(u8"Unknown"));
+		strcpy_s(out_buffer, out_buffer_length, "Unknown");
 		return TRUE;
 	}
 

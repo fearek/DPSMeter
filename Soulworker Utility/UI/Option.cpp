@@ -1,4 +1,5 @@
 #include "pch.h"
+#include <type_traits>
 #include ".\Language\Region.h"
 #include ".\UI\Option.h"
 #include ".\UI\HotKey.h"
@@ -665,9 +666,9 @@ BOOL UiOption::GetOption() {
 		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read Hotkey %s, key1 = %d, key2 = %d, key3 = %d")), name2, key[0], key[1], key[2]);
 #endif
 		
-		if (strcmp(name2, u8"Toogle") == 0)
+		if (strcmp(name2, "Toogle") == 0)
 			HOTKEY.InsertHotkeyToogle(key[0], key[1], key[2]);
-		else if (strcmp(name2, u8"Clear") == 0)
+		else if (strcmp(name2, "Clear") == 0)
 			HOTKEY.InsertHotkeyStop(key[0], key[1], key[2]);
 		
 	} while (TRUE);

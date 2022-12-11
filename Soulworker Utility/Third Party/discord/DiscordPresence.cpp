@@ -32,7 +32,7 @@ DWORD DiscordCustomPresence::Init()
 	Activity.SetState("discord.com/invite/H7jZpcVJhq");
 	Activity.SetType(discord::ActivityType::Playing);
 	Activity.GetAssets().SetLargeImage(imageLink);
-	core->ActivityManager().UpdateActivity(Activity, [](discord::Result callback) {if (callback == discord::Result::Ok) { LogInstance.WriteLog("Discord is initialized"); DISCORD.isInitialized = true; } else { LogInstance.WriteLog("Failed to init discord: %u", callback);}});
+	core->ActivityManager().UpdateActivity(Activity, [](discord::Result callback) {if (callback == discord::Result::Ok) { LogInstance.WriteLog("Discord is initialized"); DISCORD.isInitialized = true; } else { LogInstance.WriteLog("Failed to init discord: %u", callback); }});
 	LogInstance.WriteLog("Initialized discord");
 	return TRUE;
 }

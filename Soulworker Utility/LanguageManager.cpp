@@ -161,15 +161,15 @@ void DICTIONARY_t::SetLanguage(LANGUAGE lang)
 std::string DICTIONARY_t::GetLanguageNameUsedForSQLite()
 {
     if (_lang == KOREAN)
-        return u8"KR";
+        return "KR";
     else if (_lang == ENGLISH)
-        return u8"EN";
+        return "EN";
     else if (_lang == CHINESE)
-        return u8"TC";
+        return "TC";
     else if (_lang == JAPANESE)
-        return u8"JP";
+        return "JP";
     else
-        return u8"EN";
+        return "EN";
 }
 
 /// <summary>
@@ -179,7 +179,7 @@ std::string DICTIONARY_t::GetLanguageNameUsedForSQLite()
 /// <returns>text</returns>
 std::string DICTIONARY_t::GetText(STRINGS key)
 {
-    std::string l_ret = u8"Not Found";
+    std::string l_ret = "Not Found";
     auto& got = _data.find(key);
     if (got == _data.end())
         return l_ret;

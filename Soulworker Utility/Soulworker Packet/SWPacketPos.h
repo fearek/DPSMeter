@@ -4,7 +4,7 @@
 #include ".\Damage Meter\Damage Meter.h"
 
 #if defined(SERVER_KOREA)
-#define SWPACKETPOS_DUMMY 36
+#define SWPACKETPOS_DUMMY 38
 #endif
 #if defined(SERVER_STEAM)
 #define SWPACKETPOS_DUMMY 36
