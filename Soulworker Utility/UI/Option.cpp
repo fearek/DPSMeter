@@ -30,8 +30,8 @@ UiOption::UiOption()  :
 	_jobBasicColor[7] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(138, 2, 4, 255)));		// chii
 	_jobBasicColor[8] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(118, 206, 158, 255)));	// eph
 	_jobBasicColor[9] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(128, 128, 64, 255)));	// nabi
-
-	for (int i = 0; i < 10; i++)
+	_jobBasicColor[10] = ImVec4(ImGui::ColorConvertU32ToFloat4(ImColor(73, 51, 116, 255)));	// DHANA
+	for (int i = 0; i < 11; i++)
 		_jobColor[i] = _jobBasicColor[i];
 
 	strcpy_s(_selectedLang, LANGMANAGER.GetCurrentLang());
@@ -155,7 +155,7 @@ BOOL UiOption::ShowTableOption() {
 	ImGui::ColorEdit4("##ColorInActiveColor", (FLOAT*)&_activeColor[0], ImGuiColorEditFlags_None);
 	ImGui::SameLine();	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_INACTIVE_COLOR"));
 
-	const char* job[10][32] = { 
+	const char* job[11][32] = { 
 		{(const char*)LANGMANAGER.GetText("STR_CHAR_UNKNOWN")},
 		{(const char*)LANGMANAGER.GetText("STR_CHAR_HARU")},
 		{(const char*)LANGMANAGER.GetText("STR_CHAR_ERWIN")},
@@ -165,10 +165,11 @@ BOOL UiOption::ShowTableOption() {
 		{(const char*)LANGMANAGER.GetText("STR_CHAR_IRIS")},
 		{(const char*)LANGMANAGER.GetText("STR_CHAR_CHII")},
 		{(const char*)LANGMANAGER.GetText("STR_CHAR_EPHNEL")},
-		{(const char*)LANGMANAGER.GetText("STR_CHAR_NABI")}
+		{(const char*)LANGMANAGER.GetText("STR_CHAR_NABI")},
+		{(const char*)LANGMANAGER.GetText("STR_CHAR_DHANA")}
 	};
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 11; i++) {
 		ImGui::PushID(i);
 		ImGui::ColorEdit4("##Color", (FLOAT*)&_jobColor[i], ImGuiColorEditFlags_None);
 		ImGui::SameLine();	ImGui::Text(*job[i]);
@@ -411,6 +412,7 @@ VOID UiOption::Init() {
 	if (!GetOption()) {
 		SetBasicOption();
 	}
+	_inited = true;
 }
 
 BOOL UiOption::GetOption() {
@@ -783,7 +785,7 @@ BOOL UiOption::GetOption() {
 	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read InActiveColor = %.1f, %.1f, %.1f, %.1f")), _activeColor[0].x, _activeColor[0].y, _activeColor[0].z, _activeColor[0].w);
 #endif
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 11; i++) {
 		char temp[32] = { 0 };
 		sprintf_s(temp, 32, "JobColor%d", i);
 		ele = ele->NextSiblingElement(temp);
@@ -945,7 +947,7 @@ BOOL UiOption::SaveOption(BOOL skipWarning) {
 	inactive_color->SetAttribute("b", _activeColor[0].z);
 	inactive_color->SetAttribute("a", _activeColor[0].w);
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 11; i++) {
 
 		char buffer[32] = { 0 };
 		sprintf_s(buffer, 32, "JobColor%d", i);
@@ -1020,7 +1022,7 @@ BOOL UiOption::ToggleTopMost() {
 
 const ImU32 UiOption::GetJobColor(UINT index) {
 
-	if (index < 0 || index > 9)
+	if (index < 0 || index > 10)
 		return ImGui::ColorConvertFloat4ToU32(_jobColor[0]);
 
 	return ImGui::ColorConvertFloat4ToU32(_jobColor[index]);
