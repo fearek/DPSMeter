@@ -11,6 +11,11 @@ VOID SWCPresence::Do() {
 	SWPACKET_PRESENCE* presencepacket = (SWPACKET_PRESENCE*)(_data + sizeof(SWHEADER));
 	std::string utf8name;
 	utf8name.assign((const char*)(_data + sizeof(SWHEADER) + sizeof(SWPACKET_PRESENCE)), presencepacket->nicklength);
+	auto meta = DAMAGEMETER.GetPlayerMetaData(DAMAGEMETER.GetMyID());
+	if (meta)
+	{
+		meta->_job = presencepacket->playerclass;
+	}
 	DISCORD.UpdatePresence(utf8name, presencepacket->maze, presencepacket->playerclass);
 	return;
 }

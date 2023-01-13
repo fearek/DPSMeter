@@ -160,10 +160,10 @@ VOID PlayerTable::SetMainWindowSize() {
 
 
 	if (UIOPTION.isTopMost()) {
-		SetWindowPos(UIWINDOW.GetHWND(), HWND_TOPMOST, static_cast<INT>(pos.x), static_cast<INT>(pos.y), static_cast<INT>(size.x + 1), static_cast<INT>(size.y + 1), SWP_NOACTIVATE);
+		SetWindowPos(UIWINDOW.GetHWND(), HWND_TOPMOST, static_cast<INT>(pos.x), static_cast<INT>(pos.y), static_cast<INT>(size.x + 1), static_cast<INT>(size.y + 1), SWP_NOACTIVATE | SWP_SHOWWINDOW);
 	}
 	else {
-		SetWindowPos(UIWINDOW.GetHWND(), HWND_NOTOPMOST, static_cast<INT>(pos.x), static_cast<INT>(pos.y), static_cast<INT>(size.x + 1), static_cast<INT>(size.y + 1), SWP_NOACTIVATE);
+		SetWindowPos(UIWINDOW.GetHWND(), HWND_NOTOPMOST, static_cast<INT>(pos.x), static_cast<INT>(pos.y), static_cast<INT>(size.x + 1), static_cast<INT>(size.y + 1), SWP_NOACTIVATE | SWP_SHOWWINDOW);
 	}
 
 	//SetWindowPos(UIWINDOW.GetHWND(), HWND_NOTOPMOST, pos.x, pos.y, size.x + 1, size.y + 1, SWP_NOACTIVATE);
@@ -335,7 +335,36 @@ VOID PlayerTable::SetupTable() {
 	}
 
 }
+#define SET_BIT(var,val, bitIndex) var |= (val << bitIndex)
+enum PlayerStatuses {
+	NONE = 0,
+	AGGROED = 1,
+	CHILD_AGGROED = 2,
+	AGGROED_CHILD_AGGROED = 3,
+	AWAKENED = 4,
+	AGGROED_AWAKENED = 5,
+	CHILD_AGGROED_AWAKENED = 6,
+	ALL = 7
+};
+class PlayerStatus
+{
+	enum BITS {
+		IS_AGGROED,
+		IS_CHILD_AGGROED,
+		IS_AWAKENED
+	};
+	unsigned char flags : 3;
+public:
+	PlayerStatus(bool isAggroed, bool isChildAggroed, bool isAwakened)
+	{
+		SET_BIT(flags, isAggroed, IS_AGGROED);
+		SET_BIT(flags, isChildAggroed, IS_CHILD_AGGROED);
+		SET_BIT(flags, isAwakened, IS_AWAKENED);
+	}
+	operator unsigned char() { return flags; }
+	operator int() { return flags; }
 
+};
 VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 	UINT64 max_Damage = 1;
 	CHAR comma[128] = { 0 }; CHAR label[128] = { 0 };
@@ -379,15 +408,33 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 		ImVec4 saved = ImVec4(style.Colors[0].x, style.Colors[0].y, style.Colors[0].z, style.Colors[0].w);
 		
 		UINT32 playerId = (*itr)->GetID();
-		if (playerId == DAMAGEMETER.GetAggro()) {
-			style.Colors[0] = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
-		}
-		else if (playerId == DAMAGEMETER.GetOwnerID(DAMAGEMETER.GetAggro())) {
-			style.Colors[0] = ImVec4(0.0f, 0.0f, 1.0f, 1.0f);
-		}
-
-		if (DAMAGEMETER.PlayerInAwakening(playerId)) {
-			style.Colors[0] = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+		bool isAggro = (playerId == DAMAGEMETER.GetAggro());
+		bool isChildAggro = (playerId == DAMAGEMETER.GetOwnerID(DAMAGEMETER.GetAggro()));
+		bool isAwakened = DAMAGEMETER.PlayerInAwakening(playerId);
+		unsigned char status = PlayerStatus(isAggro, isChildAggro, isAwakened);
+		switch (status)
+		{
+		case AGGROED:
+			style.Colors[0] = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); //red
+			break;
+		case CHILD_AGGROED:
+			style.Colors[0] = ImVec4(0.0f, 0.0f, 1.0f, 1.0f); //blue
+			break;
+		case AGGROED_CHILD_AGGROED:
+			style.Colors[0] = ImVec4(1.0f, 0.0f, 1.0f, 1.0f); //purple
+			break;
+		case AWAKENED:
+			style.Colors[0] = ImVec4(1.0f, 1.0f, 0.0f, 1.0f); //yellow
+			break;
+		case AGGROED_AWAKENED:
+			style.Colors[0] = ImVec4(1.0f, 0.5f, 0.0f, 1.0f); //orange
+			break;
+		case CHILD_AGGROED_AWAKENED:
+			style.Colors[0] = ImVec4(0.0f, 1.0f, 0.0f, 1.0f); //green
+			break;
+		case ALL:
+			style.Colors[0] = ImVec4(0.5f, 0.25f, 0.0f, 1.0f); //brown
+			break;
 		}
 		
 		//colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 0.95f);

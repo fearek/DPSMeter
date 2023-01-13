@@ -536,7 +536,7 @@ BOOL SWDamageMeter::CheckPlayer(UINT32 id) {
 		return FALSE;
 }
 
-vector<SWDamagePlayer*>* SWDamageMeter::GetPlayerInfoByHistory()
+std::vector<SWDamagePlayer*>* SWDamageMeter::GetPlayerInfoByHistory()
 {
 	if (_historyMode)
 		return &_historyPlayerInfo;
@@ -544,7 +544,7 @@ vector<SWDamagePlayer*>* SWDamageMeter::GetPlayerInfoByHistory()
 		return &_playerInfo;
 }
 
-vector<SWDamagePlayer*>::const_iterator SWDamageMeter::GetPlayerInfo(UINT32 id) {
+std::vector<SWDamagePlayer*>::const_iterator SWDamageMeter::GetPlayerInfo(UINT32 id) {
 
 	auto itr = GetPlayerInfoByHistory()->begin();
 	for (; itr != GetPlayerInfoByHistory()->end(); itr++) {

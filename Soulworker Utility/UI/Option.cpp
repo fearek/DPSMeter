@@ -234,7 +234,7 @@ VOID UiOption::Helper() {
 		}
 		else {
 			id = helper;
-			DAMAGEMETER.InsertPlayerMetadata(id, name, helper % 10);
+			DAMAGEMETER.InsertPlayerMetadata(id, name, helper % 11);
 		}
 
 		//DAMAGEMETER.InsertPlayerMetadata(id, name, helper % 10);

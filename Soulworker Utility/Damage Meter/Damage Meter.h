@@ -16,7 +16,7 @@ using namespace SoulMeterFBS::History;
 //#define MAX_MAP_LEN 32
 #define MAX_MAP_LEN 64
 
-#define PLAYER_JOB_CANT_FIND 10
+#define PLAYER_JOB_CANT_FIND 11
 
 #ifdef _DEBUG
 #define DEBUG_DAMAGEMETER_OWNER_ID 0
