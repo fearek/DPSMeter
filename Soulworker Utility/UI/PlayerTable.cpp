@@ -100,7 +100,7 @@ VOID PlayerTable::Update() {
 		//and if 3 then do nothing basically so we display all to 999
 		std::string milisecondsstring = std::to_string(miliseconds);
 		//turning it into a string before so we dont display leading 0's so timer is more readable
-		sprintf_s(title, 1024, "%s - %02d:%02d.%s [v%s_@FeAr&ga] %s: %lldms discord.com/invite/H7jZpcVJhq ###DamageMeter",
+		sprintf_s(title, 1024, "%s - %02d:%02d.%s [v%s_@FeAr&ga] %s: %ums discord.com/invite/H7jZpcVJhq ###DamageMeter",
 			DAMAGEMETER.GetWorldName(),
 			(UINT)DAMAGEMETER.GetTime() / (60 * 1000), (UINT)(DAMAGEMETER.GetTime() / 1000) % 60, milisecondsstring.c_str(),
 			APP_VERSION,
@@ -353,7 +353,7 @@ class PlayerStatus
 		IS_CHILD_AGGROED,
 		IS_AWAKENED
 	};
-	unsigned char flags : 3;
+	unsigned char flags = 0;
 public:
 	PlayerStatus(bool isAggroed, bool isChildAggroed, bool isAwakened)
 	{
