@@ -42,6 +42,7 @@ private:
 	CHAR _selectedLang[128] = { 0 };
 	BOOL _isSoloRankMode;
 	BOOL _isUseSaveData;
+	BOOL _isUseImage;
 	BOOL _oriIsUseSaveData;
 	CHAR _selectedInterface[MAX_PATH] = { 0 };
 	BOOL _isDontSaveUnfinishedMaze;
@@ -95,7 +96,7 @@ public:
 	const BOOL& isUseSaveData();
 	const CHAR* GetUseInterface();
 	const BOOL& isDontSaveUnfinishedMaze();
-
+	const BOOL& isUseImage();
 	BOOL ToggleTopMost();
 
 	const FLOAT& GetFramerate();

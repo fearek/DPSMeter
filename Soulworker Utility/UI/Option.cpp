@@ -333,6 +333,7 @@ VOID UiOption::ShowFeatures()
 	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_HIDE_NAME"), (bool*)&_hideName);
 	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_SOLO_RANK_MODE"), (bool*)&_isSoloRankMode); ImGui::SameLine(); ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_DONT_SAVE_UNFINISHED_MAZE"), (bool*)&_isDontSaveUnfinishedMaze);
 	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_USE_SAVEDATA"), (bool*)&_isUseSaveData);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_USE_IMAGE"), (bool*)&_isUseImage);
 }
 
 VOID UiOption::OpenOption() {
@@ -499,7 +500,10 @@ BOOL UiOption::GetOption() {
 	if (attr == nullptr)
 		return FALSE;
 	attr->QueryIntValue(&_isTopMost);
-
+	attr = ele->FindAttribute("IsUseImage");
+	if (attr == nullptr)
+		return FALSE;
+	attr->QueryIntValue(&_isUseImage);
 	attr = ele->FindAttribute("TeamTA_LF");
 	if (attr != nullptr)
 		attr->QueryIntValue(&_teamTA_LF);
@@ -881,7 +885,7 @@ BOOL UiOption::SaveOption(BOOL skipWarning) {
 	root->LinkEndChild(option);
 
 	option->SetAttribute("IsTopMost", _isTopMost);
-
+	option->SetAttribute("IsUseImage", _isUseImage);
 	option->SetAttribute("GlobalScale", _fontScale);
 	option->SetAttribute("TableScale", _tableFontScale);
 	option->SetAttribute("ColumnScale", _columnFontScale);
@@ -1150,4 +1154,8 @@ const FLOAT& UiOption::GetRefreshTime() {
 
 const CHAR* UiOption::GetUseInterface() {
 	return _selectedInterface;
+}
+const BOOL& UiOption::isUseImage()
+{
+	return _isUseImage;
 }

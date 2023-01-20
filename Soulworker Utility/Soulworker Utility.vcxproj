@@ -272,6 +272,7 @@
     <ClInclude Include="UI\PlayerTable.h" />
     <ClInclude Include="UI\PlotWindow.h" />
     <ClInclude Include="UI\SpecificInfomation.h" />
+    <ClInclude Include="UI\stb_image.h" />
     <ClInclude Include="UI\UiWindow.h" />
     <ClInclude Include="UI\UtillWindow.h" />
     <ClInclude Include="Util\CriticalSection.h" />

@@ -108,7 +108,7 @@
     "STR_OPTION_SELECT_INTERFACE": "Use network interface",
     "STR_OPTION_ALL": "All",
     "STR_OPTION_DONT_SAVE_UNFINISHED_MAZE": "Don't save unfinished maze",
-
+	"STR_OPTION_USE_IMAGE": "Use Character Image",
     "STR_CHAR_UNKNOWN": "Unknown",
     "STR_CHAR_HARU": "Haru",
     "STR_CHAR_ERWIN": "Erwin",

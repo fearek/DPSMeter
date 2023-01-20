@@ -429,6 +429,9 @@
     <ClInclude Include="Third Party\discord\relationship_manager.h">
       <Filter>Discord</Filter>
     </ClInclude>
+    <ClInclude Include="UI\stb_image.h">
+      <Filter>UI\DirectX11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
