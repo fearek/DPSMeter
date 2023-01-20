@@ -441,11 +441,11 @@ VOID PlayerTable::UpdateTable(FLOAT windowWidth) {
 			Texture playerTexture = DIRECTX11.getCharacterTexture(DAMAGEMETER.GetPlayerJob((*itr)->GetID()));
 
 			if (useImage && playerTexture.ptr) {
-				ImGui::SetCursorPosX((ImGui::GetColumnWidth() * 0.5) - ((ImGui::CalcTextSize(playerName).x + 32) / 2));
+				ImGui::SetCursorPosX((ImGui::GetColumnWidth() * 0.5) - ((ImGui::CalcTextSize(playerName).x + playerTexture.xSize) / 2)); //because font size can change, we need to use texture size to center properly
 			}
 			else
 			{
-				ImGui::SetCursorPosX(ImGui::GetColumnWidth() * 0.5 - (ImGui::CalcTextSize(playerName).x / 2));
+				ImGui::SetCursorPosX(ImGui::GetColumnWidth() * 0.5 - (ImGui::CalcTextSize(playerName).x / 2)); // we dont use texture here so center text only, have to do it myself because disabled text centering for this part as it was breaking rendering
 			}
 			if (useImage && playerTexture.ptr) {
 				ImGui::Image((void*)playerTexture.ptr, ImVec2(playerTexture.xSize, playerTexture.ySize));

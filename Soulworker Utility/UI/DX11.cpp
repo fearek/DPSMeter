@@ -40,23 +40,26 @@ BOOL DX11::CreateDevice() {
 		LogInstance.WriteLog("[DirectX11] [CreateDevice FAILED]\n");
 		return FALSE;
 	}
-	for (size_t i = 0; i < charTexturesFiles.size(); i++)
+	for (size_t i = 0; i < charTexturesFiles.size(); i++) //chars start at 1, 0 is unknown
 	{
 		std::string filePath = "Images\\" + charTexturesFiles[i];
-		int xSize = (int)((float)(ImGui::GetFontSize()));
-		int ySize = (int)((float)(ImGui::GetFontSize()));
 		ID3D11ShaderResourceView* texture = nullptr;
-		bool ret = LoadTextureFromFile(filePath.c_str(), &texture, xSize, ySize);
+		bool ret = LoadTextureFromFile(filePath.c_str(), &texture);
 		if (ret)
 		{
 			charTextures[i] = texture;
 		}
 		else
 		{
-			charTextures[i] = nullptr;
+			if (charTextures[0] != nullptr)
+			{
+				charTextures[i] = charTextures[0];
+			}
+			else {
+				charTextures[i] = nullptr;
+			}
 		}
 	}
-	charTextures.back() = nullptr;
 	return TRUE;
 }
 
@@ -192,7 +195,7 @@ ID3D11Device* DX11::GetDevice() {
 ID3D11DeviceContext* DX11::GetDeviceContext() {
 	return _d3dDeviceContext;
 }
-bool DX11::LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv, int width, int height)
+bool DX11::LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv)
 {
 	// Load from disk into a raw RGBA buffer
 	int image_width = 0;

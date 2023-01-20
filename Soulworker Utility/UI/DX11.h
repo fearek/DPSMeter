@@ -12,7 +12,7 @@ private:
 	ID3D11DeviceContext* _d3dDeviceContext;
 	UINT _4xMsaaQuality;
 	BOOL _enable4xMsaa;
-	std::array<std::string, 10> charTexturesFiles = { "Haru.png","Erwin.png","Lily.png","Jin.png","Stella.png","Iris.png","Chii.png","Ephnel.png","Nabi.png","Dhana.png" };
+	std::array<std::string, 11> charTexturesFiles = {"Unknown.png","Haru.png","Erwin.png","Lily.png","Jin.png","Stella.png","Iris.png","Chii.png","Ephnel.png","Nabi.png","Dhana.png" };
 	std::array<ID3D11ShaderResourceView*, 11> charTextures;
 	BOOL CreateDevice();
 	VOID Check4XMSAA();
@@ -28,6 +28,6 @@ public:
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
-	bool LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv, int width, int height);
+	bool LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** out_srv);
 	Texture getCharacterTexture(int jobid);
 };
