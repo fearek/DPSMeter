@@ -276,7 +276,9 @@ VOID SWPacketMaker::CreateSWPacket(std::vector<unsigned char>& packet) {
 			case RecvOPcode::PARTY_LIST_INFO:
 				//swpacket = new SWPacketPartyListInfo(swheader, data);
 				break;
-
+			case RecvOPcode::SQUAD:
+				swpacket = new SWPacketSquad(swheader, data);
+				break;
 				/* 0x17 Monster */
 			case RecvOPcode::MONSTER_STAT_UPDATE:
 				swpacket = new SWPacketMonsterStatUpdate(swheader, data);

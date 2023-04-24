@@ -229,6 +229,7 @@
     <ClInclude Include="Soulworker Packet\SWPacketParty.h" />
     <ClInclude Include="Soulworker Packet\SWPacketPartyListInfo.h" />
     <ClInclude Include="Soulworker Packet\SWPacketSpawnedCharInfo.h" />
+    <ClInclude Include="Soulworker Packet\SWPacketSquad.h" />
     <ClInclude Include="Soulworker Packet\SWPacketStartMove.h" />
     <ClInclude Include="Soulworker Packet\SWPacketStatChange.h" />
     <ClInclude Include="Soulworker Packet\SWPacketUseSkill.h" />
@@ -330,6 +331,7 @@
     <ClCompile Include="Soulworker Packet\SWPacketParty.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketPartyListInfo.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketSpawnedCharInfo.cpp" />
+    <ClCompile Include="Soulworker Packet\SWPacketSquad.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketStartMove.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketStatChange.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketUseSkill.cpp" />

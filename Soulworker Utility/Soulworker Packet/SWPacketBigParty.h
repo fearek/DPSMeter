@@ -3,7 +3,7 @@
 #include ".\Soulworker Packet\SWPacket.h"
 #include ".\Damage Meter\Damage Meter.h"
 
-#define SWPACKETBIGPARTY_DUMMY 38 //0512
+#define SWPACKETBIGPARTY_DUMMY 46 //2304
 
 #pragma pack(push, 1)
 

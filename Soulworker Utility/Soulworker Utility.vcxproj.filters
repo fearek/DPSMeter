@@ -432,6 +432,9 @@
     <ClInclude Include="UI\stb_image.h">
       <Filter>UI\DirectX11</Filter>
     </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWPacketSquad.h">
+      <Filter>SWPacket\Packet\0x12 Party</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -709,6 +712,9 @@
     </ClCompile>
     <ClCompile Include="Soulworker Packet\SWCPacket.cpp">
       <Filter>SWCPacket</Filter>
+    </ClCompile>
+    <ClCompile Include="Soulworker Packet\SWPacketSquad.cpp">
+      <Filter>SWPacket\Packet\0x12 Party</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

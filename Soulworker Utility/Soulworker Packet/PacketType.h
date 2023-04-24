@@ -46,7 +46,7 @@
 /* 0x12 */
 #include ".\Soulworker Packet\SWPacketParty.h"
 #include ".\Soulworker Packet\SWPacketPartyListInfo.h"
-
+#include ".\Soulworker Packet\SWPacketSquad.h"
 /* 0x17 Monster */
 #include ".\Soulworker Packet\SWPacketMonsterStatUpdate.h"
 #include ".\Soulworker Packet\SWPacketMonsterKilled.h"
@@ -111,6 +111,8 @@ enum RecvOPcode {
 	/* 0x12 Party */
 	PARTY = 0x1209,
 	PARTY_LIST_INFO = 0x1236,
+	/* VP */
+	SQUAD = 0x1261,
 
 	/* 0x17 Monster */
 	MONSTER_STAT_UPDATE = 0x1712,
