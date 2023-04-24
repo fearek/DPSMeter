@@ -173,8 +173,8 @@ VOID SWPacketSquad::Log() {
 
 		Log::WriteLogA("Skipping past D_unk02 (50 bytes)");
 
-		offset += 58; //D_unk02*/ //AFN code
-	}
+		offset += 58; //D_unk02 //AFN code
+	}*/
 
 }
 
