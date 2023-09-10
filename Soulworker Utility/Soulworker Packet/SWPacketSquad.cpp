@@ -35,7 +35,7 @@ VOID SWPacketSquad::Do() {
 
 	offset += 1; //SQUADPLAYERCOUNT
 
-	offset += 11; //unk03
+	offset += 3; //unk03
 
 	for (int i = 0; i < squadPlayerCount; i++) {
 		UINT32 playerId = 0;
