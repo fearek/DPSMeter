@@ -171,12 +171,11 @@ VOID SWPacketMaker::CreateSWPacket(std::vector<unsigned char>& packet) {
 		return;
 	}
 
-
 #if DEBUG_RECV_DISPLAY_ALL_PKT == 1
 	LogInstance.WriteLog("OP : %04x\tsize : %04x", swheader->_op, swheader->_size);
 	for (int i = 0; i < swheader->_size; i++)
-		LogInstance.WriteLogNoDate(L"%02x ", data[i]);
-	LogInstance.WriteLogNoDate(L"\n\n");
+		LogInstance.WriteLogNoDate("%02x ", data[i]);
+	LogInstance.WriteLogNoDate("\n\n");
 #endif
 
 	SWPacket* swpacket = nullptr;
@@ -304,11 +303,13 @@ VOID SWPacketMaker::CreateSWPacket(std::vector<unsigned char>& packet) {
 
 
 			default:
+#define DEBUG_RECV_DISPLAYPKT 1
 #if DEBUG_RECV_DISPLAYPKT == 1
 				LogInstance.WriteLog("OP : %04x\tsize : %04x", swheader->_op, swheader->_size);
-				for (int i = 0; i < swheader->_size; i++)
-					LogInstance.WriteLogNoDate(L"%02x ", data[i]);
-				LogInstance.WriteLogNoDate(L"\n\n");
+				for (int i = 0; i < swheader->_size; i++) {
+					LogInstance.WriteLogNoDate("%02x ", data[i]);
+			}
+				LogInstance.WriteLogNoDate("\n\n");
 #endif
 				break;
 			}

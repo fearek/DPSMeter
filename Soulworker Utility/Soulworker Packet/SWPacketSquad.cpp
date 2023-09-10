@@ -28,6 +28,7 @@ VOID SWPacketSquad::Do() {
 	offset += squadLeaderNickSize; //SQUADLEADERNICK
 
 	offset += 4; //unk02
+	offset += 8;
 
 	UINT8 squadPlayerCount = 0;
 	memcpy(&squadPlayerCount, _data + offset, 1);
@@ -66,7 +67,7 @@ VOID SWPacketSquad::Do() {
 
 		offset += 1; //PLAYERJOB
 
-		offset += 58; //D_unk02
+		offset += 62; //D_unk02
 	}
 }
 
