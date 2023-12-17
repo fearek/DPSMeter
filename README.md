@@ -29,29 +29,18 @@ Right click title bar can display more features
 
 Can get player details with left click table of character name row
 
-option.xml and imgui.ini is user settings
+option.xml,imgui.ini,meterconfig.ini is user settings
 
 
 Q&A
 ---------------------
 
-Q: Can't display chinese
+Q: Can't display my language
 
-A: Put chinese font file to Font folder.
+A: Put font file with your language to Font folder and select it with Font Selector.
 
-Q: how to keep settings when upgrading to new version
+Q: How to use?
 
-A: Copy option.xml and imgui.ini to new version folder
-
-
-Notice
+A: Get loader from Discord (link above), all instructions are there.
 ---------------------
-You need to run dps meter before entering maze
-
-Also, USE AT YOUR OWN RISK
-
-I recommend not to talk about dps meter at in-game public chat
-
-If you can't open, try installing this: https://github.com/abbodi1406/vcredist/releases
-
 Special thanks @Nyanchii, @ga0321, @AFNGP
