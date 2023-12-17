@@ -54,4 +54,4 @@ I recommend not to talk about dps meter at in-game public chat
 
 If you can't open, try installing this: https://github.com/abbodi1406/vcredist/releases
 
-Special thanks @Nyanchii, @ga0321
+Special thanks @Nyanchii, @ga0321, @AFNGP
