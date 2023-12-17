@@ -30,8 +30,19 @@ static std::unordered_set<UINT32> pauseIdList({
 	31365131, // Ferdelance Maniac P1
 
 	/* PM */
-	13901202, // Parallel Metronome Noraml P1
+	13901202, // Parallel Metronome Normal P1
 	13901201, // Parallel Metronome Hard P1
+
+	/* VP */
+	40302003, // Flemma Normal
+	40302002, // Relfenne Normal
+	40302001, // Kain Normal
+	40302005, // Vista Egg Normal
+	40301004, // Vista Egg Hard
+
+	/* CD */
+	44002014, // Beletto Normal P1
+	44002010, // Beletto Hard P1 
 
 	});
 
@@ -39,7 +50,7 @@ static std::unordered_set<UINT32> endIdList({
 
 	/* HH */
 	31308001, // Raphakumba
-	
+
 	/* LF */
 	31309151, // Junk Queen
 
@@ -69,8 +80,18 @@ static std::unordered_set<UINT32> endIdList({
 	41100005, // Gold Gruton
 
 	/* PM */
-	13901302, // Parallel Metronome Noraml P2
+	13901302, // Parallel Metronome Normal P2
 	13901301, // Parallel Metronome Hard P2
+
+	/* VP */
+	40301005, // Vista Hard
+	40301009, // Fake Vista Hard
+	40301002, // Relfenne Hard
+	40301003, // Flemma Hard
+
+	/* CD */
+	44002015, // Beletto Normal P2
+	44002011 // Beletto Hard P2
 
 	});
 
@@ -109,8 +130,26 @@ static std::unordered_set<UINT32> changeAggroIdList({
 	31365131, 31365132, // Ferdelance Maniac
 
 	/* PM */
-	13901202, 13901302, // Parallel Metronome Noraml
+	13901202, 13901302, // Parallel Metronome Normal
 	13901201, 13901301, // Parallel Metronome Hard
+
+	/* VP */
+	40302003, // Flemma Normal
+	40302002, // Relfenne Normal
+	40302001, // Kain Normal
+	40302005, // Vista Egg Normal
+	40302004, // Vista Egg Hard
+	40301005, // Vista Hard
+	40301004, // Vista Hard
+	40301009, // Fake Vista Hard
+	40301002, // Relfenne Hard
+	40301003, // Flemma Hard
+
+	/* CD */
+	44002014, // Beletto Normal P1
+	44002010, // Beletto Hard P1
+	44002015, // Beletto Normal P2
+	44002011, // Beletto Hard P2
 
 	});
 
@@ -152,6 +191,7 @@ static std::unordered_set<UINT32> LunarFallBossListId({
 	31309151, // Junk Queen
 
 	});
+
 
 static std::unordered_map<UINT32, std::vector<UINT32>> StrictModeList({
 	// HH Rank

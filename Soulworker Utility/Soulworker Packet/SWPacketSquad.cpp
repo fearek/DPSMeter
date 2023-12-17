@@ -27,8 +27,7 @@ VOID SWPacketSquad::Do() {
 
 	offset += squadLeaderNickSize; //SQUADLEADERNICK
 
-	offset += 4; //unk02
-	offset += 8;
+	offset += 12;
 
 	UINT8 squadPlayerCount = 0;
 	memcpy(&squadPlayerCount, _data + offset, 1);

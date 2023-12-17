@@ -1,8 +1,8 @@
 #pragma once
 #define MAJORNUMBER 1
-#define MINORNUMBER 4
+#define MINORNUMBER 6
 #define BUILDNUMBER 0
-#define MODIFICATIONNUMBER 5
+#define MODIFICATIONNUMBER 0
 #define STR(value) #value
 #define STRINGIZE(value) STR(value)
 #define APP_VERSION \
@@ -10,7 +10,6 @@
   STRINGIZE(MINORNUMBER) "." \
   STRINGIZE(BUILDNUMBER) "." \
   STRINGIZE(MODIFICATIONNUMBER)
-#define SWMAGIC 4
 #define SWCONSTVALUE_RECV 1
 #define SWCONSTVALUE_SEND 2 // maybe client send request
 #define USE_XOR 0
