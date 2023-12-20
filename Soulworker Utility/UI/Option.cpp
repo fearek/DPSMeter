@@ -169,7 +169,7 @@ bool UiOption::ShowTableOption() {
 		LANGMANAGER.GetText("STR_CHAR_DHANA")
 	};
 
-	for (int i = 0; i < 11; i++) {
+	for (int i = 0; i < job.size(); i++) {
 		ImGui::PushID(i);
 		ImGui::ColorEdit4("##Color", (float*)&_jobColor[i], ImGuiColorEditFlags_None);
 		ImGui::SameLine();	ImGui::Text(job[i].data());
