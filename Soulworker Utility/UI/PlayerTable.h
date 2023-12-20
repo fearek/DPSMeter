@@ -3,11 +3,11 @@
 
 typedef struct _SELECTED_PLAYER {
 	
-	UINT32 _playerID;
-	BOOL _isSelected;
+	uint32_t _playerID;
+	bool _isSelected;
 	SpecificInformation* _specificInfo;
 
-	_SELECTED_PLAYER(UINT32 playerID, BOOL isSelected, SpecificInformation* specificInfo) : _playerID(playerID), _isSelected(isSelected), _specificInfo(specificInfo) { }
+	_SELECTED_PLAYER(uint32_t playerID, bool isSelected, SpecificInformation* specificInfo) : _playerID(playerID), _isSelected(isSelected), _specificInfo(specificInfo) { }
 }SELECTED_PLAYER;
 
 #define PLAYERTABLE PlayerTable::getInstance()
@@ -16,43 +16,43 @@ class PlayerTable : public Singleton<PlayerTable> {
 private:
 	std::vector<SELECTED_PLAYER*> _selectInfo;
 
-	BOOL ToggleSelectInfo(UINT32 id);
-	VOID ShowSelectedTable();
-	VOID BeginPopupMenu();
+	bool ToggleSelectInfo(uint32_t id);
+	void ShowSelectedTable();
+	void BeginPopupMenu();
 
-	VOID SetWindowSize();
-	VOID SetMainWindowSize();
-	VOID StoreWindowWidth();
-	VOID SetupFontScale();
+	void SetWindowSize();
+	void SetMainWindowSize();
+	void StoreWindowWidth();
+	void SetupFontScale();
 
-	VOID DrawBar(FLOAT window_Width, FLOAT percent, ImU32 color);
-	VOID SetupTable();
-	VOID UpdateTable(FLOAT windowWidth);
+	void DrawBar(float window_Width, float percent, ImU32 color);
+	void SetupTable();
+	void UpdateTable(float windowWidth);
 
-	FLOAT _globalFontScale;
-	FLOAT _columnFontScale;
-	FLOAT _tableFontScale;
+	float _globalFontScale;
+	float _columnFontScale;
+	float _tableFontScale;
 
-	FLOAT _curWindowSize;
+	float _curWindowSize;
 
-	BOOL _tableResize;
+	bool _tableResize;
 
-	FLOAT _tableTime;
-	FLOAT _accumulatedTime;
+	float _tableTime;
+	float _accumulatedTime;
 
 public:
 	PlayerTable();
 	~PlayerTable();
 
-	VOID Update();
-	VOID ClearTable();
-	VOID ResizeTalbe();
+	void Update();
+	void ClearTable();
+	void ResizeTalbe();
 
-	LONG64 _lastSendTimestamp = 0;
-	UINT32 _tick = 0;
-	BOOL _isNewestVersion = TRUE;
+	int64_t _lastSendTimestamp = 0;
+	uint32_t _tick = 0;
+	bool _isNewestVersion = true;
 
-	FLOAT GetTableTime()
+	float GetTableTime()
 	{
 		return _tableTime;
 	}

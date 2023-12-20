@@ -3,30 +3,30 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacketChat.h"
 
-SWPacketChat::SWPacketChat(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketChat::SWPacketChat(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketChat::Do() {
+void SWPacketChat::Do() {
 	SWPACKETCHAT_HEADER* chat_header = (SWPACKETCHAT_HEADER*)(_data + sizeof(SWHEADER));
 
-	BYTE* p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETCHAT_HEADER);
+	uint8_t* p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETCHAT_HEADER);
 }
 
-VOID SWPacketChat::Log() {
+void SWPacketChat::Log() {
 
 }
 
-VOID SWPacketChat::Debug() {
+void SWPacketChat::Debug() {
 	
 	//SWPACKETCHAT_HEADER* chat_header = (SWPACKETCHAT_HEADER*)(_data + sizeof(SWHEADER));
 
-	//BYTE* p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETCHAT_HEADER);
+	//uint8_t* p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETCHAT_HEADER);
 
-	//WCHAR utf16[MAX_NAME_LEN] = { 0 };
-	//memcpy_s(utf16, MAX_NAME_LEN * sizeof(WCHAR), p_data, chat_header->_chatSize);
+	//wchar_t utf16[MAX_NAME_LEN] = { 0 };
+	//memcpy_s(utf16, MAX_NAME_LEN * sizeof(wchar_t), p_data, chat_header->_chatSize);
 
-	//CHAR utf8[MAX_NAME_LEN] = { 0 };
+	//char utf8[MAX_NAME_LEN] = { 0 };
 	//if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
 	//	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketChat : UTF16toUTF8 FAILED")));
 	//	return;

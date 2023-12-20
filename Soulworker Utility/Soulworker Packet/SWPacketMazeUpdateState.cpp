@@ -4,11 +4,11 @@
 #include ".\UI\Option.h"
 #include ".\Damage Meter\MapList.h"
 
-SWPacketMazeUpdateState::SWPacketMazeUpdateState(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketMazeUpdateState::SWPacketMazeUpdateState(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketMazeUpdateState::Do() {
+void SWPacketMazeUpdateState::Do() {
 
 	SWPacketMazeUpdateStatePacket* packet = (SWPacketMazeUpdateStatePacket*)(_data + sizeof(SWHEADER));
 	
@@ -24,7 +24,7 @@ VOID SWPacketMazeUpdateState::Do() {
 	case 0x01:
 		if (UIOPTION.isDontSaveUnfinishedMaze())
 			DAMAGEMETER.SetTestMode();
-		DAMAGEMETER.SetMazeState(FALSE);
+		DAMAGEMETER.SetMazeState(false);
 		DAMAGEMETER.Start();
 		break;
 		// Play boss animation
@@ -36,17 +36,17 @@ VOID SWPacketMazeUpdateState::Do() {
 		// Maze end
 	case 0x04:
 		DAMAGEMETER.ClearTestMode();
-		DAMAGEMETER.SetMazeState(TRUE);
+		DAMAGEMETER.SetMazeState(true);
 		DAMAGEMETER.Suspend();
 		break;
 	}
 }
 
-VOID SWPacketMazeUpdateState::Log() {
+void SWPacketMazeUpdateState::Log() {
 
 }
 
-VOID SWPacketMazeUpdateState::Debug() {
+void SWPacketMazeUpdateState::Debug() {
 	/*SWPacketMazeUpdateStatePacket* packet = (SWPacketMazeUpdateStatePacket*)(_data + sizeof(SWHEADER));
 	LogInstance.WriteLog("[SWPacketMazeUpdateState] stateID = %d, state = %d", packet->_stateID, packet->_state);*/
 }

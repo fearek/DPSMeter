@@ -9,47 +9,47 @@ using namespace SoulMeterFBS::History;
 
 class SWDamageMonster : public MemoryPool<SWDamageMonster, 100> {
 private:
-	UINT32 _id;
-	//USHORT _db1;
-	UINT32 _db2;
-	UINT64 _damage;
-	UINT64 _critDamage;
-	USHORT _hitCount;
-	USHORT _critHitCount;
-	CHAR _name[MONSTER_NAME_LEN];
-	INT32 _type;
+	uint32_t _id;
+	//uint16_t _db1;
+	uint32_t _db2;
+	uint64_t _damage;
+	uint64_t _critDamage;
+	uint16_t _hitCount;
+	uint16_t _critHitCount;
+	char _name[MONSTER_NAME_LEN];
+	int32_t _type;
 
 	std::vector<SWDamageSkill*> _skillinfo;
 
-	VOID InsertSkillInfo(UINT32 skillID, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount);
-	VOID Sort();
+	void InsertSkillInfo(uint32_t skillID, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount);
+	void Sort();
 
 public:
-	SWDamageMonster(UINT32 id, UINT32 db2, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount, UINT32 skillID);
+	SWDamageMonster(uint32_t id, uint32_t db2, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount, uint32_t skillID);
 	SWDamageMonster() : _type(-1), _id(0), _db2(0), _damage(0), _critDamage(0), _hitCount(0), _critHitCount(0) { }
 	~SWDamageMonster();
 
-	static BOOL SortFunction(SWDamageMonster* monsterA, SWDamageMonster* monsterB);
+	static bool SortFunction(SWDamageMonster* monsterA, SWDamageMonster* monsterB);
 
-	UINT32 GetID();
-	INT32 GetType();
-	//USHORT GetDB1();
-	UINT32 GetDB2();
-	UINT64 GetDamage();
-	UINT64 GetCritDamage();
-	USHORT GetHitCount();
-	USHORT GetCritHitCount();
-	UINT64 GetSkillTotalDamage();
-	const CHAR* GetName();
+	uint32_t GetID();
+	int32_t GetType();
+	//uint16_t GetDB1();
+	uint32_t GetDB2();
+	uint64_t GetDamage();
+	uint64_t GetCritDamage();
+	uint16_t GetHitCount();
+	uint16_t GetCritHitCount();
+	uint64_t GetSkillTotalDamage();
+	const char* GetName();
 
 	std::vector<SWDamageSkill*>::const_iterator begin();
 	std::vector<SWDamageSkill*>::const_iterator end();
 	const SIZE_T size();
 
-	VOID SetNameFromDB();
-	VOID AddDamage(UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount, UINT32 skillID);
+	void SetNameFromDB();
+	void AddDamage(uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount, uint32_t skillID);
 
-	VOID Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tDamageMonster>>& vDamageMonster)
+	void Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tDamageMonster>>& vDamageMonster)
 	{
 		// _tDamageSkill
 		std::vector<flatbuffers::Offset<_tDamageSkill>> vSkillInfo;
@@ -72,7 +72,7 @@ public:
 
 		vDamageMonster.push_back(tdmb.Finish());
 	}
-	VOID UnSerialization(const _tDamageMonster* tDamageMonster)
+	void UnSerialization(const _tDamageMonster* tDamageMonster)
 	{
 		// _tDamageSkill
 		for (auto itr = tDamageMonster->_skillinfo()->begin(); itr != tDamageMonster->_skillinfo()->end(); itr++)

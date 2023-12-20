@@ -39,17 +39,17 @@ struct ImFontObj
 	bool selectable = false;
 };
 typedef struct _SW_OWNER_ID_STRUCT {
-	UINT32 _id;
-	UINT32 _owner_id;
+	uint32_t _id;
+	uint32_t _owner_id;
 }SW_OWNER_ID_STRUCT;
 
 typedef struct _SW_DB2_STRUCT {
-	UINT32 _id;
-	UINT32 _db2;
-	INT32 _type;
+	uint32_t _id;
+	uint32_t _db2;
+	int32_t _type;
 }SW_DB2_STRUCT;
 
-static std::vector<UINT32> _dwSkills({
+static std::vector<uint32_t> _dwSkills({
 
 	// Haru
 	15000111,
@@ -115,65 +115,65 @@ static std::vector<UINT32> _dwSkills({
 class SWDamageMeter : public Singleton<SWDamageMeter> {
 public: typedef struct _SW_PLAYER_METADATA {
 private:
-	FLOAT _armorBreak = 0.0;
-	FLOAT _sg = 0.0;
-	FLOAT _stamina = 0.0;
-	FLOAT _sv = 0.0;
-	FLOAT _attackSpeed = 0.0;
-	FLOAT _partialDamage = 0.0;
-	FLOAT _maxHP = 0.0;
-	FLOAT _currentHP = 0.0;
-	FLOAT _maxAttack = 0.0;
-	FLOAT _critDamage = 0.0;
-	FLOAT _bossDamage = 0.0;
+	float _armorBreak = 0.0;
+	float _sg = 0.0;
+	float _stamina = 0.0;
+	float _sv = 0.0;
+	float _attackSpeed = 0.0;
+	float _partialDamage = 0.0;
+	float _maxHP = 0.0;
+	float _currentHP = 0.0;
+	float _maxAttack = 0.0;
+	float _critDamage = 0.0;
+	float _bossDamage = 0.0;
 public:
-	UINT32 _id = 0;
-	CHAR _name[MAX_NAME_LEN];
-	BYTE _job = 0;
-	UINT64 _avgABSum = 0;
-	UINT64 _avgABPreviousTime = 0;
+	uint32_t _id = 0;
+	char _name[MAX_NAME_LEN];
+	uint8_t _job = 0;
+	uint64_t _avgABSum = 0;
+	uint64_t _avgABPreviousTime = 0;
 
-	UINT64 _avgBDSum = 0;
-	UINT64 _avgBDPreviousTime = 0;
+	uint64_t _avgBDSum = 0;
+	uint64_t _avgBDPreviousTime = 0;
 
-	UINT64 _avgASSum = 0;
-	UINT64 _avgASPreviousTime = 0;
+	uint64_t _avgASSum = 0;
+	uint64_t _avgASPreviousTime = 0;
 
-	BOOL _gear90EffectStarted = false;
-	UINT64 _gear90Sum = 0;
-	UINT64 _gear90EffectStartedTime = 0;
+	bool _gear90EffectStarted = false;
+	uint64_t _gear90Sum = 0;
+	uint64_t _gear90EffectStartedTime = 0;
 
-	BOOL _gear50EffectStarted = false;
-	UINT64 _gear50Sum = 0;
-	UINT64 _gear50EffectStartedTime = 0;
+	bool _gear50EffectStarted = false;
+	uint64_t _gear50Sum = 0;
+	uint64_t _gear50EffectStartedTime = 0;
 
-	BOOL _acc01EffectStarted = false;
-	UINT64 _acc01Sum = 0;
-	UINT64 _acc01EffectStartedTime = 0;
+	bool _acc01EffectStarted = false;
+	uint64_t _acc01Sum = 0;
+	uint64_t _acc01EffectStartedTime = 0;
 
-	BOOL _acc02EffectStarted = false;
-	UINT64 _acc02Sum = 0;
-	UINT64 _acc02EffectStartedTime = 0;
+	bool _acc02EffectStarted = false;
+	uint64_t _acc02Sum = 0;
+	uint64_t _acc02EffectStartedTime = 0;
 
-	DOUBLE _losedHp = 0;
+	double _losedHp = 0;
 
-	BOOL _fullABStarted = false;
-	UINT64 _fullABStartTime = 0;
-	UINT64 _fullABEndTime = 0;
-	DOUBLE _fullABPrevTime = 0;
-	DOUBLE _fullABTime = 0;
+	bool _fullABStarted = false;
+	uint64_t _fullABStartTime = 0;
+	uint64_t _fullABEndTime = 0;
+	double _fullABPrevTime = 0;
+	double _fullABTime = 0;
 
-	BOOL _AggroStarted = false;
-	UINT64 _AggroStartTime = 0;
-	UINT64 _AggroEndTime = 0;
-	DOUBLE _AggroPrevTime = 0;
-	DOUBLE _AggroTime = 0;
+	bool _AggroStarted = false;
+	uint64_t _AggroStartTime = 0;
+	uint64_t _AggroEndTime = 0;
+	double _AggroPrevTime = 0;
+	double _AggroTime = 0;
 
-	BOOL _fullASStarted = false;
-	UINT64 _fullASStartTime = 0;
-	UINT64 _fullASEndTime = 0;
-	DOUBLE _fullASPrevTime = 0;
-	DOUBLE _fullASTime = 0;
+	bool _fullASStarted = false;
+	uint64_t _fullASStartTime = 0;
+	uint64_t _fullASEndTime = 0;
+	double _fullASPrevTime = 0;
+	double _fullASTime = 0;
 
 
 	_SW_PLAYER_METADATA() {
@@ -185,7 +185,7 @@ public:
 		_avgBDPreviousTime = 0;
 	}
 
-	VOID UpdateStat(USHORT statType, FLOAT statValue) {
+	void UpdateStat(uint16_t statType, float statValue) {
 		switch (statType) {
 		case StatType::SG:
 			_sg = statValue;
@@ -199,9 +199,9 @@ public:
 		case StatType::AttackSpeed:
 			_attackSpeed = statValue;
 			if (DAMAGEMETER.isRun()) {
-				UINT64 time = (UINT64)((DOUBLE)DAMAGEMETER.GetTime()); // timer time
-				FLOAT correctedAS = (_attackSpeed > 250) ? 250 : _attackSpeed;
-				_avgASSum += static_cast<UINT64>((time - _avgASPreviousTime) * correctedAS);
+				uint64_t time = (uint64_t)((double)DAMAGEMETER.GetTime()); // timer time
+				float correctedAS = (_attackSpeed > 250) ? 250 : _attackSpeed;
+				_avgASSum += static_cast<uint64_t>((time - _avgASPreviousTime) * correctedAS);
 				_avgASPreviousTime = time;
 
 				if (_attackSpeed >= 250) {
@@ -225,9 +225,9 @@ public:
 		case StatType::ArmorBreak:
 			_armorBreak = statValue;
 			if (DAMAGEMETER.isRun()) {
-				UINT64 time = (UINT64)((DOUBLE)DAMAGEMETER.GetTime()); // timer time
-				FLOAT correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
-				_avgABSum += static_cast<UINT64>((time - _avgABPreviousTime) * correctedAB);
+				uint64_t time = (uint64_t)((double)DAMAGEMETER.GetTime()); // timer time
+				float correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
+				_avgABSum += static_cast<uint64_t>((time - _avgABPreviousTime) * correctedAB);
 				_avgABPreviousTime = time;
 
 				if (_armorBreak >= 100) {
@@ -247,7 +247,7 @@ public:
 			break;
 		case StatType::CurrentHP:
 			if (_currentHP > 0.0 && _currentHP > statValue) {
-				_losedHp += ((DOUBLE)_currentHP - (DOUBLE)statValue);
+				_losedHp += ((double)_currentHP - (double)statValue);
 			}
 			_currentHP = statValue;
 			break;
@@ -255,7 +255,7 @@ public:
 			_maxHP = statValue;
 			break;
 		case StatType::MinAttack:
-			_maxAttack = static_cast<FLOAT>(statValue * 1.25);
+			_maxAttack = static_cast<float>(statValue * 1.25);
 			break;
 		case StatType::MaxAttack:
 			_maxAttack = statValue;
@@ -270,13 +270,13 @@ public:
 		}
 	}
 
-	VOID UpdateSpecialStat(USHORT statType, FLOAT statValue) {
+	void UpdateSpecialStat(uint16_t statType, float statValue) {
 		switch (statType) {
 		case SpecialStatType::BossDamageAddRate:
 			_bossDamage = statValue;
 			if (DAMAGEMETER.isRun()) {
-				UINT64 time = (UINT64)((DOUBLE)DAMAGEMETER.GetTime());
-				_avgBDSum += static_cast<UINT64>((time - _avgBDPreviousTime) * _bossDamage);
+				uint64_t time = (uint64_t)((double)DAMAGEMETER.GetTime());
+				_avgBDSum += static_cast<uint64_t>((time - _avgBDPreviousTime) * _bossDamage);
 				_avgBDPreviousTime = time;
 			}
 			break;
@@ -286,9 +286,9 @@ public:
 		}
 	}
 
-	VOID UpdateAggroTime(BOOL isSet)
+	void UpdateAggroTime(bool isSet)
 	{
-		UINT64 time = (UINT64)((DOUBLE)DAMAGEMETER.GetTime()); // timer time
+		uint64_t time = (uint64_t)((double)DAMAGEMETER.GetTime()); // timer time
 
 		if (isSet) {
 			if (!_AggroStarted) {
@@ -305,18 +305,18 @@ public:
 		CalcAggroTime();
 	}
 
-	VOID MeterSuspended() {
-		UINT64 currentTime = (UINT64)DAMAGEMETER.GetTime();
+	void MeterSuspended() {
+		uint64_t currentTime = (uint64_t)DAMAGEMETER.GetTime();
 
-		FLOAT correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
-		_avgABSum += static_cast<UINT64>((currentTime - _avgABPreviousTime) * correctedAB);
+		float correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
+		_avgABSum += static_cast<uint64_t>((currentTime - _avgABPreviousTime) * correctedAB);
 		_avgABPreviousTime = currentTime;
 
-		_avgBDSum += static_cast<UINT64>((currentTime - _avgBDPreviousTime) * _bossDamage);
+		_avgBDSum += static_cast<uint64_t>((currentTime - _avgBDPreviousTime) * _bossDamage);
 		_avgBDPreviousTime = currentTime;
 
-		FLOAT correctedAS = (_attackSpeed > 250) ? 250 : _attackSpeed;
-		_avgASSum += static_cast<UINT64>((currentTime - _avgASPreviousTime) * correctedAS);
+		float correctedAS = (_attackSpeed > 250) ? 250 : _attackSpeed;
+		_avgASSum += static_cast<uint64_t>((currentTime - _avgASPreviousTime) * correctedAS);
 		_avgASPreviousTime = currentTime;
 
 		if (_fullABStarted) {
@@ -338,10 +338,10 @@ public:
 		CalcFullASTime();
 	}
 
-	VOID MeterReseted() {
+	void MeterReseted() {
 		auto player = DAMAGEMETER.GetPlayerInfo(_id);
 		if (player != DAMAGEMETER.end()) {
-			UINT64 currentTime = (UINT64)DAMAGEMETER.GetTime();
+			uint64_t currentTime = (uint64_t)DAMAGEMETER.GetTime();
 
 			(*player)->setHistoryLosedHP(_losedHp);
 
@@ -354,21 +354,21 @@ public:
 
 			if (_id == DAMAGEMETER.GetMyID()) {
 
-				UINT64 avgTimeDifference = currentTime - _avgABPreviousTime;
-				DOUBLE currentAB = GetStat(StatType::ArmorBreak);
+				uint64_t avgTimeDifference = currentTime - _avgABPreviousTime;
+				double currentAB = GetStat(StatType::ArmorBreak);
 				currentAB = currentAB > 100.0 ? 100.0 : currentAB; // 
-				UINT64 calculatedAvgAB = static_cast<UINT64>((_avgABSum + avgTimeDifference * currentAB));
-				(*player)->SetHistoryAvgAB((DOUBLE)calculatedAvgAB / currentTime);
+				uint64_t calculatedAvgAB = static_cast<uint64_t>((_avgABSum + avgTimeDifference * currentAB));
+				(*player)->SetHistoryAvgAB((double)calculatedAvgAB / currentTime);
 
 				avgTimeDifference = currentTime - _avgBDPreviousTime;
-				UINT64 calculatedAvgBD = static_cast<UINT64>((_avgBDSum + avgTimeDifference * _bossDamage));
-				(*player)->SetHistoryAvgBD((DOUBLE)calculatedAvgBD / currentTime);
+				uint64_t calculatedAvgBD = static_cast<uint64_t>((_avgBDSum + avgTimeDifference * _bossDamage));
+				(*player)->SetHistoryAvgBD((double)calculatedAvgBD / currentTime);
 
-				DOUBLE currentAS = GetStat(StatType::AttackSpeed);
+				double currentAS = GetStat(StatType::AttackSpeed);
 				currentAS = currentAS > 250 ? 250.0 : currentAS;
 				avgTimeDifference = currentTime - _avgASPreviousTime;
-				UINT64 calculatedAvgAS = static_cast<UINT64>((_avgASSum + avgTimeDifference * currentAS));
-				(*player)->SetHistoryAvgAS((DOUBLE)calculatedAvgAS / currentTime);
+				uint64_t calculatedAvgAS = static_cast<uint64_t>((_avgASSum + avgTimeDifference * currentAS));
+				(*player)->SetHistoryAvgAS((double)calculatedAvgAS / currentTime);
 
 				if (_fullABStarted) {
 					_fullABStarted = false;
@@ -386,7 +386,7 @@ public:
 
 				// 
 				if (_gear90EffectStarted) {
-					UINT64 gear90TimeDiff = currentTime - _gear90EffectStartedTime;
+					uint64_t gear90TimeDiff = currentTime - _gear90EffectStartedTime;
 					gear90TimeDiff = (gear90TimeDiff >= 5000) ? 5000 : gear90TimeDiff;
 					_gear90Sum += gear90TimeDiff * 500;
 					_gear90EffectStarted = false;
@@ -394,7 +394,7 @@ public:
 
 				// 
 				if (_gear50EffectStarted) {
-					UINT64 gear50TimeDiff = currentTime - _gear50EffectStartedTime;
+					uint64_t gear50TimeDiff = currentTime - _gear50EffectStartedTime;
 					gear50TimeDiff = (gear50TimeDiff >= 5000) ? 5000 : gear50TimeDiff;
 					_gear50Sum += gear50TimeDiff * 1000;
 					_gear50EffectStarted = false;
@@ -402,7 +402,7 @@ public:
 
 				//
 				if (_acc01EffectStarted) {
-					UINT64 acc01TimeDiff = currentTime - _acc01EffectStartedTime;
+					uint64_t acc01TimeDiff = currentTime - _acc01EffectStartedTime;
 					acc01TimeDiff = (acc01TimeDiff >= 2000) ? 2000 : acc01TimeDiff;
 					_acc01Sum += acc01TimeDiff * 1200;
 					_acc01EffectStarted = false;
@@ -411,17 +411,17 @@ public:
 				// 
 				if (_acc02EffectStarted)
 				{
-					UINT64 acc02TimeDiff = currentTime - _acc02EffectStartedTime;
+					uint64_t acc02TimeDiff = currentTime - _acc02EffectStartedTime;
 					acc02TimeDiff = (acc02TimeDiff >= 10000) ? 10000 : acc02TimeDiff;
 					_acc02Sum += acc02TimeDiff * 3000;
 					_acc02EffectStarted = false;
 				}
 
 				// Save all to history
-				(*player)->setHistoryBS(90, (DOUBLE)_gear90Sum / currentTime);
-				(*player)->setHistoryBS(50, (DOUBLE)_gear50Sum / currentTime);
-				(*player)->setHistoryBS(1, (DOUBLE)_acc01Sum / currentTime);
-				(*player)->setHistoryBS(2, (DOUBLE)_acc02Sum / currentTime);
+				(*player)->setHistoryBS(90, (double)_gear90Sum / currentTime);
+				(*player)->setHistoryBS(50, (double)_gear50Sum / currentTime);
+				(*player)->setHistoryBS(1, (double)_acc01Sum / currentTime);
+				(*player)->setHistoryBS(2, (double)_acc02Sum / currentTime);
 			}
 		}
 
@@ -471,11 +471,11 @@ public:
 		_fullASTime = 0;
 	}
 
-	VOID HitEnemy() {
+	void HitEnemy() {
 		if (!DAMAGEMETER.isRun()) {
 			return;
 		}
-		UINT64 currentTime = DAMAGEMETER.GetTime();
+		uint64_t currentTime = DAMAGEMETER.GetTime();
 		CalBsGear3Set(true, currentTime);
 		CalBsGear4Set(true, currentTime);
 		CalBsAccSet1(true, currentTime);
@@ -484,18 +484,18 @@ public:
 
 	// Add to sum if duration of effect is finished or effect duration is updated
 	// If duration is not finished, calculate it based on table time
-	UINT64 CalBsGear3Set(bool hit, UINT64 currentTime) {
+	uint64_t CalBsGear3Set(bool hit, uint64_t currentTime) {
 		const double HP_CONDITION = 90.0;
 		const int DURATION = 5000;
 		const int ATK = 500;
 
-		const DOUBLE hpPercent = (DOUBLE)_currentHP / (DOUBLE)_maxHP * 100;
+		const double hpPercent = (double)_currentHP / (double)_maxHP * 100;
 
 		if (currentTime - _gear90EffectStartedTime < 0) {
 			return 0;
 		}
 
-		UINT64 _gear90TimeLapse = currentTime - _gear90EffectStartedTime;
+		uint64_t _gear90TimeLapse = currentTime - _gear90EffectStartedTime;
 
 		if ((hpPercent >= HP_CONDITION) && hit && !_gear90EffectStarted) { // new start
 			_gear90EffectStarted = true;
@@ -527,18 +527,18 @@ public:
 		return 0;
 	}
 
-	UINT64 CalBsGear4Set(bool hit, UINT64 currentTime) {
+	uint64_t CalBsGear4Set(bool hit, uint64_t currentTime) {
 		const double HP_CONDITION = 50.0;
 		const int DURATION = 5000;
 		const int ATK = 1000;
 
-		const DOUBLE hpPercent = (DOUBLE)_currentHP / (DOUBLE)_maxHP * 100;
+		const double hpPercent = (double)_currentHP / (double)_maxHP * 100;
 
 		if (currentTime - _gear50EffectStartedTime < 0) {
 			return 0;
 		}
 
-		UINT64 _gear50TimeLapse = currentTime - _gear50EffectStartedTime;
+		uint64_t _gear50TimeLapse = currentTime - _gear50EffectStartedTime;
 
 		if ((hpPercent >= HP_CONDITION) && hit && !_gear50EffectStarted) { // new start
 			_gear50EffectStarted = true;
@@ -570,18 +570,18 @@ public:
 		return 0;
 	}
 
-	UINT64 CalBsAccSet1(bool hit, UINT64 currentTime) {
+	uint64_t CalBsAccSet1(bool hit, uint64_t currentTime) {
 		const double HP_CONDITION = 85.0;
 		const int DURATION = 2000;
 		const int ATK = 1200;
 
-		const DOUBLE hpPercent = (DOUBLE)_currentHP / (DOUBLE)_maxHP * 100;
+		const double hpPercent = (double)_currentHP / (double)_maxHP * 100;
 
 		if (currentTime - _acc01EffectStartedTime < 0) {
 			return 0;
 		}
 
-		UINT64 _acc01TimeLapse = currentTime - _acc01EffectStartedTime;
+		uint64_t _acc01TimeLapse = currentTime - _acc01EffectStartedTime;
 
 
 		if ((hpPercent >= HP_CONDITION) && hit && !_acc01EffectStarted) { // new start
@@ -614,17 +614,17 @@ public:
 		return 0;
 	}
 
-	UINT64 CalBsAccSet2(bool hit, UINT64 currentTime) {
+	uint64_t CalBsAccSet2(bool hit, uint64_t currentTime) {
 		const double HP_CONDITION = 30.0;
 		const int DURATION = 10000;
 		const int ATK = 3000;
 
-		const DOUBLE hpPercent = (DOUBLE)_currentHP / (DOUBLE)_maxHP * 100;
+		const double hpPercent = (double)_currentHP / (double)_maxHP * 100;
 		if (currentTime - _acc02EffectStartedTime < 0) {
 			return 0;
 		}
 
-		UINT64 _acc02TimeLapse = currentTime - _acc02EffectStartedTime;
+		uint64_t _acc02TimeLapse = currentTime - _acc02EffectStartedTime;
 
 		if ((hpPercent < HP_CONDITION) && hit && !_acc02EffectStarted) { // new start
 			_acc02EffectStarted = true;
@@ -656,31 +656,31 @@ public:
 		return 0;
 	}
 
-	VOID CalcFullABTime(UINT64 endTime = NULL)
+	void CalcFullABTime(uint64_t endTime = NULL)
 	{
 		if (endTime == NULL || _armorBreak < 100)
 			endTime = _fullABEndTime;
 
-		_fullABTime = _fullABPrevTime + ((DOUBLE)(endTime - _fullABStartTime) / 1000);
+		_fullABTime = _fullABPrevTime + ((double)(endTime - _fullABStartTime) / 1000);
 	}
 
-	VOID CalcFullASTime(UINT64 endTime = NULL)
+	void CalcFullASTime(uint64_t endTime = NULL)
 	{
 		if (endTime == NULL || _attackSpeed < 250)
 			endTime = _fullASEndTime;
 
-		_fullASTime = _fullASPrevTime + ((DOUBLE)(endTime - _fullASStartTime) / 1000);
+		_fullASTime = _fullASPrevTime + ((double)(endTime - _fullASStartTime) / 1000);
 	}
 
-	VOID CalcAggroTime(UINT64 endTime = NULL)
+	void CalcAggroTime(uint64_t endTime = NULL)
 	{
 		if (endTime == NULL || !_AggroStarted)
 			endTime = _AggroEndTime;
 
-		_AggroTime = _AggroPrevTime + ((DOUBLE)(endTime - _AggroStartTime) / 1000);
+		_AggroTime = _AggroPrevTime + ((double)(endTime - _AggroStartTime) / 1000);
 	}
 
-	FLOAT GetStat(USHORT statType) {
+	float GetStat(uint16_t statType) {
 
 		switch (statType) {
 		case StatType::SG:
@@ -704,7 +704,7 @@ public:
 		return -1;
 	}
 
-	FLOAT GetSpecialStat(USHORT statType) {
+	float GetSpecialStat(uint16_t statType) {
 
 		switch (statType) {
 		case SpecialStatType::BossDamageAddRate:
@@ -714,7 +714,7 @@ public:
 		return -1;
 	}
 
-	VOID Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tPlayerMetaData>>& vPlayerMetaData)
+	void Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tPlayerMetaData>>& vPlayerMetaData)
 	{
 		auto fcsName = fbb.CreateString(_name);
 
@@ -740,7 +740,7 @@ public:
 		vPlayerMetaData.push_back(tpmdb.Finish());
 	}
 
-	VOID UnSerialization(const _tPlayerMetaData* tPlayerMetaData)
+	void UnSerialization(const _tPlayerMetaData* tPlayerMetaData)
 	{
 		_armorBreak = tPlayerMetaData->_armorbreak();
 		_sg = tPlayerMetaData->_sg();
@@ -764,167 +764,167 @@ private:
 	std::vector<SWDamagePlayer*> _playerInfo;
 	std::vector<SW_OWNER_ID_STRUCT*> _ownerInfo;
 	std::vector<SW_DB2_STRUCT*> _dbInfo;
-	std::unordered_map<UINT32, SW_PLAYER_METADATA*> _playerMetadata;
+	std::unordered_map<uint32_t, SW_PLAYER_METADATA*> _playerMetadata;
 
 	std::vector<SWDamagePlayer*> _historyPlayerInfo;
 	std::vector<SW_DB2_STRUCT*> _historyDbInfo;
-	std::unordered_map<UINT32, SW_PLAYER_METADATA*> _historyPlayerMetadata;
+	std::unordered_map<uint32_t, SW_PLAYER_METADATA*> _historyPlayerMetadata;
 
 	std::vector<std::string> _extInfo;
-	std::unordered_map<UINT32, ULONG64> _playerUseAwaken;
+	std::unordered_map<uint32_t, uint64_t> _playerUseAwaken;
 
-	CHAR _mapName[MAX_MAP_LEN];
-	UINT32 _myID;
-	USHORT _worldID;
-	UINT32 _ping = 0;
+	char _mapName[MAX_MAP_LEN];
+	uint32_t _myID;
+	uint16_t _worldID;
+	uint32_t _ping = 0;
 
-	USHORT _historyWorldID;
-	ULONG64 _historyTime;
-	UINT32 _historyMyID;
-	LPVOID _historyHI;
-	UINT32 _historyPing = 0;
+	uint16_t _historyWorldID;
+	uint64_t _historyTime;
+	uint32_t _historyMyID;
+	void* _historyHI;
+	uint32_t _historyPing = 0;
 
-	UINT32 _aggroedId;
-	UINT32 _realClearTime;
+	uint32_t _aggroedId;
+	uint32_t _realClearTime;
 
-	BOOL _mazeEnd;
-	BOOL _historyMode;
+	bool _mazeEnd;
+	bool _historyMode;
 
-	VOID InsertPlayerInfo(UINT32 id, UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, USHORT maxCombo, UINT32 monsterID, UINT32 skillID);
-	VOID Sort();
-	VOID Restore();
+	void InsertPlayerInfo(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint16_t maxCombo, uint32_t monsterID, uint32_t skillID);
+	void Sort();
+	void Restore();
 
 	Timer _timer;
 
 	std::mutex _mutex;
 
-	INT32 _currentHistoryId = -1;
+	int32_t _currentHistoryId = -1;
 
-	BOOL _testMode = FALSE;
+	bool _testMode = false;
 
 public:
 	SWDamageMeter() :   _myID(0), _worldID(0), _mazeEnd(0), _historyMode(0), _historyWorldID(0), _historyTime(0) {}
 	~SWDamageMeter();
 
-	VOID GetLock();
-	VOID FreeLock();
+	void GetLock();
+	void FreeLock();
 	bool shouldRebuildAtlas = false;
 	bool shouldLogMstrStats = true;
 	ImFontObj selectedFont;
 	CSimpleIniA ini;
 	int mswideness = 1;
-	VOID AddDamage(UINT32 id, UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, USHORT maxCombo, UINT32 monsterID, UINT32 skillID);
-	VOID AddPlayerGetDamage(UINT32 playerId, UINT64 totalDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, UINT32 monsterID, UINT32 skillID);
-	VOID AddEnlighten(UINT32 playerId, FLOAT value);
-	VOID AddSkillUsed(UINT32 playerId, UINT32 skillId);
-	VOID AddDodgeUsed(UINT32 playerId);
-	VOID AddDeath(UINT32 playerId);
-	VOID BuffIn(UINT32 playerId, USHORT buffId, BYTE stack, UINT32 giverId);
-	VOID BuffOut(UINT32 playerId, USHORT buffId);
+	void AddDamage(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint16_t maxCombo, uint32_t monsterID, uint32_t skillID);
+	void AddPlayerGetDamage(uint32_t playerId, uint64_t totalDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint32_t monsterID, uint32_t skillID);
+	void AddEnlighten(uint32_t playerId, float value);
+	void AddSkillUsed(uint32_t playerId, uint32_t skillId);
+	void AddDodgeUsed(uint32_t playerId);
+	void AddDeath(uint32_t playerId);
+	void BuffIn(uint32_t playerId, uint16_t buffId, uint8_t stack, uint32_t giverId);
+	void BuffOut(uint32_t playerId, uint16_t buffId);
 	uint64_t GetStartTime();
-	UINT32 GetPing();
-	VOID InsertOwnerID(UINT32 id, UINT32 owner_id);
-	UINT32 GetOwnerID(UINT32 id);
+	uint32_t GetPing();
+	void InsertOwnerID(uint32_t id, uint32_t owner_id);
+	uint32_t GetOwnerID(uint32_t id);
 
-	VOID InsertDB(UINT32 id, UINT32 db2);
-	SW_DB2_STRUCT* GetMonsterDB(UINT32 id);
-	void SetPing(UINT32 ping);
-	VOID SetWorldID(USHORT worldID);
-	USHORT GetWorldID();
-	const CHAR* GetWorldName();
-	BOOL isTownMap();
+	void InsertDB(uint32_t id, uint32_t db2);
+	SW_DB2_STRUCT* GetMonsterDB(uint32_t id);
+	void SetPing(uint32_t ping);
+	void SetWorldID(uint16_t worldID);
+	uint16_t GetWorldID();
+	const char* GetWorldName();
+	bool isTownMap();
 
-	VOID SetAggro(UINT32 id, UINT32 targetedId);
-	UINT32 GetAggro();
+	void SetAggro(uint32_t id, uint32_t targetedId);
+	uint32_t GetAggro();
 
-	VOID InsertPlayerMetadata(UINT32 id, CHAR* str, BYTE job);
-	const CHAR* GetPlayerName(UINT32 id);
-	BYTE GetPlayerJob(UINT32 id);
+	void InsertPlayerMetadata(uint32_t id, char* str, uint8_t job);
+	const char* GetPlayerName(uint32_t id);
+	uint8_t GetPlayerJob(uint32_t id);
 
-	VOID UpdateSpecialStat(UINT32 id, USHORT statType, FLOAT statValue);
-	VOID UpdateStat(UINT32 id, USHORT statType, FLOAT statValue, BOOL isSpecial = FALSE);
+	void UpdateSpecialStat(uint32_t id, uint16_t statType, float statValue);
+	void UpdateStat(uint32_t id, uint16_t statType, float statValue, bool isSpecial = false);
 
-	VOID SetMyID(UINT32 id);
+	void SetMyID(uint32_t id);
 
-	UINT32 GetMyID(BOOL useHistoryID = FALSE);
+	uint32_t GetMyID(bool useHistoryID = false);
 
-	BOOL CheckPlayer(UINT32 id);
+	bool CheckPlayer(uint32_t id);
 
 	std::vector<SWDamagePlayer*>* GetPlayerInfoByHistory();
-	std::vector<SWDamagePlayer*>::const_iterator GetPlayerInfo(UINT32 id);
+	std::vector<SWDamagePlayer*>::const_iterator GetPlayerInfo(uint32_t id);
 	std::vector<SWDamagePlayer*>::const_iterator begin();
 	std::vector<SWDamagePlayer*>::const_iterator end();
 	const SIZE_T size();
 
-	std::unordered_map<UINT32, SW_PLAYER_METADATA*>* GetPlayerMetaDataByHistory();
+	std::unordered_map<uint32_t, SW_PLAYER_METADATA*>* GetPlayerMetaDataByHistory();
 
-	SW_PLAYER_METADATA* GetPlayerMetaData(UINT32 id);
-	SW_PLAYER_METADATA* GetPlayerMetaDataIfNotExistsCreate(UINT32 id);
+	SW_PLAYER_METADATA* GetPlayerMetaData(uint32_t id);
+	SW_PLAYER_METADATA* GetPlayerMetaDataIfNotExistsCreate(uint32_t id);
 
-	UINT64 GetPlayerTotalDamage();
+	uint64_t GetPlayerTotalDamage();
 
-	BOOL isRun();
+	bool isRun();
 
-	VOID Suspend();
-	VOID Start();
-	VOID Clear();
-	VOID Toggle();
+	void Suspend();
+	void Start();
+	void Clear();
+	void Toggle();
 
-	ULONG64 GetTime();
+	uint64_t GetTime();
 
-	VOID SetMazeState(BOOL end);
+	void SetMazeState(bool end);
 
-	VOID SetHistory(LPVOID hi);
-	BOOL isHistoryMode();
+	void SetHistory(void* hi);
+	bool isHistoryMode();
 
-	VOID ClearInfo(BOOL clear = FALSE);
-	VOID ClearDB();
+	void ClearInfo(bool clear = false);
+	void ClearDB();
 
-	INT32 GetCurrentHistoryId()
+	int32_t GetCurrentHistoryId()
 	{
 		return _currentHistoryId;
 	}
 
-	VOID SetCurrentHistoryId(INT32 id)
+	void SetCurrentHistoryId(int32_t id)
 	{
 		_currentHistoryId = id;
 	}
 
-	VOID SetTestMode()
+	void SetTestMode()
 	{
-		_testMode = TRUE;
+		_testMode = true;
 	}
 
-	VOID ClearTestMode()
+	void ClearTestMode()
 	{
-		_testMode = FALSE;
+		_testMode = false;
 	}
 
-	LPVOID GetHistoryHI()
+	void* GetHistoryHI()
 	{
 		return _historyHI;
 	}
 
-	VOID AddExtInfo(std::string str)
+	void AddExtInfo(std::string str)
 	{
 		_extInfo.push_back(str);
 	}
 
-	VOID SetRealClearTime(UINT32 t)
+	void SetRealClearTime(uint32_t t)
 	{
 		_realClearTime = t;
 	}
 
-	VOID AddAwakenPlayer(UINT32 uPlayerId)
+	void AddAwakenPlayer(uint32_t uPlayerId)
 	{
-		ULONG64 ulTime = GetTime();
+		uint64_t ulTime = GetTime();
 		if (_playerUseAwaken.find(uPlayerId) != _playerUseAwaken.end())
 			_playerUseAwaken[uPlayerId] = ulTime;
 		else
 			_playerUseAwaken.insert({ uPlayerId, ulTime });
 	}
 
-	BOOL PlayerInAwakening(UINT32 uPlayerId)
+	bool PlayerInAwakening(uint32_t uPlayerId)
 	{
 		WORD wTimeOut = 10000;
 		do
@@ -933,11 +933,11 @@ public:
 			if (find != _playerUseAwaken.end())
 			{
 				if (GetTime() <= find->second + wTimeOut)
-					return TRUE;
+					return true;
 			}
 
 		} while (false);
 
-		return FALSE;
+		return false;
 	}
 };

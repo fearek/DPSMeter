@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "Language.h"
 
-auto Language::GetLangFile(CHAR* langFile, BOOL outputERROR)
+auto Language::GetLangFile(char* langFile, bool outputERROR)
 {
 	// parse path
-	CHAR path[MAX_PATH] = { 0 };
+	char path[MAX_PATH] = { 0 };
 	sprintf_s(path, "%s%s", _langFolder, langFile);
 
 	json j;
@@ -32,7 +32,7 @@ auto Language::GetLangFile(CHAR* langFile, BOOL outputERROR)
 	return j;
 }
 
-std::unordered_map<std::string, std::string> Language::MapLangData(CHAR* langFile, BOOL useReplace)
+std::unordered_map<std::string, std::string> Language::MapLangData(char* langFile, bool useReplace)
 {
 	std::unordered_map<std::string, std::string> list;
 
@@ -46,7 +46,7 @@ std::unordered_map<std::string, std::string> Language::MapLangData(CHAR* langFil
 		if (useReplace)
 		{
 			try {
-				auto replaceData = GetLangFile("replace.lang", FALSE);
+				auto replaceData = GetLangFile("replace.lang", false);
 				if (!replaceData.empty())
 				{
 					for (json::iterator itr = replaceData.begin(); itr != replaceData.end(); itr++)
@@ -62,7 +62,7 @@ std::unordered_map<std::string, std::string> Language::MapLangData(CHAR* langFil
 	return list;
 }
 
-DWORD Language::SetCurrentLang(CHAR* langFile)
+DWORD Language::SetCurrentLang(char* langFile)
 {
 	DWORD error = ERROR_SUCCESS;
 
@@ -71,7 +71,7 @@ DWORD Language::SetCurrentLang(CHAR* langFile)
 
 		// get json data
 		try {
-			newLang = MapLangData(langFile, TRUE);
+			newLang = MapLangData(langFile, true);
 			if (newLang.empty()) {
 				error = ERROR_NOT_FOUND;
 				break;
@@ -96,22 +96,22 @@ DWORD Language::SetCurrentLang(CHAR* langFile)
 	return error;
 }
 
-CHAR* Language::GetText(CHAR* text, std::unordered_map<std::string, std::string>* vector)
+std::string Language::GetText(const char* text, std::unordered_map<std::string, std::string>* vector)
 {
 	if (vector == nullptr)
 		vector = &_textList;
 	
 	if (vector->find(text) == vector->end()) {
-		std::string findStr(text);
+		std::string_view findStr(text);
 		if (std::find(_notFoundText.begin(), _notFoundText.end(), findStr) == _notFoundText.end())
 		{
 			LogInstance.WriteLog("[Language::GetText] Lang text %s not found.", text);
-			_notFoundText.push_back(findStr);
+			_notFoundText.emplace_back(findStr);
 		}
 		return text;
 	}
 
-	return (CHAR*)vector->at(text).c_str();
+	return vector->at(text);
 }
 
 std::unordered_map<std::string, std::string> Language::GetAllLangFile()
@@ -125,11 +125,11 @@ std::unordered_map<std::string, std::string> Language::GetAllLangFile()
 				std::string fileName = p.path().filename().string();
 
 				try {
-					auto langData = MapLangData((CHAR*)fileName.c_str());
+					auto langData = MapLangData((char*)fileName.c_str());
 
 					if (!langData.empty()) {
 
-						CHAR* langName = GetText("STR_LANG_NAME", &langData);
+						std::string langName = GetText("STR_LANG_NAME", &langData);
 
 						list.emplace(fileName, langName);
 					}

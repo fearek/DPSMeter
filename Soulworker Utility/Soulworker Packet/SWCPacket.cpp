@@ -1,22 +1,22 @@
 #include "pch.h"
 #include ".\Soulworker Packet\SWCPacket.h"
-SWCPacket::SWCPacket(SWCHEADER* swheader, BYTE* data) {
+SWCPacket::SWCPacket(SWCHEADER* swheader, uint8_t* data) {
 	_swheader = swheader;
 	_data = data;
 }
 
-VOID SWCPacket::Do() {
+void SWCPacket::Do() {
 	return;
 }
 
-VOID SWCPacket::Log() {
+void SWCPacket::Log() {
 	return;
 }
 
-VOID SWCPacket::Debug() {
+void SWCPacket::Debug() {
 
 
-	USHORT op = _byteswap_ushort(_swheader->_op);
+	uint16_t op = _byteswap_ushort(_swheader->_op);
 
 
 

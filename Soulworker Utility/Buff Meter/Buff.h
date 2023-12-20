@@ -2,7 +2,6 @@
 #include "pch.h"
 #include ".\FlatBuffers\include\SW_HISTORY_.h"
 
-using namespace std;
 using namespace SoulMeterFBS::History;
 
 #define BUFF_NAME_LEN 64
@@ -10,39 +9,39 @@ using namespace SoulMeterFBS::History;
 
 class Buff : public MemoryPool<Buff> {
 private:
-	USHORT _buffID;
-	BYTE _stack;
-	CHAR _name[BUFF_NAME_LEN];
-	CHAR _desc[BUFF_DESC_LEN];
+	uint16_t _buffID;
+	uint8_t _stack;
+	char _name[BUFF_NAME_LEN];
+	char _desc[BUFF_DESC_LEN];
 
 	timePoint _timePoint;
-	FLOAT _time;
+	float _time;
 
-	BOOL _isActive;
+	bool _isActive;
 
-	BOOL _isHistoryMode = FALSE;
+	bool _isHistoryMode = false;
 
 protected:
 	Buff(const Buff& other) {}
 
 public:
 	Buff() {}
-	Buff(USHORT buffID, BYTE stack);
+	Buff(uint16_t buffID, uint8_t stack);
 	
-	VOID Update();
+	void Update();
 
-	VOID Active();
-	VOID InActive();
+	void Active();
+	void InActive();
 
-	const USHORT& GetBuffID();
-	const BYTE& GetStack();
-	const FLOAT& GetTime();
-	const CHAR* GetName();
-	const CHAR* GetDesc();
+	const uint16_t& GetBuffID();
+	const uint8_t& GetStack();
+	const float& GetTime();
+	const char* GetName();
+	const char* GetDesc();
 
-	VOID SetNameFromDB();
+	void SetNameFromDB();
 
-	VOID Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tBuffInfo>>& vBuffInfo)
+	void Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tBuffInfo>>& vBuffInfo)
 	{
 		_tBuffInfoBuilder tbib(fbb);
 
@@ -53,7 +52,7 @@ public:
 		vBuffInfo.push_back(tbib.Finish());
 	}
 
-	VOID UnSerialization(const _tBuffInfo* tBuffInfo)
+	void UnSerialization(const _tBuffInfo* tBuffInfo)
 	{
 		_buffID = tBuffInfo->_buff_id();
 		_stack = tBuffInfo->_stack();
@@ -61,6 +60,6 @@ public:
 
 		SetNameFromDB();
 
-		_isHistoryMode = TRUE;
+		_isHistoryMode = true;
 	}
 };

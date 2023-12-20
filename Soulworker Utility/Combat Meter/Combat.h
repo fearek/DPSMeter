@@ -36,26 +36,26 @@ struct CombatLog
 {
 	SYSTEMTIME* _time;
 	CombatLogType _type;
-	DOUBLE _val1 = 0;
-	DOUBLE _val2 = 0;
+	double _val1 = 0;
+	double _val2 = 0;
 };
 
 class Combat : public MemoryPool<Combat> {
 
 private:
-	UINT32 _id;
-	UINT32 _type;
-	std::vector<std::pair<ULONG64, CombatLog*>> _log;
-	BOOL _isHistory = FALSE;
+	uint32_t _id;
+	uint32_t _type;
+	std::vector<std::pair<uint64_t, CombatLog*>> _log;
+	bool _isHistory = false;
 
 protected:
 	Combat(const Combat& other) {}
 
 public:
-	Combat(UINT32 id, CombatType type) : _id(id), _type(type) {}
+	Combat(uint32_t id, CombatType type) : _id(id), _type(type) {}
 
-	VOID Insert(CombatLog* cl);
-	VOID Clear();
+	void Insert(CombatLog* cl);
+	void Clear();
 
 	auto GetID()
 	{
@@ -87,7 +87,7 @@ public:
 		return _log.size();
 	}
 
-	VOID Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tCombat>>& vCombat)
+	void Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tCombat>>& vCombat)
 	{
 		std::vector<flatbuffers::Offset<_tCombatLog>> vCombatLog;
 		for (auto itr = _log.begin(); itr != _log.end(); itr++)
@@ -114,9 +114,9 @@ public:
 
 		vCombat.push_back(tcb.Finish());
 	}
-	VOID UnSerialization(const _tCombat* pCombat)
+	void UnSerialization(const _tCombat* pCombat)
 	{
-		_isHistory = TRUE;
+		_isHistory = true;
 
 		_id = pCombat->_id();
 		_type = pCombat->_type();
@@ -147,8 +147,8 @@ public:
 class CombatInterface : public MemoryPool<CombatInterface> {
 
 private:
-	std::unordered_map<UINT32, Combat*> _combat;
-	BOOL _isHistory = FALSE;
+	std::unordered_map<uint32_t, Combat*> _combat;
+	bool _isHistory = false;
 
 protected:
 	CombatInterface(const CombatInterface& other) {}
@@ -156,8 +156,8 @@ protected:
 public:
 	CombatInterface() {}
 
-	VOID Insert(UINT32 id, CombatType type, CombatLog* cl);
-	VOID Clear();
+	void Insert(uint32_t id, CombatType type, CombatLog* cl);
+	void Clear();
 
 	auto begin()
 	{
@@ -186,9 +186,9 @@ public:
 
 		return tcifb.Finish();
 	}
-	VOID UnSerialization(const _tCombatInterface* pCombatInterface)
+	void UnSerialization(const _tCombatInterface* pCombatInterface)
 	{
-		_isHistory = TRUE;
+		_isHistory = true;
 
 		for (auto itr = pCombatInterface->_combat()->begin(); itr != pCombatInterface->_combat()->end(); itr++)
 		{

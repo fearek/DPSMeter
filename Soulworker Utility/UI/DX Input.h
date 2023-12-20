@@ -18,7 +18,7 @@ typedef struct _INPUTINFO {
 public:
 	_INPUTINFO() :status(INPUT_STATUS::Idle) { }
 
-	VOID Update(BOOL isDown) {
+	void Update(bool isDown) {
 
 		if (isDown) {
 			if (status == INPUT_STATUS::Idle) {
@@ -55,10 +55,10 @@ public:
 		}
 	}
 
-	BOOL isDown() { if (status == INPUT_STATUS::Down) return TRUE; return FALSE; }
-	BOOL isPress() { if (status == INPUT_STATUS::Press) return TRUE; return FALSE; }
-	BOOL isRelease() { if (status == INPUT_STATUS::Release) return TRUE; return FALSE; }
-	BOOL isIdle() { if (status == INPUT_STATUS::Idle) return TRUE; return FALSE; }
+	bool isDown() { if (status == INPUT_STATUS::Down) return true; return false; }
+	bool isPress() { if (status == INPUT_STATUS::Press) return true; return false; }
+	bool isRelease() { if (status == INPUT_STATUS::Release) return true; return false; }
+	bool isIdle() { if (status == INPUT_STATUS::Idle) return true; return false; }
 }INPUTINFO;
 
 class DXInput : public Singleton<DXInput> {
@@ -67,21 +67,21 @@ private:
 	IDirectInputDevice8* _keyboard;
 
 	INPUTINFO _inputInfo[256];
-	UCHAR _keyboardState[256];
+	unsigned char _keyboardState[256];
 
-	VOID Shutdown();
+	void Shutdown();
 
 public:
 	DXInput() : _directInput(nullptr), _keyboard(nullptr) {}
 	~DXInput() { Shutdown(); }
 
-	BOOL Init(HINSTANCE hinst, HWND hWnd);
-	BOOL Update();
+	bool Init(HINSTANCE hinst, HWND hWnd);
+	bool Update();
 
-	BOOL isKeyDown(UINT i);
-	BOOL isKeyRelease(UINT i);
-	BOOL isKeyPressed(UINT i);
-	BOOL isKeyIdle(UINT i);
+	bool isKeyDown(unsigned int i);
+	bool isKeyRelease(unsigned int i);
+	bool isKeyPressed(unsigned int i);
+	bool isKeyIdle(unsigned int i);
 
-	UINT GetStateSize();
+	unsigned int GetStateSize();
 };

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include ".\Combat Meter\Combat.h"
 
-VOID Combat::Insert(CombatLog* cl)
+void Combat::Insert(CombatLog* cl)
 {
 	if (_isHistory)
 		return;
@@ -14,7 +14,7 @@ VOID Combat::Insert(CombatLog* cl)
 	_log.push_back(std::pair(GetCurrentTimeStamp(), cl));
 }
 
-VOID Combat::Clear()
+void Combat::Clear()
 {
 	for (auto itr = _log.begin(); itr != _log.end(); itr++)
 	{
@@ -25,7 +25,7 @@ VOID Combat::Clear()
 	_log.clear();
 }
 
-VOID CombatInterface::Insert(UINT32 id, CombatType type, CombatLog* cl)
+void CombatInterface::Insert(uint32_t id, CombatType type, CombatLog* cl)
 {
 	if (_isHistory)
 		return;
@@ -45,7 +45,7 @@ VOID CombatInterface::Insert(UINT32 id, CombatType type, CombatLog* cl)
 	pCombat->Insert(cl);
 }
 
-VOID CombatInterface::Clear()
+void CombatInterface::Clear()
 {
 	for (auto itr = _combat.begin(); itr != _combat.end(); itr++)
 	{

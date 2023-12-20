@@ -17,8 +17,9 @@ public:
     {
 
     }
-    BOOL WriteLog(char* data, ...);
-    BOOL WriteLogNoDate(LPTSTR data, ...);
+    bool WriteLog(std::string data, ...);
+    bool WriteLog(char* data, ...);
+    bool WriteLogNoDate(LPTSTR data, ...);
     void Enable();
 };
 extern Log LogInstance;

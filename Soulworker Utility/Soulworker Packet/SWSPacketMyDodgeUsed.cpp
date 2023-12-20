@@ -2,12 +2,12 @@
 #include ".\Soulworker Packet\SWSPacketMyDodgeUsed.h"
 #include ".\Damage Meter\Damage Meter.h"
 
-SWSPacketMyDodgeUsed::SWSPacketMyDodgeUsed(SWHEADER* swheader, BYTE* data) {
+SWSPacketMyDodgeUsed::SWSPacketMyDodgeUsed(SWHEADER* swheader, uint8_t* data) {
 	_swheader = swheader;
 	_data = data;
 }
 
-VOID SWSPacketMyDodgeUsed::Do() {
+void SWSPacketMyDodgeUsed::Do() {
 	SWPACKET_MYDODGEUSED* dodgeUsed = (SWPACKET_MYDODGEUSED*)(_data + sizeof(SWHEADER));
 
 	// check is it normal dodge (ground dodge) as rolling (roll after down) is also there
@@ -20,10 +20,10 @@ VOID SWSPacketMyDodgeUsed::Do() {
 	return;
 }
 
-VOID SWSPacketMyDodgeUsed::Log() {
+void SWSPacketMyDodgeUsed::Log() {
 	return;
 }
 
-VOID SWSPacketMyDodgeUsed::Debug() {
+void SWSPacketMyDodgeUsed::Debug() {
 	return;
 }

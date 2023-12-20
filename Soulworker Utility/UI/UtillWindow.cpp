@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "UtillWindow.h"
 
-VOID UtillWindow::OpenWindow()
+void UtillWindow::OpenWindow()
 {
 	_isOpen = true;
 }
 
-VOID UtillWindow::handleDialogInfo()
+void UtillWindow::handleDialogInfo()
 {
 	if (ImGui::FileDialog(&_fileDialogOpen, &_fileDialogInfo))
 	{
@@ -37,8 +37,9 @@ VOID UtillWindow::handleDialogInfo()
 									LogInstance.WriteLog("[UtillWindow::Update] Load savedata failed");
 									exit(1);
 								}
-								CHAR label[256] = { 0 };
-								ANSItoUTF8(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_LOAD_FAILED"), label, sizeof(label));
+								char label[256] = { 0 };
+								std::string historyLoadFailed = LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_LOAD_FAILED");
+								ANSItoUTF8(historyLoadFailed.data(), label, sizeof(label));
 								MessageBoxA(UIWINDOW.GetHWND(), label, "ERROR", MB_ICONERROR | MB_OK);
 							}
 							SAVEDATA.FreeLock();
@@ -52,26 +53,26 @@ VOID UtillWindow::handleDialogInfo()
 	}
 }
 
-VOID UtillWindow::HistoryWindow()
+void UtillWindow::HistoryWindow()
 {
-	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_MENU_HISTORY")))
+	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_MENU_HISTORY").c_str()))
 	{
-		CHAR label[1024] = { 0 };
+		char label[1024] = { 0 };
 
-		ImGui::InputText(LANGMANAGER.GetText("STR_UTILLWINDOW_SEARCH"), _searchData, IM_ARRAYSIZE(_searchData));
+		ImGui::InputText(LANGMANAGER.GetText("STR_UTILLWINDOW_SEARCH").c_str(), _searchData, IM_ARRAYSIZE(_searchData));
 
 		if (UIOPTION.isUseSaveData())
 		{
-			sprintf_s(label, "%s(%s %d) : %s", LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_USING"), LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_MAX"), HISTORY_SIZE, SAVEDATA.CurrentSaveDataPath().c_str());
+			sprintf_s(label, "%s(%s %d) : %s", LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_USING").c_str(), LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_MAX").c_str(), HISTORY_SIZE, SAVEDATA.CurrentSaveDataPath().c_str());
 		}
 		else {
-			sprintf_s(label, "%s(%s %d)", LANGMANAGER.GetText("STR_MENU_HISTORY"), LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_MAX"), HISTORY_SIZE);
+			sprintf_s(label, "%s(%s %d)", LANGMANAGER.GetText("STR_MENU_HISTORY").c_str(), LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_MAX").c_str(), HISTORY_SIZE);
 		}
 		ImGui::Text(label);
 
 		if (UIOPTION.isUseSaveData())
 		{
-			if (ImGui::Button(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_LOAD")))
+			if (ImGui::Button(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_LOAD").c_str()))
 			{
 				if (!DAMAGEMETER.isRun())
 				{
@@ -86,7 +87,7 @@ VOID UtillWindow::HistoryWindow()
 			handleDialogInfo();
 
 			ImGui::SameLine();
-			if (ImGui::Button(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_SAVETO")))
+			if (ImGui::Button(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_SAVETO").c_str()))
 			{
 				if (!DAMAGEMETER.isRun() && HISTORY.size() > 0)
 				{
@@ -100,13 +101,14 @@ VOID UtillWindow::HistoryWindow()
 		}
 
 		ImGui::SameLine();
-		if (ImGui::Button(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_CLEARALL")))
+		if (ImGui::Button(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_CLEARALL").c_str()))
 		{
 			HISTORY.GetLock();
 			{
 				DAMAGEMETER.GetLock();
 				{
-					ANSItoUTF8(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_CLEARALL_CONFIRM"), label, sizeof(label));
+					std::string historyClearAllConfirm = LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_CLEARALL_CONFIRM");
+					ANSItoUTF8(historyClearAllConfirm.data(), label, sizeof(label));
 					if (!DAMAGEMETER.isRun() && HISTORY.size() > 0 && MessageBoxA(UIWINDOW.GetHWND(), label, "WARNING", MB_ICONWARNING | MB_YESNO | MB_TOPMOST) == IDYES)
 					{
 						DAMAGEMETER.Clear();
@@ -120,7 +122,7 @@ VOID UtillWindow::HistoryWindow()
 		}
 
 		ImGui::SameLine();
-		if (ImGui::Button(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_DELETE_SELECTED")))
+		if (ImGui::Button(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_DELETE_SELECTED").c_str()))
 		{
 			HISTORY.GetLock();
 			{
@@ -131,7 +133,7 @@ VOID UtillWindow::HistoryWindow()
 						HISTORY_INFO* HI = (HISTORY_INFO*)DAMAGEMETER.GetHistoryHI();
 						DAMAGEMETER.Clear();
 
-						HISTORY.ClearHistory(HI, FALSE);
+						HISTORY.ClearHistory(HI, false);
 						_currentIndex = -1;
 					}
 					DAMAGEMETER.FreeLock();
@@ -149,26 +151,26 @@ VOID UtillWindow::HistoryWindow()
 				_historyTmp.clear();
 
 				if (HISTORY.size() > 0) {
-					INT32 i = static_cast<INT32>(HISTORY.size());
+					int32_t i = static_cast<int32_t>(HISTORY.size());
 					for (auto itr = HISTORY.rbegin(); itr != HISTORY.rend(); itr++)
 					{
 						HISTORY_INFO* hi = (HISTORY_INFO*)*itr;
 
-						CHAR mapName[MAX_MAP_LEN] = { 0 };
+						char mapName[MAX_MAP_LEN] = { 0 };
 						SWDB.GetMapName(hi->_worldID, mapName, MAX_MAP_LEN);
 
-						CHAR extInfo[256] = { 0 };
+						char extInfo[256] = { 0 };
 						//if (hi->_historyData->_extInfo.length() > 0)
 						//	sprintf_s(extInfo, "(%s)", hi->_historyData->_extInfo.c_str());
 #ifdef _DEBUG
 						sprintf_s(extInfo, "(M:%u)", hi->_worldID);
 #endif
 
-						CHAR realClearTime[128] = { 0 };
+						char realClearTime[128] = { 0 };
 						if (hi->_realClearTime > 0)
 						{
 							sprintf_s(realClearTime, "(%02d:%02d.%01d)",
-								(UINT)hi->_realClearTime / 10 % 3600 / 60, (UINT)hi->_realClearTime / 10 % 3600 % 60, (UINT)hi->_realClearTime % 10
+								(unsigned int)hi->_realClearTime / 10 % 3600 / 60, (unsigned int)hi->_realClearTime / 10 % 3600 % 60, (unsigned int)hi->_realClearTime % 10
 							);
 						}
 
@@ -177,14 +179,14 @@ VOID UtillWindow::HistoryWindow()
 							hi->_saveTime->wMonth, hi->_saveTime->wDay, hi->_saveTime->wHour, hi->_saveTime->wMinute, hi->_saveTime->wSecond,
 							extInfo,
 							mapName,
-							(UINT)hi->_time / (60 * 1000), (UINT)(hi->_time / 1000) % 60, (UINT)hi->_time % 1000 / 100,
+							(unsigned int)hi->_time / (60 * 1000), (unsigned int)(hi->_time / 1000) % 60, (unsigned int)hi->_time % 1000 / 100,
 							realClearTime,
 							i
 						);
 
 						i--;
 
-						_historyTmp.push_back(std::pair(hi, string(label)));
+						_historyTmp.push_back(std::pair(hi, std::string(label)));
 					}
 				}
 
@@ -194,19 +196,19 @@ VOID UtillWindow::HistoryWindow()
 
 		ImGui::BeginChild("select history", ImVec2(0, 0), true);
 		{
-			INT32 i = static_cast<INT32>(_historyTmp.size());
+			int32_t i = static_cast<int32_t>(_historyTmp.size());
 			for (auto itr = _historyTmp.begin(); itr != _historyTmp.end(); itr++)
 			{
 				if (itr->first == nullptr)
 					continue;
-				if (strlen(_searchData) > 0 && itr->second.find(string(_searchData)) == std::string::npos)
+				if (strlen(_searchData) > 0 && itr->second.find(std::string(_searchData)) == std::string::npos)
 					continue;
 
 				if (ImGui::Selectable(itr->second.c_str(), DAMAGEMETER.GetHistoryHI() == itr->first) && !DAMAGEMETER.isRun()) {
 					if (!DAMAGEMETER.isRun()) {
 						DAMAGEMETER.Clear();
 						DAMAGEMETER.SetCurrentHistoryId(i);
-						DAMAGEMETER.SetHistory((LPVOID)itr->first);
+						DAMAGEMETER.SetHistory((void*)itr->first);
 					}
 				}
 			}
@@ -216,11 +218,11 @@ VOID UtillWindow::HistoryWindow()
 	}
 }
 
-VOID UtillWindow::CombatWindow()
+void UtillWindow::CombatWindow()
 {
-	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_UTILLWINDOW_COMBAT")))
+	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_UTILLWINDOW_COMBAT").c_str()))
 	{
-		CHAR label[1024] = { 0 };
+		char label[1024] = { 0 };
 		_mutex.lock();
 		{
 			auto combatIF = COMBATMETER.Get();
@@ -240,9 +242,9 @@ VOID UtillWindow::CombatWindow()
 
 				if (_ci != nullptr)
 				{
-					ImGui::InputText(LANGMANAGER.GetText("STR_UTILLWINDOW_SEARCH"), _searchData2, IM_ARRAYSIZE(_searchData2));
+					ImGui::InputText(LANGMANAGER.GetText("STR_UTILLWINDOW_SEARCH").c_str(), _searchData2, IM_ARRAYSIZE(_searchData2));
 
-					sprintf_s(label, "%s###UtillCombatSelector", LANGMANAGER.GetText("STR_UTILLWINDOW_COMBAT_SELECTOR"));
+					sprintf_s(label, "%s###UtillCombatSelector", LANGMANAGER.GetText("STR_UTILLWINDOW_COMBAT_SELECTOR").c_str());
 					if (ImGui::BeginCombo(label, COMBATMETER.GetName(_ci).c_str(), ImGuiComboFlags_HeightLarge))
 					{
 						COMBATMETER.GetLock();
@@ -276,7 +278,7 @@ VOID UtillWindow::CombatWindow()
 						{
 							const char* label = itr->second.c_str();
 
-							if (strlen(_searchData2) > 0 && string(label).find(string(_searchData2)) == std::string::npos)
+							if (strlen(_searchData2) > 0 && std::string(label).find(std::string(_searchData2)) == std::string::npos)
 								continue;
 
 							ImGui::Text(label);
@@ -291,11 +293,11 @@ VOID UtillWindow::CombatWindow()
 	}
 }
 
-VOID UtillWindow::ForceUpdateCombatTemp(Combat* pCombat)
+void UtillWindow::ForceUpdateCombatTemp(Combat* pCombat)
 {
 	_combatTmp.clear();
 
-	CHAR label[1024] = { 0 };
+	char label[1024] = { 0 };
 	size_t i = pCombat->size();
 	int j = 0;
 	for (auto itr2 = pCombat->rbegin(); itr2 != pCombat->rend(); itr2++)
@@ -309,11 +311,11 @@ VOID UtillWindow::ForceUpdateCombatTemp(Combat* pCombat)
 			COMBATMETER.ConvertCombatLogVal(pCombatLog, (CombatType)pCombat->GetType()).c_str()
 		);
 
-		_combatTmp.push_back(std::pair(j++, string(label)));
+		_combatTmp.push_back(std::pair(j++, std::string(label)));
 	}
 }
 
-VOID UtillWindow::ClearCombatTemp()
+void UtillWindow::ClearCombatTemp()
 {
 	_mutex.lock();
 	{
@@ -323,13 +325,13 @@ VOID UtillWindow::ClearCombatTemp()
 	}
 }
 
-VOID UtillWindow::Update()
+void UtillWindow::Update()
 {
 	if (!_isOpen)
 		return;
 
-	CHAR label[1024] = { 0 };
-	sprintf_s(label, "%s###UtillWindow", LANGMANAGER.GetText("STR_MENU_UTILL"));
+	char label[1024] = { 0 };
+	sprintf_s(label, "%s###UtillWindow", LANGMANAGER.GetText("STR_MENU_UTILL").c_str());
 
 	ImGui::Begin(label, &_isOpen, ImGuiWindowFlags_None);
 	{
@@ -349,6 +351,6 @@ UtillWindow::UtillWindow()
 
 UtillWindow::~UtillWindow()
 {
-	BOOL a = _mutex.try_lock();
+	bool a = _mutex.try_lock();
 	_mutex.unlock();
 }

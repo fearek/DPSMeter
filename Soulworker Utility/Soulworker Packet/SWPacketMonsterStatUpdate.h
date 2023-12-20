@@ -3,14 +3,14 @@
 
 #pragma pack(push, 1)
 typedef struct _SWPacketMonsterStatUpdate {
-	UINT32 _id;
-	BYTE _statCounts;
+	uint32_t _id;
+	uint8_t _statCounts;
 }SWPacketMonsterStatUpdatePkt;
 
 typedef struct _SWPacketMonsterStatData {
-	FLOAT _unk01;
-	USHORT _statID;
-	UINT64 _statVal;
+	float _unk01;
+	uint16_t _statID;
+	uint64_t _statVal;
 }SWPacketMonsterStatData;
 #pragma pack(pop)
 
@@ -20,10 +20,10 @@ protected:
 	SWPacketMonsterStatUpdate() {}
 
 public:
-	SWPacketMonsterStatUpdate(SWHEADER* swheader, BYTE* data);
+	SWPacketMonsterStatUpdate(SWHEADER* swheader, uint8_t* data);
 	~SWPacketMonsterStatUpdate() {}
 
-	VOID Do();
-	VOID Debug();
-	VOID Log();
+	void Do();
+	void Debug();
+	void Log();
 };

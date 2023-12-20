@@ -12,10 +12,10 @@ protected:
 	SWPacketSquad() {}
 
 public:
-	SWPacketSquad(SWHEADER* swheader, BYTE* data);
+	SWPacketSquad(SWHEADER* swheader, uint8_t* data);
 	~SWPacketSquad() {}
 
-	VOID Do();
-	VOID Log();
-	VOID Debug();
+	void Do();
+	void Log();
+	void Debug();
 };

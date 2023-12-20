@@ -6,32 +6,32 @@
 #include ".\UI\UtillWindow.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketOtherUseSkill::SWPacketOtherUseSkill(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketOtherUseSkill::SWPacketOtherUseSkill(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketOtherUseSkill::Do() {
+void SWPacketOtherUseSkill::Do() {
 	//	SWPACKETCHAT_HEADER* chat_header = (SWPACKETCHAT_HEADER*)(_data + sizeof(SWHEADER));
 
-	//	BYTE* p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETCHAT_HEADER);
+	//	uint8_t* p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETCHAT_HEADER);
 
 	SWPACKET_OTHERUSESKILL* otherSkill = (SWPACKET_OTHERUSESKILL*)(_data + sizeof(SWHEADER));
 
 	DAMAGEMETER.AddSkillUsed(otherSkill->_playerId, otherSkill->_skillId);
 
 	// check id
-	UINT32 userId = otherSkill->_playerId;
-	BOOL isPlayer = TRUE;
+	uint32_t userId = otherSkill->_playerId;
+	bool isPlayer = true;
 	if (!DAMAGEMETER.CheckPlayer(userId)) {
 		// is summon
-		UINT32 ownerId = DAMAGEMETER.GetOwnerID(userId);
+		uint32_t ownerId = DAMAGEMETER.GetOwnerID(userId);
 
 		// is mob
 		if (!DAMAGEMETER.CheckPlayer(ownerId))
 		{
 			SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(userId);
 			if (db != nullptr) {
-				isPlayer = FALSE;
+				isPlayer = false;
 				userId = db->_db2;
 			}
 		}
@@ -45,12 +45,12 @@ VOID SWPacketOtherUseSkill::Do() {
 	pCombatLog->_val1 = otherSkill->_skillId;
 	COMBATMETER.Insert(userId, isPlayer ? CombatType::PLAYER : CombatType::MONSTER, pCombatLog);
 
-	/*UINT32 userId = otherSkill->_playerId;
+	/*uint32_t userId = otherSkill->_playerId;
 	if (!DAMAGEMETER.CheckPlayer(userId)) {
-		UINT32 ownerId = DAMAGEMETER.GetOwnerID(userId);
+		uint32_t ownerId = DAMAGEMETER.GetOwnerID(userId);
 		if (!DAMAGEMETER.CheckPlayer(ownerId)) {
 			SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(userId);
-			UINT32 db2 = 0;
+			uint32_t db2 = 0;
 			if (db != nullptr) {
 				db2 = db->_db2;
 			}
@@ -73,11 +73,11 @@ VOID SWPacketOtherUseSkill::Do() {
 
 }
 
-VOID SWPacketOtherUseSkill::Log() {
+void SWPacketOtherUseSkill::Log() {
 
 }
 
-VOID SWPacketOtherUseSkill::Debug() {
+void SWPacketOtherUseSkill::Debug() {
 
 	//LogInstance.MyLog(_T("UseSkill Packet\n"));
 	//for (int i = sizeof(SWHEADER); i < _swheader->_size; i++)

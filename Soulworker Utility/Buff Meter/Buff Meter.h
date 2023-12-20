@@ -9,27 +9,27 @@ using namespace SoulMeterFBS::History;
 
 typedef struct _PLAYERBUFF {
 private:
-	UINT32 _playerID;
-	vector<Buff*> _buffInfo;
-	BOOL _isHistoryMode = FALSE;
+	uint32_t _playerID;
+	std::vector<Buff*> _buffInfo;
+	bool _isHistoryMode = false;
 
 protected:
 	_PLAYERBUFF(const _PLAYERBUFF& other) {}
 
 public:
 	_PLAYERBUFF() {}
-	_PLAYERBUFF(UINT32 playerID, USHORT buffid, BYTE stack);
+	_PLAYERBUFF(uint32_t playerID, uint16_t buffid, uint8_t stack);
 	~_PLAYERBUFF();
 
-	VOID AddBuff(USHORT buffid, BYTE stack);
-	VOID EndBuff(USHORT buffid, BOOL endAll = FALSE);
+	void AddBuff(uint16_t buffid, uint8_t stack);
+	void EndBuff(uint16_t buffid, bool endAll = false);
 
-	const UINT32& GetPlayerID();
+	const uint32_t& GetPlayerID();
 
-	vector<Buff*>::const_iterator begin();
-	vector<Buff*>::const_iterator end();
+	std::vector<Buff*>::const_iterator begin();
+	std::vector<Buff*>::const_iterator end();
 
-	VOID Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tBuff>>& vBuff)
+	void Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tBuff>>& vBuff)
 	{
 		// _tBuffInfo
 		std::vector<flatbuffers::Offset<_tBuffInfo>> vBuffInfo;
@@ -44,7 +44,7 @@ public:
 
 		vBuff.push_back(tbb.Finish());
 	}
-	VOID UnSerialization(const _tBuff* tBuff)
+	void UnSerialization(const _tBuff* tBuff)
 	{
 		// _tBuffInfo
 		for (auto itr = tBuff->_buff_info()->begin(); itr != tBuff->_buff_info()->end(); itr++)
@@ -58,34 +58,34 @@ public:
 		// _tBuff
 		_playerID = tBuff->_id();
 
-		_isHistoryMode = TRUE;
+		_isHistoryMode = true;
 	}
 }PLAYERBUF;
 
 class BuffMeter : public Singleton<BuffMeter> {
 private:
-	vector<PLAYERBUF*> _playerBuffInfo;
+	std::vector<PLAYERBUF*> _playerBuffInfo;
 
-	BOOL _historyMode = false;
+	bool _historyMode = false;
 
-	mutex _mutex;
+	std::mutex _mutex;
 
 public:
 	BuffMeter();
 	~BuffMeter();
 
 	std::vector<PLAYERBUF*> GetPlayerInfo();
-	VOID SetPlayerInfo(std::vector<PLAYERBUF*> it);
-	VOID Clear();
+	void SetPlayerInfo(std::vector<PLAYERBUF*> it);
+	void Clear();
 
-	VOID AddBuff(UINT32 playerID, USHORT buffid, BYTE stack);
-	VOID EndBuff(UINT32 playerID, USHORT buffid, BOOL endAll = FALSE);
-	VOID EndAllBuff();
+	void AddBuff(uint32_t playerID, uint16_t buffid, uint8_t stack);
+	void EndBuff(uint32_t playerID, uint16_t buffid, bool endAll = false);
+	void EndAllBuff();
 
-	vector<PLAYERBUF*>::const_iterator find(UINT32 playerID);
-	vector<PLAYERBUF*>::const_iterator begin();
-	vector<PLAYERBUF*>::const_iterator end();
+	std::vector<PLAYERBUF*>::const_iterator find(uint32_t playerID);
+	std::vector<PLAYERBUF*>::const_iterator begin();
+	std::vector<PLAYERBUF*>::const_iterator end();
 
-	VOID GetLock();
-	VOID FreeLock();
+	void GetLock();
+	void FreeLock();
 };

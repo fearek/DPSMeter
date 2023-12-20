@@ -3,23 +3,23 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacketAkasic.h"
 
-SWPacketAkasic::SWPacketAkasic(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketAkasic::SWPacketAkasic(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketAkasic::Do() {
+void SWPacketAkasic::Do() {
 
 	SWPACKETAKASIC* akasic = (SWPACKETAKASIC*)(_data + sizeof(SWHEADER));
 
 	DAMAGEMETER.InsertOwnerID(akasic->_id, akasic->_ownder_id);
 }
 
-VOID SWPacketAkasic::Log() {
+void SWPacketAkasic::Log() {
 
 }
 
-VOID SWPacketAkasic::Debug() {
+void SWPacketAkasic::Debug() {
 	SWPACKETAKASIC* akasic = (SWPACKETAKASIC*)(_data + sizeof(SWHEADER));
 
-	//LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [Akasic] [ID = %08x] [Owner ID = %08x]"), akasic->_id, akasic->_ownder_id);
+	//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [Akasic] [ID = %08x] [Owner ID = %08x]"), akasic->_id, akasic->_ownder_id);
 }

@@ -13,35 +13,35 @@ private:
 	HINSTANCE _hInst;
 	HWND _hWnd;
 
-	UINT _x;
-	UINT _y;
-	UINT _width;
-	UINT _height;
+	unsigned int _x;
+	unsigned int _y;
+	unsigned int _width;
+	unsigned int _height;
 
 	ImGuiContext* _imGuiContext;
 
 	timePoint _prevTimePoint;
-	FLOAT _deltaTime;
+	float _deltaTime;
 
-	VOID DrawScene();
-	VOID Update();
-	VOID OnResize();
-	VOID CalcDeltaTime();
+	void DrawScene();
+	void Update();
+	void OnResize();
+	void CalcDeltaTime();
 
-	BOOL InitImGUI();
-	BOOL SetFontList();
+	bool InitImGUI();
+	bool SetFontList();
 
-	VOID UpdateMainTable();
+	void UpdateMainTable();
 
-	BOOL _isExit = false;
+	bool _isExit = false;
 
 public:
 	UiWindow();
 	~UiWindow();
 	 
-	VOID Run();
-	BOOL Init(UINT x, UINT y, UINT width, UINT height);
-	LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	void Run();
+	bool Init(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
+	LRESULT CALLBACK WndProc(HWND hWnd, unsigned int msg, WPARAM wParam, LPARAM lParam);
 	const HWND& GetHWND();
-	const FLOAT& GetDeltaTime();
+	const float& GetDeltaTime();
 };

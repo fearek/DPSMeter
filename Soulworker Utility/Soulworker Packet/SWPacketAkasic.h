@@ -5,8 +5,8 @@
 #pragma pack(push, 1)
 
 typedef struct _SWPACKETAKASIC {
-	UINT32 _ownder_id;
-	UINT32 _id;
+	uint32_t _ownder_id;
+	uint32_t _id;
 }SWPACKETAKASIC;
 
 #pragma pack(pop)
@@ -16,10 +16,10 @@ protected:
 	SWPacketAkasic() {}
 
 public:
-	SWPacketAkasic(SWHEADER* swheader, BYTE* data);
+	SWPacketAkasic(SWHEADER* swheader, uint8_t* data);
 	~SWPacketAkasic() {}
 
-	VOID Do();
-	VOID Log();
-	VOID Debug();
+	void Do();
+	void Log();
+	void Debug();
 };

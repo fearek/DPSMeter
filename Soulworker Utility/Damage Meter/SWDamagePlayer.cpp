@@ -6,12 +6,12 @@
 #include ".\MySQLite.h"
 #include ".\UI\Option.h"
 
-SWDamagePlayer::SWDamagePlayer(UINT32 id, UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, USHORT maxCombo, UINT32 monsterID, UINT32 skillID) {
+SWDamagePlayer::SWDamagePlayer(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint16_t maxCombo, uint32_t monsterID, uint32_t skillID) {
 	_id = id;
 	AddDamage(totalDMG, soulstoneDMG, damageType, maxCombo, monsterID, skillID);
 }
 
-SWDamagePlayer::SWDamagePlayer(UINT32 id) {
+SWDamagePlayer::SWDamagePlayer(uint32_t id) {
 	_id = id;
 }
 
@@ -28,18 +28,18 @@ SWDamagePlayer::~SWDamagePlayer() {
 	skillCounts.clear();
 }
 
-BOOL SWDamagePlayer::SortFunction(SWDamagePlayer* playerA, SWDamagePlayer* playerB) {
+bool SWDamagePlayer::SortFunction(SWDamagePlayer* playerA, SWDamagePlayer* playerB) {
 	return playerA->GetDamage() > playerB->GetDamage();
 }
 
-VOID SWDamagePlayer::InsertMonsterInfo(UINT32 monsterID, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount, UINT32 skillID) {
+void SWDamagePlayer::InsertMonsterInfo(uint32_t monsterID, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount, uint32_t skillID) {
 
 	auto itr = _monsterInfo.begin();
 
 	SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(monsterID);
 	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[Monster] [MonsterID = %d] [DB2 = %d]")), monsterID, db->_db2);
 
-	UINT32 db2 = 0;
+	uint32_t db2 = 0;
 
 	if (db != nullptr) {
 		db2 = db->_db2;
@@ -55,11 +55,11 @@ VOID SWDamagePlayer::InsertMonsterInfo(UINT32 monsterID, UINT64 damage, UINT64 c
 	_monsterInfo.push_back(new SWDamageMonster(monsterID, db2, damage, critDamage, hitCount, critHitCount, skillID));
 }
 
-VOID SWDamagePlayer::Sort() {
+void SWDamagePlayer::Sort() {
 	sort(_monsterInfo.begin(), _monsterInfo.end(), SWDamageMonster::SortFunction);
 }
 
-VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, USHORT maxCombo, UINT32 monsterID, UINT32 skillID)
+void SWDamagePlayer::AddDamage(uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint16_t maxCombo, uint32_t monsterID, uint32_t skillID)
 {
 	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[PLAYER] [DamageType = %d]")), damageType.CRIT);
 
@@ -68,7 +68,7 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 
 	// Skip not in db monster
 	SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(monsterID);
-	UINT32 db2 = 0;
+	uint32_t db2 = 0;
 	if (db == nullptr) {
 		return;
 	}
@@ -103,10 +103,10 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 		_maxCombo = maxCombo;
 	}
 
-	USHORT worldID = DAMAGEMETER.GetWorldID();
+	uint16_t worldID = DAMAGEMETER.GetWorldID();
 
 	auto stList = StrictModeList.find(worldID);
-	BOOL isStrictMode = false;
+	bool isStrictMode = false;
 	if (stList != StrictModeList.end())
 	{
 		auto& vec = (*stList).second;
@@ -134,33 +134,33 @@ VOID SWDamagePlayer::AddDamage(UINT64 totalDMG, UINT64 soulstoneDMG, SWPACKETDAM
 	Sort();
 }
 
-UINT32 SWDamagePlayer::GetID() {
+uint32_t SWDamagePlayer::GetID() {
 	return _id;
 }
 
-UINT64 SWDamagePlayer::GetDamage() {
+uint64_t SWDamagePlayer::GetDamage() {
 	return _damage;
 }
 
-UINT64 SWDamagePlayer::GetSoulstoneDamage() {
+uint64_t SWDamagePlayer::GetSoulstoneDamage() {
 	return _soulstoneDamage;
 }
 
-USHORT SWDamagePlayer::GetHitCount() {
+uint16_t SWDamagePlayer::GetHitCount() {
 	return _hitCount;
 }
 
-USHORT SWDamagePlayer::GetCritHitCount() {
+uint16_t SWDamagePlayer::GetCritHitCount() {
 	return _critHitCount;
 }
 
-USHORT SWDamagePlayer::GetMaxCombo() {
+uint16_t SWDamagePlayer::GetMaxCombo() {
 	return _maxCombo;
 }
 
-UINT64 SWDamagePlayer::GetMonsterTotalDamage() {
+uint64_t SWDamagePlayer::GetMonsterTotalDamage() {
 
-	UINT64 monsterTotalDamage = 0;
+	uint64_t monsterTotalDamage = 0;
 
 	for (auto itr = _monsterInfo.begin(); itr != _monsterInfo.end(); itr++)
 		monsterTotalDamage += (*itr)->GetDamage();
@@ -168,62 +168,62 @@ UINT64 SWDamagePlayer::GetMonsterTotalDamage() {
 	return monsterTotalDamage;
 }
 
-USHORT SWDamagePlayer::GetHitCountForCritRate()
+uint16_t SWDamagePlayer::GetHitCountForCritRate()
 {
 	return _hitCountForCritRate;
 }
 
-USHORT SWDamagePlayer::GetCritHitCountForCritRate()
+uint16_t SWDamagePlayer::GetCritHitCountForCritRate()
 {
 	return _critHitCountForCritRate;
 }
 
-USHORT SWDamagePlayer::GetSoulstoneCount()
+uint16_t SWDamagePlayer::GetSoulstoneCount()
 {
 	return _soulstoneCount;
 }
 
-UINT64 SWDamagePlayer::GetDamageForSoulstone()
+uint64_t SWDamagePlayer::GetDamageForSoulstone()
 {
 	return _damageForSoulstone;
 }
 
-UINT64 SWDamagePlayer::GetSoulStoneDamageForSoulstone()
+uint64_t SWDamagePlayer::GetSoulStoneDamageForSoulstone()
 {
 	return _soulstoneDamageForSoulstone;
 }
 
-USHORT SWDamagePlayer::GetGetHitAll()
+uint16_t SWDamagePlayer::GetGetHitAll()
 {
 	return _getHitAll;
 }
 
-USHORT SWDamagePlayer::GetGetHit()
+uint16_t SWDamagePlayer::GetGetHit()
 {
 	return _getHit;
 }
 
-USHORT SWDamagePlayer::GetGetHitBS()
+uint16_t SWDamagePlayer::GetGetHitBS()
 {
 	return _getHitBS;
 }
 
-USHORT SWDamagePlayer::GetGetHitMissed()
+uint16_t SWDamagePlayer::GetGetHitMissed()
 {
 	return _getHitMissed;
 }
 
-USHORT SWDamagePlayer::GetGetHitMissedReal()
+uint16_t SWDamagePlayer::GetGetHitMissedReal()
 {
 	return _getHitMissedReal;
 }
 
-USHORT SWDamagePlayer::GetMissCount()
+uint16_t SWDamagePlayer::GetMissCount()
 {
 	return _missCount;
 }
 
-std::vector<SWDamageMonster*>::const_iterator SWDamagePlayer::GetMonsterInfo(UINT id) {
+std::vector<SWDamageMonster*>::const_iterator SWDamagePlayer::GetMonsterInfo(unsigned int id) {
 
 	auto itr = _monsterInfo.begin();
 
@@ -236,82 +236,82 @@ std::vector<SWDamageMonster*>::const_iterator SWDamagePlayer::GetMonsterInfo(UIN
 	return itr;
 }
 
-DOUBLE SWDamagePlayer::GetHistoryABTime()
+double SWDamagePlayer::GetHistoryABTime()
 {
 	return _historyABTime;
 }
 
-VOID SWDamagePlayer::SetHistoryABTime(DOUBLE historyABTime)
+void SWDamagePlayer::SetHistoryABTime(double historyABTime)
 {
 	_historyABTime = historyABTime;
 }
 
-VOID SWDamagePlayer::SetHistoryAvgAB(DOUBLE historyAvgAB)
+void SWDamagePlayer::SetHistoryAvgAB(double historyAvgAB)
 {
 	_historyAvgAB = historyAvgAB;
 }
 
-DOUBLE SWDamagePlayer::GetHistoryAvgAB()
+double SWDamagePlayer::GetHistoryAvgAB()
 {
 	return _historyAvgAB;
 }
 
-VOID SWDamagePlayer::SetHistoryAvgBD(DOUBLE historyAvgBD)
+void SWDamagePlayer::SetHistoryAvgBD(double historyAvgBD)
 {
 	_historyAvgBD = historyAvgBD;
 }
 
-DOUBLE SWDamagePlayer::GetHistoryAvgBD()
+double SWDamagePlayer::GetHistoryAvgBD()
 {
 	return _historyAvgBD;
 }
 
-DOUBLE SWDamagePlayer::GetHistoryAggroTime()
+double SWDamagePlayer::GetHistoryAggroTime()
 {
 	return _historyAggroTime;
 }
 
-VOID SWDamagePlayer::SetHistoryAggroTime(DOUBLE t)
+void SWDamagePlayer::SetHistoryAggroTime(double t)
 {
 	_historyAggroTime = t;
 }
 
-DOUBLE SWDamagePlayer::GetHistoryASTime()
+double SWDamagePlayer::GetHistoryASTime()
 {
 	return _historyASTime;
 }
 
-VOID SWDamagePlayer::SetHistoryASTime(DOUBLE d)
+void SWDamagePlayer::SetHistoryASTime(double d)
 {
 	_historyASTime = d;
 }
 
-VOID SWDamagePlayer::SetHistoryAvgAS(DOUBLE d)
+void SWDamagePlayer::SetHistoryAvgAS(double d)
 {
 	_historyAvgAS = d;
 }
 
-DOUBLE SWDamagePlayer::GetHistoryAvgAS()
+double SWDamagePlayer::GetHistoryAvgAS()
 {
 	return _historyAvgAS;
 }
 
-FLOAT SWDamagePlayer::GetEnlightenSum()
+float SWDamagePlayer::GetEnlightenSum()
 {
 	return _enlightenSum;
 }
 
-USHORT SWDamagePlayer::GetGigaEnlighten()
+uint16_t SWDamagePlayer::GetGigaEnlighten()
 {
 	return _gigaEnlightenProc;
 }
 
-USHORT SWDamagePlayer::GetTeraEnlighten()
+uint16_t SWDamagePlayer::GetTeraEnlighten()
 {
 	return _teraEnlightenProc;
 }
 
-VOID SWDamagePlayer::setHistoryBS(int type, DOUBLE value)
+void SWDamagePlayer::setHistoryBS(int type, double value)
 {
 	switch (type) {
 	case 90:
@@ -330,7 +330,7 @@ VOID SWDamagePlayer::setHistoryBS(int type, DOUBLE value)
 	}
 }
 
-DOUBLE SWDamagePlayer::GetHistoryBS(int type)
+double SWDamagePlayer::GetHistoryBS(int type)
 {
 	switch (type) {
 	case 90:
@@ -345,24 +345,24 @@ DOUBLE SWDamagePlayer::GetHistoryBS(int type)
 	return 0;
 }
 
-VOID SWDamagePlayer::setHistoryLosedHP(DOUBLE losedHP)
+void SWDamagePlayer::setHistoryLosedHP(double losedHP)
 {
 	_historyLosedHP = losedHP;
 }
 
-DOUBLE SWDamagePlayer::GetHistoryLosedHP()
+double SWDamagePlayer::GetHistoryLosedHP()
 {
 	return _historyLosedHP;
 }
 
-VOID SWDamagePlayer::AddSkillUsed(UINT32 skillId)
+void SWDamagePlayer::AddSkillUsed(uint32_t skillId)
 {
 	if (DAMAGEMETER.isHistoryMode())
 		return;
 
 	_skillCounts++;
 
-	BOOL isInFullAB = false;
+	bool isInFullAB = false;
 	auto metadata = DAMAGEMETER.GetPlayerMetaData(_id);
 	if (metadata != nullptr) {
 		isInFullAB = metadata->_fullABStarted;
@@ -383,17 +383,17 @@ VOID SWDamagePlayer::AddSkillUsed(UINT32 skillId)
 		pSc->_in_full_ab_count += 1;
 }
 
-VOID SWDamagePlayer::AddDodgeUsed()
+void SWDamagePlayer::AddDodgeUsed()
 {
 	_dodgeCounts++;
 }
 
-VOID SWDamagePlayer::AddDeathCount()
+void SWDamagePlayer::AddDeathCount()
 {
 	_deathCounts++;
 }
 
-VOID SWDamagePlayer::AddGetDamage(UINT64 totalDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, UINT32 monsterID, UINT32 skillID)
+void SWDamagePlayer::AddGetDamage(uint64_t totalDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint32_t monsterID, uint32_t skillID)
 {
 	_getHitAll++;
 	if (totalDMG > 0) {
@@ -414,7 +414,7 @@ VOID SWDamagePlayer::AddGetDamage(UINT64 totalDMG, SWPACKETDAMAGE_DAMAGETYPE dam
 	}
 }
 
-VOID SWDamagePlayer::AddEnlighten(FLOAT value)
+void SWDamagePlayer::AddEnlighten(float value)
 {
 	_enlightenSum += value;
 	if (value == 5.0) {
@@ -425,27 +425,27 @@ VOID SWDamagePlayer::AddEnlighten(FLOAT value)
 	}
 }
 
-USHORT SWDamagePlayer::GetSkillUsed()
+uint16_t SWDamagePlayer::GetSkillUsed()
 {
 	return _skillCounts;
 }
 
-USHORT SWDamagePlayer::GetDodgeUsed()
+uint16_t SWDamagePlayer::GetDodgeUsed()
 {
 	return _dodgeCounts;
 }
 
-USHORT SWDamagePlayer::GetDeathCount()
+uint16_t SWDamagePlayer::GetDeathCount()
 {
 	return _deathCounts;
 }
 
-VOID SWDamagePlayer::SetJqStack(BYTE stack)
+void SWDamagePlayer::SetJqStack(uint8_t stack)
 {
 	_JqStack = stack;
 }
 
-BYTE SWDamagePlayer::GetJqStack() {
+uint8_t SWDamagePlayer::GetJqStack() {
 	return _JqStack;
 }
 

@@ -14,13 +14,13 @@
 #include <thread>
 #include ".\discord\DiscordPresence.h"
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, unsigned int msg, WPARAM wParam, LPARAM lParam);
 
 namespace {
 	UiWindow* uiWindow = 0;
 }
 
-LRESULT CALLBACK MainWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK MainWndProc(HWND hWnd, unsigned int msg, WPARAM wParam, LPARAM lParam) {
 
 	return uiWindow->WndProc(hWnd, msg, wParam, lParam);
 }
@@ -47,7 +47,7 @@ UiWindow::~UiWindow() {
 	ImGui::DestroyContext();
 }
 
-BOOL UiWindow::Init(UINT x, UINT y, UINT width, UINT height) {
+bool UiWindow::Init(unsigned int x, unsigned int y, unsigned int width, unsigned int height) {
 
 	WNDCLASSEX wc;
 	_hInst = GetModuleHandle(NULL);
@@ -69,12 +69,12 @@ BOOL UiWindow::Init(UINT x, UINT y, UINT width, UINT height) {
 	
 	if (!RegisterClassEx(&wc)) {
 		LogInstance.WriteLog("Error in RegisterClassEx");
-		return FALSE;
+		return false;
 	}
 
 	if ((_hWnd = CreateWindowEx(WS_EX_TOPMOST, wc.lpszClassName, _T(""), WS_POPUP, x, y, width, height, NULL, NULL, _hInst, NULL)) == NULL) {
 		LogInstance.WriteLog("Error in CreateWindowEx : %x", GetLastError());
-		return FALSE;
+		return false;
 	}
 //	SetLayeredWindowAttributes(_hWnd, 0, 180, LWA_ALPHA);
 //	SetLayeredWindowAttributes(_hWnd, 0, RGB(0, 0, 0), LWA_COLORKEY);
@@ -87,36 +87,36 @@ BOOL UiWindow::Init(UINT x, UINT y, UINT width, UINT height) {
 
 	if (!DIRECTX11.Init()) {
 		LogInstance.WriteLog("Error in DirectX Init");
-		return FALSE;
+		return false;
 	}
 
 	if (!DXINPUT.Init(_hInst, _hWnd)) {
 		LogInstance.WriteLog("Error in Direct Input Init");
-		return FALSE;
+		return false;
 	}
 
 	if ((_swapChain = DIRECTX11.CreateSwapChain(_hWnd)) == nullptr) {
 		LogInstance.WriteLog("Error in CreateSwapChain");
-		return FALSE;
+		return false;
 	}
 
 	if ((_renderTargetView = DIRECTX11.CreateRenderTarget(_swapChain)) == nullptr) {
 		LogInstance.WriteLog("Error in CreateRenderTarget");
-		return FALSE;
+		return false;
 	}
 	
 	if (!InitImGUI()) {
 		LogInstance.WriteLog("Error in Init ImGUI");
-		return FALSE;
+		return false;
 	}
 	
-	return TRUE;
+	return true;
 }
 
-BOOL UiWindow::InitImGUI() {
+bool UiWindow::InitImGUI() {
 
 	if (!IMGUI_CHECKVERSION())
-		return FALSE;
+		return false;
 	
 
 	_imGuiContext = ImGui::CreateContext();
@@ -140,25 +140,25 @@ BOOL UiWindow::InitImGUI() {
 
 	
 	if (!ImGui_ImplWin32_Init(_hWnd))
-		return FALSE;
+		return false;
 	
 	if (!ImGui_ImplDX11_Init(DIRECTX11.GetDevice(), DIRECTX11.GetDeviceContext()))
-		return FALSE;
+		return false;
 
 	SetFontList();
 	UIOPTION.Init();
 
-	return TRUE;
+	return true;
 }
 
-BOOL UiWindow::SetFontList() {
+bool UiWindow::SetFontList() {
 
 	_finddata_t fd;
 	const char* path = ".\\Font\\";
 	const char* filter = "*.ttf";
-	vector<string> vsFontPathPool;
+	std::vector<std::string> vsFontPathPool;
 
-	string fontDir(path);
+	std::string fontDir(path);
 	fontDir.append(filter);
 
 	auto handle = _findfirst(fontDir.c_str(), &fd);
@@ -174,7 +174,7 @@ BOOL UiWindow::SetFontList() {
 		if (GetWindowsDirectoryA(szSysPath, MAX_PATH) != 0)
 		{
 			const char* szWindowsFontsDir = "\\Fonts\\";
-			string sFindDefaultFontPath(szSysPath);
+			std::string sFindDefaultFontPath(szSysPath);
 			sFindDefaultFontPath.append(szWindowsFontsDir);
 			sFindDefaultFontPath.append("msjh.*");
 
@@ -183,7 +183,7 @@ BOOL UiWindow::SetFontList() {
 
 			if (pFont != -1)
 			{
-				string fnExt = defaultFontFD.name;
+				std::string fnExt = defaultFontFD.name;
 				if (fnExt.substr(fnExt.find_last_of(".") + 1) == "ttc" || fnExt.substr(fnExt.find_last_of(".") + 1) == "ttf")
 				{
 					sFindDefaultFontPath = szSysPath;
@@ -209,10 +209,10 @@ BOOL UiWindow::SetFontList() {
 	for (auto itr = vsFontPathPool.begin(); itr != vsFontPathPool.end(); itr++)
 		io.Fonts->AddFontFromFileTTF((*itr).c_str(), 32, &config, io.Fonts->GetGlyphRangesChineseAndKoreaFull());
 
-	return TRUE;
+	return true;
 }
 
-VOID UiWindow::Run() {
+void UiWindow::Run() {
 
 	MSG msg = { 0 };
 
@@ -229,7 +229,7 @@ VOID UiWindow::Run() {
 	}
 }
 
-VOID UiWindow::Update() {
+void UiWindow::Update() {
 	DISCORD.RunCallbacks();
 	if (DAMAGEMETER.shouldRebuildAtlas)
 	{
@@ -268,13 +268,13 @@ VOID UiWindow::Update() {
 	DrawScene();
 }
 
-VOID UiWindow::DrawScene() {
+void UiWindow::DrawScene() {
 	
 	ImVec4 clear_color = UIOPTION.GetWindowBGColor();
 
 	ImGui::Render();
 	DIRECTX11.GetDeviceContext()->OMSetRenderTargets(1, &_renderTargetView, NULL);
-	DIRECTX11.GetDeviceContext()->ClearRenderTargetView(_renderTargetView, (FLOAT*)&clear_color);
+	DIRECTX11.GetDeviceContext()->ClearRenderTargetView(_renderTargetView, (float*)&clear_color);
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -285,13 +285,13 @@ VOID UiWindow::DrawScene() {
 		ImGui::RenderPlatformWindowsDefault();
 	}
 
-	_swapChain->Present(static_cast<UINT>(UIOPTION.GetFramerate()), 0);
+	_swapChain->Present(static_cast<unsigned int>(UIOPTION.GetFramerate()), 0);
 }
 
-LRESULT UiWindow::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+LRESULT UiWindow::WndProc(HWND hWnd, unsigned int msg, WPARAM wParam, LPARAM lParam) {
 
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
-		return TRUE;
+		return true;
 
 	switch (msg) {
 	case WM_SIZE:
@@ -308,7 +308,7 @@ LRESULT UiWindow::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	case WM_QUIT:
 	case WM_CLOSE:
 	case WM_DESTROY:
-		UIOPTION.SaveOption(TRUE);
+		UIOPTION.SaveOption(true);
 		PostQuitMessage(0);
 		return 0;
 	}
@@ -316,7 +316,7 @@ LRESULT UiWindow::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-VOID UiWindow::OnResize() {
+void UiWindow::OnResize() {
 	
 	if (_swapChain == nullptr)
 		return;
@@ -334,13 +334,13 @@ VOID UiWindow::OnResize() {
 	}
 }
 
-VOID UiWindow::CalcDeltaTime() {
-	std::chrono::duration<FLOAT> deltaTime = std::chrono::system_clock::now() - _prevTimePoint;
+void UiWindow::CalcDeltaTime() {
+	std::chrono::duration<float> deltaTime = std::chrono::system_clock::now() - _prevTimePoint;
 	_prevTimePoint = std::chrono::system_clock::now();
 	_deltaTime = deltaTime.count();
 }
 
-VOID UiWindow::UpdateMainTable() {
+void UiWindow::UpdateMainTable() {
 	PLAYERTABLE.Update();
 }
 
@@ -348,6 +348,6 @@ const HWND& UiWindow::GetHWND() {
 	return _hWnd;
 }
 
-const FLOAT& UiWindow::GetDeltaTime() {
+const float& UiWindow::GetDeltaTime() {
 	return _deltaTime;
 }

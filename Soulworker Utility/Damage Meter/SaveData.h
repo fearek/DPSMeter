@@ -16,45 +16,45 @@ using namespace SoulMeterFBS::History;
 class SWSaveData : public Singleton<SWSaveData> {
 
 private:
-	const UINT32 _saveVersion = 1;
-	const string _oriSaveFileName = "SoulMeter.dat";
-	string _saveFileName;
+	const uint32_t _saveVersion = 1;
+	const std::string _oriSaveFileName = "SoulMeter.dat";
+	std::string _saveFileName;
 	std::fstream _saveFile;
 
-	BOOL _fileNotExist = FALSE;
-	BOOL _inited = FALSE;
+	bool _fileNotExist = false;
+	bool _inited = false;
 
-	BOOL Load();
-	VOID Crypt(UCHAR* src, UCHAR* dest, LONG64 len);
+	bool Load();
+	void Crypt(unsigned char* src, unsigned char* dest, int64_t len);
 
-	VOID ReadSaveData(LONG64& offset);
+	void ReadSaveData(int64_t& offset);
 
-	VOID WriteData(UCHAR* buf, LONG64 size, fstream* pFS = nullptr);
-	VOID ReadData(UCHAR* buf, LONG64 size, LONG64 offset);
-	LONG64 GetNextSaveDataLength(LONG64& offset);
+	void WriteData(unsigned char* buf, int64_t size, std::fstream* pFS = nullptr);
+	void ReadData(unsigned char* buf, int64_t size, int64_t offset);
+	int64_t GetNextSaveDataLength(int64_t& offset);
 
-	mutex _mutex;
+	std::mutex _mutex;
 
 public:
 	~SWSaveData();
 
-	DWORD Init(string fileName = "");
-	LONG64 GetCurrentLength();
-	VOID Save(flatbuffers::FlatBufferBuilder& fbb);
-	VOID Delete(LONG64 index, LONG64 clearCount = -1);
-	VOID Clone(string filename);
-	VOID Reset();
+	DWORD Init(std::string fileName = "");
+	int64_t GetCurrentLength();
+	void Save(flatbuffers::FlatBufferBuilder& fbb);
+	void Delete(int64_t index, int64_t clearCount = -1);
+	void Clone(std::string filename);
+	void Reset();
 
-	VOID GetLock()
+	void GetLock()
 	{
 		_mutex.lock();
 	}
-	VOID FreeLock()
+	void FreeLock()
 	{
 		_mutex.unlock();
 	}
 
-	const string CurrentSaveDataPath()
+	const std::string CurrentSaveDataPath()
 	{
 		return _saveFileName;
 	}

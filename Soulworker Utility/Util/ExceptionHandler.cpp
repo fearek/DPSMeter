@@ -1,7 +1,7 @@
 #include "pch.h"
 #include ".\Util\ExceptionHandler.h"
 
-typedef BOOL(WINAPI* MINIDUMPWRITEDUMP)( // Callback 
+typedef bool(WINAPI* MINIDUMPWRITEDUMP)( // Callback 
     HANDLE hProcess,
     DWORD dwPid,
     HANDLE hFile,
@@ -58,7 +58,7 @@ LONG WINAPI UnHandledExceptionFilter(struct _EXCEPTION_POINTERS* exceptionInfo)
                 MiniDumpExceptionInfo.ExceptionPointers = exceptionInfo;
                 MiniDumpExceptionInfo.ClientPointers = NULL;
 
-                BOOL Success = Dump(
+                bool Success = Dump(
                     GetCurrentProcess(),
                     GetCurrentProcessId(),
                     FileHandle,                    
@@ -82,7 +82,7 @@ LONG WINAPI UnHandledExceptionFilter(struct _EXCEPTION_POINTERS* exceptionInfo)
     return EXCEPTION_CONTINUE_SEARCH;
 }
 
-BOOL MiniDump::Begin(VOID)
+bool MiniDump::Begin(void)
 {
     SetErrorMode(SEM_FAILCRITICALERRORS);
 
@@ -91,7 +91,7 @@ BOOL MiniDump::Begin(VOID)
     return true;
 }
 
-BOOL MiniDump::End(VOID)
+bool MiniDump::End(void)
 {
     SetUnhandledExceptionFilter(PreviousExceptionFilter);
 

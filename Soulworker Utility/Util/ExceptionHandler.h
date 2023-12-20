@@ -3,6 +3,6 @@
 class MiniDump
 {
 public:
-    static BOOL Begin(VOID);
-    static BOOL End(VOID);
+    static bool Begin(void);
+    static bool End(void);
 };

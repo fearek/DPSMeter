@@ -7,7 +7,7 @@
 #include ".\Damage Meter\MySQLite.h"
 
 
-SpecificInformation::SpecificInformation(UINT32 playerID) : _playerID(playerID), _monsterID_SKILL(0), _globalFontScale(0), _columnFontScale(0), _tableFontScale(0), _tableTime(0), _accumulatedTime(0) {
+SpecificInformation::SpecificInformation(uint32_t playerID) : _playerID(playerID), _monsterID_SKILL(0), _globalFontScale(0), _columnFontScale(0), _tableFontScale(0), _tableTime(0), _accumulatedTime(0) {
 
 }
 
@@ -15,11 +15,11 @@ SpecificInformation::~SpecificInformation() {
 	Clear();
 }
 
-VOID SpecificInformation::Clear() {
+void SpecificInformation::Clear() {
 
 }
 
-VOID SpecificInformation::SetupFontScale() {
+void SpecificInformation::SetupFontScale() {
 	ImFont* font = ImGui::GetFont();
 
 	_globalFontScale = font->Scale;
@@ -27,20 +27,20 @@ VOID SpecificInformation::SetupFontScale() {
 	_tableFontScale = _globalFontScale * UIOPTION.GetTableFontScale();
 }
 
-VOID SpecificInformation::Update(BOOL* open, INT64 index) {
+void SpecificInformation::Update(bool* open, int64_t index) {
 
 	SetupFontScale();
 
 	_accumulatedTime += UIWINDOW.GetDeltaTime();
 
 	if (_accumulatedTime > UIOPTION.GetRefreshTime()) {
-		_tableTime = static_cast<FLOAT>((DOUBLE)DAMAGEMETER.GetTime() / 1000);
+		_tableTime = static_cast<float>((double)DAMAGEMETER.GetTime() / 1000);
 		_accumulatedTime = 0;
 	}
 
-	CHAR title[128] = { 0 };
+	char title[128] = { 0 };
 
-	sprintf_s(title, 128, "%s %s ###SpecificInformation%lld", DAMAGEMETER.GetPlayerName(_playerID), LANGMANAGER.GetText("STR_SPECIFICINFO_DETAIL"), index);
+	sprintf_s(title, 128, "%s %s ###SpecificInformation%lld", DAMAGEMETER.GetPlayerName(_playerID), LANGMANAGER.GetText("STR_SPECIFICINFO_DETAIL").c_str(), index);
 	ImGui::Begin(title, (bool*)open, ImGuiWindowFlags_None);
 	{
 		sprintf_s(title, 128, "##tab");
@@ -57,10 +57,10 @@ VOID SpecificInformation::Update(BOOL* open, INT64 index) {
 	ImGui::End();
 }
 
-VOID SpecificInformation::UpdateSkillInfo() {
+void SpecificInformation::UpdateSkillInfo() {
 	
-	CHAR label[128] = { 0 };
-	sprintf_s(label, "%s###DetailSkill", LANGMANAGER.GetText("STR_SPECIFICINFO_SKILL"));
+	char label[128] = { 0 };
+	sprintf_s(label, "%s###DetailSkill", LANGMANAGER.GetText("STR_SPECIFICINFO_SKILL").c_str());
 
 	if(ImGui::BeginTabItem(label))
 	{
@@ -78,10 +78,10 @@ VOID SpecificInformation::UpdateSkillInfo() {
 	}
 }
 
-VOID SpecificInformation::UpdateSkillTotalInfo() {
+void SpecificInformation::UpdateSkillTotalInfo() {
 
-	CHAR label[128] = { 0 };
-	sprintf_s(label, "%s###SpecificinfoTotal", LANGMANAGER.GetText("STR_SPECIFICINFO_TOTAL"));
+	char label[128] = { 0 };
+	sprintf_s(label, "%s###SpecificinfoTotal", LANGMANAGER.GetText("STR_SPECIFICINFO_TOTAL").c_str());
 	if (ImGui::BeginTabItem(label))
 	{
 		ImGui::OutlineText::PushOutlineText(ImGui::IMGUIOUTLINETEXT(UIOPTION.GetOutlineColor(), 1));
@@ -96,7 +96,7 @@ VOID SpecificInformation::UpdateSkillTotalInfo() {
 	}
 }
 
-VOID SpecificInformation::UpdateSkillTotalTable()
+void SpecificInformation::UpdateSkillTotalTable()
 {
 	auto player = DAMAGEMETER.GetPlayerInfo(_playerID);
 
@@ -109,19 +109,19 @@ VOID SpecificInformation::UpdateSkillTotalTable()
 	style.WindowPadding.x = 0;
 	style.WindowPadding.y = 0;
 
-	CHAR table[128] = { 0 };
+	char table[128] = { 0 };
 	sprintf_s(table, 128, "##skilltotaltable");
 	if (ImGui::BeginTable(table, 3, ImGuiTableFlags_Resizable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Reorderable)) {
 
 		ImGui::SetWindowFontScale(_columnFontScale);
 
-		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_NAME"), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_SPECIFICINFO_USE_SKILL_COUNTS"), ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_SPECIFICINFO_USE_SKILL_COUNTS_IN_FULL_AB"), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_NAME").c_str(), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_SPECIFICINFO_USE_SKILL_COUNTS").c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_SPECIFICINFO_USE_SKILL_COUNTS_IN_FULL_AB").c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableHeadersRow();
 
-		CHAR comma[128] = { 0 }; CHAR label[128] = { 0 };
-		FLOAT windowWidth = ImGui::GetWindowWidth();
+		char comma[128] = { 0 }; char label[128] = { 0 };
+		float windowWidth = ImGui::GetWindowWidth();
 
 		ImGui::SetWindowFontScale(_tableFontScale);
 		for (auto itr = (*player)->skillCounts.begin(); itr != (*player)->skillCounts.end(); itr++) {
@@ -140,7 +140,7 @@ VOID SpecificInformation::UpdateSkillTotalTable()
 			ImGui::TableNextColumn();
 
 			// In Full AB
-			if ((*player)->GetID() == DAMAGEMETER.GetMyID(TRUE))
+			if ((*player)->GetID() == DAMAGEMETER.GetMyID(true))
 			{
 				sprintf_s(label, 128, "%d", itr->second->_in_full_ab_count);
 			}
@@ -158,14 +158,14 @@ VOID SpecificInformation::UpdateSkillTotalTable()
 	style.WindowPadding.y = prevWindowPadding.y;
 }
 
-VOID SpecificInformation::UpdateMonsterCombo() {
+void SpecificInformation::UpdateMonsterCombo() {
 
 	auto player = DAMAGEMETER.GetPlayerInfo(_playerID);
 
 	if (player == DAMAGEMETER.end())
 		return;
 
-	const CHAR* comboPreview = nullptr;
+	const char* comboPreview = nullptr;
 
 	auto monster = (*player)->GetMonsterInfo(_monsterID_SKILL);
 
@@ -173,19 +173,19 @@ VOID SpecificInformation::UpdateMonsterCombo() {
 		comboPreview = (*monster)->GetName();
 	}
 
-	CHAR label[128] = { 0 };
-	sprintf_s(label, "%s###DetailMonster", LANGMANAGER.GetText("STR_SPECIFICINFO_MONSTER"));
+	char label[128] = { 0 };
+	sprintf_s(label, "%s###DetailMonster", LANGMANAGER.GetText("STR_SPECIFICINFO_MONSTER").c_str());
 	if(ImGui::BeginCombo(label, comboPreview, ImGuiComboFlags_HeightLarge)) {
 	
 		for (auto itr = (*player)->begin(); itr != (*player)->end(); itr++) 
 		{
 		
-			CHAR ext[MONSTER_NAME_LEN] = { 0 };
+			char ext[MONSTER_NAME_LEN] = { 0 };
 #ifdef _DEBUG
 			sprintf_s(ext, "(%d)", (*itr)->GetDB2());
 #endif
 
-			CHAR label[MONSTER_NAME_LEN + MONSTER_NAME_LEN] = { 0 };
+			char label[MONSTER_NAME_LEN + MONSTER_NAME_LEN] = { 0 };
 			sprintf_s(label, MONSTER_NAME_LEN + MONSTER_NAME_LEN, "%s%s##%d", (*itr)->GetName(), ext, (*itr)->GetID());
 
 			if (ImGui::Selectable(label, _monsterID_SKILL == (*itr)->GetID())) {
@@ -197,7 +197,7 @@ VOID SpecificInformation::UpdateMonsterCombo() {
 	}
 }
 
-VOID SpecificInformation::UpdateSkillTable() {
+void SpecificInformation::UpdateSkillTable() {
 
 	auto player = DAMAGEMETER.GetPlayerInfo(_playerID);
 
@@ -215,25 +215,25 @@ VOID SpecificInformation::UpdateSkillTable() {
 	style.WindowPadding.x = 0;
 	style.WindowPadding.y = 0;
 
-	CHAR table[128] = { 0 };
+	char table[128] = { 0 };
 	sprintf_s(table, 128, "##skilltable");
 	if(ImGui::BeginTable(table, 7, ImGuiTableFlags_Resizable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Reorderable)) {
 	
 		ImGui::SetWindowFontScale(_columnFontScale);
 
-		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_NAME"), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_DPS"), ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_DAMAGE_PERCENT"), ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_TOTAL_DAMAGE"), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
-		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_TOTAL_HIT"), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
-		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_CRIT_RATE"), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
-		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_HIT_PER_SECOND"), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_NAME").c_str(), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_DPS").c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_DAMAGE_PERCENT").c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_TOTAL_DAMAGE").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_TOTAL_HIT").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_CRIT_RATE").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultHide, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_HIT_PER_SECOND").c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
 	// ImGui::TableSetupColumn(STR_TABLE_SKILL_PER_SECOND, ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableHeadersRow();
 
-		UINT64 max_Damage = 1;
-		CHAR comma[128] = { 0 }; CHAR label[128] = { 0 };
-		FLOAT windowWidth = ImGui::GetWindowWidth();
+		uint64_t max_Damage = 1;
+		char comma[128] = { 0 }; char label[128] = { 0 };
+		float windowWidth = ImGui::GetWindowWidth();
 
 		ImGui::SetWindowFontScale(_tableFontScale);
 
@@ -242,7 +242,7 @@ VOID SpecificInformation::UpdateSkillTable() {
 			if (itr == (*monster)->begin())
 				max_Damage = (*itr)->GetDamage();
 
-			FLOAT damage_percent = static_cast<FLOAT>((DOUBLE)(*itr)->GetDamage() / (DOUBLE)max_Damage);
+			float damage_percent = static_cast<float>((double)(*itr)->GetDamage() / (double)max_Damage);
 
 			if (damage_percent > 1)
 				damage_percent = 1;
@@ -260,7 +260,7 @@ VOID SpecificInformation::UpdateSkillTable() {
 			ImGui::TableNextColumn();
 
 			// DPS
-			DOUBLE dps = ((DOUBLE)(*itr)->GetDamage()) / _tableTime;
+			double dps = ((double)(*itr)->GetDamage()) / _tableTime;
 			if (UIOPTION.is1K())
 				dps /= 1000;
 			else if (UIOPTION.is1M())
@@ -276,13 +276,13 @@ VOID SpecificInformation::UpdateSkillTable() {
 			ImGui::TableNextColumn();
 
 			// D%
-			sprintf_s(label, 128, "%.0lf", ((DOUBLE)(*itr)->GetDamage() / (DOUBLE)(*monster)->GetSkillTotalDamage() * 100));
+			sprintf_s(label, 128, "%.0lf", ((double)(*itr)->GetDamage() / (double)(*monster)->GetSkillTotalDamage() * 100));
 			ImGui::Text(label);
 
 			ImGui::TableNextColumn();
 
 			// DAMAGE
-			UINT64 damage = (*itr)->GetDamage();
+			uint64_t damage = (*itr)->GetDamage();
 			if (UIOPTION.is1K())
 				damage /= 1000;
 			else if (UIOPTION.is1M())
@@ -305,10 +305,10 @@ VOID SpecificInformation::UpdateSkillTable() {
 			ImGui::TableNextColumn();
 
 			// CRIT
-			FLOAT crit = 0;
+			float crit = 0;
 
 			if ((*itr)->GetHitCount() != 0)
-				crit = (FLOAT)(*itr)->GetCritHitCount() / (FLOAT)(*itr)->GetHitCount() * 100;
+				crit = (float)(*itr)->GetCritHitCount() / (float)(*itr)->GetHitCount() * 100;
 
 			sprintf_s(label, 128, "%.0f", crit);
 			ImGui::Text(label);
@@ -316,7 +316,7 @@ VOID SpecificInformation::UpdateSkillTable() {
 			ImGui::TableNextColumn();
 
 			// HIT/S
-			sprintf_s(label, 128, "%.2lf", (DOUBLE)(*itr)->GetHitCount() / _tableTime);
+			sprintf_s(label, 128, "%.2lf", (double)(*itr)->GetHitCount() / _tableTime);
 			ImGui::Text(label);
 
 			ImGui::TableNextColumn();
@@ -331,12 +331,12 @@ VOID SpecificInformation::UpdateSkillTable() {
 
 }
 
-VOID SpecificInformation::UpdateBuffMeter() {
+void SpecificInformation::UpdateBuffMeter() {
 
 	BUFFMETER.GetLock();
 	{
-		CHAR label[128] = { 0 };
-		sprintf_s(label, "%s###DetailBuffDeBuff", LANGMANAGER.GetText("STR_SPECIFICINFO_BUFF_AND_DEBUFF"));
+		char label[128] = { 0 };
+		sprintf_s(label, "%s###DetailBuffDeBuff", LANGMANAGER.GetText("STR_SPECIFICINFO_BUFF_AND_DEBUFF").c_str());
 		if (ImGui::BeginTabItem(label))
 		{
 			ImGui::OutlineText::PushOutlineText(ImGui::IMGUIOUTLINETEXT(UIOPTION.GetOutlineColor(), 1));
@@ -353,7 +353,7 @@ VOID SpecificInformation::UpdateBuffMeter() {
 	BUFFMETER.FreeLock();
 }
 
-VOID SpecificInformation::UpdateBuffTable() {
+void SpecificInformation::UpdateBuffTable() {
 
 	auto buff = BUFFMETER.find(_playerID);
 
@@ -366,23 +366,23 @@ VOID SpecificInformation::UpdateBuffTable() {
 	style.WindowPadding.x = 0;
 	style.WindowPadding.y = 0;
 
-	CHAR table[128] = { 0 };
+	char table[128] = { 0 };
 	sprintf_s(table, 128, "##bufftable");
 	if (ImGui::BeginTable(table, 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Reorderable)) {
 
 		ImGui::SetWindowFontScale(_columnFontScale);
 
-		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_SPECIFICINFO_BUFF_NAME"), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
-		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_DURATION"), ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_SPECIFICINFO_BUFF_NAME").c_str(), ImGuiTableColumnFlags_NoReorder | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoClip | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_DURATION").c_str(), ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableHeadersRow();
 
 		ImGui::SetWindowFontScale(_tableFontScale);
 
-		FLOAT windowWidth = ImGui::GetWindowWidth();
+		float windowWidth = ImGui::GetWindowWidth();
 		for (auto itr = (*buff)->begin(); itr != (*buff)->end(); itr++) {
 
-			CHAR label[128] = { 0 };
-			FLOAT duration_percent = (*itr)->GetTime() / (DAMAGEMETER.GetTime() / 1000);
+			char label[128] = { 0 };
+			float duration_percent = (*itr)->GetTime() / (DAMAGEMETER.GetTime() / 1000);
 
 			if (duration_percent > 1)
 				duration_percent = 1;
@@ -419,12 +419,12 @@ VOID SpecificInformation::UpdateBuffTable() {
 	style.WindowPadding.y = prevWindowPadding.y;
 }
 
-VOID SpecificInformation::DrawBar(FLOAT window_Width, FLOAT percent, ImU32 color) {
+void SpecificInformation::DrawBar(float window_Width, float percent, ImU32 color) {
 
 	auto draw_list = ImGui::GetWindowDrawList();
 
-	FLOAT result_width = window_Width * percent;
-	FLOAT height = ImGui::GetFontSize();
+	float result_width = window_Width * percent;
+	float height = ImGui::GetFontSize();
 	ImVec2 line = ImGui::GetCursorScreenPos();
 
 	line.x = FLOOR(line.x);	line.y = line.y;

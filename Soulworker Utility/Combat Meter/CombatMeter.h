@@ -10,8 +10,8 @@ using namespace SoulMeterFBS::History;
 
 class CombatMeter : public Singleton<CombatMeter> {
 private:
-	BOOL _historyMode = false;
-	BOOL _isEnd = false;
+	bool _historyMode = false;
+	bool _isEnd = false;
 
 	std::mutex _mutex;
 
@@ -21,7 +21,7 @@ public:
 	CombatMeter() {}
 	~CombatMeter()
 	{
-		BOOL a = _mutex.try_lock();
+		bool a = _mutex.try_lock();
 		_mutex.unlock();
 	}
 
@@ -29,7 +29,7 @@ public:
 	{
 		return _ci;
 	}
-	VOID Set(CombatInterface* ci)
+	void Set(CombatInterface* ci)
 	{
 		GetLock();
 		{
@@ -44,7 +44,7 @@ public:
 			FreeLock();
 		}
 	}
-	VOID Clear(BOOL realClear = FALSE)
+	void Clear(bool realClear = false)
 	{
 		GetLock();
 		{
@@ -59,27 +59,27 @@ public:
 			FreeLock();
 		}
 	}
-	VOID End()
+	void End()
 	{
 		GetLock();
 		{
-			_isEnd = TRUE;
+			_isEnd = true;
 			FreeLock();
 		}
 	}
 
-	VOID Insert(UINT32 id, CombatType type, CombatLog* cl);
+	void Insert(uint32_t id, CombatType type, CombatLog* cl);
 
 	std::string ConvertCombatLogVal(CombatLog* pCombatLog, CombatType type);
 	std::string GetName(Combat* pCombat);
 	CombatLogType ConvertDamageTypeForGiveDamage(SWPACKETDAMAGE_DAMAGETYPE damageType);
 	CombatLogType ConvertDamageTypeForTakeDamage(SWPACKETDAMAGE_DAMAGETYPE damageType);
 
-	VOID GetLock()
+	void GetLock()
 	{
 		_mutex.lock();
 	}
-	VOID FreeLock()
+	void FreeLock()
 	{
 		_mutex.unlock();
 	}

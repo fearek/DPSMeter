@@ -5,7 +5,7 @@
 
 #define DEBUG_DAMAGE_MONSTER 0
 
-SWDamageMonster::SWDamageMonster(UINT32 id, UINT32 db2, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount, UINT32 skillID) {
+SWDamageMonster::SWDamageMonster(uint32_t id, uint32_t db2, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount, uint32_t skillID) {
 	_id = id;
 	_db2 = db2;
 	_damage = damage;
@@ -34,17 +34,17 @@ SWDamageMonster::~SWDamageMonster() {
 	_skillinfo.clear();
 }
 
-VOID SWDamageMonster::SetNameFromDB()
+void SWDamageMonster::SetNameFromDB()
 {
 	ZeroMemory(_name, MONSTER_NAME_LEN);
 	SWDB.GetMonsterName(_db2, _name, MONSTER_NAME_LEN);
 }
 
-BOOL SWDamageMonster::SortFunction(SWDamageMonster* monsterA, SWDamageMonster* monsterB) {
+bool SWDamageMonster::SortFunction(SWDamageMonster* monsterA, SWDamageMonster* monsterB) {
 	return monsterA->GetDamage() > monsterB->GetDamage();
 }
 
-VOID SWDamageMonster::AddDamage(UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount, UINT32 skillID) {
+void SWDamageMonster::AddDamage(uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount, uint32_t skillID) {
 	_damage += damage;
 	_critDamage += critDamage;
 	_hitCount += hitCount;
@@ -58,7 +58,7 @@ VOID SWDamageMonster::AddDamage(UINT64 damage, UINT64 critDamage, USHORT hitCoun
 	Sort();
 }
 
-VOID SWDamageMonster::InsertSkillInfo(UINT32 skillID, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount) {
+void SWDamageMonster::InsertSkillInfo(uint32_t skillID, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount) {
 
 	auto itr = _skillinfo.begin();
 
@@ -72,44 +72,44 @@ VOID SWDamageMonster::InsertSkillInfo(UINT32 skillID, UINT64 damage, UINT64 crit
 	_skillinfo.push_back(new SWDamageSkill(skillID, damage, critDamage, hitCount, critHitCount));
 }
 
-VOID SWDamageMonster::Sort() {
+void SWDamageMonster::Sort() {
 	sort(_skillinfo.begin(), _skillinfo.end(), SWDamageSkill::SortFunction);
 }
 
-UINT32 SWDamageMonster::GetID() {
+uint32_t SWDamageMonster::GetID() {
 	return _id;
 }
 
-INT32 SWDamageMonster::GetType() {
+int32_t SWDamageMonster::GetType() {
 	return _type;
 }
 
-//USHORT SWDamageMonster::GetDB1() {
+//uint16_t SWDamageMonster::GetDB1() {
 //	return _db1;
 //}
 
-UINT32 SWDamageMonster::GetDB2() {
+uint32_t SWDamageMonster::GetDB2() {
 	return _db2;
 }
 
-UINT64 SWDamageMonster::GetDamage() {
+uint64_t SWDamageMonster::GetDamage() {
 	return _damage;
 }
 
-UINT64 SWDamageMonster::GetCritDamage() {
+uint64_t SWDamageMonster::GetCritDamage() {
 	return _critDamage;
 }
 
-USHORT SWDamageMonster::GetHitCount() {
+uint16_t SWDamageMonster::GetHitCount() {
 	return _hitCount;
 }
 
-USHORT SWDamageMonster::GetCritHitCount() {
+uint16_t SWDamageMonster::GetCritHitCount() {
 	return _critHitCount;
 }
 
-UINT64 SWDamageMonster::GetSkillTotalDamage() {
-	UINT64 skillTotalDamage = 0;
+uint64_t SWDamageMonster::GetSkillTotalDamage() {
+	uint64_t skillTotalDamage = 0;
 
 	for (auto itr = _skillinfo.begin(); itr != _skillinfo.end(); itr++)
 		skillTotalDamage += (*itr)->GetDamage();
@@ -117,7 +117,7 @@ UINT64 SWDamageMonster::GetSkillTotalDamage() {
 	return skillTotalDamage;
 }
 
-const CHAR* SWDamageMonster::GetName() {
+const char* SWDamageMonster::GetName() {
 	return _name;
 }
 

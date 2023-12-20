@@ -4,11 +4,11 @@
 #include ".\Damage Meter\MySQLite.h"
 #include ".\Damage Meter\Damage Meter.h"
 
-VOID CombatMeter::Insert(UINT32 id, CombatType type, CombatLog* cl)
+void CombatMeter::Insert(uint32_t id, CombatType type, CombatLog* cl)
 {
 	COMBATMETER.GetLock();
 	{
-		BOOL success = FALSE;
+		bool success = false;
 		do
 		{
 			if (_historyMode || _isEnd || DAMAGEMETER.isTownMap())
@@ -19,7 +19,7 @@ VOID CombatMeter::Insert(UINT32 id, CombatType type, CombatLog* cl)
 
 			if (type == CombatType::MONSTER)
 			{
-				INT32 type = 0;
+				int32_t type = 0;
 				SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(id);
 				if (db == nullptr)
 				{
@@ -35,7 +35,7 @@ VOID CombatMeter::Insert(UINT32 id, CombatType type, CombatLog* cl)
 			}
 
 			_ci->Insert(id, type, cl);
-			success = TRUE;
+			success = true;
 		} while (false);
 
 		if (!success)
@@ -52,7 +52,8 @@ std::string CombatMeter::ConvertCombatLogVal(CombatLog* pCombatLog, CombatType t
 	std::string outPut;
 
 	sprintf_s(tmp, "STR_UTILLWINDOW_COMBAT_LOG_TYPE_%d", pCombatLog->_type);
-	char* typeText = LANGMANAGER.GetText(tmp);
+	std::string typeTexts = LANGMANAGER.GetText(tmp);
+	const char* typeText = typeTexts.c_str();
 
 	switch (pCombatLog->_type)
 	{
@@ -60,22 +61,22 @@ std::string CombatMeter::ConvertCombatLogVal(CombatLog* pCombatLog, CombatType t
 	case CombatLogType::CHANGED_SPECIAL_STATS:
 	{
 		if (pCombatLog->_type == CombatLogType::CHANGED_STATS)
-			sprintf_s(tmp, "STR_STAT_TYPE_%d", static_cast<INT32>(pCombatLog->_val1));
+			sprintf_s(tmp, "STR_STAT_TYPE_%d", static_cast<int32_t>(pCombatLog->_val1));
 		else
-			sprintf_s(tmp, "STR_SPECIAL_STAT_TYPE_%d", static_cast<INT32>(pCombatLog->_val1));
+			sprintf_s(tmp, "STR_SPECIAL_STAT_TYPE_%d", static_cast<int32_t>(pCombatLog->_val1));
 
-		char* statTypeText = LANGMANAGER.GetText(tmp);
+		std::string statTypeText = LANGMANAGER.GetText(tmp);
 
 		char comma[128] = { 0 };
 		TextCommmaIncludeDecimal(pCombatLog->_val2, sizeof(comma), comma);
 
-		sprintf_s(tmp, "%s %s %s", statTypeText, typeText, comma);
+		sprintf_s(tmp, "%s %s %s", statTypeText.c_str(), typeText, comma);
 		break;
 	}
 	case CombatLogType::USED_SKILL:
 	{
 		char skillName[128] = { 0 };
-		SWDB.GetSkillName(static_cast<UINT32>(pCombatLog->_val1), skillName, sizeof(skillName));
+		SWDB.GetSkillName(static_cast<uint32_t>(pCombatLog->_val1), skillName, sizeof(skillName));
 		if (strcmp(skillName, "0") == 0)
 			sprintf_s(skillName, "%.0f", pCombatLog->_val1);
 
@@ -98,7 +99,7 @@ std::string CombatMeter::ConvertCombatLogVal(CombatLog* pCombatLog, CombatType t
 		}
 		else
 		{
-			sprintf_s(tmp, "%s %s %s", typeText, DAMAGEMETER.GetPlayerName(static_cast<UINT32>(pCombatLog->_val2)), comma1);
+			sprintf_s(tmp, "%s %s %s", typeText, DAMAGEMETER.GetPlayerName(static_cast<uint32_t>(pCombatLog->_val2)), comma1);
 		}
 		break;
 	}
@@ -116,11 +117,11 @@ std::string CombatMeter::ConvertCombatLogVal(CombatLog* pCombatLog, CombatType t
 	case CombatLogType::BUFF_END:
 	{
 		char buffName[128] = { 0 };
-		if (!SWDB.GetBuffName(static_cast<UINT32>(pCombatLog->_val1), buffName, sizeof(buffName), NULL, NULL))
+		if (!SWDB.GetBuffName(static_cast<uint32_t>(pCombatLog->_val1), buffName, sizeof(buffName), NULL, NULL))
 			sprintf_s(buffName, "%.0f", pCombatLog->_val1);
 
 		if (pCombatLog->_type == CombatLogType::BUFF_STARTED)
-			sprintf_s(tmp, "%s %s(%d)", typeText, buffName, static_cast<UINT32>(pCombatLog->_val2));
+			sprintf_s(tmp, "%s %s(%d)", typeText, buffName, static_cast<uint32_t>(pCombatLog->_val2));
 		else
 			sprintf_s(tmp, "%s %s", typeText, buffName);
 		break;
@@ -128,7 +129,7 @@ std::string CombatMeter::ConvertCombatLogVal(CombatLog* pCombatLog, CombatType t
 	case CombatLogType::INVINCIBLE_SET:
 	case CombatLogType::INVINCIBLE_UNSET:
 	{
-		sprintf_s(tmp, "%s %s", DAMAGEMETER.GetPlayerName(static_cast<UINT32>(pCombatLog->_val1)), typeText);
+		sprintf_s(tmp, "%s %s", DAMAGEMETER.GetPlayerName(static_cast<uint32_t>(pCombatLog->_val1)), typeText);
 		break;
 	}
 	default:

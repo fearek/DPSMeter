@@ -6,10 +6,10 @@ protected:
 	SWPacketMazeStart() {}
 
 public:
-	SWPacketMazeStart(SWHEADER* swheader, BYTE* data);
+	SWPacketMazeStart(SWHEADER* swheader, uint8_t* data);
 	~SWPacketMazeStart() {}
 
-	VOID Do();
-	VOID Log();
-	VOID Debug();
+	void Do();
+	void Log();
+	void Debug();
 };

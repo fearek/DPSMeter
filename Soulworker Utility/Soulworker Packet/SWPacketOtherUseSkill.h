@@ -5,13 +5,13 @@
 #pragma pack(push, 1)
 
 typedef struct _SWPACKET_OTHERUSESKILL {
-	UINT32 _playerId;
-	UINT32 _skillId;
-	FLOAT _locationX;
-	FLOAT _locationY;
-	FLOAT _locationZ;
-	FLOAT _direction;
-	//BYTE _unknown01[19]; // 0430new
+	uint32_t _playerId;
+	uint32_t _skillId;
+	float _locationX;
+	float _locationY;
+	float _locationZ;
+	float _direction;
+	//uint8_t _unknown01[19]; // 0430new
 }SWPACKET_OTHERUSESKILL;
 
 #pragma pack(pop)
@@ -19,16 +19,16 @@ typedef struct _SWPACKET_OTHERUSESKILL {
 class SWPacketOtherUseSkill : public SWPacket {
 
 private:
-	CHAR _skillName[SKILL_NAME_LEN];
+	char _skillName[SKILL_NAME_LEN];
 
 protected:
 	SWPacketOtherUseSkill() {}
 
 public:
-	SWPacketOtherUseSkill(SWHEADER* swheader, BYTE* data);
+	SWPacketOtherUseSkill(SWHEADER* swheader, uint8_t* data);
 	~SWPacketOtherUseSkill() {}
 
-	VOID Do();
-	VOID Debug();
-	VOID Log();
+	void Do();
+	void Debug();
+	void Log();
 };

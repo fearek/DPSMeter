@@ -3,12 +3,12 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWSPacketMySkillUsed::SWSPacketMySkillUsed(SWHEADER* swheader, BYTE* data) {
+SWSPacketMySkillUsed::SWSPacketMySkillUsed(SWHEADER* swheader, uint8_t* data) {
 	_swheader = swheader;
 	_data = data;
 }
 
-VOID SWSPacketMySkillUsed::Do() {
+void SWSPacketMySkillUsed::Do() {
 	SWPACKET_MYSKILLUSED* skillUsed = (SWPACKET_MYSKILLUSED*)(_data + sizeof(SWHEADER));
 
 	DAMAGEMETER.AddSkillUsed(skillUsed->_playerId, skillUsed->_skillId);
@@ -20,10 +20,10 @@ VOID SWSPacketMySkillUsed::Do() {
 	return;
 }
 
-VOID SWSPacketMySkillUsed::Log() {
+void SWSPacketMySkillUsed::Log() {
 	return;
 }
 
-VOID SWSPacketMySkillUsed::Debug() {
+void SWSPacketMySkillUsed::Debug() {
 	return;
 }

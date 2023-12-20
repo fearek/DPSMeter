@@ -3,24 +3,24 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacketSquad.h"
 
-SWPacketSquad::SWPacketSquad(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketSquad::SWPacketSquad(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketSquad::Do() {
+void SWPacketSquad::Do() {
 
 	size_t offset = sizeof(SWHEADER); //SWHEADER
 
 	offset += 12; //unk01
 
-	UINT16 msgLen = 0; //RECRUITMSG
+	uint16_t msgLen = 0; //RECRUITMSG
 	memcpy(&msgLen, _data + offset, 2);
 
 	offset += 2; //msgLen
 
 	offset += msgLen; //Recruitment message
 
-	UINT16 squadLeaderNickSize = 0;
+	uint16_t squadLeaderNickSize = 0;
 	memcpy(&squadLeaderNickSize, _data + offset, 2);
 
 	offset += 2; //SQUADLEADERNICKSIZE
@@ -29,7 +29,7 @@ VOID SWPacketSquad::Do() {
 
 	offset += 12;
 
-	UINT8 squadPlayerCount = 0;
+	uint8_t squadPlayerCount = 0;
 	memcpy(&squadPlayerCount, _data + offset, 1);
 
 	offset += 1; //SQUADPLAYERCOUNT
@@ -37,20 +37,20 @@ VOID SWPacketSquad::Do() {
 	offset += 3; //unk03
 
 	for (int i = 0; i < squadPlayerCount; i++) {
-		UINT32 playerId = 0;
+		uint32_t playerId = 0;
 		memcpy(&playerId, _data + offset, 4);
 
 		offset += 4; //PLAYERID
 
-		UINT16 playerNickSize = 0;
+		uint16_t playerNickSize = 0;
 		memcpy(&playerNickSize, _data + offset, 2);
 
 		offset += 2; //PLAYERNICKSIZE
 
-		WCHAR utf16[MAX_NAME_LEN] = { 0 };
-		memcpy_s(utf16, MAX_NAME_LEN * sizeof(WCHAR), _data + offset, playerNickSize);
+		wchar_t utf16[MAX_NAME_LEN] = { 0 };
+		memcpy_s(utf16, MAX_NAME_LEN * sizeof(wchar_t), _data + offset, playerNickSize);
 
-		CHAR utf8[MAX_NAME_LEN] = { 0 };
+		char utf8[MAX_NAME_LEN] = { 0 };
 		if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
 			// Log::WriteLogA("Error in SWPacketSquad : UTF16toUTF8 FAILED");
 			return;
@@ -59,7 +59,7 @@ VOID SWPacketSquad::Do() {
 		offset += playerNickSize; //PLAYERNICK
 
 		offset += 1; //D_unk01
-		UINT8 playerJob = 0;
+		uint8_t playerJob = 0;
 		memcpy(&playerJob, _data + offset, 1);
 
 		DAMAGEMETER.InsertPlayerMetadata(playerId, utf8, playerJob);
@@ -70,7 +70,7 @@ VOID SWPacketSquad::Do() {
 	}
 }
 
-VOID SWPacketSquad::Log() {
+void SWPacketSquad::Log() {
 
 	/*size_t offset = sizeof(SWHEADER); //SWHEADER
 
@@ -78,15 +78,15 @@ VOID SWPacketSquad::Log() {
 	offset += 12; //unk01
 
 	Log::WriteLogA("At offset %zu", offset);
-	UINT16 msgLen = 0; //RECRUITMSG
+	uint16_t msgLen = 0; //RECRUITMSG
 	memcpy(&msgLen, _data + offset, 2);
 
 	offset += 2; //msgLen
 
 	Log::WriteLogA("At offset %zu", offset);
-	WCHAR utf16[MAX_NAME_LEN] = { 0 };
-	memcpy_s(utf16, MAX_NAME_LEN * sizeof(WCHAR), _data + offset, msgLen);
-	CHAR utf8[MAX_NAME_LEN] = { 0 };
+	wchar_t utf16[MAX_NAME_LEN] = { 0 };
+	memcpy_s(utf16, MAX_NAME_LEN * sizeof(wchar_t), _data + offset, msgLen);
+	char utf8[MAX_NAME_LEN] = { 0 };
 	if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
 		Log::WriteLogA("Failed to convert recruitment message");
 	}
@@ -98,14 +98,14 @@ VOID SWPacketSquad::Log() {
 
 	Log::WriteLogA("At offset %zu", offset);
 
-	UINT16 squadLeaderNickSize = 0;
+	uint16_t squadLeaderNickSize = 0;
 	memcpy(&squadLeaderNickSize, _data + offset, 2);
 	Log::WriteLogA("Found leader nick size of %04x (2 bytes)", squadLeaderNickSize);
 
 	offset += 2; //SQUADLEADERNICKSIZE
 
 	Log::WriteLogA("At offset %zu skip leader name for now", offset);
-	memcpy_s(utf16, MAX_NAME_LEN * sizeof(WCHAR), _data + offset, squadLeaderNickSize);
+	memcpy_s(utf16, MAX_NAME_LEN * sizeof(wchar_t), _data + offset, squadLeaderNickSize);
 	memset(utf16, 0, sizeof(utf16));
 	memset(utf8, 0, sizeof(utf8));
 	if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
@@ -122,7 +122,7 @@ VOID SWPacketSquad::Log() {
 	offset += 4; //unk02
 
 	Log::WriteLogA("At offset %zu", offset);
-	UINT8 squadPlayerCount = 0;
+	uint8_t squadPlayerCount = 0;
 	memcpy(&squadPlayerCount, _data + offset, 1);
 	Log::WriteLogA("Squad player count is %02x (1 byte)", squadPlayerCount);
 
@@ -133,14 +133,14 @@ VOID SWPacketSquad::Log() {
 	offset += 11; //unk03
 
 	for (int i = 0; i < squadPlayerCount; i++) {
-		UINT32 playerId = 0;
+		uint32_t playerId = 0;
 		memcpy(&playerId, _data + offset, 4);
 		Log::WriteLogA("Found player ID %08x (4 bytes)", playerId);
 
 		offset += 4; //PLAYERID
 		Log::WriteLogA("At offset %zu", offset);
 
-		UINT16 playerNickSize = 0;
+		uint16_t playerNickSize = 0;
 		memcpy(&playerNickSize, _data + offset, 2);
 		Log::WriteLogA("Found player nick size of %04x (2 bytes)", playerNickSize);
 
@@ -149,7 +149,7 @@ VOID SWPacketSquad::Log() {
 
 		memset(utf16, 0, sizeof(utf16));
 		memset(utf8, 0, sizeof(utf8));
-		memcpy_s(utf16, MAX_NAME_LEN * sizeof(WCHAR), _data + offset, playerNickSize);
+		memcpy_s(utf16, MAX_NAME_LEN * sizeof(wchar_t), _data + offset, playerNickSize);
 		utf16[playerNickSize] = 0;
 		if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
 			Log::WriteLogA("Failed to convert player name");
@@ -165,7 +165,7 @@ VOID SWPacketSquad::Log() {
 		offset += 1; //D_unk01
 
 		Log::WriteLogA("At offset %zu", offset);
-		UINT8 playerJob = 0;
+		uint8_t playerJob = 0;
 		memcpy(&playerJob, _data + offset, 1);
 		Log::WriteLogA("Player job is %02x (1 byte)", playerJob);
 
@@ -178,6 +178,6 @@ VOID SWPacketSquad::Log() {
 
 }
 
-VOID SWPacketSquad::Debug() {
+void SWPacketSquad::Debug() {
 
 }

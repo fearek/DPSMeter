@@ -5,15 +5,15 @@
 #pragma pack(push, 1)
 typedef struct _SWPacketCharacterUpdateSpecialOptionListHeader {
 
-	UINT32 _playerID;
-	BYTE _listCount;
+	uint32_t _playerID;
+	uint8_t _listCount;
 
 }SWPacketCharacterUpdateSpecialOptionListHeader;
 
 typedef struct _SWPacketCharacterUpdateSpecialOptionVal {
 
-	USHORT _listID;
-	FLOAT _listVal;
+	uint16_t _listID;
+	float _listVal;
 
 }SWPacketCharacterUpdateSpecialOptionVal;
 #pragma pack(pop)
@@ -23,10 +23,10 @@ protected:
 	SWPacketCharacterUpdateSpecialOptionList() {}
 
 public:
-	SWPacketCharacterUpdateSpecialOptionList(SWHEADER* swheader, BYTE* data);
+	SWPacketCharacterUpdateSpecialOptionList(SWHEADER* swheader, uint8_t* data);
 	~SWPacketCharacterUpdateSpecialOptionList() {}
 
-	VOID Do();
-	VOID Log();
-	VOID Debug();
+	void Do();
+	void Log();
+	void Debug();
 };

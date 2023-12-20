@@ -6,13 +6,13 @@
 #include ".\Damage Meter\MySQLite.h"
 #include ".\Damage Meter\MapList.h"
 
-SWPacketDamage::SWPacketDamage(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketDamage::SWPacketDamage(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketDamage::AttackOfMonster()
+void SWPacketDamage::AttackOfMonster()
 {
-	BYTE playerNum = *(_data + sizeof(SWHEADER));
+	uint8_t playerNum = *(_data + sizeof(SWHEADER));
 	SWPACKETDAMAGE_PLAYER* monster = (SWPACKETDAMAGE_PLAYER*)((_data + sizeof(_SWPACKETDAMAGE_MONSTER) * playerNum) + sizeof(SWHEADER) + 1);
 	//LogInstance.MyLog(_T("skill ID : %u\n"), monster->_skillID);
 
@@ -25,15 +25,15 @@ VOID SWPacketDamage::AttackOfMonster()
 			//LogInstance.MyLog(_T("hitted Player : %08x / damage : %u\n"), player->_monsterID, player->_totalDMG);
 		}
 		
-		//LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [PlayerNum = 0x%01x] [PlayerID = %04x]"), playerNum, player->_monsterID);
+		//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [PlayerNum = 0x%01x] [PlayerID = %04x]"), playerNum, player->_monsterID);
 
 		DAMAGEMETER.AddPlayerGetDamage(player->_monsterID, player->_totalDMG, player->_damageType, monster->_playerID, monster->_skillID);
 	}
 }
 
-VOID SWPacketDamage::Do() {
+void SWPacketDamage::Do() {
 
-	BYTE monsterNum = *(_data + sizeof(SWHEADER));
+	uint8_t monsterNum = *(_data + sizeof(SWHEADER));
 	SWPACKETDAMAGE_PLAYER* player = (SWPACKETDAMAGE_PLAYER*)((_data + sizeof(_SWPACKETDAMAGE_MONSTER) * monsterNum) + sizeof(SWHEADER) + 1);
 
 	if (player->_playerID == NULL) {
@@ -41,12 +41,12 @@ VOID SWPacketDamage::Do() {
 	}
 
 	//if (!DAMAGEMETER.CheckPlayer(player->_playerID))
-	//	LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [ID = %04x]"), player->_playerID);
+	//	LogInstance.WriteLog(const_cast<char*>("[DEBUG] [ID = %04x]"), player->_playerID);
 
 	// If attacker is not a player, then check it is summoned object and get summoner's id for checking is summoner a player
 	// 
 	if (!DAMAGEMETER.CheckPlayer(player->_playerID)) {
-		UINT32 owner_id = 0xffffffff;
+		uint32_t owner_id = 0xffffffff;
 		if ((owner_id = DAMAGEMETER.GetOwnerID(player->_playerID)) == 0xffffffff) {
 			AttackOfMonster();
 			return;
@@ -68,12 +68,12 @@ VOID SWPacketDamage::Do() {
 		//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[PLAYER] [DamageType = %d]")), monster->_damageType);
 			//DAMAGEMETER.AddDamage(player->_playerID, monster->_totalDMG, monster->_criticalDMG, player->_maxCombo != 0 ? 1 : 0, player->_maxCombo != 0 ? CheckCritical(monster->_damageType) : 0, player->_maxCombo, monster->_monsterID, player->_skillID);
 
-		//LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [MonsterNum = 0x%01x] [MonsterID = %04x] [PlayerID = %04x] [CheckPlayer = %d] [GetOwnerID = %04x] [OwnerCheckPlayer = %d]"),
+		//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [MonsterNum = 0x%01x] [MonsterID = %04x] [PlayerID = %04x] [CheckPlayer = %d] [GetOwnerID = %04x] [OwnerCheckPlayer = %d]"),
 		//	monsterNum, monster->_monsterID, player->_playerID, DAMAGEMETER.CheckPlayer(player->_playerID),
 		//	DAMAGEMETER.GetOwnerID(player->_playerID), DAMAGEMETER.CheckPlayer(DAMAGEMETER.GetOwnerID(player->_playerID)));
 
 		SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(monster->_monsterID);
-		UINT32 db2 = 0;
+		uint32_t db2 = 0;
 		// Don't calc not in db monster
 		if (db != nullptr) {
 			db2 = db->_db2;
@@ -86,12 +86,12 @@ VOID SWPacketDamage::Do() {
 			}
 
 			if (monster->_remainHP <= 0) {
-				BOOL isEndId = false;
+				bool isEndId = false;
 				if (endIdList.find(db2) != endIdList.end() || db->_type == 4)
 					isEndId = true;
 
 				if (UIOPTION.isTeamTALF() && DAMAGEMETER.GetWorldID() == 22061 && LunarFallBossListId.find(db2) != LunarFallBossListId.end()) {
-					BOOL skipClear = false;
+					bool skipClear = false;
 					// only edgar+queen
 					if (UIOPTION.TeamTALFMode() == 2)
 					{
@@ -108,7 +108,7 @@ VOID SWPacketDamage::Do() {
 					DAMAGEMETER.Suspend();
 				}
 				else if (isEndId) {
-					DAMAGEMETER.SetMazeState(TRUE);
+					DAMAGEMETER.SetMazeState(true);
 					DAMAGEMETER.Suspend();
 				}
 			}
@@ -116,12 +116,12 @@ VOID SWPacketDamage::Do() {
 	}
 }
 
-VOID SWPacketDamage::Debug() {
+void SWPacketDamage::Debug() {
 
-	/*BYTE monsterNum = *(_data + sizeof(SWHEADER));
+	/*uint8_t monsterNum = *(_data + sizeof(SWHEADER));
 	SWPACKETDAMAGE_PLAYER* player = (SWPACKETDAMAGE_PLAYER*)((_data + sizeof(_SWPACKETDAMAGE_MONSTER) * monsterNum) + sizeof(SWHEADER) + 2);
 
-	//LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [MonsterNum = %d] [PlayerID = %08x] [CheckPlayer = %d] [GetOwnerID = %08x] [OwnerCheckPlayer = %d]"), monsterNum, player->_playerID, DAMAGEMETER.CheckPlayer(player->_playerID), DAMAGEMETER.GetOwnerID(player->_playerID), DAMAGEMETER.CheckPlayer(DAMAGEMETER.GetOwnerID(player->_playerID)));
+	//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [MonsterNum = %d] [PlayerID = %08x] [CheckPlayer = %d] [GetOwnerID = %08x] [OwnerCheckPlayer = %d]"), monsterNum, player->_playerID, DAMAGEMETER.CheckPlayer(player->_playerID), DAMAGEMETER.GetOwnerID(player->_playerID), DAMAGEMETER.CheckPlayer(DAMAGEMETER.GetOwnerID(player->_playerID)));
 	//LogInstance.MyLog("1234");
 
 	//if (DAMAGEMETER.CheckPlayer(player->_playerID)) {
@@ -129,7 +129,7 @@ VOID SWPacketDamage::Debug() {
 	//}
 
 	if (!DAMAGEMETER.CheckPlayer(player->_playerID)) {
-		UINT32 owner_id = 0xffffffff;
+		uint32_t owner_id = 0xffffffff;
 		if ((owner_id = DAMAGEMETER.GetOwnerID(player->_playerID)) == 0xffffffff) {
 			return;
 		}
@@ -157,10 +157,10 @@ VOID SWPacketDamage::Debug() {
 
 		LogInstance.MyLog(_T("Unknown 01 : %02x"), monster->_unknown01);
 
-		LogInstance.WriteLog(const_cast<CHAR*>("\t[unknown01 = %02x] [UnknownF1 = %f] [UnknownF2 = %f] [UnknownF3 = %f]"),
+		LogInstance.WriteLog(const_cast<char*>("\t[unknown01 = %02x] [UnknownF1 = %f] [UnknownF2 = %f] [UnknownF3 = %f]"),
 		monster->_unknown01,monster->_unknownF1, monster->_unknownF2, monster->_unknownF3);
 
-		LogInstance.WriteLog(const_cast<CHAR*>("\t[PlayerID = %08x] [MonsterID = %08x] [SkillID = %08x] [Damage = %d] [remainHP = %d]"),
+		LogInstance.WriteLog(const_cast<char*>("\t[PlayerID = %08x] [MonsterID = %08x] [SkillID = %08x] [Damage = %d] [remainHP = %d]"),
 			player->_playerID, monster->_monsterID, player->_skillID, monster->_totalDMG, monster->_remainHP);*/
 	//}
 }

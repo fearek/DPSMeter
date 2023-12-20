@@ -4,11 +4,11 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketBuffOut::SWPacketBuffOut(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketBuffOut::SWPacketBuffOut(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketBuffOut::Do() {
+void SWPacketBuffOut::Do() {
 
 	BUFFMETER.GetLock();
 	{
@@ -29,11 +29,11 @@ VOID SWPacketBuffOut::Do() {
 	BUFFMETER.FreeLock();
 }
 
-VOID SWPacketBuffOut::Log() {
+void SWPacketBuffOut::Log() {
 
 }
 
-VOID SWPacketBuffOut::Debug() {
+void SWPacketBuffOut::Debug() {
 	SWPACKETBUFFOUT* buff = (SWPACKETBUFFOUT*)(_data + sizeof(SWHEADER));
 
 	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [BUFF OUT] [PLAYER ID = %08x] [BUFF ID = %d]")), buff->_playerID, buff->_buffID);

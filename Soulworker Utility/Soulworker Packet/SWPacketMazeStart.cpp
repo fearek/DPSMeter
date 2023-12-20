@@ -2,19 +2,19 @@
 #include ".\Soulworker Packet\SWPacketMazeStart.h"
 #include ".\Damage Meter\Damage Meter.h"
 
-SWPacketMazeStart::SWPacketMazeStart(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketMazeStart::SWPacketMazeStart(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketMazeStart::Do() {
-	DAMAGEMETER.SetMazeState(FALSE);
+void SWPacketMazeStart::Do() {
+	DAMAGEMETER.SetMazeState(false);
 }
 
-VOID SWPacketMazeStart::Log() {
+void SWPacketMazeStart::Log() {
 
 }
 
-VOID SWPacketMazeStart::Debug() {
+void SWPacketMazeStart::Debug() {
 	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[TEST] [MAZE START]")));
 
 	//LogInstance.MyLog(_T("Maze Start\n"));

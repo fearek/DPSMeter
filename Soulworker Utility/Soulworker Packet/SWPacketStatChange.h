@@ -5,15 +5,15 @@
 #pragma pack(push, 1)
 
 typedef struct _SWPACKETSTATCHANGE_HEADER {
-	BYTE _unknown01;
-	UINT32 _playerID;
-	BYTE _statsCount;
+	uint8_t _unknown01;
+	uint32_t _playerID;
+	uint8_t _statsCount;
 }SWPACKETSTATCHANGE_HEADER;
 
 typedef struct _SWPACKETSTATCHANGE_DATA {
-	FLOAT _statValue;
-	USHORT _statType;
-	BYTE _unknown01[8]; //0430new
+	float _statValue;
+	uint16_t _statType;
+	uint8_t _unknown01[8]; //0430new
 }SWPACKETSTATCHANGE_DATA;
 
 #pragma pack(pop)
@@ -24,10 +24,10 @@ protected:
 	SWPacketStatChange() {}
 
 public:
-	SWPacketStatChange(SWHEADER* swheader, BYTE* data);
+	SWPacketStatChange(SWHEADER* swheader, uint8_t* data);
 	~SWPacketStatChange() {}
 
-	VOID Do();
-	VOID Debug();
-	VOID Log();
+	void Do();
+	void Debug();
+	void Log();
 };

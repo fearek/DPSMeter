@@ -3,8 +3,8 @@
 
 #pragma pack(push, 1)
 typedef struct _SWPACKETAGGROCHANGED {
-	UINT32 _id;
-	UINT32 _targetedId;
+	uint32_t _id;
+	uint32_t _targetedId;
 }SWPACKETAGGROCHANGED;
 #pragma pack(pop)
 
@@ -14,10 +14,10 @@ protected:
 	SWPacketAggroChanged() {}
 
 public:
-	SWPacketAggroChanged(SWHEADER* swheader, BYTE* data);
+	SWPacketAggroChanged(SWHEADER* swheader, uint8_t* data);
 	~SWPacketAggroChanged() {}
 
-	VOID Do();
-	VOID Debug();
-	VOID Log();
+	void Do();
+	void Debug();
+	void Log();
 };

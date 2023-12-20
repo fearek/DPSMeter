@@ -3,8 +3,8 @@
 
 #pragma pack(push, 1)
 typedef struct _SWPACKETCOOLDOWN {
-	UINT32 _playerID;
-	FLOAT _value;
+	uint32_t _playerID;
+	float _value;
 }SWPACKETCOOLDOWN;
 #pragma pack(pop)
 
@@ -13,10 +13,10 @@ protected:
 	SWPacketCooldown() {}
 
 public:
-	SWPacketCooldown(SWHEADER* swheader, BYTE* data);
+	SWPacketCooldown(SWHEADER* swheader, uint8_t* data);
 	~SWPacketCooldown() {}
 
-	VOID Do();
-	VOID Log();
-	VOID Debug();
+	void Do();
+	void Log();
+	void Debug();
 };

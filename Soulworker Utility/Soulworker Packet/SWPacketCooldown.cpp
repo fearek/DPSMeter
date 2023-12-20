@@ -3,21 +3,21 @@
 #include ".\Buff Meter\Buff Meter.h"
 #include ".\Damage Meter\Damage Meter.h"
 
-SWPacketCooldown::SWPacketCooldown(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketCooldown::SWPacketCooldown(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 	
 }
 
-VOID SWPacketCooldown::Do() {
+void SWPacketCooldown::Do() {
 	SWPACKETCOOLDOWN* cooldown = (SWPACKETCOOLDOWN*)(_data + sizeof(SWHEADER));
 
 	DAMAGEMETER.AddEnlighten(cooldown->_playerID, cooldown->_value);
 }
 
-VOID SWPacketCooldown::Log() {
+void SWPacketCooldown::Log() {
 
 }
 
-VOID SWPacketCooldown::Debug() {
+void SWPacketCooldown::Debug() {
 
 	SWPACKETCOOLDOWN* cooldown = (SWPACKETCOOLDOWN*)(_data + sizeof(SWHEADER));
 	//LogInstance.MyLog(const_cast<LPTSTR>(_T("[DEBUG] [BUFF IN] [PLAYER ID = %08x] [value = %f] [Unknown = %u]\n")), cooldown->_playerID, cooldown->_value, cooldown->_unknown01);

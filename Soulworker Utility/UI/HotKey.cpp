@@ -8,9 +8,9 @@ AutoHotKey::~AutoHotKey() {
 	_callbacks.clear();
 }
 
-AutoHotKey::AutoHotKey(const INT key1, INT key2, INT key3, const CHAR* name, INT callback_num, HOTKEYCALLBACK* callback, ...) {
+AutoHotKey::AutoHotKey(const int key1, int key2, int key3, const char* name, int callback_num, HOTKEYCALLBACK* callback, ...) {
 	_key[0] = key1; _key[1] = key2; _key[2] = key3;
-	_isActive = FALSE;
+	_isActive = false;
 
 	if (key3 == -1 && key2 == -1)
 		_hotkeyCount = 1;
@@ -25,7 +25,7 @@ AutoHotKey::AutoHotKey(const INT key1, INT key2, INT key3, const CHAR* name, INT
 	va_list va;
 	va_start(va, callback);
 
-	for (INT i = 0; i < callback_num; i++) {
+	for (int i = 0; i < callback_num; i++) {
 		_callbacks.push_back(move(*callback));
 		callback = va_arg(va, HOTKEYCALLBACK*);
 	}
@@ -33,9 +33,9 @@ AutoHotKey::AutoHotKey(const INT key1, INT key2, INT key3, const CHAR* name, INT
 	va_end(va);
 }
 
-AutoHotKey::AutoHotKey(const INT key1, INT key2, const CHAR* name, INT callback_num, HOTKEYCALLBACK* callback, ...) {
+AutoHotKey::AutoHotKey(const int key1, int key2, const char* name, int callback_num, HOTKEYCALLBACK* callback, ...) {
 	_key[0] = key1; _key[1] = key2; _key[2] = -1;
-	_isActive = FALSE;
+	_isActive = false;
 
 	if (key2 == -1)
 		_hotkeyCount = 1;
@@ -48,7 +48,7 @@ AutoHotKey::AutoHotKey(const INT key1, INT key2, const CHAR* name, INT callback_
 	va_list va;
 	va_start(va, callback);
 
-	for (INT i = 0; i < callback_num; i++) {
+	for (int i = 0; i < callback_num; i++) {
 		_callbacks.push_back(std::move(*callback));
 		callback = va_arg(va, HOTKEYCALLBACK*);
 	}
@@ -56,9 +56,9 @@ AutoHotKey::AutoHotKey(const INT key1, INT key2, const CHAR* name, INT callback_
 	va_end(va);
 }
 
-AutoHotKey::AutoHotKey(const INT key1, const CHAR* name, INT callback_num, HOTKEYCALLBACK* callback, ...) : _hotkeyCount(1) {
+AutoHotKey::AutoHotKey(const int key1, const char* name, int callback_num, HOTKEYCALLBACK* callback, ...) : _hotkeyCount(1) {
 	_key[0] = key1; _key[1] = -1, _key[2] = -1;
-	_isActive = FALSE;
+	_isActive = false;
 
 	if (name != nullptr)
 		strcpy_s(_name, name);
@@ -66,7 +66,7 @@ AutoHotKey::AutoHotKey(const INT key1, const CHAR* name, INT callback_num, HOTKE
 	va_list va;
 	va_start(va, callback);
 
-	for (INT i = 0; i < callback_num; i++) {
+	for (int i = 0; i < callback_num; i++) {
 		_callbacks.push_back(std::move(*callback));
 		callback = va_arg(va, HOTKEYCALLBACK*);
 	}
@@ -74,16 +74,16 @@ AutoHotKey::AutoHotKey(const INT key1, const CHAR* name, INT callback_num, HOTKE
 	va_end(va);
 }
 
-VOID AutoHotKey::CheckKey() {
+void AutoHotKey::CheckKey() {
 
 	if (_hotkeyCount > HOTKEY._pressedKey.size()) {
-		_isActive = FALSE;
+		_isActive = false;
 		return;
 	}
 
 	if (_isActive) {
 		if (DXINPUT.isKeyIdle(_key[0]) || DXINPUT.isKeyIdle(_key[1]) || DXINPUT.isKeyIdle(_key[2])) {
-			_isActive = FALSE;
+			_isActive = false;
 		}
 		else {
 			return;
@@ -92,17 +92,17 @@ VOID AutoHotKey::CheckKey() {
 
 	for (auto itr = HOTKEY._pressedKey.begin(); itr != HOTKEY._pressedKey.end(); itr++) {
 
-		BOOL find = FALSE;
+		bool find = false;
 
-		for (INT i = 0; i < _hotkeyCount; i++) {
+		for (int i = 0; i < _hotkeyCount; i++) {
 			if (_key[i] == *itr) {
-				find = TRUE;
+				find = true;
 				break;
 			}
 		}
 
 		if (!find) {
-			_isActive = FALSE;
+			_isActive = false;
 			return;
 		}
 	}
@@ -111,7 +111,7 @@ VOID AutoHotKey::CheckKey() {
 	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [HOTKEY] [KEY1 = %d] [KEY2 = %d] [KEY3 = %d] [%s]")), _key[0], _key[1], _key[2], _name);
 #endif
 
-	_isActive = TRUE;
+	_isActive = true;
 
 	for (auto itr = _callbacks.begin(); itr != _callbacks.end(); itr++) {
 		if ((*itr) != nullptr) {
@@ -130,9 +130,9 @@ HotKey::~HotKey() {
 	}
 }
 
-VOID HotKey::CheckKey() {
+void HotKey::CheckKey() {
 
-	for (UINT i = 0; i < DXINPUT.GetStateSize(); i++) {
+	for (unsigned int i = 0; i < DXINPUT.GetStateSize(); i++) {
 		if (DXINPUT.isKeyRelease(i)) {
 			for (auto itr = _pressedKey.begin(); itr != _pressedKey.end(); itr++) {
 				if (*itr == i) {
@@ -147,7 +147,7 @@ VOID HotKey::CheckKey() {
 		}
 	}
 
-	for (UINT i = 0; i < DXINPUT.GetStateSize(); i++) {
+	for (unsigned int i = 0; i < DXINPUT.GetStateSize(); i++) {
 		if (DXINPUT.isKeyDown(i)) {
 #if DEBUG_HOTKEY == 1
 			LogInstance.WriteLog(const_cast<char*>("Down Key - %d"), i);
@@ -157,21 +157,21 @@ VOID HotKey::CheckKey() {
 	}
 }
 
-VOID HotKey::CheckHotKey() {
+void HotKey::CheckHotKey() {
 	
 	for (auto itr = _hotkeys.begin(); itr != _hotkeys.end(); itr++) {
 		(*itr)->CheckKey();
 	}
 }
 
-VOID HotKey::Update() {
+void HotKey::Update() {
 
 	CheckKey();
 	CheckHotKey();
 
 }
 
-VOID HotKey::InsertHotkeyToogle(INT key1, INT key2, INT key3) {
+void HotKey::InsertHotkeyToogle(int key1, int key2, int key3) {
 	
 //	HOTKEYCALLBACK callback = bind(&SWDamageMeter::Toggle, &DAMAGEMETER);
 
@@ -179,7 +179,7 @@ VOID HotKey::InsertHotkeyToogle(INT key1, INT key2, INT key3) {
 
 }
 
-VOID HotKey::InsertHotkeyStop(INT key1, INT key2, INT key3) {
+void HotKey::InsertHotkeyStop(int key1, int key2, int key3) {
 
 	HOTKEYCALLBACK callback1 = std::bind(&SWDamageMeter::Clear, &DAMAGEMETER);
 	HOTKEYCALLBACK callback2 = std::bind(&PlayerTable::ClearTable, &PLAYERTABLE);

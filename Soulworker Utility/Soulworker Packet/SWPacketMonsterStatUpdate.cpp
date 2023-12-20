@@ -6,16 +6,16 @@
 #include ".\UI\PlayerTable.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketMonsterStatUpdate::SWPacketMonsterStatUpdate(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketMonsterStatUpdate::SWPacketMonsterStatUpdate(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketMonsterStatUpdate::Do() {
+void SWPacketMonsterStatUpdate::Do() {
 
-	SHORT offset = sizeof(SWHEADER);
+	int16_t offset = sizeof(SWHEADER);
 	SWPacketMonsterStatUpdatePkt* pkt = (SWPacketMonsterStatUpdatePkt*)(_data + offset);
 	offset += sizeof(SWPacketMonsterStatUpdatePkt);
-	for (BYTE i = 0; i < pkt->_statCounts; i++) {
+	for (uint8_t i = 0; i < pkt->_statCounts; i++) {
 
 		SWPacketMonsterStatData* pktStatData = (SWPacketMonsterStatData*)(_data + offset);
 		offset += sizeof(SWPacketMonsterStatData);
@@ -26,7 +26,7 @@ VOID SWPacketMonsterStatUpdate::Do() {
 			break;
 		}
 
-		UINT32 monsterId = 0;
+		uint32_t monsterId = 0;
 		SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(pkt->_id);
 		if (db != nullptr) {
 			monsterId = db->_db2;
@@ -35,25 +35,25 @@ VOID SWPacketMonsterStatUpdate::Do() {
 		CombatLog* pCombatLog = new CombatLog;
 		pCombatLog->_type = CombatLogType::CHANGED_STATS;
 		pCombatLog->_val1 = pktStatData->_statID;
-		pCombatLog->_val2 = static_cast<DOUBLE>(pktStatData->_statVal);
+		pCombatLog->_val2 = static_cast<double>(pktStatData->_statVal);
 		COMBATMETER.Insert(monsterId, CombatType::MONSTER, pCombatLog);
 	}
 
 }
 
-VOID SWPacketMonsterStatUpdate::Log() {
+void SWPacketMonsterStatUpdate::Log() {
 
 }
 
-VOID SWPacketMonsterStatUpdate::Debug() {
+void SWPacketMonsterStatUpdate::Debug() {
 
-	/*SHORT offset = sizeof(SWHEADER);
+	/*int16_t offset = sizeof(SWHEADER);
 	SWPacketMonsterStatUpdatePkt* pkt = (SWPacketMonsterStatUpdatePkt*)(_data + offset);
 	offset += sizeof(SWPacketMonsterStatUpdatePkt);
 
 	LogInstance.WriteLog("[SWPacketMonsterStatUpdate] MonsterId = %u, StatCount = %d", pkt->_id, pkt->_statCounts);
 
-	for (BYTE i = 0; i < pkt->_statCounts; i++) {
+	for (uint8_t i = 0; i < pkt->_statCounts; i++) {
 
 		SWPacketMonsterStatData* pktStatData = (SWPacketMonsterStatData*)(_data + offset);
 		offset += sizeof(SWPacketMonsterStatData);

@@ -13,7 +13,7 @@ class FlatBufferUtil : public Singleton<FlatBufferUtil> {
 
 public:
 
-	VOID tIntDoubleListConverter(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tIntDoubleList>>& vIntDouble, std::unordered_map<UINT32, std::vector<double>>& m)
+	void tIntDoubleListConverter(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tIntDoubleList>>& vIntDouble, std::unordered_map<uint32_t, std::vector<double>>& m)
 	{
 		for (auto itr = m.begin(); itr != m.end(); itr++) 
 		{
@@ -28,7 +28,7 @@ public:
 		}
 	}
 
-	VOID tIntDoubleListReverser(const _tIntDoubleList* tIntDoubleList, std::unordered_map<UINT32, std::vector<double>>& m)
+	void tIntDoubleListReverser(const _tIntDoubleList* tIntDoubleList, std::unordered_map<uint32_t, std::vector<double>>& m)
 	{
 		std::vector<double> vTmp;
 
@@ -38,7 +38,7 @@ public:
 		m[tIntDoubleList->_f()] = vTmp;
 	}
 
-	VOID fbvDoubleReverser(const flatbuffers::Vector<double>* fbvDouble, std::vector<double>& vDouble)
+	void fbvDoubleReverser(const flatbuffers::Vector<double>* fbvDouble, std::vector<double>& vDouble)
 	{
 		for (auto itr = fbvDouble->begin(); itr != fbvDouble->end(); itr++)
 			vDouble.push_back(*itr);

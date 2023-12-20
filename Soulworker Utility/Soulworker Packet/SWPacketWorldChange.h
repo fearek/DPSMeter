@@ -5,11 +5,11 @@
 #pragma pack(push, 1)
 
 typedef struct _SWPACKETWORLDCHANGE {
-	UINT32 _id;
-	BYTE _unknwon1[20];
-	USHORT _worldID;
-	BYTE _unknwon2[10];
-	USHORT _serverIPLen;
+	uint32_t _id;
+	uint8_t _unknwon1[20];
+	uint16_t _worldID;
+	uint8_t _unknwon2[10];
+	uint16_t _serverIPLen;
 	uint8_t _serverIP;
 }SWPACKETWORLDCHANGE;
 
@@ -20,10 +20,10 @@ protected:
 	SWPacketWorldChange() {}
 
 public:
-	SWPacketWorldChange(SWHEADER* swheader, BYTE* data);
+	SWPacketWorldChange(SWHEADER* swheader, uint8_t* data);
 	~SWPacketWorldChange() {}
 
-	VOID Do();
-	VOID Log();
-	VOID Debug();
+	void Do();
+	void Log();
+	void Debug();
 };

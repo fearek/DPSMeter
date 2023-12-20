@@ -5,9 +5,9 @@
 #pragma pack(push, 1)
 
 typedef struct _SWPACKETENTERANIMATION {
-	UINT32 _player_id;
-	UINT32 _type1;
-	UINT32 _type2;
+	uint32_t _player_id;
+	uint32_t _type1;
+	uint32_t _type2;
 }SWPACKETENTERANIMATION;
 
 #pragma pack(pop)
@@ -17,10 +17,10 @@ protected:
 	SWPacketEnterAnimation() {}
 
 public:
-	SWPacketEnterAnimation(SWHEADER* swheader, BYTE* data);
+	SWPacketEnterAnimation(SWHEADER* swheader, uint8_t* data);
 	~SWPacketEnterAnimation() {}
 
-	VOID Do();
-	VOID Log();
-	VOID Debug();
+	void Do();
+	void Log();
+	void Debug();
 };

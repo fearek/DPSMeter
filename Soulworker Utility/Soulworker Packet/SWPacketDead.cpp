@@ -4,23 +4,23 @@
 #include ".\Damage Meter\Damage Meter.h"
 
 
-SWPacketDead::SWPacketDead(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketDead::SWPacketDead(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketDead::Do() {
+void SWPacketDead::Do() {
 	SWPACKET_DEAD* stat_header = (SWPACKET_DEAD*)(_data + sizeof(SWHEADER));
 
-	UINT32 playerId = stat_header->_playerid;
+	uint32_t playerId = stat_header->_playerid;
 	if (DAMAGEMETER.CheckPlayer(playerId)) {
 		DAMAGEMETER.AddDeath(playerId);
 	}
 }
 
-VOID SWPacketDead::Log() {
+void SWPacketDead::Log() {
 
 }
 
-VOID SWPacketDead::Debug() {
+void SWPacketDead::Debug() {
 
 }

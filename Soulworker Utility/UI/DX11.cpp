@@ -2,7 +2,7 @@
 #include ".\UI\DX11.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include ".\UI\stb_image.h"
-DX11::DX11() : _4xMsaaQuality(0), _enable4xMsaa(FALSE), _d3dDevice(nullptr), _d3dDeviceContext(nullptr) {
+DX11::DX11() : _4xMsaaQuality(0), _enable4xMsaa(false), _d3dDevice(nullptr), _d3dDeviceContext(nullptr) {
 
 }
 
@@ -10,12 +10,12 @@ DX11::~DX11() {
 	CleanDevice();
 }
 
-BOOL DX11::CreateDevice() {
+bool DX11::CreateDevice() {
 
 	if (_d3dDevice)
-		return TRUE;
+		return true;
 
-	UINT createDeviceFlags = 0;
+	unsigned int createDeviceFlags = 0;
 
 #if defined(DEBUG) || defined(_DEBUG)
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
@@ -38,7 +38,7 @@ BOOL DX11::CreateDevice() {
 
 	if (FAILED(hr)) {
 		LogInstance.WriteLog("[DirectX11] [CreateDevice FAILED]\n");
-		return FALSE;
+		return false;
 	}
 	for (size_t i = 0; i < charTexturesFiles.size(); i++) //chars start at 1, 0 is unknown
 	{
@@ -60,10 +60,10 @@ BOOL DX11::CreateDevice() {
 			}
 		}
 	}
-	return TRUE;
+	return true;
 }
 
-VOID DX11::Check4XMSAA() {
+void DX11::Check4XMSAA() {
 
 	if (_d3dDevice == nullptr)
 		return;
@@ -71,14 +71,14 @@ VOID DX11::Check4XMSAA() {
 	HRESULT hr = _d3dDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &_4xMsaaQuality);
 
 	if (FAILED(hr) || _4xMsaaQuality < 1) {
-		_enable4xMsaa = FALSE;
+		_enable4xMsaa = false;
 		return;
 	}
 
-	_enable4xMsaa = TRUE;
+	_enable4xMsaa = true;
 }
 
-VOID DX11::CleanDevice() {
+void DX11::CleanDevice() {
 
 	if (_d3dDeviceContext != nullptr) {
 		_d3dDeviceContext->ClearState();
@@ -92,16 +92,16 @@ VOID DX11::CleanDevice() {
 	}
 }
 
-BOOL DX11::Init() {
+bool DX11::Init() {
 	
 	if (!CreateDevice()) {
 		CleanDevice();
-		return FALSE;
+		return false;
 	}
 
 	Check4XMSAA();
 
-	return TRUE;
+	return true;
 }
 
 IDXGISwapChain* DX11::CreateSwapChain(HWND hWnd) {
@@ -131,7 +131,7 @@ IDXGISwapChain* DX11::CreateSwapChain(HWND hWnd) {
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	sd.BufferCount = 2;
 	sd.OutputWindow = hWnd;
-	sd.Windowed = TRUE;
+	sd.Windowed = true;
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
@@ -153,7 +153,7 @@ IDXGISwapChain* DX11::CreateSwapChain(HWND hWnd) {
 		if (FAILED(dxgiFactory->CreateSwapChain(_d3dDevice, &sd, &swapChain)))
 			break;
 
-	} while (FALSE);
+	} while (false);
 
 	if (dxgiDevice != nullptr)
 		dxgiDevice->Release();
@@ -180,7 +180,7 @@ ID3D11RenderTargetView* DX11::CreateRenderTarget(IDXGISwapChain* swapChain) {
 			break;
 
 		_d3dDevice->CreateRenderTargetView(backBuffer, 0, &renderTargetView);
-	} while (FALSE);
+	} while (false);
 
 	if(backBuffer != nullptr)
 		backBuffer->Release();

@@ -5,11 +5,11 @@
 #pragma pack(push, 1)
 
 //typedef struct _SWPACKETCHAT_HEADER {
-//	UINT32 _playerID;
-//	BYTE _chatType;
-//	BYTE _unknown01;
-//	USHORT _unknown02;
-//	USHORT _chatSize;
+//	uint32_t _playerID;
+//	uint8_t _chatType;
+//	uint8_t _unknown01;
+//	uint16_t _unknown02;
+//	uint16_t _chatSize;
 //}SWPACKETCHAT_HEADER;
 #pragma pack(pop)
 
@@ -19,10 +19,10 @@ protected:
 	SWPacketUseSkill() {}
 
 public:
-	SWPacketUseSkill(SWHEADER* swheader, BYTE* data);
+	SWPacketUseSkill(SWHEADER* swheader, uint8_t* data);
 	~SWPacketUseSkill() {}
 
-	VOID Do();
-	VOID Debug();
-	VOID Log();
+	void Do();
+	void Debug();
+	void Log();
 };

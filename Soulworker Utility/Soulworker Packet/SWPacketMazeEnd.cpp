@@ -2,24 +2,24 @@
 #include ".\Soulworker Packet\SWPacketMazeEnd.h"
 #include ".\Damage Meter\Damage Meter.h"
 
-SWPacketMazeEnd::SWPacketMazeEnd(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketMazeEnd::SWPacketMazeEnd(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketMazeEnd::Do() 
+void SWPacketMazeEnd::Do() 
 {
 	SWPACKETCHATMAZEEND* pMazeEnd = (SWPACKETCHATMAZEEND*)(_data + sizeof(SWHEADER));
 
-	DAMAGEMETER.SetMazeState(TRUE);
+	DAMAGEMETER.SetMazeState(true);
 	DAMAGEMETER.Suspend();
 	DAMAGEMETER.SetRealClearTime(pMazeEnd->_clearTime);
 }
 
-VOID SWPacketMazeEnd::Log() {
+void SWPacketMazeEnd::Log() {
 
 }
 
-VOID SWPacketMazeEnd::Debug() {
+void SWPacketMazeEnd::Debug() {
 	/*SWPACKETCHATMAZEEND* pMazeEnd = (SWPACKETCHATMAZEEND*)(_data + sizeof(SWHEADER));
 	LogInstance.WriteLog("[SWPacketMazeEnd] rank = %d, playScore = %u, clearScore = %u, clearTime = %u",
 		pMazeEnd->_rank, pMazeEnd->_playScore, pMazeEnd->_clearScore, pMazeEnd->_clearTime);*/

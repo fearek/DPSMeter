@@ -5,11 +5,11 @@
 #include ".\Combat Meter\Combat.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketStatChange::SWPacketStatChange(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketStatChange::SWPacketStatChange(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketStatChange::Do() {
+void SWPacketStatChange::Do() {
 
 	if (DAMAGEMETER.isTownMap()) {
 		return;
@@ -17,7 +17,7 @@ VOID SWPacketStatChange::Do() {
 
 	SWPACKETSTATCHANGE_HEADER* stat_header = (SWPACKETSTATCHANGE_HEADER*)(_data + sizeof(SWHEADER));
 
-	BYTE* p_data;
+	uint8_t* p_data;
 	if (stat_header->_unknown01 == 0) {
 		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER);
 	}
@@ -50,14 +50,14 @@ VOID SWPacketStatChange::Do() {
 	}
 }
 
-VOID SWPacketStatChange::Log() {
+void SWPacketStatChange::Log() {
 
 }
 
-VOID SWPacketStatChange::Debug() {
+void SWPacketStatChange::Debug() {
 	SWPACKETSTATCHANGE_HEADER* stat_header = (SWPACKETSTATCHANGE_HEADER*)(_data + sizeof(SWHEADER));
 
-	BYTE* p_data;
+	uint8_t* p_data;
 	if (stat_header->_unknown01 == 0) {
 		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER);
 	}

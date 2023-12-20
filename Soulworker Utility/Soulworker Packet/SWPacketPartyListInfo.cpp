@@ -3,11 +3,11 @@
 #include ".\Soulworker Packet\SWPacketPartyListInfo.h"
 #include ".\Damage Meter\Damage Meter.h"
 
-SWPacketPartyListInfo::SWPacketPartyListInfo(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketPartyListInfo::SWPacketPartyListInfo(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketPartyListInfo::Do() {
+void SWPacketPartyListInfo::Do() {
 
 
 	//LogInstance.MyLog(_T("Party Info\n"));
@@ -15,76 +15,76 @@ VOID SWPacketPartyListInfo::Do() {
 	//	LogInstance.MyLog(_T("%02x "), _data[i]);
 	//LogInstance.MyLog(_T("\n"));
 
-	BYTE* p_data = _data;
+	uint8_t* p_data = _data;
 	p_data += sizeof(SWHEADER);
-	BYTE partyCount = *p_data;
+	uint8_t partyCount = *p_data;
 	//LogInstance.MyLog("Party Counts : %u\n", partyCount);
 	p_data += 1;
 
-	//LogInstance.MyLog("Unknown01 : %04x\n", *((USHORT*)p_data));
+	//LogInstance.MyLog("Unknown01 : %04x\n", *((uint16_t*)p_data));
 	p_data += 2;
 	//LogInstance.MyLog("\n");
 
 	for (int i = 0; i < partyCount; i++) {
-		USHORT unknown01 = *((USHORT*)p_data);
+		uint16_t unknown01 = *((uint16_t*)p_data);
 		p_data += 2;
 
-		BYTE unknown02 = *p_data;
+		uint8_t unknown02 = *p_data;
 		p_data += 1;
 
-		USHORT partyNameLength = *((USHORT*)p_data);
+		uint16_t partyNameLength = *((uint16_t*)p_data);
 		p_data += 2;
 
-		WCHAR partyName_utf16[MAX_NAME_LEN] = { 0 };
-		memcpy_s(partyName_utf16, MAX_NAME_LEN * sizeof(WCHAR), p_data, partyNameLength);
-		CHAR partyName_utf8[MAX_NAME_LEN] = { 0 };
+		wchar_t partyName_utf16[MAX_NAME_LEN] = { 0 };
+		memcpy_s(partyName_utf16, MAX_NAME_LEN * sizeof(wchar_t), p_data, partyNameLength);
+		char partyName_utf8[MAX_NAME_LEN] = { 0 };
 		if (!UTF16toUTF8(partyName_utf16, partyName_utf8, MAX_NAME_LEN)) {
 			//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
 			return;
 		}
 		p_data += partyNameLength;
 
-		USHORT minLv = *((USHORT*)p_data);
+		uint16_t minLv = *((uint16_t*)p_data);
 		p_data += 2;
-		USHORT maxLv = *((USHORT*)p_data);
+		uint16_t maxLv = *((uint16_t*)p_data);
 		p_data += 2;
 
-		BYTE unknown03 = *p_data;
+		uint8_t unknown03 = *p_data;
 		p_data += 1;
 
-		USHORT leaderNameLength = *((USHORT*)p_data);
+		uint16_t leaderNameLength = *((uint16_t*)p_data);
 		p_data += 2;
 
-		WCHAR leaderName_utf16[MAX_NAME_LEN] = { 0 };
-		memcpy_s(leaderName_utf16, MAX_NAME_LEN * sizeof(WCHAR), p_data, leaderNameLength);
-		CHAR leaderName_utf8[MAX_NAME_LEN] = { 0 };
+		wchar_t leaderName_utf16[MAX_NAME_LEN] = { 0 };
+		memcpy_s(leaderName_utf16, MAX_NAME_LEN * sizeof(wchar_t), p_data, leaderNameLength);
+		char leaderName_utf8[MAX_NAME_LEN] = { 0 };
 		if (!UTF16toUTF8(leaderName_utf16, leaderName_utf8, MAX_NAME_LEN)) {
 			//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
 			return;
 		}
 		p_data += leaderNameLength;
 
-		BYTE partyMemberCount = *p_data;
+		uint8_t partyMemberCount = *p_data;
 		p_data += 1;
 
-		UINT32 remainedTime = *((UINT32*)p_data);
+		uint32_t remainedTime = *((uint32_t*)p_data);
 		p_data += 4;
 
-		USHORT mapId = *((USHORT*)p_data);
+		uint16_t mapId = *((uint16_t*)p_data);
 		p_data += 2;
 
-		USHORT unknown04 = *((USHORT*)p_data);
+		uint16_t unknown04 = *((uint16_t*)p_data);
 		p_data += 2;
 
-		UINT32 partyId = *((UINT32*)p_data);
+		uint32_t partyId = *((uint32_t*)p_data);
 		p_data += 4;
 
-		UINT32 leaderId = *((UINT32*)p_data);
+		uint32_t leaderId = *((uint32_t*)p_data);
 		p_data += 4;
 
-		BYTE unknown05 = *p_data; // 1=teammates 2=enemy
+		uint8_t unknown05 = *p_data; // 1=teammates 2=enemy
 		p_data += 1;
-		BYTE unknown06 = *p_data;
+		uint8_t unknown06 = *p_data;
 		p_data += 1;
 
 		//LogInstance.MyLog(_T("unknown 01 : %04x / 2: %02x / 3: %02x / 4 : %04x / 5 : %02x / 6 : %02x\n")
@@ -97,25 +97,25 @@ VOID SWPacketPartyListInfo::Do() {
 	}
 }
 
-VOID SWPacketPartyListInfo::Log() {
+void SWPacketPartyListInfo::Log() {
 
 }
 
-VOID SWPacketPartyListInfo::Debug() {
+void SWPacketPartyListInfo::Debug() {
 
 	//SWPACKETPARTY_HEADER* party_header = (SWPACKETPARTY_HEADER*)(_data + sizeof(SWHEADER));
 
-	//BYTE* p_data = _data;
+	//uint8_t* p_data = _data;
 	//p_data += sizeof(SWHEADER) + sizeof(SWPACKETPARTY_HEADER);
 
 	//for (int i = 0; i < party_header->_partyPlayerCount; i++) {
 	//	SWPACKETPARTY_DATA* party_data = (SWPACKETPARTY_DATA*)p_data;
-	//	BYTE job = *(p_data + sizeof(SWPACKETPARTY_DATA) + party_data->_nickSize + 1);
+	//	uint8_t job = *(p_data + sizeof(SWPACKETPARTY_DATA) + party_data->_nickSize + 1);
 
-	//	WCHAR utf16[MAX_NAME_LEN] = { 0 };
-	//	memcpy_s(utf16, MAX_NAME_LEN * sizeof(WCHAR), p_data + sizeof(SWPACKETPARTY_DATA), party_data->_nickSize);
+	//	wchar_t utf16[MAX_NAME_LEN] = { 0 };
+	//	memcpy_s(utf16, MAX_NAME_LEN * sizeof(wchar_t), p_data + sizeof(SWPACKETPARTY_DATA), party_data->_nickSize);
 
-	//	CHAR utf8[MAX_NAME_LEN] = { 0 };
+	//	char utf8[MAX_NAME_LEN] = { 0 };
 	//	if (!UTF16toUTF8(utf16, utf8, MAX_NAME_LEN)) {
 	//		//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Error in SWPacketParty : UTF16toUTF8 FAILED")));
 	//		return;

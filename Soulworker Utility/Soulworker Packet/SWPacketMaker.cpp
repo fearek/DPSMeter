@@ -33,7 +33,7 @@ bool getBytes(std::vector<unsigned char>& buffer, unsigned int size)
 	}
 	return true;
 }
-DWORD ReceiveCallback(LPVOID prc) {
+DWORD ReceiveCallback(void* prc) {
 
 	//handle connection and packets
 	int max_sd, activity;
@@ -99,7 +99,7 @@ bool SWPacketMaker::Init() {
 		LogInstance.WriteLog("Socket failed: %d", error);
 		return error;
 	};
-	int opt = TRUE;
+	int opt = true;
 	iResult = setsockopt(main_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&opt, sizeof(opt));
 	if (iResult != 0)
 	{
@@ -156,15 +156,15 @@ SWHEADER* SWPacketMaker::GetSWHeader(std::vector<unsigned char>& packet) {
 
 }
 
-BYTE* SWPacketMaker::GetSWData(std::vector<unsigned char>& packet) {
+uint8_t* SWPacketMaker::GetSWData(std::vector<unsigned char>& packet) {
 
-	return (BYTE*)(&packet[0]);
+	return (uint8_t*)(&packet[0]);
 }
 
-VOID SWPacketMaker::CreateSWPacket(std::vector<unsigned char>& packet) {
+void SWPacketMaker::CreateSWPacket(std::vector<unsigned char>& packet) {
 
 	SWHEADER* swheader = GetSWHeader(packet);
-	BYTE* data = GetSWData(packet);
+	uint8_t* data = GetSWData(packet);
 
 	if (swheader == nullptr || data == nullptr)
 	{
@@ -191,7 +191,7 @@ VOID SWPacketMaker::CreateSWPacket(std::vector<unsigned char>& packet) {
 			case RecvOPcode::DEAD:
 				swpacket = new SWPacketDead(swheader, data);
 				break;
-			case RecvOPcode::CHARACTER_UPDATE_SPECIAL_OPTION_LIST:
+			case RecvOPcode::charACTER_UPDATE_SPECIAL_OPTION_LIST:
 				swpacket = new SWPacketCharacterUpdateSpecialOptionList(swheader, data);
 				break;
 
@@ -203,7 +203,7 @@ VOID SWPacketMaker::CreateSWPacket(std::vector<unsigned char>& packet) {
 			case RecvOPcode::MAZESTART:
 				swpacket = new SWPacketMazeStart(swheader, data);
 				break;
-			case RecvOPcode::SPAWNED_CHARINFO:
+			case RecvOPcode::SPAWNED_charINFO:
 				//swpacket = new SWPacketSpawnedCharInfo(swheader, data);
 				break;
 			case RecvOPcode::IN_INFO_MONSTER: //0605

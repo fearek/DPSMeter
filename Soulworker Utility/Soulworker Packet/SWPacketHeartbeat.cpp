@@ -2,20 +2,20 @@
 #include ".\Soulworker Packet\SWPacketHeartbeat.h"
 #include ".\UI\PlayerTable.h"
 
-SWPacketHeartbeat::SWPacketHeartbeat(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketHeartbeat::SWPacketHeartbeat(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 }
 
-VOID SWPacketHeartbeat::Do() {
+void SWPacketHeartbeat::Do() {
 	
 
 	
 }
 
-VOID SWPacketHeartbeat::Log() {
+void SWPacketHeartbeat::Log() {
 
 }
 
-VOID SWPacketHeartbeat::Debug() {
+void SWPacketHeartbeat::Debug() {
 
 	SWPACKETHEARTBEAT* hbData = (SWPACKETHEARTBEAT*)(_data + sizeof(SWHEADER));
 	//LogInstance.WriteLog(_T("recv tick : %u / "), hbData->_tick);

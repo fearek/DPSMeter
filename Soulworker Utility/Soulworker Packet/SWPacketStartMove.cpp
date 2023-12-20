@@ -3,22 +3,22 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacketStartMove.h"
 
-SWPacketStartMove::SWPacketStartMove(SWHEADER* swheader, BYTE* data) {
+SWPacketStartMove::SWPacketStartMove(SWHEADER* swheader, uint8_t* data) {
 	_swheader = swheader;
 	_data = data;
 }
 
-VOID SWPacketStartMove::Do() {
+void SWPacketStartMove::Do() {
 	return;
 }
 
-VOID SWPacketStartMove::Log() {
+void SWPacketStartMove::Log() {
 	return;
 }
 
-VOID SWPacketStartMove::Debug() {
+void SWPacketStartMove::Debug() {
 
-	//USHORT op = _byteswap_ushort(_swheader->_op);
+	//uint16_t op = _byteswap_ushort(_swheader->_op);
 	//_SWPACKETSTARTMOVE* move = (_SWPACKETSTARTMOVE*)(_data + sizeof(SWHEADER));
 
 	//if (_swheader->_op != 0x3403) {

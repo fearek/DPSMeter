@@ -4,15 +4,15 @@
 #include ".\Soulworker Packet\SWPacketInInfoMonster.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketInInfoMonster::SWPacketInInfoMonster(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketInInfoMonster::SWPacketInInfoMonster(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketInInfoMonster::Do() {
+void SWPacketInInfoMonster::Do() {
 
-	BYTE counts = *(_data + sizeof(SWHEADER));
-	SHORT offset = sizeof(SWHEADER) + sizeof(counts);
-	for (BYTE i = 0; i < counts; i++) {
+	uint8_t counts = *(_data + sizeof(SWHEADER));
+	int16_t offset = sizeof(SWHEADER) + sizeof(counts);
+	for (uint8_t i = 0; i < counts; i++) {
 
 		SWPACKET_IN_INFO_MONSTER1* pktHeader = (SWPACKET_IN_INFO_MONSTER1*)(_data + offset);
 		offset += sizeof(SWPACKET_IN_INFO_MONSTER1);
@@ -42,16 +42,16 @@ VOID SWPacketInInfoMonster::Do() {
 	}
 }
 
-VOID SWPacketInInfoMonster::Log() {
+void SWPacketInInfoMonster::Log() {
 
 }
 
 
-VOID SWPacketInInfoMonster::Debug() {
+void SWPacketInInfoMonster::Debug() {
 
-	/*BYTE counts = *(_data + sizeof(SWHEADER));
-	SHORT offset = sizeof(SWHEADER) + sizeof(counts);
-	for (BYTE i = 0; i < counts; i++) {
+	/*uint8_t counts = *(_data + sizeof(SWHEADER));
+	int16_t offset = sizeof(SWHEADER) + sizeof(counts);
+	for (uint8_t i = 0; i < counts; i++) {
 
 		SWPACKET_IN_INFO_MONSTER1* pktHeader = (SWPACKET_IN_INFO_MONSTER1*)(_data + offset);
 		offset += sizeof(SWPACKET_IN_INFO_MONSTER1);

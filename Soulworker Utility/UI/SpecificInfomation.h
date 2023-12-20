@@ -2,38 +2,38 @@
 
 class SpecificInformation : public MemoryPool<SpecificInformation, 10> {
 private:
-	FLOAT _globalFontScale;
-	FLOAT _columnFontScale;
-	FLOAT _tableFontScale;
+	float _globalFontScale;
+	float _columnFontScale;
+	float _tableFontScale;
 
-	UINT32 _playerID;
+	uint32_t _playerID;
 
-	FLOAT _tableTime;
-	FLOAT _accumulatedTime;
+	float _tableTime;
+	float _accumulatedTime;
 
 	// Skill Details
-	UINT32 _monsterID_SKILL;
+	uint32_t _monsterID_SKILL;
 
-	CHAR _skillName[64];
+	char _skillName[64];
 
-	VOID UpdateSkillInfo();
-	VOID UpdateSkillTotalInfo();
-	VOID UpdateMonsterCombo();
-	VOID UpdateSkillTable();
-	VOID UpdateSkillTotalTable();
+	void UpdateSkillInfo();
+	void UpdateSkillTotalInfo();
+	void UpdateMonsterCombo();
+	void UpdateSkillTable();
+	void UpdateSkillTotalTable();
 
 	// Buff Aggregation Information
-	VOID UpdateBuffMeter();
-	VOID UpdateBuffTable();
+	void UpdateBuffMeter();
+	void UpdateBuffTable();
 
-	VOID DrawBar(FLOAT window_Width, FLOAT percent, ImU32 color);
-	VOID SetupFontScale();
-	VOID Clear();
+	void DrawBar(float window_Width, float percent, ImU32 color);
+	void SetupFontScale();
+	void Clear();
 
 	SpecificInformation() : _playerID(0), _monsterID_SKILL(0), _globalFontScale(0), _columnFontScale(0), _tableFontScale(0), _tableTime(0), _accumulatedTime(0) {}
 public:
-	SpecificInformation(UINT32 playerID);
+	SpecificInformation(uint32_t playerID);
 	~SpecificInformation();
 
-	VOID Update(BOOL* open, INT64 index);
+	void Update(bool* open, int64_t index);
 };

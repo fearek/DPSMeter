@@ -10,11 +10,11 @@
 using namespace SoulMeterFBS::History;
 
 struct metaInfo {
-	metaInfo(UINT32 id, std::string name) {
+	metaInfo(uint32_t id, std::string name) {
 		_id = id;
 		_name = name;
 	}
-	UINT32 _id;
+	uint32_t _id;
 	std::string _name;
 };
 
@@ -22,8 +22,8 @@ class PlotInfo : public MemoryPool<PlotInfo> {
 private:
 
 	std::vector<metaInfo*> _metaInfos;
-	std::unordered_map<UINT32, std::vector<double>> _dpsList;
-	std::unordered_map<UINT32, std::vector<double>> _timeList;
+	std::unordered_map<uint32_t, std::vector<double>> _dpsList;
+	std::unordered_map<uint32_t, std::vector<double>> _timeList;
 	double _lastTime = -1;
 
 	std::vector<double> _abList;
@@ -38,30 +38,30 @@ private:
 	std::vector<double> _jqTimeList;
 	double _jqLastTime = -1;
 
-	std::unordered_map<UINT32, std::vector<double>> _bossHpList;
-	std::unordered_map<UINT32, std::vector<double>> _bossTimeList;
+	std::unordered_map<uint32_t, std::vector<double>> _bossHpList;
+	std::unordered_map<uint32_t, std::vector<double>> _bossTimeList;
 	double _bhLastTime = -1;
 
 	bool _allowed = false;
 
-	BOOL _isHistoryMode = FALSE;
+	bool _isHistoryMode = false;
 
 public:
 
-	VOID AddData(UINT32 id, std::string name, DOUBLE DPS, DOUBLE time, bool isFirstElement);
-	VOID AddAbData(DOUBLE DPS, DOUBLE time);
-	VOID AddBdData(DOUBLE DPS, DOUBLE time);
-	VOID AddJqData(BYTE stack, DOUBLE time);
-	VOID AddBossHpData(UINT32 id, UINT64 HP, DOUBLE time);
+	void AddData(uint32_t id, std::string name, double DPS, double time, bool isFirstElement);
+	void AddAbData(double DPS, double time);
+	void AddBdData(double DPS, double time);
+	void AddJqData(uint8_t stack, double time);
+	void AddBossHpData(uint32_t id, uint64_t HP, double time);
 	std::vector<metaInfo*> GetMetaInfo()
 	{
 		return _metaInfos;
 	}
-	std::unordered_map<UINT32, std::vector<double>> GetTimeList()
+	std::unordered_map<uint32_t, std::vector<double>> GetTimeList()
 	{
 		return _timeList;
 	}
-	std::unordered_map<UINT32, std::vector<double>> GetDPSList()
+	std::unordered_map<uint32_t, std::vector<double>> GetDPSList()
 	{
 		return _dpsList;
 	}
@@ -89,16 +89,16 @@ public:
 	{
 		return _jqTimeList;
 	}
-	std::unordered_map<UINT32, std::vector<double>> GetBossHpList()
+	std::unordered_map<uint32_t, std::vector<double>> GetBossHpList()
 	{
 		return _bossHpList;
 	}
-	std::unordered_map<UINT32, std::vector<double>> GetBossTimeList()
+	std::unordered_map<uint32_t, std::vector<double>> GetBossTimeList()
 	{
 		return _bossTimeList;
 	}
 
-	VOID Clear()
+	void Clear()
 	{
 		for (auto itr = _metaInfos.begin(); itr != _metaInfos.end(); itr++)
 			delete (*itr);
@@ -172,7 +172,7 @@ public:
 
 		return tpib.Finish();
 	}
-	VOID UnSerialization(const _tPlotInfo* tPlotInfo)
+	void UnSerialization(const _tPlotInfo* tPlotInfo)
 	{
 		// _tMetaInfo
 		for (auto itr = tPlotInfo->_meta()->begin(); itr != tPlotInfo->_meta()->end(); itr++)
@@ -212,7 +212,7 @@ public:
 		FLATBUFFERUTIL.fbvDoubleReverser(tPlotInfo->_jq_list(), _jqList);
 		FLATBUFFERUTIL.fbvDoubleReverser(tPlotInfo->_jq_time_list(), _jqTimeList);
 
-		_isHistoryMode = TRUE;
+		_isHistoryMode = true;
 	}
 };
 
@@ -223,32 +223,32 @@ private:
 
 	PlotInfo* _pi = nullptr;
 
-	UINT32 _selectedBossHpComboID;
+	uint32_t _selectedBossHpComboID;
 
-	BOOL _historyMode = false;
+	bool _historyMode = false;
 
-	VOID UpdatePlotTab();
-	VOID UpdateAbPlotTab();
-	VOID UpdateBdPlotTab();
-	VOID UpdateJqPlotTab();
-	VOID UpdateBossHpPlotTab();
-	VOID UpdateBossHpPlotCombo();
-	VOID UpdateBossHpPlotGraph();
+	void UpdatePlotTab();
+	void UpdateAbPlotTab();
+	void UpdateBdPlotTab();
+	void UpdateJqPlotTab();
+	void UpdateBossHpPlotTab();
+	void UpdateBossHpPlotCombo();
+	void UpdateBossHpPlotGraph();
 public:
 
-	VOID AddData(UINT32 id, std::string name, DOUBLE DPS, DOUBLE time, bool isFirstElement);
-	VOID AddAbData(DOUBLE DPS, DOUBLE time);
-	VOID AddBdData(DOUBLE DPS, DOUBLE time);
-	VOID AddJqData(BYTE stack, DOUBLE time);
-	VOID AddBossHpData(UINT32 id, UINT64 HP, DOUBLE time);
+	void AddData(uint32_t id, std::string name, double DPS, double time, bool isFirstElement);
+	void AddAbData(double DPS, double time);
+	void AddBdData(double DPS, double time);
+	void AddJqData(uint8_t stack, double time);
+	void AddBossHpData(uint32_t id, uint64_t HP, double time);
 
-	VOID OpenWindow();
-	VOID Update();
-	VOID Start();
-	VOID End();
-	VOID Clear();
+	void OpenWindow();
+	void Update();
+	void Start();
+	void End();
+	void Clear();
 
-	VOID SetPlotInfo(PlotInfo* p_pi);
+	void SetPlotInfo(PlotInfo* p_pi);
 	PlotInfo* GetPlotInfo();
 
 	PlotWindow() : _selectedBossHpComboID(-1) {}

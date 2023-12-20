@@ -3,11 +3,11 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketMonsterKilled::SWPacketMonsterKilled(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketMonsterKilled::SWPacketMonsterKilled(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketMonsterKilled::Do() {
+void SWPacketMonsterKilled::Do() {
 
 	SWPACKETMONSTERKILLED* killed = (SWPACKETMONSTERKILLED*)(_data + sizeof(SWHEADER));
 	DAMAGEMETER.SetAggro(killed->_killedId, 0xffffffff);
@@ -31,11 +31,11 @@ VOID SWPacketMonsterKilled::Do() {
 	}
 }
 
-VOID SWPacketMonsterKilled::Log() {
+void SWPacketMonsterKilled::Log() {
 
 }
 
-VOID SWPacketMonsterKilled::Debug() {
+void SWPacketMonsterKilled::Debug() {
 
 	/*SWPACKETMONSTERKILLED* killed = (SWPACKETMONSTERKILLED*)(_data + sizeof(SWHEADER));
 	LogInstance.WriteLog("[SWPacketMonsterKilled] KillId = %u", killed->_killedId);*/

@@ -9,29 +9,29 @@ using std::chrono::system_clock;
 
 typedef std::chrono::system_clock::time_point timePoint;
 
-#define FLOOR(x) (FLOAT)((INT)x)
+#define FLOOR(x) (float)((int)x)
 
-inline BOOL UTF16toUTF8(_In_ WCHAR* src, _Out_ CHAR* dest, _In_ SIZE_T destLen) {
+inline bool UTF16toUTF8(_In_ wchar_t* src, _Out_ char* dest, _In_ SIZE_T destLen) {
 
 	if (src == nullptr || dest == nullptr)
-		return FALSE;
+		return false;
 
-	std::wstring_convert<std::codecvt_utf8_utf16<WCHAR>> wchar_to_utf8;
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> wchar_t_to_utf8;
 	std::wstring wstr(src);
-	std::string utf8str = wchar_to_utf8.to_bytes(wstr);
+	std::string utf8str = wchar_t_to_utf8.to_bytes(wstr);
 
 	if (destLen < utf8str.size())
-		return FALSE;
+		return false;
 
 	strcpy_s(dest, destLen, utf8str.c_str());
 
-	return TRUE;
+	return true;
 }
 
-inline BOOL ANSItoUTF8(_In_ CHAR* src, _Out_ CHAR* dest, _In_ INT32 destLen) {
+inline bool ANSItoUTF8(_In_ char* src, _Out_ char* dest, _In_ int32_t destLen) {
 
 	if (src == nullptr || dest == nullptr)
-		return FALSE;
+		return false;
 
 	BSTR bstr;
 	int len = MultiByteToWideChar(CP_UTF8, 0, src, -1, NULL, NULL);
@@ -42,23 +42,23 @@ inline BOOL ANSItoUTF8(_In_ CHAR* src, _Out_ CHAR* dest, _In_ INT32 destLen) {
 	len = WideCharToMultiByte(CP_ACP, 0, bstr, -1, NULL, 0, NULL, NULL);
 
 	if (len < 1)
-		return FALSE;
+		return false;
 
 	if (len < destLen) {
 		WideCharToMultiByte(CP_ACP, 0, bstr, -1, dest, destLen, NULL, NULL);
 	}
 	else {
 		SysFreeString(bstr);
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
-inline BOOL TextCommma(_In_ CHAR* src, _Out_ CHAR* dest) {
+inline bool TextCommma(_In_ char* src, _Out_ char* dest) {
 
 	if (src == nullptr || dest == nullptr) {
-		return FALSE;
+		return false;
 	}
 
 	size_t len = strlen(src);
@@ -71,39 +71,39 @@ inline BOOL TextCommma(_In_ CHAR* src, _Out_ CHAR* dest) {
 	}
 	*dest++ = 0;
 
-	return TRUE;
+	return true;
 }
 
-inline BOOL TextCommmaIncludeDecimal(_In_ DOUBLE src, _In_ size_t destLen, _Out_ CHAR* dest) 
+inline bool TextCommmaIncludeDecimal(_In_ double src, _In_ size_t destLen, _Out_ char* dest) 
 {
 	if (dest == nullptr) {
-		return FALSE;
+		return false;
 	}
 
 	char tmp[128] = { 0 };
 	char comma[128] = { 0 };
-	DOUBLE whole = floor(src);
-	DOUBLE decimal = (src - whole) * 10;
+	double whole = floor(src);
+	double decimal = (src - whole) * 10;
 
 	sprintf_s(tmp, "%.0f", whole);
 	TextCommma(tmp, comma);
 	sprintf_s(dest, destLen, "%s.%.0f", comma, decimal);
 
-	return TRUE;
+	return true;
 }
 
-inline ULONG64 GetCurrentTimeStamp() {
+inline uint64_t GetCurrentTimeStamp() {
 	return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
-static BOOL file_contents(const std::filesystem::path& path, std::string* str)
+static bool file_contents(const std::filesystem::path& path, std::string* str)
 {
 	if (!std::filesystem::is_regular_file(path))
-		return FALSE;
+		return false;
 
 	std::ifstream file(path, std::ios::in | std::ios::binary);
 	if (!file.is_open())
-		return FALSE;
+		return false;
 
 	std::string content{ std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>() };
 
@@ -111,7 +111,7 @@ static BOOL file_contents(const std::filesystem::path& path, std::string* str)
 
 	*str = content;
 
-	return TRUE;
+	return true;
 }
 
 #define MAX_BUFFER_LENGTH 1024

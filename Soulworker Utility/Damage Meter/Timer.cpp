@@ -12,7 +12,7 @@ Timer::~Timer() {
 
 }
 
-VOID Timer::Run() {
+void Timer::Run() {
 	
 	if (_status == TIMER_STATUS::end) {
 		_startTimePoint = GetCurrentTimeStamp();
@@ -28,7 +28,7 @@ VOID Timer::Run() {
 	}
 }
 
-VOID Timer::Suspend() {
+void Timer::Suspend() {
 
 	if (_status == TIMER_STATUS::run) {
 		_suspendTimePoint = GetCurrentTimeStamp();
@@ -39,21 +39,21 @@ VOID Timer::Suspend() {
 	}
 }
 
-VOID Timer::Stop() {
+void Timer::Stop() {
 	
 	_status = TIMER_STATUS::end;
 }
 
-BOOL Timer::isRun() {
+bool Timer::isRun() {
 	if (_status == TIMER_STATUS::run)
-		return TRUE;
+		return true;
 	else
-		return FALSE;
+		return false;
 }
 
-ULONG64 Timer::GetTime() {
+uint64_t Timer::GetTime() {
 
-	ULONG64 time;
+	uint64_t time;
 
 	if (_status == TIMER_STATUS::run) {
 		time = GetCurrentTimeStamp() - _startTimePoint;

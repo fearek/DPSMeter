@@ -3,12 +3,12 @@
 #pragma pack(push, 1)
 
 typedef struct _SWHEADER { // 9
-	USHORT _magic;
-	USHORT _size;
-	UCHAR _const_value01;
-	UCHAR key;
-	USHORT _op;
-	UCHAR unk01;
+	uint16_t _magic;
+	uint16_t _size;
+	unsigned char _const_value01;
+	unsigned char key;
+	uint16_t _op;
+	unsigned char unk01;
 } SWHEADER;
 
 #pragma pack(pop)
@@ -16,16 +16,16 @@ typedef struct _SWHEADER { // 9
 class SWPacket : public MemoryPool<SWPacket, 10> {
 protected:
 	SWHEADER* _swheader;
-	BYTE* _data;
+	uint8_t* _data;
 
 	SWPacket() {}
 	SWPacket(SWPacket& other) {}
 
 public:
-	SWPacket(SWHEADER* swheader, BYTE* data);
+	SWPacket(SWHEADER* swheader, uint8_t* data);
 	virtual ~SWPacket() {}
 
-	virtual VOID Debug();
-	virtual VOID Log();
-	virtual VOID Do();
+	virtual void Debug();
+	virtual void Log();
+	virtual void Do();
 };

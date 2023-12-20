@@ -7,14 +7,14 @@
 #pragma pack(push, 1)
 
 typedef struct _SWPACKET_MYDODGEUSED {
-	UINT32 _skillId;
-	UINT32 _playerId;
-	BYTE _unknown01[46];
+	uint32_t _skillId;
+	uint32_t _playerId;
+	uint8_t _unknown01[46];
 }SWPACKET_MYDODGEUSED;
 
 #pragma pack(pop)
 
-static std::unordered_set<UINT32> normalDodgeList({
+static std::unordered_set<uint32_t> normalDodgeList({
 	12040011, 12040012, 12040013,
 	22040011, 22040012, 22040013,
 	32040011, 32040012, 32040013,
@@ -31,16 +31,16 @@ static std::unordered_set<UINT32> normalDodgeList({
 class SWSPacketMyDodgeUsed : public SWPacket {
 protected:
 	SWHEADER* _swheader;
-	BYTE* _data;
+	uint8_t* _data;
 
 	SWSPacketMyDodgeUsed() {}
 	SWSPacketMyDodgeUsed(SWPacket& other) {}
 
 public:
-	SWSPacketMyDodgeUsed(SWHEADER* swheader, BYTE* data);
+	SWSPacketMyDodgeUsed(SWHEADER* swheader, uint8_t* data);
 	virtual ~SWSPacketMyDodgeUsed() {}
 
-	virtual VOID Debug();
-	virtual VOID Log();
-	virtual VOID Do();
+	virtual void Debug();
+	virtual void Log();
+	virtual void Do();
 };

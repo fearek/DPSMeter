@@ -1000,7 +1000,7 @@ static int stbi__addsizes_valid(int a, int b)
 {
     if (b < 0) return 0;
     // now 0 <= b <= INT_MAX, hence also
-    // 0 <= INT_MAX - b <= INTMAX.
+    // 0 <= INT_MAX - b <= intMAX.
     // And "a + b <= INT_MAX" (which might overflow) is the
     // same as a <= INT_MAX - b (no overflow)
     return a <= INT_MAX - b;
@@ -1709,7 +1709,7 @@ static stbi__uint32 stbi__get32le(stbi__context* s)
 }
 #endif
 
-#define STBI__BYTECAST(x)  ((stbi_uc) ((x) & 255))  // truncate int to byte without warnings
+#define STBI__uint8_tCAST(x)  ((stbi_uc) ((x) & 255))  // truncate int to byte without warnings
 
 #if defined(STBI_NO_JPEG) && defined(STBI_NO_PNG) && defined(STBI_NO_BMP) && defined(STBI_NO_PSD) && defined(STBI_NO_TGA) && defined(STBI_NO_GIF) && defined(STBI_NO_PIC) && defined(STBI_NO_PNM)
 // nothing
@@ -4240,7 +4240,7 @@ static int stbi__zexpand(stbi__zbuf* z, char* zout, int n)  // need to make room
     if (!z->z_expandable) return stbi__err("output buffer limit", "Corrupt PNG");
     cur = (unsigned int)(z->zout - z->zout_start);
     limit = old_limit = (unsigned)(z->zout_end - z->zout_start);
-    if (UINT_MAX - cur < (unsigned)n) return stbi__err("outofmem", "Out of memory");
+    if (UINT_MAX - cur < (unsigned int)n) return stbi__err("outofmem", "Out of memory");
     while (cur + n > limit) {
         if (limit > UINT_MAX / 2) return stbi__err("outofmem", "Out of memory");
         limit *= 2;
@@ -4683,9 +4683,9 @@ static int stbi__create_png_image_raw(stbi__png* a, stbi_uc* raw, stbi__uint32 r
             switch (filter) {
             case STBI__F_none: cur[k] = raw[k]; break;
             case STBI__F_sub: cur[k] = raw[k]; break;
-            case STBI__F_up: cur[k] = STBI__BYTECAST(raw[k] + prior[k]); break;
-            case STBI__F_avg: cur[k] = STBI__BYTECAST(raw[k] + (prior[k] >> 1)); break;
-            case STBI__F_paeth: cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(0, prior[k], 0)); break;
+            case STBI__F_up: cur[k] = STBI__uint8_tCAST(raw[k] + prior[k]); break;
+            case STBI__F_avg: cur[k] = STBI__uint8_tCAST(raw[k] + (prior[k] >> 1)); break;
+            case STBI__F_paeth: cur[k] = STBI__uint8_tCAST(raw[k] + stbi__paeth(0, prior[k], 0)); break;
             case STBI__F_avg_first: cur[k] = raw[k]; break;
             case STBI__F_paeth_first: cur[k] = raw[k]; break;
             }
@@ -4722,12 +4722,12 @@ static int stbi__create_png_image_raw(stbi__png* a, stbi_uc* raw, stbi__uint32 r
             switch (filter) {
                 // "none" filter turns into a memcpy here; make that explicit.
             case STBI__F_none:         memcpy(cur, raw, nk); break;
-                STBI__CASE(STBI__F_sub) { cur[k] = STBI__BYTECAST(raw[k] + cur[k - filter_bytes]); } break;
-                STBI__CASE(STBI__F_up) { cur[k] = STBI__BYTECAST(raw[k] + prior[k]); } break;
-                STBI__CASE(STBI__F_avg) { cur[k] = STBI__BYTECAST(raw[k] + ((prior[k] + cur[k - filter_bytes]) >> 1)); } break;
-                STBI__CASE(STBI__F_paeth) { cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(cur[k - filter_bytes], prior[k], prior[k - filter_bytes])); } break;
-                STBI__CASE(STBI__F_avg_first) { cur[k] = STBI__BYTECAST(raw[k] + (cur[k - filter_bytes] >> 1)); } break;
-                STBI__CASE(STBI__F_paeth_first) { cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(cur[k - filter_bytes], 0, 0)); } break;
+                STBI__CASE(STBI__F_sub) { cur[k] = STBI__uint8_tCAST(raw[k] + cur[k - filter_bytes]); } break;
+                STBI__CASE(STBI__F_up) { cur[k] = STBI__uint8_tCAST(raw[k] + prior[k]); } break;
+                STBI__CASE(STBI__F_avg) { cur[k] = STBI__uint8_tCAST(raw[k] + ((prior[k] + cur[k - filter_bytes]) >> 1)); } break;
+                STBI__CASE(STBI__F_paeth) { cur[k] = STBI__uint8_tCAST(raw[k] + stbi__paeth(cur[k - filter_bytes], prior[k], prior[k - filter_bytes])); } break;
+                STBI__CASE(STBI__F_avg_first) { cur[k] = STBI__uint8_tCAST(raw[k] + (cur[k - filter_bytes] >> 1)); } break;
+                STBI__CASE(STBI__F_paeth_first) { cur[k] = STBI__uint8_tCAST(raw[k] + stbi__paeth(cur[k - filter_bytes], 0, 0)); } break;
             }
 #undef STBI__CASE
             raw += nk;
@@ -4740,12 +4740,12 @@ static int stbi__create_png_image_raw(stbi__png* a, stbi_uc* raw, stbi__uint32 r
                    for (k=0; k < filter_bytes; ++k)
             switch (filter) {
                 STBI__CASE(STBI__F_none) { cur[k] = raw[k]; } break;
-                STBI__CASE(STBI__F_sub) { cur[k] = STBI__BYTECAST(raw[k] + cur[k - output_bytes]); } break;
-                STBI__CASE(STBI__F_up) { cur[k] = STBI__BYTECAST(raw[k] + prior[k]); } break;
-                STBI__CASE(STBI__F_avg) { cur[k] = STBI__BYTECAST(raw[k] + ((prior[k] + cur[k - output_bytes]) >> 1)); } break;
-                STBI__CASE(STBI__F_paeth) { cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(cur[k - output_bytes], prior[k], prior[k - output_bytes])); } break;
-                STBI__CASE(STBI__F_avg_first) { cur[k] = STBI__BYTECAST(raw[k] + (cur[k - output_bytes] >> 1)); } break;
-                STBI__CASE(STBI__F_paeth_first) { cur[k] = STBI__BYTECAST(raw[k] + stbi__paeth(cur[k - output_bytes], 0, 0)); } break;
+                STBI__CASE(STBI__F_sub) { cur[k] = STBI__uint8_tCAST(raw[k] + cur[k - output_bytes]); } break;
+                STBI__CASE(STBI__F_up) { cur[k] = STBI__uint8_tCAST(raw[k] + prior[k]); } break;
+                STBI__CASE(STBI__F_avg) { cur[k] = STBI__uint8_tCAST(raw[k] + ((prior[k] + cur[k - output_bytes]) >> 1)); } break;
+                STBI__CASE(STBI__F_paeth) { cur[k] = STBI__uint8_tCAST(raw[k] + stbi__paeth(cur[k - output_bytes], prior[k], prior[k - output_bytes])); } break;
+                STBI__CASE(STBI__F_avg_first) { cur[k] = STBI__uint8_tCAST(raw[k] + (cur[k - output_bytes] >> 1)); } break;
+                STBI__CASE(STBI__F_paeth_first) { cur[k] = STBI__uint8_tCAST(raw[k] + stbi__paeth(cur[k - output_bytes], 0, 0)); } break;
             }
 #undef STBI__CASE
 
@@ -5241,10 +5241,10 @@ static int stbi__parse_png_file(stbi__png* z, int scan, int req_comp)
 #ifndef STBI_NO_FAILURE_STRINGS
                 // not threadsafe
                 static char invalid_chunk[] = "XXXX PNG chunk not known";
-                invalid_chunk[0] = STBI__BYTECAST(c.type >> 24);
-                invalid_chunk[1] = STBI__BYTECAST(c.type >> 16);
-                invalid_chunk[2] = STBI__BYTECAST(c.type >> 8);
-                invalid_chunk[3] = STBI__BYTECAST(c.type >> 0);
+                invalid_chunk[0] = STBI__uint8_tCAST(c.type >> 24);
+                invalid_chunk[1] = STBI__uint8_tCAST(c.type >> 16);
+                invalid_chunk[2] = STBI__uint8_tCAST(c.type >> 8);
+                invalid_chunk[3] = STBI__uint8_tCAST(c.type >> 0);
 #endif
                 return stbi__err(invalid_chunk, "PNG not supported: unknown PNG chunk type");
             }
@@ -5685,12 +5685,12 @@ static void* stbi__bmp_load(stbi__context* s, int* x, int* y, int* comp, int req
                 for (i = 0; i < (int)s->img_x; ++i) {
                     stbi__uint32 v = (bpp == 16 ? (stbi__uint32)stbi__get16le(s) : stbi__get32le(s));
                     unsigned int a;
-                    out[z++] = STBI__BYTECAST(stbi__shiftsigned(v & mr, rshift, rcount));
-                    out[z++] = STBI__BYTECAST(stbi__shiftsigned(v & mg, gshift, gcount));
-                    out[z++] = STBI__BYTECAST(stbi__shiftsigned(v & mb, bshift, bcount));
+                    out[z++] = STBI__uint8_tCAST(stbi__shiftsigned(v & mr, rshift, rcount));
+                    out[z++] = STBI__uint8_tCAST(stbi__shiftsigned(v & mg, gshift, gcount));
+                    out[z++] = STBI__uint8_tCAST(stbi__shiftsigned(v & mb, bshift, bcount));
                     a = (ma ? stbi__shiftsigned(v & ma, ashift, acount) : 255);
                     all_a |= a;
-                    if (target == 4) out[z++] = STBI__BYTECAST(a);
+                    if (target == 4) out[z++] = STBI__uint8_tCAST(a);
                 }
             }
             stbi__skip(s, pad);

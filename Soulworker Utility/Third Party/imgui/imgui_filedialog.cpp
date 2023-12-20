@@ -75,7 +75,7 @@ bool ImGui::FileDialog(bool* open, ImFileDialogInfo* dialogInfo)
 			RefreshInfo(dialogInfo);
 
 		// Draw path
-		ImGui::Text("%s: %s", LANGMANAGER.GetText("STR_FILEDIALOG_PATH"), dialogInfo->directoryPath.string().c_str());
+		ImGui::Text("%s: %s", LANGMANAGER.GetText("STR_FILEDIALOG_PATH").c_str(), dialogInfo->directoryPath.string().c_str());
 
 
 		ImGui::BeginChild("##browser", ImVec2(ImGui::GetWindowContentRegionWidth(), 300), true, ImGuiWindowFlags_HorizontalScrollbar);
@@ -99,7 +99,7 @@ bool ImGui::FileDialog(bool* open, ImFileDialogInfo* dialogInfo)
 		}
 
 		// File Columns
-		sprintf_s(label, "%s###Name", LANGMANAGER.GetText("STR_FILEDIALOG_NAME"));
+		sprintf_s(label, "%s###Name", LANGMANAGER.GetText("STR_FILEDIALOG_NAME").c_str());
 		if (ImGui::Selectable(label))
 		{
 			sizeSortOrder = ImGuiFileDialogSortOrder_None;
@@ -108,7 +108,7 @@ bool ImGui::FileDialog(bool* open, ImFileDialogInfo* dialogInfo)
 			fileNameSortOrder = fileNameSortOrder == ImGuiFileDialogSortOrder_Down ? ImGuiFileDialogSortOrder_Up : ImGuiFileDialogSortOrder_Down;
 		}
 		ImGui::NextColumn();
-		sprintf_s(label, "%s###Size", LANGMANAGER.GetText("STR_FILEDIALOG_SIZE"));
+		sprintf_s(label, "%s###Size", LANGMANAGER.GetText("STR_FILEDIALOG_SIZE").c_str());
 		if (ImGui::Selectable(label))
 		{
 			fileNameSortOrder = ImGuiFileDialogSortOrder_None;
@@ -117,7 +117,7 @@ bool ImGui::FileDialog(bool* open, ImFileDialogInfo* dialogInfo)
 			sizeSortOrder = sizeSortOrder == ImGuiFileDialogSortOrder_Down ? ImGuiFileDialogSortOrder_Up : ImGuiFileDialogSortOrder_Down;
 		}
 		ImGui::NextColumn();
-		sprintf_s(label, "%s###Type", LANGMANAGER.GetText("STR_FILEDIALOG_TYPE"));
+		sprintf_s(label, "%s###Type", LANGMANAGER.GetText("STR_FILEDIALOG_TYPE").c_str());
 		if (ImGui::Selectable(label))
 		{
 			fileNameSortOrder = ImGuiFileDialogSortOrder_None;
@@ -126,7 +126,7 @@ bool ImGui::FileDialog(bool* open, ImFileDialogInfo* dialogInfo)
 			typeSortOrder = typeSortOrder == ImGuiFileDialogSortOrder_Down ? ImGuiFileDialogSortOrder_Up : ImGuiFileDialogSortOrder_Down;
 		}
 		ImGui::NextColumn();
-		sprintf_s(label, "%s###Date", LANGMANAGER.GetText("STR_FILEDIALOG_DATE"));
+		sprintf_s(label, "%s###Date", LANGMANAGER.GetText("STR_FILEDIALOG_DATE").c_str());
 		if (ImGui::Selectable(label))
 		{
 			fileNameSortOrder = ImGuiFileDialogSortOrder_None;
@@ -234,7 +234,7 @@ bool ImGui::FileDialog(bool* open, ImFileDialogInfo* dialogInfo)
 			ImGui::NextColumn();
 			ImGui::TextUnformatted("-");
 			ImGui::NextColumn();
-			sprintf_s(label, "%s", LANGMANAGER.GetText("STR_FILEDIALOG_TYPE_PARENT"));
+			sprintf_s(label, "%s", LANGMANAGER.GetText("STR_FILEDIALOG_TYPE_PARENT").c_str());
 			ImGui::TextUnformatted(label);
 			ImGui::NextColumn();
 			ImGui::TextUnformatted("-");
@@ -264,7 +264,7 @@ bool ImGui::FileDialog(bool* open, ImFileDialogInfo* dialogInfo)
 			ImGui::NextColumn();
 			ImGui::TextUnformatted("-");
 			ImGui::NextColumn();
-			sprintf_s(label, "%s", LANGMANAGER.GetText("STR_FILEDIALOG_TYPE_DIR"));
+			sprintf_s(label, "%s", LANGMANAGER.GetText("STR_FILEDIALOG_TYPE_DIR").c_str());
 			ImGui::TextUnformatted(label);
 			ImGui::NextColumn();
 
@@ -326,7 +326,7 @@ bool ImGui::FileDialog(bool* open, ImFileDialogInfo* dialogInfo)
 		fileNameBuffer[fileNameSize] = 0;
 
 		ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
-		sprintf_s(label, "%s", LANGMANAGER.GetText("STR_FILEDIALOG_NAME"));
+		sprintf_s(label, "%s", LANGMANAGER.GetText("STR_FILEDIALOG_NAME").c_str());
 		if (ImGui::InputText(label, fileNameBuffer, fileNameBufferSize))
 		{
 			dialogInfo->fileName = std::string(fileNameBuffer);
@@ -335,7 +335,7 @@ bool ImGui::FileDialog(bool* open, ImFileDialogInfo* dialogInfo)
 
 		if (dialogInfo->type == ImGuiFileDialogType_OpenFile)
 		{
-			sprintf_s(label, "%s", LANGMANAGER.GetText("STR_FILEDIALOG_OPEN"));
+			sprintf_s(label, "%s", LANGMANAGER.GetText("STR_FILEDIALOG_OPEN").c_str());
 			if (ImGui::Button(label))
 			{
 				dialogInfo->resultPath = dialogInfo->directoryPath / dialogInfo->fileName;
@@ -359,7 +359,7 @@ bool ImGui::FileDialog(bool* open, ImFileDialogInfo* dialogInfo)
 		}
 		else if (dialogInfo->type == ImGuiFileDialogType_SaveFile)
 		{
-			sprintf_s(label, "%s", LANGMANAGER.GetText("STR_FILEDIALOG_SAVE"));
+			sprintf_s(label, "%s", LANGMANAGER.GetText("STR_FILEDIALOG_SAVE").c_str());
 			if (ImGui::Button(label))
 			{
 				dialogInfo->resultPath = dialogInfo->directoryPath / dialogInfo->fileName;
@@ -384,7 +384,7 @@ bool ImGui::FileDialog(bool* open, ImFileDialogInfo* dialogInfo)
 
 		ImGui::SameLine();
 
-		sprintf_s(label, "%s", LANGMANAGER.GetText("STR_FILEDIALOG_CANCEL"));
+		sprintf_s(label, "%s", LANGMANAGER.GetText("STR_FILEDIALOG_CANCEL").c_str());
 		if (ImGui::Button(label))
 		{
 			fileNameSortOrder = ImGuiFileDialogSortOrder_None;

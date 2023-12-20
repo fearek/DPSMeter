@@ -1,7 +1,7 @@
 #pragma once
 
 #define HOTKEY HotKey::getInstance()
-typedef std::function<VOID(VOID)> HOTKEYCALLBACK;
+typedef std::function<void(void)> HOTKEYCALLBACK;
 
 #ifdef _DEBUG
 #define DEBUG_HOTKEY 0
@@ -10,26 +10,26 @@ typedef std::function<VOID(VOID)> HOTKEYCALLBACK;
 
 struct AutoHotKey {
 private:
-	INT _key[3];
+	int _key[3];
 	std::vector<HOTKEYCALLBACK> _callbacks;
-	BOOL _isActive;
-	INT _hotkeyCount;
-	CHAR _name[AUTO_HOTKEY_NAME_LEN];
+	bool _isActive;
+	int _hotkeyCount;
+	char _name[AUTO_HOTKEY_NAME_LEN];
 
 	AutoHotKey() {}
 	AutoHotKey(const AutoHotKey& other) {}
 
 public:
 	~AutoHotKey();
-	AutoHotKey(const INT key1, INT key2, INT key3, const CHAR* name, INT callback_num = 0, HOTKEYCALLBACK* callback = nullptr, ...);
-	AutoHotKey(const INT key1, INT key2, const CHAR* name, INT callback_num = 0, HOTKEYCALLBACK* callback = nullptr, ...);
-	AutoHotKey(const INT key1, const CHAR* name, INT callback_num = 0, HOTKEYCALLBACK* callback = nullptr, ...);
+	AutoHotKey(const int key1, int key2, int key3, const char* name, int callback_num = 0, HOTKEYCALLBACK* callback = nullptr, ...);
+	AutoHotKey(const int key1, int key2, const char* name, int callback_num = 0, HOTKEYCALLBACK* callback = nullptr, ...);
+	AutoHotKey(const int key1, const char* name, int callback_num = 0, HOTKEYCALLBACK* callback = nullptr, ...);
 
-	const CHAR* GetName() { return _name; }
-	const INT& GetKeyCount() { return _hotkeyCount; }
-	const INT* GetKey() { return _key; }
+	const char* GetName() { return _name; }
+	const int& GetKeyCount() { return _hotkeyCount; }
+	const int* GetKey() { return _key; }
 
-	VOID CheckKey();
+	void CheckKey();
 };
 
 class HotKey : public Singleton<HotKey> {
@@ -37,20 +37,20 @@ class HotKey : public Singleton<HotKey> {
 private:
 	std::vector<AutoHotKey*> _hotkeys;
 
-	VOID CheckKey();
-	VOID CheckHotKey();
+	void CheckKey();
+	void CheckHotKey();
 	
 protected:
-	std::vector<INT> _pressedKey;
+	std::vector<int> _pressedKey;
 
 public:
 	HotKey(){}
 	~HotKey();
 
-	VOID Update();
+	void Update();
 
-	VOID InsertHotkeyToogle(INT key1, INT key2, INT key3);
-	VOID InsertHotkeyStop(INT key1, INT key2, INT key3);
+	void InsertHotkeyToogle(int key1, int key2, int key3);
+	void InsertHotkeyStop(int key1, int key2, int key3);
 
 	std::vector<AutoHotKey*>::const_iterator begin();
 	std::vector<AutoHotKey*>::const_iterator end();

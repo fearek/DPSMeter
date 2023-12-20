@@ -2,20 +2,20 @@
 #include ".\Soulworker Packet\SWPacketGestureUsed.h"
 
 
-SWPacketGestureUsed::SWPacketGestureUsed(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketGestureUsed::SWPacketGestureUsed(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketGestureUsed::Do() {
+void SWPacketGestureUsed::Do() {
 
 	SWPACKETGESTUREUSED* gesture_data = (SWPACKETGESTUREUSED*)(_data + sizeof(SWHEADER));
 }
 
-VOID SWPacketGestureUsed::Log() {
+void SWPacketGestureUsed::Log() {
 
 }
 
-VOID SWPacketGestureUsed::Debug() {
+void SWPacketGestureUsed::Debug() {
 
 	//SWPACKETGESTUREUSED* g_data = (SWPACKETGESTUREUSED*)(_data + sizeof(SWHEADER));
 	//LogInstance.MyLog(_T("[Gesture Used] [Player = %u] [Gesture = %u] [X=%f][Y=%f][Z=%f][Direct=%f][Screen=%f]"),

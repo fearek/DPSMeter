@@ -21,47 +21,47 @@ private:
 	ImVec4 _textColor;
 	ImVec4 _windowBg;
 
-	FLOAT _fontScale;
-	BOOL ShowFontSelector();
-	VOID ShowFeatures();
+	float _fontScale;
+	bool ShowFontSelector();
+	void ShowFeatures();
 
-	FLOAT _columnFontScale;
-	FLOAT _tableFontScale;
-	BOOL _is1K;
-	BOOL _is1M;
-	BOOL _isSoloMode;
-	BOOL _hideName;
+	float _columnFontScale;
+	float _tableFontScale;
+	bool _is1K;
+	bool _is1M;
+	bool _isSoloMode;
+	bool _hideName;
 	ImVec2 _cellPadding;
-	FLOAT _framerate;
-	FLOAT _windowBorderSize;
-	FLOAT _windowWidth;
-	FLOAT _refreshTime;
-	BOOL _isTopMost;
-	BOOL _teamTA_LF;
-	INT32 _teamTA_LF_Mode = 1;
-	CHAR _selectedLang[128] = { 0 };
-	BOOL _isSoloRankMode;
-	BOOL _isUseSaveData;
-	BOOL _isUseImage;
-	BOOL _oriIsUseSaveData;
-	CHAR _selectedInterface[MAX_PATH] = { 0 };
-	BOOL _isDontSaveUnfinishedMaze;
+	float _framerate;
+	float _windowBorderSize;
+	float _windowWidth;
+	float _refreshTime;
+	bool _isTopMost;
+	bool _teamTA_LF;
+	int32_t _teamTA_LF_Mode = 1;
+	char _selectedLang[128] = { 0 };
+	bool _isSoloRankMode;
+	bool _isUseSaveData;
+	bool _isUseImage;
+	bool _oriIsUseSaveData;
+	char _selectedInterface[MAX_PATH] = { 0 };
+	bool _isDontSaveUnfinishedMaze;
 
-	BOOL ShowTableOption();
-	BOOL ShowHotkeySetting();
-	VOID ShowLangSelector();
-	VOID ChangeLang();
+	bool ShowTableOption();
+	bool ShowHotkeySetting();
+	void ShowLangSelector();
+	void ChangeLang();
 
-	VOID ShowTeamTALFSelector();
+	void ShowTeamTALFSelector();
 
-	VOID Helper();
+	void Helper();
 
-	BOOL GetOption();
-	BOOL SetBasicOption();
+	bool GetOption();
+	bool SetBasicOption();
 
-	BOOL _open;
+	bool _open;
 
-	BOOL _inited = false;
+	bool _inited = false;
 
 	std::unordered_map<std::string, std::string> _allLangList = LANGMANAGER.GetAllLangFile();
 
@@ -71,41 +71,41 @@ public:
 	UiOption();
 	~UiOption();
 
-	const BOOL& isOption();
-	VOID OpenOption();
-	VOID Update();
-	VOID Init();
+	const bool& isOption();
+	void OpenOption();
+	void Update();
+	void Init();
 
-	const ImU32 GetJobColor(UINT index);
+	const ImU32 GetJobColor(unsigned int index);
 	const ImU32 GetOutlineColor();
-	const FLOAT& GetFontScale();
-	const FLOAT& GetColumnFontScale();
-	const FLOAT& GetTableFontScale();
+	const float& GetFontScale();
+	const float& GetColumnFontScale();
+	const float& GetTableFontScale();
 	const ImVec4& GetActiveColor();
 	const ImVec4& GetInActiveColor();
 	const ImVec4& GetWindowBGColor();
-	const BOOL& is1K();
-	const BOOL& is1M();
-	const BOOL& isSoloMode();
-	const BOOL& doHideName();
-	const BOOL& isTopMost();
-	const BOOL& isTeamTALF();
-	const INT32& TeamTALFMode();
-	const BOOL& isSoloRankMode();
-	const INT32& GetCaptureMode();
-	const BOOL& isUseSaveData();
-	const CHAR* GetUseInterface();
-	const BOOL& isDontSaveUnfinishedMaze();
-	const BOOL& isUseImage();
-	BOOL ToggleTopMost();
+	const bool& is1K();
+	const bool& is1M();
+	const bool& isSoloMode();
+	const bool& doHideName();
+	const bool& isTopMost();
+	const bool& isTeamTALF();
+	const int32_t& TeamTALFMode();
+	const bool& isSoloRankMode();
+	const int32_t& GetCaptureMode();
+	const bool& isUseSaveData();
+	const char* GetUseInterface();
+	const bool& isDontSaveUnfinishedMaze();
+	const bool& isUseImage();
+	bool ToggleTopMost();
 
-	const FLOAT& GetFramerate();
-	VOID SetFramerate(FLOAT i);
+	const float& GetFramerate();
+	void SetFramerate(float i);
 
-	const FLOAT& GetWindowWidth();
-	VOID SetWindowWidth(const FLOAT& width);
+	const float& GetWindowWidth();
+	void SetWindowWidth(const float& width);
 
-	const FLOAT& GetRefreshTime();
+	const float& GetRefreshTime();
 
-	BOOL SaveOption(BOOL skipWarning = FALSE);
+	bool SaveOption(bool skipWarning = false);
 };

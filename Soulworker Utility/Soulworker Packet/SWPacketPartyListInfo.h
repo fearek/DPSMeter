@@ -12,10 +12,10 @@ protected:
 	SWPacketPartyListInfo() {}
 
 public:
-	SWPacketPartyListInfo(SWHEADER* swheader, BYTE* data);
+	SWPacketPartyListInfo(SWHEADER* swheader, uint8_t* data);
 	~SWPacketPartyListInfo() {}
 
-	VOID Do();
-	VOID Log();
-	VOID Debug();
+	void Do();
+	void Log();
+	void Debug();
 };

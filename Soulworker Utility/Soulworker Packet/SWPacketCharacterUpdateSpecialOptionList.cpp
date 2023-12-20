@@ -5,21 +5,21 @@
 #include ".\UI\PlotWindow.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketCharacterUpdateSpecialOptionList::SWPacketCharacterUpdateSpecialOptionList(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketCharacterUpdateSpecialOptionList::SWPacketCharacterUpdateSpecialOptionList(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketCharacterUpdateSpecialOptionList::Do() {
+void SWPacketCharacterUpdateSpecialOptionList::Do() {
 
 	if (DAMAGEMETER.isTownMap()) {
 		return;
 	}
 
-	SHORT offset = sizeof(SWHEADER);
+	int16_t offset = sizeof(SWHEADER);
 	SWPacketCharacterUpdateSpecialOptionListHeader* listPacket = (SWPacketCharacterUpdateSpecialOptionListHeader*)(_data + offset);
 	offset += sizeof(SWPacketCharacterUpdateSpecialOptionListHeader);
 
-	for (BYTE i = 0; i < listPacket->_listCount; i++)
+	for (uint8_t i = 0; i < listPacket->_listCount; i++)
 	{
 		SWPacketCharacterUpdateSpecialOptionVal* valPacket = (SWPacketCharacterUpdateSpecialOptionVal*)(_data + offset);
 		offset += sizeof(SWPacketCharacterUpdateSpecialOptionVal);
@@ -42,20 +42,20 @@ VOID SWPacketCharacterUpdateSpecialOptionList::Do() {
 	}
 }
 
-VOID SWPacketCharacterUpdateSpecialOptionList::Log() {
+void SWPacketCharacterUpdateSpecialOptionList::Log() {
 
 }
 
-VOID SWPacketCharacterUpdateSpecialOptionList::Debug() {
+void SWPacketCharacterUpdateSpecialOptionList::Debug() {
 
-	/*SHORT offset = sizeof(SWHEADER);
+	/*int16_t offset = sizeof(SWHEADER);
 	SWPacketCharacterUpdateSpecialOptionListHeader* listPacket = (SWPacketCharacterUpdateSpecialOptionListHeader*)(_data + offset);
 	offset += sizeof(SWPacketCharacterUpdateSpecialOptionListHeader);
 
 	if (listPacket->_playerID != DAMAGEMETER.GetMyID())
 		return;
 
-	for (BYTE i = 0; i < listPacket->_listCount; i++)
+	for (uint8_t i = 0; i < listPacket->_listCount; i++)
 	{
 		SWPacketCharacterUpdateSpecialOptionVal* valPacket = (SWPacketCharacterUpdateSpecialOptionVal*)(_data + offset);
 		offset += sizeof(SWPacketCharacterUpdateSpecialOptionVal);

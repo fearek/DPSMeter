@@ -10,33 +10,33 @@ using namespace SoulMeterFBS::History;
 
 class SWDamageSkill : public MemoryPool<SWDamageSkill, 100> {
 private:
-	UINT32 _id;
-	UINT64 _damage;
-	UINT64 _critDamage;
-	USHORT _hitCount;
-	USHORT _critHitCount;
-	USHORT _skillCasts;
-	CHAR _name[SKILL_NAME_LEN];
+	uint32_t _id;
+	uint64_t _damage;
+	uint64_t _critDamage;
+	uint16_t _hitCount;
+	uint16_t _critHitCount;
+	uint16_t _skillCasts;
+	char _name[SKILL_NAME_LEN];
 
 public:
 	SWDamageSkill() : _id(0), _damage(0), _critDamage(0), _hitCount(0), _critHitCount(0), _skillCasts(0) { }
-	SWDamageSkill(UINT32 id, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount);
+	SWDamageSkill(uint32_t id, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount);
 	~SWDamageSkill() {}
 
-	static BOOL SortFunction(SWDamageSkill* skillA, SWDamageSkill* skillB);
+	static bool SortFunction(SWDamageSkill* skillA, SWDamageSkill* skillB);
 
-	UINT32 GetID();
-	UINT64 GetDamage();
-	UINT64 GetCritDamage();
-	USHORT GetHitCount();
-	USHORT GetCritHitCount();
-	USHORT GetSkillUsed();
-	CHAR* GetName();
+	uint32_t GetID();
+	uint64_t GetDamage();
+	uint64_t GetCritDamage();
+	uint16_t GetHitCount();
+	uint16_t GetCritHitCount();
+	uint16_t GetSkillUsed();
+	char* GetName();
 
-	VOID SetNameFromDB();
-	VOID AddDamage(UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount);
+	void SetNameFromDB();
+	void AddDamage(uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount);
 
-	VOID Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tDamageSkill>>& vDamageSkill)
+	void Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tDamageSkill>>& vDamageSkill)
 	{
 		_tDamageSkillBuilder tdsb(fbb);
 
@@ -50,7 +50,7 @@ public:
 		vDamageSkill.push_back(tdsb.Finish());
 	}
 
-	VOID UnSerialization(const _tDamageSkill* tDamageSkill)
+	void UnSerialization(const _tDamageSkill* tDamageSkill)
 	{
 		_id = tDamageSkill->_id();
 		_damage = tDamageSkill->_damage();

@@ -10,33 +10,33 @@ MySQL::~MySQL() {
 	FreeDB();
 }
 
-BOOL MySQL::InitDB(){
+bool MySQL::InitDB(){
 
 	if (sqlite3_open(SWDBPATH, &_db) != SQLITE_OK) {
-		LogInstance.WriteLog(const_cast<CHAR*>("Error in InitDB : %s"), sqlite3_errmsg(_db));
+		LogInstance.WriteLog(const_cast<char*>("Error in InitDB : %s"), sqlite3_errmsg(_db));
 		sqlite3_close(_db);
 		_db = nullptr;
 
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL MySQL::InitMemDB() {
+bool MySQL::InitMemDB() {
 
 	if (sqlite3_open(":memory:", &_memdb) != SQLITE_OK) {
-		LogInstance.WriteLog(const_cast<CHAR*>("Error in InitMemDB : %s"), sqlite3_errmsg(_memdb));
+		LogInstance.WriteLog(const_cast<char*>("Error in InitMemDB : %s"), sqlite3_errmsg(_memdb));
 		sqlite3_close(_memdb);
 		_memdb = nullptr;
 
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
-VOID MySQL::FreeDB() {
+void MySQL::FreeDB() {
 
 	if (_db != nullptr) {
 		sqlite3_close(_db);
@@ -60,124 +60,124 @@ VOID MySQL::FreeDB() {
 
 }
 
-BOOL MySQL::InitSkillDB() {
+bool MySQL::InitSkillDB() {
 
-	CHAR* errbuf = nullptr;
+	char* errbuf = nullptr;
 
-	const CHAR* sql = "CREATE TABLE IF NOT EXISTS Skill(Id INTEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
+	const char* sql = "CREATE TABLE IF NOT EXISTS Skill(Id intEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
-		LogInstance.WriteLog(const_cast<CHAR*>("Error in InitSkillDB : %s"), errbuf);
+		LogInstance.WriteLog(const_cast<char*>("Error in InitSkillDB : %s"), errbuf);
 		sqlite3_free(errbuf);
 
-		return FALSE;
+		return false;
 	}
 
-//	const CHAR* sql2 = "SELECT Name From Skill Where Id = ?";
-	std::string sql2 = std::string("SELECT Name_") + std::string(LANGMANAGER.GetText("STR_SQL_SUFFIX")) + " From Skill Where Id = ?";
+//	const char* sql2 = "SELECT Name From Skill Where Id = ?";
+	std::string sql2 = std::string("SELECT Name_") + LANGMANAGER.GetText("STR_SQL_SUFFIX") + " From Skill Where Id = ?";
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_skill_stmt, 0) != SQLITE_OK) {
-		LogInstance.WriteLog(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
+		LogInstance.WriteLog(const_cast<char*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
 
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL MySQL::InitMonsterDB() {
+bool MySQL::InitMonsterDB() {
 
-	CHAR* errbuf = nullptr;
+	char* errbuf = nullptr;
 
-	//const CHAR* sql = "CREATE TABLE IF NOT EXISTS Monster(Db1 INTEGER, Db2 INTEGER, Name_KR TEXT NOT NULL, PRIMARY KEY(Db1, Db2));";
-	const CHAR* sql = "CREATE TABLE IF NOT EXISTS Monster(Id INTEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
+	//const char* sql = "CREATE TABLE IF NOT EXISTS Monster(Db1 intEGER, Db2 intEGER, Name_KR TEXT NOT NULL, PRIMARY KEY(Db1, Db2));";
+	const char* sql = "CREATE TABLE IF NOT EXISTS Monster(Id intEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in InitMonsterDB : %s", errbuf);
 		sqlite3_free(errbuf);
 
-		return FALSE;
+		return false;
 	}
 
 	//std::string sql2 = "SELECT Name_" LANG " From Monster Where Db1 = ? and Db2 = ?";
-	std::string sql2 = "SELECT Name_" + std::string(LANGMANAGER.GetText("STR_SQL_SUFFIX")) + ", type From Monster Where Id = ?";
+	std::string sql2 = "SELECT Name_" + LANGMANAGER.GetText("STR_SQL_SUFFIX") + ", type From Monster Where Id = ?";
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_monster_stmt, 0) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in sqlite3_prepare_v2 : %s", sqlite3_errmsg(_db));
 
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL MySQL::InitMapDB() {
-	CHAR* errbuf = nullptr;
+bool MySQL::InitMapDB() {
+	char* errbuf = nullptr;
 
-	const CHAR* sql = "CREATE TABLE IF NOT EXISTS Map(Id INTEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
+	const char* sql = "CREATE TABLE IF NOT EXISTS Map(Id intEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in InitMapDB : %s", errbuf);
 		sqlite3_free(errbuf);
 
-		return FALSE;
+		return false;
 	}
-	std::string sql2 = "SELECT Name_" + std::string(LANGMANAGER.GetText("STR_SQL_SUFFIX")) + " From Map Where Id = ?";
+	std::string sql2 = "SELECT Name_" + LANGMANAGER.GetText("STR_SQL_SUFFIX") + " From Map Where Id = ?";
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_map_stmt, 0) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in sqlite3_prepare_v2 MAP : %s", sqlite3_errmsg(_db));
 
-		return FALSE;
+		return false;
 	}
 	std::string sql3 = "SELECT Name_EN From Map Where Id = ?";
 	if (sqlite3_prepare_v2(_db, sql3.c_str(), -1, &_map_stmt_eng, 0) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in sqlite3_prepare_v2 MAP2 : %s", sqlite3_errmsg(_db));
 
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 
-BOOL MySQL::InitBuffDB() {
-	CHAR* errbuf = nullptr;
+bool MySQL::InitBuffDB() {
+	char* errbuf = nullptr;
 
-	const CHAR* sql = "CREATE TABLE IF NOT EXISTS Buff (Id INTEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT, Desc_EN TEXT, Desc_TC TEXT, Desc_JP TEXT, Desc_KR TEXT)";
+	const char* sql = "CREATE TABLE IF NOT EXISTS Buff (Id intEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT, Desc_EN TEXT, Desc_TC TEXT, Desc_JP TEXT, Desc_KR TEXT)";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
-		LogInstance.WriteLog(const_cast<CHAR*>("Error in InitBuffDB : %s"), errbuf);
+		LogInstance.WriteLog(const_cast<char*>("Error in InitBuffDB : %s"), errbuf);
 		sqlite3_free(errbuf);
 
-		return FALSE;
+		return false;
 	}
 
 	std::string sql2 = "SELECT Name_" + std::string(LANGMANAGER.GetText("STR_SQL_SUFFIX")) + ",Desc_" + std::string(LANGMANAGER.GetText("STR_SQL_SUFFIX")) + " From Buff Where Id = ?";
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_buff_stmt, 0) != SQLITE_OK) {
-		LogInstance.WriteLog(const_cast<CHAR*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
+		LogInstance.WriteLog(const_cast<char*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
 
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL MySQL::InitSkillTimelineDB() {
+bool MySQL::InitSkillTimelineDB() {
 
-	return TRUE;
+	return true;
 }
 
-BOOL MySQL::InitBuffTimelineDB() {
+bool MySQL::InitBuffTimelineDB() {
 
-	return TRUE;
+	return true;
 }
-BOOL MySQL::GetMapNameENG(UINT32 mapID, CHAR* out_buffer, SIZE_T out_buffer_length) {
+bool MySQL::GetMapNameENG(uint32_t mapID, char* out_buffer, size_t out_buffer_length) {
 
 	if (out_buffer == nullptr || _map_stmt_eng == nullptr)
-		return FALSE;
+		return false;
 
 	if (mapID == 0) {
 		strcpy_s(out_buffer, out_buffer_length, "No info");
-		return TRUE;
+		return true;
 	}
 	sprintf_s(out_buffer, out_buffer_length, "%u", mapID);
 
@@ -185,82 +185,82 @@ BOOL MySQL::GetMapNameENG(UINT32 mapID, CHAR* out_buffer, SIZE_T out_buffer_leng
 
 	sqlite3_bind_int(_map_stmt_eng, 1, mapID);
 
-	INT step;
+	int step;
 	do {
 		step = sqlite3_step(_map_stmt_eng);
 	} while (step == SQLITE_BUSY || step == SQLITE_LOCKED);
 	if (step == SQLITE_ROW) {
-		const CHAR* result = (const CHAR*)sqlite3_column_text(_map_stmt_eng, 0);
+		const char* result = (const char*)sqlite3_column_text(_map_stmt_eng, 0);
 
 		if (result == nullptr)
 		{
 			strncpy(out_buffer, "FailToGetName", out_buffer_length - 2);
 			out_buffer[out_buffer_length - 1] = 0x00;
-			return FALSE;
+			return false;
 		}
 		if (strcmp(result, "UNKNOWN") == 0)
 		{
-			return FALSE;
+			return false;
 		}
 		if (strlen(result) > out_buffer_length)
 		{
 			strncpy(out_buffer, result, out_buffer_length - 2);
 			out_buffer[out_buffer_length - 1] = 0x00;
-			return FALSE;
+			return false;
 		}
 		strcpy_s(out_buffer, out_buffer_length, result);
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
-BOOL MySQL::Init() {
+bool MySQL::Init() {
 
-	BOOL success = TRUE;
+	bool success = true;
 
 	do {
 		if (!InitDB()) {
-			success = FALSE;
+			success = false;
 			break;
 		}
 
 		if (!InitSkillDB()) {
-			success = FALSE;
+			success = false;
 			break;
 		}
 
 		if (!InitMonsterDB()) {
-			success = FALSE;
+			success = false;
 			break;
 		}
 
 		if (!InitMapDB()) {
-			success = FALSE;
+			success = false;
 			break;
 		}
 
 		if (!InitMemDB()) {
-			success = FALSE;
+			success = false;
 			break;
 		}
 
 		if (!InitBuffDB()) {
-			success = FALSE;
+			success = false;
 			break;
 		}
 
 		if (!InitSkillTimelineDB()) {
-			success = FALSE;
+			success = false;
 			break;
 		}
 
 		if (!InitBuffTimelineDB()) {
-			success = FALSE;
+			success = false;
 			break;
 		}
-	} while (FALSE);
+	} while (false);
 
 	if (!success)
 		FreeDB();
@@ -268,34 +268,34 @@ BOOL MySQL::Init() {
 	return success;
 }
 
-BOOL MySQL::GetSkillName(UINT32 skillId, CHAR* out_buffer, SIZE_T out_buffer_length) {
+bool MySQL::GetSkillName(uint32_t skillId, char* out_buffer, size_t out_buffer_length) {
 
 	if (out_buffer == nullptr || _skill_stmt == nullptr)
-		return FALSE;
+		return false;
 
 	sprintf_s(out_buffer, out_buffer_length, "%d", skillId);
 
 	sqlite3_reset(_skill_stmt);
 
 	sqlite3_bind_int(_skill_stmt, 1, skillId);
-	INT step = sqlite3_step(_skill_stmt);
+	int step = sqlite3_step(_skill_stmt);
 
 	if (step == SQLITE_ROW) {
-		const CHAR* result = (const CHAR*)sqlite3_column_text(_skill_stmt, 0);
+		const char* result = (const char*)sqlite3_column_text(_skill_stmt, 0);
 
 		if (result == nullptr || strlen(result) > out_buffer_length)
-			return FALSE;
+			return false;
 
 		strcpy_s(out_buffer, out_buffer_length, result);
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL MySQL::GetMonsterName(UINT32 DB2, CHAR* out_buffer, SIZE_T out_buffer_length) {
+bool MySQL::GetMonsterName(uint32_t DB2, char* out_buffer, size_t out_buffer_length) {
 
 	if (out_buffer == nullptr || _monster_stmt == nullptr)
-		return FALSE;
+		return false;
 
 	sprintf_s(out_buffer, out_buffer_length, "%d", DB2);
 
@@ -303,47 +303,47 @@ BOOL MySQL::GetMonsterName(UINT32 DB2, CHAR* out_buffer, SIZE_T out_buffer_lengt
 
 	sqlite3_bind_int(_monster_stmt, 1, DB2);
 
-	INT step = sqlite3_step(_monster_stmt);
+	int step = sqlite3_step(_monster_stmt);
 
 	if (step == SQLITE_ROW) {
-		const CHAR* result = (const CHAR*)sqlite3_column_text(_monster_stmt, 0);
+		const char* result = (const char*)sqlite3_column_text(_monster_stmt, 0);
 
 		if (result == nullptr || strlen(result) > out_buffer_length)
-			return FALSE;
+			return false;
 
 		strcpy_s(out_buffer, out_buffer_length, result);
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL MySQL::GetMonsterType(UINT32 DB2, INT32* type) {
+bool MySQL::GetMonsterType(uint32_t DB2, int32_t* type) {
 
 	if (type == nullptr || _monster_stmt == nullptr)
-		return FALSE;
+		return false;
 
 	sqlite3_reset(_monster_stmt);
 
 	sqlite3_bind_int(_monster_stmt, 1, DB2);
 
-	INT step = sqlite3_step(_monster_stmt);
+	int step = sqlite3_step(_monster_stmt);
 
 	if (step == SQLITE_ROW) {
-		INT32 result = sqlite3_column_int(_monster_stmt, 1);
-		memcpy_s(type, sizeof(INT32), &result, sizeof(INT32));
+		int32_t result = sqlite3_column_int(_monster_stmt, 1);
+		memcpy_s(type, sizeof(int32_t), &result, sizeof(int32_t));
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL MySQL::GetMapName(UINT32 mapID, CHAR* out_buffer, SIZE_T out_buffer_length){
+bool MySQL::GetMapName(uint32_t mapID, char* out_buffer, size_t out_buffer_length){
 
 	if (out_buffer == nullptr || _map_stmt == nullptr)
-		return FALSE;
+		return false;
 
 	if (mapID == 0) {
-		strcpy_s(out_buffer, out_buffer_length, LANGMANAGER.GetText("STR_WORLD_NO_INFORMATION"));
-		return TRUE;
+		strcpy_s(out_buffer, out_buffer_length, LANGMANAGER.GetText("STR_WORLD_NO_INFORMATION").c_str());
+		return true;
 	}
 
 	sprintf_s(out_buffer, out_buffer_length, "%d", mapID);
@@ -352,28 +352,28 @@ BOOL MySQL::GetMapName(UINT32 mapID, CHAR* out_buffer, SIZE_T out_buffer_length)
 
 	sqlite3_bind_int(_map_stmt, 1, mapID);
 
-	INT step = sqlite3_step(_map_stmt);
+	int step = sqlite3_step(_map_stmt);
 
 	if (step == SQLITE_ROW) {
-		const CHAR* result = (const CHAR*)sqlite3_column_text(_map_stmt, 0);
+		const char* result = (const char*)sqlite3_column_text(_map_stmt, 0);
 
 		if (result == nullptr || strlen(result) > out_buffer_length)
-			return FALSE;
+			return false;
 
 		strcpy_s(out_buffer, out_buffer_length, result);
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL MySQL::GetBuffName(UINT32 buffId, CHAR* out_buffer, SIZE_T out_buffer_length, CHAR* out_buffer_desc, SIZE_T out_buffer_desc_length) {
+bool MySQL::GetBuffName(uint32_t buffId, char* out_buffer, size_t out_buffer_length, char* out_buffer_desc, size_t out_buffer_desc_length) {
 
 	if (out_buffer == nullptr || _buff_stmt == nullptr)
-		return FALSE;
+		return false;
 
 	if (buffId == 0) {
 		strcpy_s(out_buffer, out_buffer_length,u8"Unknown");
-		return TRUE;
+		return true;
 	}
 
 	sprintf_s(out_buffer, out_buffer_length, "%d", buffId);
@@ -382,26 +382,26 @@ BOOL MySQL::GetBuffName(UINT32 buffId, CHAR* out_buffer, SIZE_T out_buffer_lengt
 
 	sqlite3_bind_int(_buff_stmt, 1, buffId);
 
-	INT step = sqlite3_step(_buff_stmt);
+	int step = sqlite3_step(_buff_stmt);
 
 	if (step == SQLITE_ROW) {
-		const CHAR* result = (const CHAR*)sqlite3_column_text(_buff_stmt, 0);
+		const char* result = (const char*)sqlite3_column_text(_buff_stmt, 0);
 
 		if (result == nullptr || strlen(result) > out_buffer_length)
-			return FALSE;
+			return false;
 
 		strcpy_s(out_buffer, out_buffer_length, result);
 
 		if (out_buffer_desc != NULL)
 		{
-			result = (const CHAR*)sqlite3_column_text(_buff_stmt, 1);
+			result = (const char*)sqlite3_column_text(_buff_stmt, 1);
 
 			if (result == nullptr || strlen(result) > out_buffer_desc_length)
-				return FALSE;
+				return false;
 
 			strcpy_s(out_buffer_desc, out_buffer_desc_length, result);
 		}
 	}
 
-	return TRUE;
+	return true;
 }

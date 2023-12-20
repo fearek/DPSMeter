@@ -2,40 +2,40 @@
 #include ".\UI\DX Input.h"
 
 
-BOOL DXInput::Init(HINSTANCE hinst, HWND hWnd) {
+bool DXInput::Init(HINSTANCE hinst, HWND hWnd) {
 	
-	HRESULT result = DirectInput8Create(hinst, DIRECTINPUT_VERSION, IID_IDirectInput8, (LPVOID*)&_directInput, NULL);
+	HRESULT result = DirectInput8Create(hinst, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&_directInput, NULL);
 
 	if (FAILED(result)) {
 		LogInstance.WriteLog("Error in DirectInput8Create");
-		return FALSE;
+		return false;
 	}
 	
 
 	if (FAILED(_directInput->CreateDevice(GUID_SysKeyboard, &_keyboard, NULL))) {
 		LogInstance.WriteLog("Error in CreateDevice");
-		return FALSE;
+		return false;
 	}
 
 	if (FAILED(_keyboard->SetDataFormat(&c_dfDIKeyboard))) {
 		LogInstance.WriteLog("Error in SetDataFormat");
-		return FALSE;
+		return false;
 	}
 
 	if (FAILED(_keyboard->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE))) {
 		LogInstance.WriteLog("Error in SetCooperativeLevel");
-		return FALSE;
+		return false;
 	}
 
 	if (FAILED(_keyboard->Acquire())) {
 		LogInstance.WriteLog("Error in Acquire");
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
-VOID DXInput::Shutdown() {
+void DXInput::Shutdown() {
 
 	if (_keyboard != nullptr) {
 		_keyboard->Unacquire();
@@ -50,9 +50,9 @@ VOID DXInput::Shutdown() {
 
 }
 
-BOOL DXInput::Update() {
+bool DXInput::Update() {
 
-	HRESULT result = _keyboard->GetDeviceState(sizeof(_keyboardState), (LPVOID)&_keyboardState);
+	HRESULT result = _keyboard->GetDeviceState(sizeof(_keyboardState), (void*)&_keyboardState);
 
 	if (FAILED(result))
 	{
@@ -62,48 +62,48 @@ BOOL DXInput::Update() {
 		}
 		else
 		{
-			return FALSE;
+			return false;
 		}
 	}
 
-	for (INT i = 0; i < 256; i++) {
-		_inputInfo[i].Update(_keyboardState[i] & 0x80 ? TRUE : FALSE);
+	for (int i = 0; i < 256; i++) {
+		_inputInfo[i].Update(_keyboardState[i] & 0x80 ? true : false);
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL DXInput::isKeyDown(UINT i) {
+bool DXInput::isKeyDown(unsigned int i) {
 	
 	if (i >= 0 && i < GetStateSize())
 		return _inputInfo[i].isDown();
 	else
-		return FALSE;
+		return false;
 }
 
-BOOL DXInput::isKeyRelease(UINT i) {
+bool DXInput::isKeyRelease(unsigned int i) {
 
 	if (i >= 0 && i < GetStateSize())
 		return _inputInfo[i].isRelease();
 	else
-		return FALSE;
+		return false;
 }
 
-BOOL DXInput::isKeyPressed(UINT i) {
+bool DXInput::isKeyPressed(unsigned int i) {
 
 	if (i >= 0 && i < GetStateSize())
 		return _inputInfo[i].isPress();
 	else
-		return FALSE;
+		return false;
 }
 
-BOOL DXInput::isKeyIdle(UINT i) {
+bool DXInput::isKeyIdle(unsigned int i) {
 	if (i >= 0 && i < GetStateSize())
 		return _inputInfo[i].isIdle();
 	else
-		return FALSE;
+		return false;
 }
 
-UINT DXInput::GetStateSize() {
+unsigned int DXInput::GetStateSize() {
 	return 256;
 }

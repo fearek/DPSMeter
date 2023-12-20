@@ -4,7 +4,7 @@
 #include ".\Damage Meter\SaveData.h"
 #include ".\UI\UiWindow.h"
 
-VOID _HISTORYINFO::Setup(HISTORY_DATA* historyData, UINT32 worldID, ULONG64 time, UINT32 myID, BOOL isSaveData, SYSTEMTIME* saveTime, UINT32 realClearTime) {
+void _HISTORYINFO::Setup(HISTORY_DATA* historyData, uint32_t worldID, uint64_t time, uint32_t myID, bool isSaveData, SYSTEMTIME* saveTime, uint32_t realClearTime) {
 	_historyData = historyData;
 	_worldID = worldID;
 	_time = time;
@@ -28,7 +28,7 @@ VOID _HISTORYINFO::Setup(HISTORY_DATA* historyData, UINT32 worldID, ULONG64 time
 	}
 }
 
-VOID _HISTORYINFO::Clear(){
+void _HISTORYINFO::Clear(){
 	
 	if (_historyData == nullptr)
 		return;
@@ -74,20 +74,20 @@ SWDamageMeterHistory::~SWDamageMeterHistory() {
 	
 	_stopAddHistory = true;
 
-	BOOL a = _mutex.try_lock();
+	bool a = _mutex.try_lock();
 
 	ClearVector();
 
 	_mutex.unlock();
 }
 
-VOID SWDamageMeterHistory::ClearAll()
+void SWDamageMeterHistory::ClearAll()
 {
 	SAVEDATA.Delete(-1, HISTORY_SIZE);
 	ClearVector();
 }
 
-VOID SWDamageMeterHistory::ClearVector()
+void SWDamageMeterHistory::ClearVector()
 {
 	for (auto itr = _historys.begin(); itr != _historys.end(); itr++) {
 		HISTORY_INFO* hi = (HISTORY_INFO*)*itr;
@@ -99,7 +99,7 @@ VOID SWDamageMeterHistory::ClearVector()
 	_curIndex = 0;
 }
 
-VOID SWDamageMeterHistory::ClearHistory(HISTORY_INFO* pHI, BOOL deleteFirst)
+void SWDamageMeterHistory::ClearHistory(HISTORY_INFO* pHI, bool deleteFirst)
 {
 	if (_historys.begin() == _historys.end())
 		return;
@@ -109,11 +109,11 @@ VOID SWDamageMeterHistory::ClearHistory(HISTORY_INFO* pHI, BOOL deleteFirst)
 		pHI = (HISTORY_INFO*)*_historys.begin();
 	}
 
-	auto itr = find(_historys.begin(), _historys.end(), (LPVOID)pHI);
+	auto itr = find(_historys.begin(), _historys.end(), (void*)pHI);
 
 	if (UIOPTION.isUseSaveData())
 	{
-		LONG64 index = 0;
+		int64_t index = 0;
 		if (deleteFirst)
 			index = 1;
 		else {
@@ -134,9 +134,9 @@ VOID SWDamageMeterHistory::ClearHistory(HISTORY_INFO* pHI, BOOL deleteFirst)
 	delete pHI;
 }
 
-VOID SWDamageMeterHistory::push_back(HISTORY_INFO* pHi) {
+void SWDamageMeterHistory::push_back(HISTORY_INFO* pHi) {
 
-	BOOL canLock = _mutex.try_lock();
+	bool canLock = _mutex.try_lock();
 	{
 		do
 		{
@@ -221,7 +221,7 @@ flatbuffers::Offset<_tHistory> _HISTORYINFO::Serialization(flatbuffers::FlatBuff
 	return thb.Finish();
 }
 
-VOID SWDamageMeterHistory::UnSerialization(const _tHistory* pHistory)
+void SWDamageMeterHistory::UnSerialization(const _tHistory* pHistory)
 {
 	if (_stopAddHistory) {
 		return;
@@ -296,9 +296,9 @@ VOID SWDamageMeterHistory::UnSerialization(const _tHistory* pHistory)
 	pSysTime->wMilliseconds = pHistory->_save_time()->milliseconds();
 
 	HISTORY_INFO* pHI = new HISTORY_INFO;
-	pHI->Setup(pHD, pHistory->_word_id(), pHistory->_time(), pHistory->_my_id(), TRUE, pSysTime, pHistory->_real_clear_time());
+	pHI->Setup(pHD, pHistory->_word_id(), pHistory->_time(), pHistory->_my_id(), true, pSysTime, pHistory->_real_clear_time());
 
-	BOOL canLock = _mutex.try_lock();
+	bool canLock = _mutex.try_lock();
 	{
 		push_back(pHI);
 		if (canLock)

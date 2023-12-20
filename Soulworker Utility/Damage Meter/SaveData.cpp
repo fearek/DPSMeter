@@ -3,7 +3,7 @@
 
 SWSaveData::~SWSaveData()
 {
-	BOOL isLock = _mutex.try_lock();
+	bool isLock = _mutex.try_lock();
 
 	if (_saveFile.is_open())
 		_saveFile.close();
@@ -11,14 +11,14 @@ SWSaveData::~SWSaveData()
 	FreeLock();
 }
 
-VOID SWSaveData::Reset()
+void SWSaveData::Reset()
 {
 	_inited = false;
 	_saveFile.close();
 	_saveFile.clear();
 }
 
-DWORD SWSaveData::Init(string fileName)
+DWORD SWSaveData::Init(std::string fileName)
 {
 	DWORD error = ERROR_FILE_NOT_FOUND;
 
@@ -29,14 +29,14 @@ DWORD SWSaveData::Init(string fileName)
 		else
 			_saveFileName = fileName;
 		// Open save data, set deny read/write
-		while (TRUE)
+		while (true)
 		{
-			_saveFile.open(_saveFileName, ios::in | ios::out | ios::binary, _SH_DENYRW);
+			_saveFile.open(_saveFileName, std::ios::in | std::ios::out | std::ios::binary, _SH_DENYRW);
 			if (!_saveFile.is_open())
 			{
 				_saveFile.close();
 
-				_saveFile.open(_saveFileName, ios::out, _SH_DENYRW);
+				_saveFile.open(_saveFileName, std::ios::out, _SH_DENYRW);
 				if (!_saveFile)
 				{
 					error = ERROR_FILE_SYSTEM_LIMITATION;
@@ -69,17 +69,17 @@ DWORD SWSaveData::Init(string fileName)
 	return error;
 }
 
-BOOL SWSaveData::Load()
+bool SWSaveData::Load()
 {
-	LONG64 fileSize = GetCurrentLength();
-	LONG64 processedHistory = 0;
+	int64_t fileSize = GetCurrentLength();
+	int64_t processedHistory = 0;
 	// file version
 	if (fileSize >= sizeof(_saveVersion))
 	{
-		LONG64 offset = 0;
-		UINT32 fileVersion = 0;
+		int64_t offset = 0;
+		uint32_t fileVersion = 0;
 
-		ReadData((UCHAR*)&fileVersion, sizeof(_saveVersion), offset);
+		ReadData((unsigned char*)&fileVersion, sizeof(_saveVersion), offset);
 		offset += sizeof(_saveVersion);
 
 		// Check version
@@ -97,14 +97,14 @@ BOOL SWSaveData::Load()
 
 	}
 	else {
-		_fileNotExist = TRUE;
+		_fileNotExist = true;
 	}
 
-	_inited = TRUE;
+	_inited = true;
 
 	if (processedHistory > 0)
 	{
-		LONG64 clearCount = processedHistory - HISTORY_SIZE;
+		int64_t clearCount = processedHistory - HISTORY_SIZE;
 #if DEBUG_SAVEDATA_DELETE == 1
 		LogInstance.WriteLog("[SWSaveData::Load] Loaded data = %llu", processedHistory);
 #endif
@@ -115,12 +115,12 @@ BOOL SWSaveData::Load()
 	return true;
 }
 
-VOID SWSaveData::ReadSaveData(LONG64& offset)
+void SWSaveData::ReadSaveData(int64_t& offset)
 {
-	LONG64 dataSize = GetNextSaveDataLength(offset);
+	int64_t dataSize = GetNextSaveDataLength(offset);
 	if (dataSize > 0)
 	{
-		UCHAR* pSaveData = new UCHAR[dataSize];
+		unsigned char* pSaveData = new unsigned char[dataSize];
 
 		ReadData(pSaveData, dataSize, offset);
 		offset += dataSize;
@@ -131,15 +131,15 @@ VOID SWSaveData::ReadSaveData(LONG64& offset)
 	}
 }
 
-VOID SWSaveData::Crypt(UCHAR* src, UCHAR* dest, LONG64 len)
+void SWSaveData::Crypt(unsigned char* src, unsigned char* dest, int64_t len)
 {
-	for (LONG64 i = 0; i < len; i++)
+	for (int64_t i = 0; i < len; i++)
 		dest[i] = src[i] ^ (12 + 14);
 }
 
-LONG64 SWSaveData::GetCurrentLength()
+int64_t SWSaveData::GetCurrentLength()
 {
-	LONG64 size = 0;
+	int64_t size = 0;
 
 	_saveFile.seekg(0, std::ios::end);
 
@@ -150,9 +150,9 @@ LONG64 SWSaveData::GetCurrentLength()
 	return size;
 }
 
-VOID SWSaveData::Save(flatbuffers::FlatBufferBuilder& fbb)
+void SWSaveData::Save(flatbuffers::FlatBufferBuilder& fbb)
 {
-	BOOL isLock = _mutex.try_lock();
+	bool isLock = _mutex.try_lock();
 	{
 		do
 		{
@@ -160,7 +160,7 @@ VOID SWSaveData::Save(flatbuffers::FlatBufferBuilder& fbb)
 			{
 				_saveFile.close();
 
-				string tmpFileName = _saveFileName + string(".tmp");
+				std::string tmpFileName = _saveFileName + std::string(".tmp");
 
 				// remove tmp file
 				std::remove(tmpFileName.c_str());
@@ -170,7 +170,7 @@ VOID SWSaveData::Save(flatbuffers::FlatBufferBuilder& fbb)
 
 				// open tmp file
 				std::fstream tmpFile;
-				tmpFile.open(tmpFileName, ios::in | ios::out | ios::binary, _SH_DENYRW);
+				tmpFile.open(tmpFileName, std::ios::in | std::ios::out | std::ios::binary, _SH_DENYRW);
 				if (!tmpFile.is_open())
 				{
 					LogInstance.WriteLog("[SWSaveData::Save] open tmp file failed");
@@ -184,16 +184,16 @@ VOID SWSaveData::Save(flatbuffers::FlatBufferBuilder& fbb)
 				// write save data version
 				if (_fileNotExist)
 				{
-					_fileNotExist = FALSE;
-					WriteData((UCHAR*)&_saveVersion, sizeof(UINT32), &tmpFile);
+					_fileNotExist = false;
+					WriteData((unsigned char*)&_saveVersion, sizeof(uint32_t), &tmpFile);
 				}
 
 				// write savedata size
-				LONG64 size = fbb.GetSize();
-				WriteData((UCHAR*)&size, sizeof(LONG64), &tmpFile);
+				int64_t size = fbb.GetSize();
+				WriteData((unsigned char*)&size, sizeof(int64_t), &tmpFile);
 
 				// write savedata
-				WriteData((UCHAR*)fbb.GetBufferPointer(), size, &tmpFile);
+				WriteData((unsigned char*)fbb.GetBufferPointer(), size, &tmpFile);
 
 				// flush tmp file
 				tmpFile.close();
@@ -220,9 +220,9 @@ VOID SWSaveData::Save(flatbuffers::FlatBufferBuilder& fbb)
 	}
 }
 
-VOID SWSaveData::Delete(LONG64 index, LONG64 clearCount)
+void SWSaveData::Delete(int64_t index, int64_t clearCount)
 {
-	BOOL isLock = _mutex.try_lock();
+	bool isLock = _mutex.try_lock();
 	{
 		
 		do
@@ -230,44 +230,44 @@ VOID SWSaveData::Delete(LONG64 index, LONG64 clearCount)
 			if (!_inited || !_saveFile.is_open())
 				break;
 
-			LONG64 currentSize = GetCurrentLength();
+			int64_t currentSize = GetCurrentLength();
 			if (currentSize <= sizeof(_saveVersion))
 				break;
 
-			string tmpFileName = _saveFileName + string(".tmp");
+			std::string tmpFileName = _saveFileName + std::string(".tmp");
 			std::remove(tmpFileName.c_str());
 
-			fstream tmpFile;
-			tmpFile.open(tmpFileName, ios::out | ios::binary, _SH_DENYRW);
+			std::fstream tmpFile;
+			tmpFile.open(tmpFileName, std::ios::out | std::ios::binary, _SH_DENYRW);
 			if (!tmpFile.is_open())
 			{
 				LogInstance.WriteLog("[SWSaveData::Save] open tmp file failed");
 				exit(1);
 			}
 
-			WriteData((UCHAR*)&_saveVersion, sizeof(UINT32), &tmpFile);
+			WriteData((unsigned char*)&_saveVersion, sizeof(uint32_t), &tmpFile);
 
-			LONG64 offset = sizeof(_saveVersion);
-			LONG64 i = 0;
-			LONG64 prevSize = 0;
-			UCHAR* tmpData = nullptr;
+			int64_t offset = sizeof(_saveVersion);
+			int64_t i = 0;
+			int64_t prevSize = 0;
+			unsigned char* tmpData = nullptr;
 			while (currentSize > offset)
 			{
 				i++;
 
-				LONG64 dataSize = GetNextSaveDataLength(offset);
+				int64_t dataSize = GetNextSaveDataLength(offset);
 				if (index != i && i > clearCount)
 				{
 					if (dataSize > prevSize)
 					{
 						delete[] tmpData;
-						tmpData = new UCHAR[dataSize];
+						tmpData = new unsigned char[dataSize];
 					}
 					// read data from savedata
 					ReadData(tmpData, dataSize, offset);
 
 					// write datalength to tmp file
-					WriteData((UCHAR*)&dataSize, sizeof(dataSize), &tmpFile);
+					WriteData((unsigned char*)&dataSize, sizeof(dataSize), &tmpFile);
 
 					// write data to tmp file
 					WriteData(tmpData, dataSize, &tmpFile);
@@ -304,9 +304,9 @@ VOID SWSaveData::Delete(LONG64 index, LONG64 clearCount)
 	}
 }
 
-VOID SWSaveData::Clone(string filename)
+void SWSaveData::Clone(std::string filename)
 {
-	BOOL isLock = _mutex.try_lock();
+	bool isLock = _mutex.try_lock();
 	{
 		if (_saveFile.is_open())
 		{
@@ -321,12 +321,12 @@ VOID SWSaveData::Clone(string filename)
 	}
 }
 
-VOID SWSaveData::WriteData(UCHAR* buf, LONG64 size, fstream* pFS)
+void SWSaveData::WriteData(unsigned char* buf, int64_t size, std::fstream* pFS)
 {
 	if (pFS == nullptr)
 		pFS = &_saveFile;
 
-	UCHAR* tmp = new UCHAR[size];
+	unsigned char* tmp = new unsigned char[size];
 
 	Crypt(buf, tmp, size);
 	
@@ -335,7 +335,7 @@ VOID SWSaveData::WriteData(UCHAR* buf, LONG64 size, fstream* pFS)
 	delete[] tmp;
 }
 
-VOID SWSaveData::ReadData(UCHAR* buf, LONG64 size, LONG64 offset)
+void SWSaveData::ReadData(unsigned char* buf, int64_t size, int64_t offset)
 {
 	_saveFile.seekg(offset, std::ios::beg);
 
@@ -344,12 +344,12 @@ VOID SWSaveData::ReadData(UCHAR* buf, LONG64 size, LONG64 offset)
 	Crypt(buf, buf, size);
 }
 
-LONG64 SWSaveData::GetNextSaveDataLength(LONG64& offset)
+int64_t SWSaveData::GetNextSaveDataLength(int64_t& offset)
 {
-	LONG64 dataSize = 0;
+	int64_t dataSize = 0;
 
-	ReadData((UCHAR*)&dataSize, sizeof(LONG64), offset);
-	offset += sizeof(LONG64);
+	ReadData((unsigned char*)&dataSize, sizeof(int64_t), offset);
+	offset += sizeof(int64_t);
 
 	return dataSize;
 }

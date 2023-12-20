@@ -5,11 +5,11 @@
 #include ".\Damage Meter\MySQLite.h"
 #include ".\Combat Meter\CombatMeter.h"
 #include <sstream>
-SWPacketMonsterInfo::SWPacketMonsterInfo(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketMonsterInfo::SWPacketMonsterInfo(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketMonsterInfo::Do() {
+void SWPacketMonsterInfo::Do() {
 	uint64_t offset = 0;
 	uint16_t monsterAmount = *(uint16_t*)(_data + sizeof(SWHEADER));
 	offset += sizeof(uint16_t);
@@ -64,12 +64,12 @@ VOID SWPacketMonsterInfo::Do() {
 	}
 }
 
-VOID SWPacketMonsterInfo::Log() {
+void SWPacketMonsterInfo::Log() {
 
 }
 
 
-VOID SWPacketMonsterInfo::Debug() {
+void SWPacketMonsterInfo::Debug() {
 
 
 	SWPACKETMONSTERINFO* obj_create = (SWPACKETMONSTERINFO*)(_data + sizeof(SWHEADER));
@@ -84,10 +84,10 @@ VOID SWPacketMonsterInfo::Debug() {
 	//	LogInstance.MyLog(_T("%02x "), obj_create->_unknown03[i]);
 	//LogInstance.MyLog(_T("\n"));
 
-	//LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [Created Object] [X = %f] [Y = %f] [Z = %f]"), obj_create->_locationX, obj_create->_locationY, obj_create->_locationZ);
-	//LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [Created Object] [X = %f] [Y = %f] [Z = %f]"), obj_create->_unknownFloat1, obj_create->_unknownFloat2, obj_create->_unknownFloat3);
+	//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [Created Object] [X = %f] [Y = %f] [Z = %f]"), obj_create->_locationX, obj_create->_locationY, obj_create->_locationZ);
+	//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [Created Object] [X = %f] [Y = %f] [Z = %f]"), obj_create->_unknownFloat1, obj_create->_unknownFloat2, obj_create->_unknownFloat3);
 
-	//LogInstance.MyLog(const_cast<CHAR*>("[DEBUG] [Created Object] [ID = %u] [Owner ID = %08x] [DB2 = %u] [RealDB2 = %u]\n"), obj_create->_id, obj_create->_owner_id, obj_create->_db2, obj_create->_realDB2);
+	//LogInstance.MyLog(const_cast<char*>("[DEBUG] [Created Object] [ID = %u] [Owner ID = %08x] [DB2 = %u] [RealDB2 = %u]\n"), obj_create->_id, obj_create->_owner_id, obj_create->_db2, obj_create->_realDB2);
 
-	//LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [Created Object] [ID = %08x] [Owner ID = %08x] [DB2 = %u] [RealDB2 = %u]"), obj_create->_id, obj_create->_owner_id, obj_create->_db2, obj_create->_realDB2);
+	//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [Created Object] [ID = %08x] [Owner ID = %08x] [DB2 = %u] [RealDB2 = %u]"), obj_create->_id, obj_create->_owner_id, obj_create->_db2, obj_create->_realDB2);
 }

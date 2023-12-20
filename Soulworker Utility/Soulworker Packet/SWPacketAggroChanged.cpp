@@ -2,22 +2,22 @@
 #include ".\Soulworker Packet\SWPacketAggroChanged.h"
 #include ".\Damage Meter\Damage Meter.h"
 
-SWPacketAggroChanged::SWPacketAggroChanged(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketAggroChanged::SWPacketAggroChanged(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketAggroChanged::Do() {
+void SWPacketAggroChanged::Do() {
 
 	SWPACKETAGGROCHANGED* aggro_data = (SWPACKETAGGROCHANGED*)(_data + sizeof(SWHEADER));
 	DAMAGEMETER.SetAggro(aggro_data->_id, aggro_data->_targetedId);
 
 }
 
-VOID SWPacketAggroChanged::Log() {
+void SWPacketAggroChanged::Log() {
 
 }
 
-VOID SWPacketAggroChanged::Debug() {
+void SWPacketAggroChanged::Debug() {
 	SWPACKETAGGROCHANGED* aggro_data = (SWPACKETAGGROCHANGED*)(_data + sizeof(SWHEADER));
 
 	//LogInstance.MyLog(_T("Aggro Packet\n"));

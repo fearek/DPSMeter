@@ -9,7 +9,7 @@ enum StatType {
 	Stamina = 0x03,
 	STR = 0x04,
 	DEX = 0x05,
-	INTELLIGENCE = 0x06,
+	intELLIGENCE = 0x06,
 	BALANCE = 0x07,
 	CON = 0x08,
 	LUK = 0x09,
@@ -200,7 +200,7 @@ typedef struct _SWPACKETDAMAGE_DAMAGETYPE {
 	unsigned int unknown4 : 1;
 	unsigned int soulstoneType : 4;
 
-	_SWPACKETDAMAGE_DAMAGETYPE(BYTE rawData) {
+	_SWPACKETDAMAGE_DAMAGETYPE(uint8_t rawData) {
 		MISS = rawData & 0x01 ? 1 : 0;
 		unknown2 = rawData & 0x02 ? 1 : 0;
 		CRIT = rawData & 0x04 ? 1 : 0;

@@ -14,16 +14,16 @@ private:
 	sqlite3* _db;
 	sqlite3* _memdb;
 
-	BOOL InitDB();
-	BOOL InitMemDB();
-	VOID FreeDB();
+	bool InitDB();
+	bool InitMemDB();
+	void FreeDB();
 
-	BOOL InitSkillDB();
-	BOOL InitMonsterDB();
-	BOOL InitMapDB();
-	BOOL InitBuffDB();
-	BOOL InitSkillTimelineDB();
-	BOOL InitBuffTimelineDB();
+	bool InitSkillDB();
+	bool InitMonsterDB();
+	bool InitMapDB();
+	bool InitBuffDB();
+	bool InitSkillTimelineDB();
+	bool InitBuffTimelineDB();
 
 	sqlite3_stmt* _skill_stmt;
 	sqlite3_stmt* _monster_stmt;
@@ -41,7 +41,7 @@ public:
 		{3,"CURRENT_STAMINA"},
 		{4,"STR"},
 		{5,"DEX"},
-		{6,"INTELLIGENCE"}, //whatever the fuck these are
+		{6,"intELLIGENCE"}, //whatever the fuck these are
 		{7,"BALANCE"},
 		{8,"CON"},
 		{9,"LUK"},
@@ -112,11 +112,11 @@ public:
 			return stats.at(statid);
 		}
 	}
-	BOOL Init();
-	BOOL GetSkillName(UINT32 skillId, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length);
-	BOOL GetMonsterName(UINT32 DB2, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length);
-	BOOL GetMonsterType(UINT32 DB2, INT32* type);
-	BOOL GetMapName(UINT32 mapId, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length);
-	BOOL GetMapNameENG(UINT32 mapId, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length);
-	BOOL GetBuffName(UINT32 buffId, _Out_ CHAR* out_buffer, _In_ SIZE_T out_buffer_length, _Out_ CHAR* out_buffer_desc = NULL, _In_ SIZE_T out_buffer_desc_length = NULL);
+	bool Init();
+	bool GetSkillName(uint32_t skillId, _Out_ char* out_buffer, _In_ size_t out_buffer_length);
+	bool GetMonsterName(uint32_t DB2, _Out_ char* out_buffer, _In_ size_t out_buffer_length);
+	bool GetMonsterType(uint32_t DB2, int32_t* type);
+	bool GetMapName(uint32_t mapId, _Out_ char* out_buffer, _In_ size_t out_buffer_length);
+	bool GetMapNameENG(uint32_t mapId, _Out_ char* out_buffer, _In_ size_t out_buffer_length);
+	bool GetBuffName(uint32_t buffId, _Out_ char* out_buffer, _In_ size_t out_buffer_length, _Out_ char* out_buffer_desc = NULL, _In_ size_t out_buffer_desc_length = NULL);
 };

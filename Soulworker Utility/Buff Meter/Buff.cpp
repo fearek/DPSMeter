@@ -2,76 +2,76 @@
 #include ".\Buff Meter\Buff.h"
 #include ".\Damage Meter\MySQLite.h"
 
-Buff::Buff(USHORT buffID, BYTE stack) : _buffID(buffID), _stack(stack) {
+Buff::Buff(uint16_t buffID, uint8_t stack) : _buffID(buffID), _stack(stack) {
 	_timePoint = std::chrono::system_clock::now();
 	_time = 0;
 
 	SetNameFromDB();
 }
 
-VOID Buff::SetNameFromDB()
+void Buff::SetNameFromDB()
 {
 	ZeroMemory(&_desc, BUFF_DESC_LEN);
 	SWDB.GetBuffName(_buffID, _name, BUFF_NAME_LEN, _desc, BUFF_DESC_LEN);
 
-	CHAR stackName[8] = { 0 };
+	char stackName[8] = { 0 };
 	sprintf_s(stackName, 8, "(%d)", _stack);
 	strcat_s(_name, BUFF_NAME_LEN, stackName);
 }
 
-VOID Buff::Update() {
+void Buff::Update() {
 	if (_isHistoryMode)
 		return;
 
 	if (_isActive) {
-		std::chrono::duration<FLOAT> time;
+		std::chrono::duration<float> time;
 		time = std::chrono::system_clock::now() - _timePoint;
 		_time += time.count();
 		_timePoint = std::chrono::system_clock::now();
 	}
 }
 
-VOID Buff::Active() {
+void Buff::Active() {
 	if (_isHistoryMode)
 		return;
 
 	_timePoint = std::chrono::system_clock::now();
-	_isActive = TRUE;
+	_isActive = true;
 }
 
-VOID Buff::InActive() {
+void Buff::InActive() {
 	if (_isHistoryMode)
 		return;
 
 	if (_isActive) {
-		std::chrono::duration<FLOAT> time;
+		std::chrono::duration<float> time;
 		time = std::chrono::system_clock::now() - _timePoint;
 		_time += time.count();
 		_timePoint = std::chrono::system_clock::now();
 	}
 
-	_isActive = FALSE;
+	_isActive = false;
 }
 
-const USHORT& Buff::GetBuffID() {
+const uint16_t& Buff::GetBuffID() {
 	return _buffID;
 }
 
-const BYTE& Buff::GetStack() {
+const uint8_t& Buff::GetStack() {
 	return _stack;
 }
 
-const FLOAT& Buff::GetTime() {
+const float& Buff::GetTime() {
 
 	Update();
 
 	return _time;
 }
 
-const CHAR* Buff::GetName() {
+const char* Buff::GetName() {
 	return _name;
 }
 
-const CHAR* Buff::GetDesc() {
+const char* Buff::GetDesc() {
 	return _desc;
 }

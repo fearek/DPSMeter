@@ -8,15 +8,15 @@
 #pragma pack(push, 1)
 
 typedef struct _SWPACKETBIGPARTY_HEADER {
-	BYTE _unknown01[4];
-	UINT32 _posHostID;
-	BYTE _unknown02[10];
-	BYTE _posPlayerCount;
+	uint8_t _unknown01[4];
+	uint32_t _posHostID;
+	uint8_t _unknown02[10];
+	uint8_t _posPlayerCount;
 }SWPACKETBIGPARTY_HEADER;
 
 typedef struct _SWPACKETBIGPARTY_DATA {
-	UINT32 _playerID;
-	USHORT _nickSize;
+	uint32_t _playerID;
+	uint16_t _nickSize;
 }SWPACKETBIGPARTY_DATA;
 
 #pragma pack(pop)
@@ -26,10 +26,10 @@ protected:
 	SWPacketBigParty() {}
 
 public:
-	SWPacketBigParty(SWHEADER* swheader, BYTE* data);
+	SWPacketBigParty(SWHEADER* swheader, uint8_t* data);
 	~SWPacketBigParty() {}
 
-	VOID Do();
-	VOID Log();
-	VOID Debug();
+	void Do();
+	void Log();
+	void Debug();
 };

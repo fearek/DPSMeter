@@ -3,11 +3,11 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacketWorldChange.h"
 
-SWPacketWorldChange::SWPacketWorldChange(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketWorldChange::SWPacketWorldChange(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketWorldChange::Do() {
+void SWPacketWorldChange::Do() {
 	
 	DAMAGEMETER.Clear();
 
@@ -16,15 +16,15 @@ VOID SWPacketWorldChange::Do() {
 	DAMAGEMETER.SetMyID(world_change->_id);
 	DAMAGEMETER.SetWorldID(world_change->_worldID);
 
-	DAMAGEMETER.SetMazeState(FALSE);
+	DAMAGEMETER.SetMazeState(false);
 }
 
-VOID SWPacketWorldChange::Log() {
+void SWPacketWorldChange::Log() {
 
 }
 
-VOID SWPacketWorldChange::Debug() {
+void SWPacketWorldChange::Debug() {
 	SWPACKETWORLDCHANGE* world_change = (SWPACKETWORLDCHANGE*)(_data + sizeof(SWHEADER));
 
-	//LogInstance.WriteLog(const_cast<CHAR*>("[DEBUG] [World Change = %04x] [MyID = %08x]"), world_change->_worldID, world_change->_id);
+	//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [World Change = %04x] [MyID = %08x]"), world_change->_worldID, world_change->_id);
 }

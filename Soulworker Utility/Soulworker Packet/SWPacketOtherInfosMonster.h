@@ -27,25 +27,25 @@ typedef struct _SWPACKETMONSTERINFO {
 }SWPACKETMONSTERINFO;
 typedef struct _SWPACKETSTATINFO {
 
-	BYTE type;
-	FLOAT val;
+	uint8_t type;
+	float val;
 
 }SWPACKETMONSTERSTATINFO;
 typedef struct _SWPACKETMONSTERINFOFOOTER {
 
-	ULONG64 unk01;
-	ULONG64 unk02;
-	FLOAT unk03;
-	BYTE unknownCount;
+	uint64_t unk01;
+	uint64_t unk02;
+	float unk03;
+	uint8_t unknownCount;
 
 }SWPACKETMONSTERINFOFOOTER;
 typedef struct _SWPACKETMONSTERINFOUNKNOWN {
 
-	UINT32 unk01;
-	FLOAT unk02;
-	BYTE unk03;
-	UINT32 unk04;
-	BYTE unk05;
+	uint32_t unk01;
+	float unk02;
+	uint8_t unk03;
+	uint32_t unk04;
+	uint8_t unk05;
 
 }SWPACKETMONSTERINFOUNKNOWN;
 #pragma pack(pop)
@@ -55,10 +55,10 @@ protected:
 	SWPacketMonsterInfo() {}
 
 public:
-	SWPacketMonsterInfo(SWHEADER* swheader, BYTE* data);
+	SWPacketMonsterInfo(SWHEADER* swheader, uint8_t* data);
 	~SWPacketMonsterInfo() {}
 
-	VOID Do();
-	VOID Log();
-	VOID Debug();
+	void Do();
+	void Log();
+	void Debug();
 };

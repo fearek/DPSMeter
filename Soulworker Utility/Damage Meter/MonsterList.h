@@ -2,7 +2,7 @@
 #include "pch.h"
 #include <unordered_set>
 
-static std::unordered_set<UINT32> pauseIdList({
+static std::unordered_set<uint32_t> pauseIdList({
 
 	702, // Trainning Master
 
@@ -46,7 +46,7 @@ static std::unordered_set<UINT32> pauseIdList({
 
 	});
 
-static std::unordered_set<UINT32> endIdList({
+static std::unordered_set<uint32_t> endIdList({
 
 	/* HH */
 	31308001, // Raphakumba
@@ -95,7 +95,7 @@ static std::unordered_set<UINT32> endIdList({
 
 	});
 
-static std::unordered_set<UINT32> resumeIgnoreIdList({
+static std::unordered_set<uint32_t> resumeIgnoreIdList({
 
 	/* AR */
 	14000101, 14000102, 14000103, // Summoned Orb
@@ -106,7 +106,7 @@ static std::unordered_set<UINT32> resumeIgnoreIdList({
 
 	});
 
-static std::unordered_set<UINT32> changeAggroIdList({
+static std::unordered_set<uint32_t> changeAggroIdList({
 
 	701, 702, // Trainning Master
 
@@ -153,7 +153,7 @@ static std::unordered_set<UINT32> changeAggroIdList({
 
 	});
 
-static std::unordered_set<UINT32> dpsIgnoreIdList({
+static std::unordered_set<uint32_t> dpsIgnoreIdList({
 
 	/* HH */
 	31308106, // Hermit
@@ -181,7 +181,7 @@ static std::unordered_set<UINT32> dpsIgnoreIdList({
 
 	});
 
-static std::unordered_set<UINT32> LunarFallBossListId({
+static std::unordered_set<uint32_t> LunarFallBossListId({
 
 	701, 702, // Trainning Master
 
@@ -193,7 +193,7 @@ static std::unordered_set<UINT32> LunarFallBossListId({
 	});
 
 
-static std::unordered_map<UINT32, std::vector<UINT32>> StrictModeList({
+static std::unordered_map<uint32_t, std::vector<uint32_t>> StrictModeList({
 	// HH Rank
 	{
 		22016,

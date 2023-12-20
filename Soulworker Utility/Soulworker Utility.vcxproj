@@ -129,7 +129,7 @@
       <AdditionalIncludeDirectories>..\Soulworker Utility\Third Party\openssl\include;..\Soulworker Utility\Third Party\Npcap\Include;..\Soulworker Utility;..\Soulworker Utility\Third Party;..\Soulworker Utility\Third Party\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FunctionLevelLinking>
       </FunctionLevelLinking>
@@ -157,7 +157,7 @@
       <AdditionalIncludeDirectories>..\Soulworker Utility\Third Party\Npcap\Include;..\Soulworker Utility\Third Party\openssl\include;..\Soulworker Utility;..\Soulworker Utility\Third Party;..\Soulworker Utility\Third Party\imgui;..\Soulworker Utility\Third Party\FlatBuffers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <UndefinePreprocessorDefinitions>%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <AdditionalOptions>/Zc:char8_t- /utf-8 /wd4996 %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
@@ -174,7 +174,8 @@
       </ModuleDefinitionFile>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
-      <DelayLoadDLLs>wpcap.dll;packet.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
       <GenerateMapFile>true</GenerateMapFile>
       <AssemblyDebug>false</AssemblyDebug>
     </Link>

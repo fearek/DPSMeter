@@ -20,6 +20,6 @@ public:
 
 	bool Init();
 	SWHEADER* GetSWHeader(std::vector<unsigned char>& packet);
-	BYTE* GetSWData(std::vector<unsigned char>&  packet);
-	VOID CreateSWPacket(std::vector<unsigned char>&  packet);
+	uint8_t* GetSWData(std::vector<unsigned char>&  packet);
+	void CreateSWPacket(std::vector<unsigned char>&  packet);
 };

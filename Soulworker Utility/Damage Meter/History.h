@@ -13,62 +13,62 @@ using namespace SoulMeterFBS::History;
 
 struct HISTORY_DATA
 {
-	vector<SWDamagePlayer*> _playerHistory;
-	vector<SW_DB2_STRUCT*> _dbHistory;
-	vector<PLAYERBUF*> _buffHistory;
+	std::vector<SWDamagePlayer*> _playerHistory;
+	std::vector<SW_DB2_STRUCT*> _dbHistory;
+	std::vector<PLAYERBUF*> _buffHistory;
 	PlotInfo* _plotHistory = nullptr;
-	unordered_map<UINT32, SWDamageMeter::SW_PLAYER_METADATA*> _playerMetadata;
-	string _extInfo;
+	std::unordered_map<uint32_t, SWDamageMeter::SW_PLAYER_METADATA*> _playerMetadata;
+	std::string _extInfo;
 	CombatInterface* _combatIF = nullptr;
 };
 
 typedef struct _HISTORYINFO {
 public:
-	UINT32 _worldID;
+	uint32_t _worldID;
 	SYSTEMTIME* _saveTime;
-	ULONG64 _time;
+	uint64_t _time;
 	HISTORY_DATA* _historyData;
-	UINT32 _myID;
-	UINT32 _realClearTime;
-	BOOL _isSaveData = FALSE;
+	uint32_t _myID;
+	uint32_t _realClearTime;
+	bool _isSaveData = false;
 
-	VOID Setup(HISTORY_DATA* historyData, UINT32 worldID, ULONG64 time, UINT32 myID, BOOL isSaveData = FALSE, SYSTEMTIME* saveTime = nullptr, UINT32 realClearTime = 0);
-	VOID Clear();
+	void Setup(HISTORY_DATA* historyData, uint32_t worldID, uint64_t time, uint32_t myID, bool isSaveData = false, SYSTEMTIME* saveTime = nullptr, uint32_t realClearTime = 0);
+	void Clear();
 
 	flatbuffers::Offset<_tHistory> Serialization(flatbuffers::FlatBufferBuilder& fbb, HISTORY_DATA* historyData);
 }HISTORY_INFO;
 
 class SWDamageMeterHistory : public Singleton<SWDamageMeterHistory> {
 private:
-	vector<LPVOID> _historys;
-	INT _curIndex = 0;
+	std::vector<void*> _historys;
+	int _curIndex = 0;
 	
-	mutex _mutex;
+	std::mutex _mutex;
 
-	BOOL _stopAddHistory = FALSE;
+	bool _stopAddHistory = false;
 
 public:
 	SWDamageMeterHistory() : _curIndex(0) {}
 	~SWDamageMeterHistory();
 
-	VOID push_back(HISTORY_INFO* pHi);
-	VOID ClearHistory(HISTORY_INFO* pHI = nullptr, BOOL deleteFirst = TRUE);
-	VOID ClearAll();
-	VOID ClearVector();
+	void push_back(HISTORY_INFO* pHi);
+	void ClearHistory(HISTORY_INFO* pHI = nullptr, bool deleteFirst = true);
+	void ClearAll();
+	void ClearVector();
 
-	VOID UnSerialization(const _tHistory* pHistory);
+	void UnSerialization(const _tHistory* pHistory);
 
-	INT GetCurrentIndex()
+	int GetCurrentIndex()
 	{
 		return _curIndex;
 	}
 
-	VOID GetLock()
+	void GetLock()
 	{
 		_mutex.lock();
 	}
 
-	VOID FreeLock()
+	void FreeLock()
 	{
 		_mutex.unlock();
 	}
@@ -98,7 +98,7 @@ public:
 		return _historys.size();
 	}
 
-	BOOL isStop()
+	bool isStop()
 	{
 		return _stopAddHistory;
 	}

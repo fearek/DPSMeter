@@ -5,8 +5,8 @@
 #pragma pack(push, 1)
 
 typedef struct _SWPACKET_DEAD {
-	UINT32 _playerid;
-	BYTE _unknown2[7];
+	uint32_t _playerid;
+	uint8_t _unknown2[7];
 }SWPACKET_DEAD;
 
 #pragma pack(pop)
@@ -17,10 +17,10 @@ protected:
 	SWPacketDead() {}
 
 public:
-	SWPacketDead(SWHEADER* swheader, BYTE* data);
+	SWPacketDead(SWHEADER* swheader, uint8_t* data);
 	~SWPacketDead() {}
 
-	VOID Do();
-	VOID Debug();
-	VOID Log();
+	void Do();
+	void Debug();
+	void Log();
 };

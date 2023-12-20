@@ -11,12 +11,12 @@
 #include ".\Buff Meter\Buff Meter.h"
 #include ".\Damage Meter\MySQLite.h"
 #include ".\discord\DiscordPresence.h"
-
+#include <array>
 UiOption::UiOption()  : 
 	_open(0), _framerate(1), _windowBorderSize(1), _fontScale(1), _columnFontScale(1), _tableFontScale(1), 
-	_is1K(0), _is1M(0), _isSoloMode(0), _hideName(0), _isTopMost(true), _teamTA_LF(false), _isSoloRankMode(FALSE), _isUseSaveData(FALSE),
+	_is1K(0), _is1M(0), _isSoloMode(0), _hideName(0), _isTopMost(true), _teamTA_LF(false), _isSoloRankMode(false), _isUseSaveData(false),
 	_isDontSaveUnfinishedMaze(false),
-	_cellPadding(0, 0), _windowWidth(800), _refreshTime((FLOAT)0.3), _oriIsUseSaveData(FALSE),
+	_cellPadding(0, 0), _windowWidth(800), _refreshTime((float)0.3), _oriIsUseSaveData(false),
 	_selectedInterface("ALL")
 {
 	
@@ -71,7 +71,7 @@ void SetFont()
 	DAMAGEMETER.shouldRebuildAtlas = true;
 	LogInstance.WriteLog("Trying to set font to: %s", DAMAGEMETER.selectedFont.path.c_str());
 }
-BOOL UiOption::ShowFontSelector() {
+bool UiOption::ShowFontSelector() {
 
 	ImFont* font_current = ImGui::GetFont();
 	float width = ImGui::CalcItemWidth();
@@ -96,23 +96,23 @@ BOOL UiOption::ShowFontSelector() {
 	{
 		SetFont();
 	}
-	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_FONTSCALE_DESC"));
-	ImGui::DragFloat(LANGMANAGER.GetText("STR_OPTION_FONTSCALE"), &_fontScale, 0.005f, 0.3f, 2.0f, " % .1f");
+	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_FONTSCALE_DESC").c_str());
+	ImGui::DragFloat(LANGMANAGER.GetText("STR_OPTION_FONTSCALE").c_str(), &_fontScale, 0.005f, 0.3f, 2.0f, " % .1f");
 	if (_fontScale < 0.1f) _fontScale = 0.3f;
 	if (_fontScale > 2.0f) _fontScale = 2.0f;
 	font_current->Scale = _fontScale;
 
-	if (ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_UNIT_1K"), (bool*)&_is1K)) {
+	if (ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_UNIT_1K").c_str(), (bool*)&_is1K)) {
 		if (_is1M)
-			_is1M = FALSE;
+			_is1M = false;
 	}
 
-	if (ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_UNIT_1M"), (bool*)&_is1M)) {
+	if (ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_UNIT_1M").c_str(), (bool*)&_is1M)) {
 		if (_is1K)
-			_is1K = FALSE;
+			_is1K = false;
 	}
-	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_SOLO_MODE"), (bool*)&_isSoloMode);
-	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_HIDE_NAME"), (bool*)&_hideName);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_SOLO_MODE").c_str(), (bool*)&_isSoloMode);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_HIDE_NAME").c_str(), (bool*)&_hideName);
 	if (ImGui::Checkbox("Rich presence", &DISCORD.shouldUpdate))
 	{
 		if (!DISCORD.shouldUpdate)
@@ -124,59 +124,59 @@ BOOL UiOption::ShowFontSelector() {
 	ImGui::Checkbox("Hide character name", &DISCORD.hideName);
 	ImGui::SameLine();
 	ImGui::Checkbox("Hide character class", &DISCORD.hideClass);
-	return TRUE;
+	return true;
 }
 
-BOOL UiOption::ShowTableOption() {
+bool UiOption::ShowTableOption() {
 
 	ImGuiStyle& style = ImGui::GetStyle();
 	float width = ImGui::CalcItemWidth();
 	ImGui::PushItemWidth(width - 200.0);
 	ImGui::SliderInt("Timer accuracy", &DAMAGEMETER.mswideness, 1, 3);
-	ImGui::SliderFloat(LANGMANAGER.GetText("STR_OPTION_WINDOW_BORDER_SIZE"), &_windowBorderSize, 0.0f, 1.0f, "%.0f");
+	ImGui::SliderFloat(LANGMANAGER.GetText("STR_OPTION_WINDOW_BORDER_SIZE").c_str(), &_windowBorderSize, 0.0f, 1.0f, "%.0f");
 	style.WindowBorderSize = _windowBorderSize;
-	ImGui::SliderFloat2(LANGMANAGER.GetText("STR_OPTION_CELL_PADDING"), (float*)&_cellPadding, 0.0f, 20.0f, "%.0f");
+	ImGui::SliderFloat2(LANGMANAGER.GetText("STR_OPTION_CELL_PADDING").c_str(), (float*)&_cellPadding, 0.0f, 20.0f, "%.0f");
 	style.CellPadding = _cellPadding;
-	ImGui::DragFloat(LANGMANAGER.GetText("STR_OPTION_COLUMN_FONT_SCALE"), &_columnFontScale, 0.005f, 0.3f, 2.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
-	ImGui::DragFloat(LANGMANAGER.GetText("STR_OPTION_TABLE_FONT_SCALE"), &_tableFontScale, 0.005f, 0.3f, 2.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+	ImGui::DragFloat(LANGMANAGER.GetText("STR_OPTION_COLUMN_FONT_SCALE").c_str(), &_columnFontScale, 0.005f, 0.3f, 2.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+	ImGui::DragFloat(LANGMANAGER.GetText("STR_OPTION_TABLE_FONT_SCALE").c_str(), &_tableFontScale, 0.005f, 0.3f, 2.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 	ImGui::Separator();
-	ImGui::DragFloat(LANGMANAGER.GetText("STR_OPTION_TABLE_REFRESH_TIME"), &_refreshTime, 0.005f, 0.1f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+	ImGui::DragFloat(LANGMANAGER.GetText("STR_OPTION_TABLE_REFRESH_TIME").c_str(), &_refreshTime, 0.005f, 0.1f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
 	ImGui::Separator();
-	ImGui::ColorEdit4("##ColorText", (FLOAT*)&_textColor, ImGuiColorEditFlags_None); 
+	ImGui::ColorEdit4("##ColorText", (float*)&_textColor, ImGuiColorEditFlags_None); 
 	ImGui::SameLine(); 	ImGui::Text(ImGui::GetStyleColorName(0));
 	style.Colors[0] = _textColor;
-	ImGui::ColorEdit4("##ColorBgr", (FLOAT*)&_windowBg, ImGuiColorEditFlags_None);
+	ImGui::ColorEdit4("##ColorBgr", (float*)&_windowBg, ImGuiColorEditFlags_None);
 	ImGui::SameLine();	ImGui::Text(ImGui::GetStyleColorName(2));
 	style.Colors[2] = _windowBg;
-	ImGui::ColorEdit4("##ColorOutline", (FLOAT*)&_outlineColor, ImGuiColorEditFlags_None);
-	ImGui::SameLine();	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_TEXT_OUTLINE_COLOR"));
-	ImGui::ColorEdit4("##ColorActiveColor", (FLOAT*)&_activeColor[1], ImGuiColorEditFlags_None);
-	ImGui::SameLine();	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_ACTIVE_COLOR"));
-	ImGui::ColorEdit4("##ColorInActiveColor", (FLOAT*)&_activeColor[0], ImGuiColorEditFlags_None);
-	ImGui::SameLine();	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_INACTIVE_COLOR"));
+	ImGui::ColorEdit4("##ColorOutline", (float*)&_outlineColor, ImGuiColorEditFlags_None);
+	ImGui::SameLine();	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_TEXT_OUTLINE_COLOR").c_str());
+	ImGui::ColorEdit4("##ColorActiveColor", (float*)&_activeColor[1], ImGuiColorEditFlags_None);
+	ImGui::SameLine();	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_ACTIVE_COLOR").c_str());
+	ImGui::ColorEdit4("##ColorInActiveColor", (float*)&_activeColor[0], ImGuiColorEditFlags_None);
+	ImGui::SameLine();	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_INACTIVE_COLOR").c_str());
 
-	const char* job[11][32] = { 
-		{(const char*)LANGMANAGER.GetText("STR_CHAR_UNKNOWN")},
-		{(const char*)LANGMANAGER.GetText("STR_CHAR_HARU")},
-		{(const char*)LANGMANAGER.GetText("STR_CHAR_ERWIN")},
-		{(const char*)LANGMANAGER.GetText("STR_CHAR_LILY")},
-		{(const char*)LANGMANAGER.GetText("STR_CHAR_JIN")},
-		{(const char*)LANGMANAGER.GetText("STR_CHAR_STELLA")},
-		{(const char*)LANGMANAGER.GetText("STR_CHAR_IRIS")},
-		{(const char*)LANGMANAGER.GetText("STR_CHAR_CHII")},
-		{(const char*)LANGMANAGER.GetText("STR_CHAR_EPHNEL")},
-		{(const char*)LANGMANAGER.GetText("STR_CHAR_NABI")},
-		{(const char*)LANGMANAGER.GetText("STR_CHAR_DHANA")}
+	auto job = std::array{
+		LANGMANAGER.GetText("STR_CHAR_UNKNOWN"),
+		LANGMANAGER.GetText("STR_CHAR_HARU"),
+		LANGMANAGER.GetText("STR_CHAR_ERWIN"),
+		LANGMANAGER.GetText("STR_CHAR_LILY"),
+		LANGMANAGER.GetText("STR_CHAR_JIN"),
+		LANGMANAGER.GetText("STR_CHAR_STELLA"),
+		LANGMANAGER.GetText("STR_CHAR_IRIS"),
+		LANGMANAGER.GetText("STR_CHAR_CHII"),
+		LANGMANAGER.GetText("STR_CHAR_EPHNEL"),
+		LANGMANAGER.GetText("STR_CHAR_NABI"),
+		LANGMANAGER.GetText("STR_CHAR_DHANA")
 	};
 
 	for (int i = 0; i < 11; i++) {
 		ImGui::PushID(i);
-		ImGui::ColorEdit4("##Color", (FLOAT*)&_jobColor[i], ImGuiColorEditFlags_None);
-		ImGui::SameLine();	ImGui::Text(*job[i]);
+		ImGui::ColorEdit4("##Color", (float*)&_jobColor[i], ImGuiColorEditFlags_None);
+		ImGui::SameLine();	ImGui::Text(job[i].data());
 
 		if (memcmp(&_jobColor[i], &_jobBasicColor[i], sizeof(ImVec4)) != 0) {
 			ImGui::SameLine(0.0f, style.ItemInnerSpacing.x); 
-			if (ImGui::Button(LANGMANAGER.GetText("STR_OPTION_RESTORE_DEFAULT_COLOR"))) {
+			if (ImGui::Button(LANGMANAGER.GetText("STR_OPTION_RESTORE_DEFAULT_COLOR").c_str())) {
 				_jobColor[i] = _jobBasicColor[i];
 			}
 		}
@@ -184,33 +184,33 @@ BOOL UiOption::ShowTableOption() {
 		ImGui::PopID();
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL UiOption::ShowHotkeySetting() {
+bool UiOption::ShowHotkeySetting() {
 
 	char text[4096] = { 0 };
 	sprintf_s(text, "%s%s%s%s%s",
-		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_1"),
-		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_2"),
-		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_3"),
-		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_4"),
-		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_5")
+		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_1").c_str(),
+		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_2").c_str(),
+		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_3").c_str(),
+		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_4").c_str(),
+		LANGMANAGER.GetText("STR_OPTION_HOTKEY_DESC_5").c_str()
 	);
 
 	ImGui::Text(text);
 
-	return TRUE;
+	return true;
 }
 
-VOID UiOption::Helper() {
+void UiOption::Helper() {
 
-	static UINT32 helper = 1;
-	CHAR name[128] = { 0 };
+	static uint32_t helper = 1;
+	char name[128] = { 0 };
 
-	UINT monster[4] = { 604, 605, 10000206, 10194613 };
-	UINT skill[4] = { 72000233, 72000331, 72000433, 72000638 };
-	UINT buff[4] = { 10001, 10111, 10222, 10333 };
+	unsigned int monster[4] = { 604, 605, 10000206, 10194613 };
+	unsigned int skill[4] = { 72000233, 72000331, 72000433, 72000638 };
+	unsigned int buff[4] = { 10001, 10111, 10222, 10333 };
 
 	if (DAMAGEMETER.GetWorldID() == 0) {
 		DAMAGEMETER.SetWorldID(20011);
@@ -225,10 +225,10 @@ VOID UiOption::Helper() {
 	DAMAGEMETER.InsertDB(6, monster[2]);
 	DAMAGEMETER.InsertDB(7, monster[3]);
 
-	for (INT i = 0; i < 4; i++) {
-		sprintf_s(name, 128, "%s %d", LANGMANAGER.GetText("STR_OPTION_TEST_VALUE_PLAYER"), helper);
+	for (int i = 0; i < 4; i++) {
+		sprintf_s(name, 128, "%s %d", LANGMANAGER.GetText("STR_OPTION_TEST_VALUE_PLAYER").c_str(), helper);
 		
-		UINT32 id;
+		uint32_t id;
 		if (helper == 3) {
 			id = DAMAGEMETER.GetMyID();
 		}
@@ -254,17 +254,16 @@ VOID UiOption::Helper() {
 	DAMAGEMETER.SetTestMode();
 }
 
-VOID UiOption::ShowLangSelector() {
-	const CHAR* comboPreview = LANGMANAGER.GetText("STR_LANG_NAME");
+void UiOption::ShowLangSelector() {
+	std::string comboPreview = LANGMANAGER.GetText("STR_LANG_NAME");
+	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_COMBO_LANG").c_str());
+	if (ImGui::BeginCombo(u8"###OptionLangSelector", comboPreview.c_str(), ImGuiComboFlags_HeightLarge)) {
 
-	ImGui::Text(LANGMANAGER.GetText("STR_OPTION_COMBO_LANG"));
-	if (ImGui::BeginCombo(u8"###OptionLangSelector", comboPreview, ImGuiComboFlags_HeightLarge)) {
-
-		INT32 i = 0;
+		int32_t i = 0;
 		for (auto itr = _allLangList.begin(); itr != _allLangList.end(); itr++)
 		{
 
-			CHAR label[MONSTER_NAME_LEN] = { 0 };
+			char label[MONSTER_NAME_LEN] = { 0 };
 			sprintf_s(label, MONSTER_NAME_LEN, "%s##%d", itr->second.c_str(), i);
 
 			if (ImGui::Selectable(label, strcmp(_selectedLang, itr->first.c_str()) == 0)) {
@@ -279,7 +278,7 @@ VOID UiOption::ShowLangSelector() {
 	}
 }
 
-VOID UiOption::ChangeLang()
+void UiOption::ChangeLang()
 {
 	DAMAGEMETER.GetLock();
 	{
@@ -290,25 +289,25 @@ VOID UiOption::ChangeLang()
 	DAMAGEMETER.FreeLock();
 }
 
-VOID UiOption::ShowTeamTALFSelector()
+void UiOption::ShowTeamTALFSelector()
 {
-	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_TEAMTA_LUNARFALL"), (bool*)&_teamTA_LF);
-	const CHAR* comboPreview = nullptr;
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_TEAMTA_LUNARFALL").c_str(), (bool*)&_teamTA_LF);
+	std::string comboPreview;
 	if (_teamTA_LF_Mode == 1)
 		comboPreview = LANGMANAGER.GetText("STR_OPTION_TEAMTA_OPTION_1");
 	else
 		comboPreview = LANGMANAGER.GetText("STR_OPTION_TEAMTA_OPTION_2");
-	if (ImGui::BeginCombo(u8"###OptionTALF", comboPreview, ImGuiComboFlags_HeightLargest))
+	if (ImGui::BeginCombo(u8"###OptionTALF", comboPreview.c_str(), ImGuiComboFlags_HeightLargest))
 	{
 
-		CHAR label[128] = { 0 };
+		char label[128] = { 0 };
 
-		for (INT32 i = 1; i <= 2; i++)
+		for (int32_t i = 1; i <= 2; i++)
 		{
 			if (i == 1)
-				sprintf_s(label, 128, "%s##OptionTALF1", LANGMANAGER.GetText("STR_OPTION_TEAMTA_OPTION_1"));
+				sprintf_s(label, 128, "%s##OptionTALF1", LANGMANAGER.GetText("STR_OPTION_TEAMTA_OPTION_1").c_str());
 			else
-				sprintf_s(label, 128, "%s##OptionTALF2", LANGMANAGER.GetText("STR_OPTION_TEAMTA_OPTION_2"));
+				sprintf_s(label, 128, "%s##OptionTALF2", LANGMANAGER.GetText("STR_OPTION_TEAMTA_OPTION_2").c_str());
 			if (ImGui::Selectable(label, _teamTA_LF_Mode == i)) {
 				_teamTA_LF_Mode = i;
 			}
@@ -318,51 +317,51 @@ VOID UiOption::ShowTeamTALFSelector()
 	}
 }
 
-VOID UiOption::ShowFeatures()
+void UiOption::ShowFeatures()
 {
-	if (ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_UNIT_1K"), (bool*)&_is1K)) {
+	if (ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_UNIT_1K").c_str(), (bool*)&_is1K)) {
 		if (_is1M)
-			_is1M = FALSE;
+			_is1M = false;
 	}
 
-	if (ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_UNIT_1M"), (bool*)&_is1M)) {
+	if (ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_UNIT_1M").c_str(), (bool*)&_is1M)) {
 		if (_is1K)
-			_is1K = FALSE;
+			_is1K = false;
 	}
-	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_SOLO_MODE"), (bool*)&_isSoloMode);
-	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_HIDE_NAME"), (bool*)&_hideName);
-	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_SOLO_RANK_MODE"), (bool*)&_isSoloRankMode); ImGui::SameLine(); ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_DONT_SAVE_UNFINISHED_MAZE"), (bool*)&_isDontSaveUnfinishedMaze);
-	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_USE_SAVEDATA"), (bool*)&_isUseSaveData);
-	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_USE_IMAGE"), (bool*)&_isUseImage);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_SOLO_MODE").c_str(), (bool*)&_isSoloMode);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_HIDE_NAME").c_str(), (bool*)&_hideName);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_SOLO_RANK_MODE").c_str(), (bool*)&_isSoloRankMode); ImGui::SameLine(); ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_DONT_SAVE_UNFINISHED_MAZE").c_str(), (bool*)&_isDontSaveUnfinishedMaze);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_USE_SAVEDATA").c_str(), (bool*)&_isUseSaveData);
+	ImGui::Checkbox(LANGMANAGER.GetText("STR_OPTION_USE_IMAGE").c_str(), (bool*)&_isUseImage);
 }
 
-VOID UiOption::OpenOption() {
+void UiOption::OpenOption() {
 
 
-	_open = TRUE;
+	_open = true;
 
 	if (DAMAGEMETER.size() < 1) {
 		Helper();
 		PLAYERTABLE.ResizeTalbe();
 	}
 
-	CHAR label[128] = { 0 };
-	sprintf_s(label, "%s###Option", LANGMANAGER.GetText("STR_OPTION_WINDOWS_NAME"));
+	char label[128] = { 0 };
+	sprintf_s(label, "%s###Option", LANGMANAGER.GetText("STR_OPTION_WINDOWS_NAME").c_str());
 
 	ImGui::Begin(label, 0, ImGuiWindowFlags_None);
 
-		if (ImGui::Button(LANGMANAGER.GetText("STR_OPTION_ADD_TEST_VALUE"))) {
+		if (ImGui::Button(LANGMANAGER.GetText("STR_OPTION_ADD_TEST_VALUE").c_str())) {
 			Helper();
 		}
 
 		ImGui::SameLine(); 		
 		
-		if (ImGui::Button(LANGMANAGER.GetText("STR_OPTION_SAVE_AND_EXIT"))) {
+		if (ImGui::Button(LANGMANAGER.GetText("STR_OPTION_SAVE_AND_EXIT").c_str())) {
 			SaveOption();
 			if (DAMAGEMETER.GetWorldID() == 20011) {
 				DAMAGEMETER.SetWorldID(0);
 			}
-			_open = FALSE;
+			_open = false;
 		}
 
 #ifdef _DEBUG
@@ -376,8 +375,8 @@ VOID UiOption::OpenOption() {
 #endif
 		ShowLangSelector();
 		if (ImGui::BeginTabBar("##tabs")) {
-			CHAR label[128] = {0};
-			sprintf_s(label, "%s###TabFeatures", LANGMANAGER.GetText("STR_OPTION_TAB_TABLE_FEATURES"));
+			char label[128] = {0};
+			sprintf_s(label, "%s###TabFeatures", LANGMANAGER.GetText("STR_OPTION_TAB_TABLE_FEATURES").c_str());
 			if (ImGui::BeginTabItem(label)) {
 				ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.5f);
 				ShowFeatures();
@@ -386,7 +385,7 @@ VOID UiOption::OpenOption() {
 				ImGui::EndTabItem();
 			}
 
-			sprintf_s(label, "%s###TabTable", LANGMANAGER.GetText("STR_OPTION_TAB_TABLE_SETTING"));
+			sprintf_s(label, "%s###TabTable", LANGMANAGER.GetText("STR_OPTION_TAB_TABLE_SETTING").c_str());
 			if (ImGui::BeginTabItem(label)) {
 				ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.5f);
 				ShowFontSelector();
@@ -396,7 +395,7 @@ VOID UiOption::OpenOption() {
 				ImGui::EndTabItem();
 			}
 
-			sprintf_s(label, "%s###TabHotKey", LANGMANAGER.GetText("STR_OPTION_TAB_HOTKEY_SETTING"));
+			sprintf_s(label, "%s###TabHotKey", LANGMANAGER.GetText("STR_OPTION_TAB_HOTKEY_SETTING").c_str());
 			if (ImGui::BeginTabItem(label)) {
 				ShowHotkeySetting();
 				ImGui::EndTabItem();
@@ -408,7 +407,7 @@ VOID UiOption::OpenOption() {
 		ImGui::End();
 }
 
-VOID UiOption::Init() {
+void UiOption::Init() {
 
 	if (!GetOption()) {
 		SetBasicOption();
@@ -416,29 +415,29 @@ VOID UiOption::Init() {
 	_inited = true;
 }
 
-BOOL UiOption::GetOption() {
+bool UiOption::GetOption() {
 
 	tinyxml2::XMLDocument doc;
 	ImGuiStyle& style = ImGui::GetStyle();
 
 	if (doc.LoadFile(OPTION_FILE_NAME))
-		return FALSE;
+		return false;
 
 	tinyxml2::XMLNode* node = doc.FirstChildElement("SDM");
 
 	if (!node)
-		return FALSE;
+		return false;
 
 	// Option
 	tinyxml2::XMLElement* ele = node->FirstChildElement("Option");
 
 	if (!ele)
-		return FALSE;
+		return false;
 
 	auto attr = ele->FindAttribute("GlobalScale");
 
 	if (attr == nullptr)
-		return FALSE;
+		return false;
 
 	attr->QueryFloatValue(&_fontScale);
 
@@ -449,7 +448,7 @@ BOOL UiOption::GetOption() {
 	attr = ele->FindAttribute("TableScale");
 
 	if (attr == nullptr)
-		return FALSE;
+		return false;
 
 	attr->QueryFloatValue(&_tableFontScale);
 
@@ -460,7 +459,7 @@ BOOL UiOption::GetOption() {
 	attr = ele->FindAttribute("ColumnScale");
 
 	if (attr == nullptr)
-		return FALSE;
+		return false;
 
 	attr->QueryFloatValue(&_columnFontScale);
 
@@ -471,9 +470,9 @@ BOOL UiOption::GetOption() {
 	attr = ele->FindAttribute("K");
 
 	if (attr == nullptr)
-		return FALSE;
+		return false;
 
-	attr->QueryIntValue(&_is1K);
+	attr->QueryBoolValue(&_is1K);
 
 #if DEBUG_READ_XML == 1
 	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read 1K = %d")), _is1K);
@@ -482,31 +481,31 @@ BOOL UiOption::GetOption() {
 	attr = ele->FindAttribute("M");
 
 	if (attr == nullptr)
-		return FALSE;
+		return false;
 
-	attr->QueryIntValue(&_is1M);
+	attr->QueryBoolValue(&_is1M);
 
 	attr = ele->FindAttribute("IsSoloMode");
 	if (attr == nullptr)
-		return FALSE;
-	attr->QueryIntValue(&_isSoloMode);
+		return false;
+	attr->QueryBoolValue(&_isSoloMode);
 
 	attr = ele->FindAttribute("DoHideName");
 	if (attr == nullptr)
-		return FALSE;
-	attr->QueryIntValue(&_hideName);
+		return false;
+	attr->QueryBoolValue(&_hideName);
 
 	attr = ele->FindAttribute("IsTopMost");
 	if (attr == nullptr)
-		return FALSE;
-	attr->QueryIntValue(&_isTopMost);
+		return false;
+	attr->QueryBoolValue(&_isTopMost);
 	attr = ele->FindAttribute("IsUseImage");
 	if (attr == nullptr)
-		return FALSE;
-	attr->QueryIntValue(&_isUseImage);
+		return false;
+	attr->QueryBoolValue(&_isUseImage);
 	attr = ele->FindAttribute("TeamTA_LF");
 	if (attr != nullptr)
-		attr->QueryIntValue(&_teamTA_LF);
+		attr->QueryBoolValue(&_teamTA_LF);
 
 	attr = ele->FindAttribute("TeamTA_LF_Mode");
 	if (attr != nullptr)
@@ -521,12 +520,12 @@ BOOL UiOption::GetOption() {
 
 	attr = ele->FindAttribute("IsSoloRankMode");
 	if (attr != nullptr)
-		attr->QueryIntValue(&_isSoloRankMode);
+		attr->QueryBoolValue(&_isSoloRankMode);
 
 	attr = ele->FindAttribute("IsUseSaveData");
 	if (attr != nullptr) {
-		attr->QueryIntValue(&_isUseSaveData);
-		attr->QueryIntValue(&_oriIsUseSaveData);
+		attr->QueryBoolValue(&_isUseSaveData);
+		attr->QueryBoolValue(&_oriIsUseSaveData);
 	}
 
 	attr2 = ele->FirstChildElement("UseInterface");
@@ -537,7 +536,7 @@ BOOL UiOption::GetOption() {
 	
 	attr = ele->FindAttribute("IsDontSaveUnfinishedMaze");
 	if (attr != nullptr)
-		attr->QueryIntValue(&_isDontSaveUnfinishedMaze);
+		attr->QueryBoolValue(&_isDontSaveUnfinishedMaze);
 
 #if DEBUG_READ_XML == 1
 	LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read 1M = %d")), _is1M);
@@ -546,7 +545,7 @@ BOOL UiOption::GetOption() {
 	attr = ele->FindAttribute("CellPaddingX");
 
 	if (attr == nullptr)
-		return FALSE;
+		return false;
 
 	attr->QueryFloatValue(&_cellPadding.x);
 	style.CellPadding.x = _cellPadding.x;
@@ -558,7 +557,7 @@ BOOL UiOption::GetOption() {
 	attr = ele->FindAttribute("CellPaddingY");
 
 	if (attr == nullptr)
-		return FALSE;
+		return false;
 
 	attr->QueryFloatValue(&_cellPadding.y);
 	style.CellPadding.y = _cellPadding.y;
@@ -570,7 +569,7 @@ BOOL UiOption::GetOption() {
 	attr = ele->FindAttribute("BorderSize");
 
 	if (attr == nullptr)
-		return FALSE;
+		return false;
 
 	attr->QueryFloatValue(&_windowBorderSize);
 	style.WindowBorderSize = _windowBorderSize;
@@ -582,7 +581,7 @@ BOOL UiOption::GetOption() {
 	attr = ele->FindAttribute("WindowWidth");
 
 	if (attr == nullptr)
-		return FALSE;
+		return false;
 
 	attr->QueryFloatValue(&_windowWidth);
 
@@ -594,7 +593,7 @@ BOOL UiOption::GetOption() {
 	attr = ele->FindAttribute("RefreshTime");
 
 	if (attr == nullptr)
-		return FALSE;
+		return false;
 
 	attr->QueryFloatValue(&_refreshTime);
 
@@ -604,21 +603,21 @@ BOOL UiOption::GetOption() {
 		attr = ele->FindAttribute("WinPosX");
 
 		if (attr == nullptr)
-			return FALSE;
+			return false;
 
-		FLOAT winX, winY;
+		float winX, winY;
 
 		attr->QueryFloatValue(&winX);
 
 		attr = ele->FindAttribute("WinPosY");
 
 		if (attr == nullptr)
-			return FALSE;
+			return false;
 
 		attr->QueryFloatValue(&winY);
 
 		//SetWindowPos(UIWINDOW.GetHWND(), HWND_NOTOPMOST, winX, winY, 0, 0, SWP_NOSIZE);
-		SetWindowPos(UIWINDOW.GetHWND(), HWND_TOPMOST, static_cast<INT>(winX), static_cast<INT>(winY), 0, 0, SWP_NOSIZE);
+		SetWindowPos(UIWINDOW.GetHWND(), HWND_TOPMOST, static_cast<int>(winX), static_cast<int>(winY), 0, 0, SWP_NOSIZE);
 
 #if DEBUG_READ_XML == 1
 		LogInstance.WriteLog(const_cast<LPTSTR>(_T("Read WinPos(X,Y) = (%f, %f)")), winX, winY);
@@ -628,7 +627,7 @@ BOOL UiOption::GetOption() {
 	ele = ele->NextSiblingElement("TextColor");
 
 	if (!ele)
-		return FALSE;
+		return false;
 
 	const char name[4][8] = { {"r"}, {"g"}, {"b"}, {"a"} };
 
@@ -636,7 +635,7 @@ BOOL UiOption::GetOption() {
 		attr = ele->FindAttribute(name[i]);
 
 		if (attr == nullptr)
-			return FALSE;
+			return false;
 
 		switch (i) {
 		case 0:
@@ -664,13 +663,13 @@ BOOL UiOption::GetOption() {
 	ele = ele->NextSiblingElement("WindowBgColor");
 
 	if (!ele)
-		return FALSE;
+		return false;
 
 	for (int i = 0; i < 4; i++) {
 		attr = ele->FindAttribute(name[i]);
 
 		if (attr == nullptr)
-			return FALSE;
+			return false;
 
 		switch (i) {
 		case 0:
@@ -698,13 +697,13 @@ BOOL UiOption::GetOption() {
 	ele = ele->NextSiblingElement("OutlineColor");
 		
 	if (!ele)
-		return FALSE;
+		return false;
 
 	for (int i = 0; i < 4; i++) {
 		attr = ele->FindAttribute(name[i]);
 
 		if (attr == nullptr)
-			return FALSE;
+			return false;
 		
 		switch (i) {
 		case 0:
@@ -730,13 +729,13 @@ BOOL UiOption::GetOption() {
 	ele = ele->NextSiblingElement("ActiveColor");
 
 	if (!ele)
-		return FALSE;
+		return false;
 
 	for (int i = 0; i < 4; i++) {
 		attr = ele->FindAttribute(name[i]);
 
 		if (attr == nullptr)
-			return FALSE;
+			return false;
 
 		switch (i) {
 		case 0:
@@ -761,13 +760,13 @@ BOOL UiOption::GetOption() {
 	ele = ele->NextSiblingElement("InActiveColor");
 
 	if (!ele)
-		return FALSE;
+		return false;
 
 	for (int i = 0; i < 4; i++) {
 		attr = ele->FindAttribute(name[i]);
 
 		if (attr == nullptr)
-			return FALSE;
+			return false;
 
 		switch (i) {
 		case 0:
@@ -795,13 +794,13 @@ BOOL UiOption::GetOption() {
 		ele = ele->NextSiblingElement(temp);
 
 		if (!ele)
-			return FALSE;
+			return false;
 
 		for (int j = 0; j < 4; j++) {
 			attr = ele->FindAttribute(name[j]);
 
 			if (attr == nullptr)
-				return FALSE;
+				return false;
 
 			switch (j) {
 			case 0:
@@ -824,12 +823,12 @@ BOOL UiOption::GetOption() {
 #endif
 	}
 	
-	INT hotkeyID = 0;
+	int hotkeyID = 0;
 
 	do {
 
-		INT key[3] = { -1 };
-		CHAR name2[AUTO_HOTKEY_NAME_LEN] = { 0 };
+		int key[3] = { -1 };
+		char name2[AUTO_HOTKEY_NAME_LEN] = { 0 };
 		sprintf_s(name2, AUTO_HOTKEY_NAME_LEN, "HOTKEY%d", hotkeyID++);
 
 		ele = ele->NextSiblingElement(name2);
@@ -837,7 +836,7 @@ BOOL UiOption::GetOption() {
 		if (ele == nullptr)
 			break;
 
-		for (INT i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++) {
 
 			char temp[12] = { 0 };
 			sprintf_s(temp, 12, "key%d", i + 1);
@@ -863,12 +862,12 @@ BOOL UiOption::GetOption() {
 		else if (strcmp(name2, u8"Clear") == 0)
 			HOTKEY.InsertHotkeyStop(key[0], key[1], key[2]);
 		
-	} while (TRUE);
+	} while (true);
 
-	return TRUE;
+	return true;
 }
 
-BOOL UiOption::SaveOption(BOOL skipWarning) {
+bool UiOption::SaveOption(bool skipWarning) {
 
 	if (!_inited)
 		return false;
@@ -913,8 +912,8 @@ BOOL UiOption::SaveOption(BOOL skipWarning) {
 
 	RECT rect;
 	GetWindowRect(UIWINDOW.GetHWND(), &rect);
-	option->SetAttribute("WinPosX", (FLOAT)rect.left);
-	option->SetAttribute("WinPosY", (FLOAT)rect.top);
+	option->SetAttribute("WinPosX", (float)rect.left);
+	option->SetAttribute("WinPosY", (float)rect.top);
 
 	tinyxml2::XMLElement* text_color = doc.NewElement("TextColor");
 	root->LinkEndChild(text_color);
@@ -964,7 +963,7 @@ BOOL UiOption::SaveOption(BOOL skipWarning) {
 		job_color->SetAttribute("a", _jobColor[i].w);
 	}
 	
-	INT hotkeyid = 0;
+	int hotkeyid = 0;
 
 	for (auto itr = HOTKEY.begin(); itr != HOTKEY.end(); itr++) {
 
@@ -984,16 +983,17 @@ BOOL UiOption::SaveOption(BOOL skipWarning) {
 	if (!skipWarning)
 	{
 		if (_oriIsUseSaveData != _isUseSaveData) {
-			CHAR tmp[256] = { 0 };
-			ANSItoUTF8(LANGMANAGER.GetText("STR_OPTION_SAVE_WARNING"), tmp, 256);
+			char tmp[256] = { 0 };
+			std::string saveWarning = LANGMANAGER.GetText("STR_OPTION_SAVE_WARNING");
+			ANSItoUTF8(saveWarning.data(), tmp, 256);
 			MessageBoxA(UIWINDOW.GetHWND(), tmp, "WARNING", MB_ICONWARNING | MB_TOPMOST);
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL UiOption::SetBasicOption() {
+bool UiOption::SetBasicOption() {
 
 	ImGui::StyleColorsDark();
 
@@ -1011,20 +1011,20 @@ BOOL UiOption::SetBasicOption() {
 
 	Helper();
 	PLAYERTABLE.ResizeTalbe();
-	_open = TRUE;
+	_open = true;
 
-	return TRUE;
+	return true;
 }
 
 
-BOOL UiOption::ToggleTopMost() {
+bool UiOption::ToggleTopMost() {
 
 	_isTopMost = _isTopMost ? false : true;
 	
 	return SaveOption();
 }
 
-const ImU32 UiOption::GetJobColor(UINT index) {
+const ImU32 UiOption::GetJobColor(unsigned int index) {
 
 	if (index < 0 || index > 10)
 		return ImGui::ColorConvertFloat4ToU32(_jobColor[0]);
@@ -1036,15 +1036,15 @@ const ImU32 UiOption::GetOutlineColor() {
 	return ImGui::ColorConvertFloat4ToU32(_outlineColor);
 }
 
-const FLOAT& UiOption::GetFontScale() {
+const float& UiOption::GetFontScale() {
 	return _fontScale;
 }
 
-const FLOAT& UiOption::GetColumnFontScale() {
+const float& UiOption::GetColumnFontScale() {
 	return _columnFontScale;
 }
 
-const FLOAT& UiOption::GetTableFontScale() {
+const float& UiOption::GetTableFontScale() {
 	return _tableFontScale;
 }
 
@@ -1056,55 +1056,55 @@ const ImVec4& UiOption::GetInActiveColor() {
 	return _activeColor[0];
 }
 
-const BOOL& UiOption::is1K() {
+const bool& UiOption::is1K() {
 	return _is1K;
 }
 
-const BOOL& UiOption::is1M() {
+const bool& UiOption::is1M() {
 	return _is1M;
 }
 
-const BOOL& UiOption::isSoloMode(){
+const bool& UiOption::isSoloMode(){
 	return _isSoloMode;
 }
 
-const BOOL& UiOption::doHideName()
+const bool& UiOption::doHideName()
 {
 	return _hideName;
 }
 
-const BOOL& UiOption::isTopMost()
+const bool& UiOption::isTopMost()
 {
 	return _isTopMost;
 }
 
-const BOOL& UiOption::isTeamTALF()
+const bool& UiOption::isTeamTALF()
 {
 	return _teamTA_LF;
 }
 
-const INT32& UiOption::TeamTALFMode()
+const int32_t& UiOption::TeamTALFMode()
 {
 	return _teamTA_LF_Mode;
 }
 
-const BOOL& UiOption::isSoloRankMode() {
+const bool& UiOption::isSoloRankMode() {
 	return _isSoloRankMode;
 }
 
-const BOOL& UiOption::isUseSaveData()
+const bool& UiOption::isUseSaveData()
 {
 	if (_oriIsUseSaveData != _isUseSaveData)
 		return _oriIsUseSaveData;
 	return _isUseSaveData;
 }
 
-const BOOL& UiOption::isDontSaveUnfinishedMaze()
+const bool& UiOption::isDontSaveUnfinishedMaze()
 {
 	return _isDontSaveUnfinishedMaze;
 }
 
-VOID UiOption::Update() {
+void UiOption::Update() {
 
 	ImFont* font = ImGui::GetFont();
 	font->Scale = _fontScale;
@@ -1113,20 +1113,20 @@ VOID UiOption::Update() {
 		OpenOption();
 
 #if DEBUG_COLUMN_WIDTH == 1
-	for (INT i = 0; i < 8; i++)
+	for (int i = 0; i < 8; i++)
 		LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [Column Width] [%d] [%f]")), i, UIOPTION[i]);
 #endif
 }
 
-const BOOL& UiOption::isOption() {
+const bool& UiOption::isOption() {
 	return _open;
 }
 
-const FLOAT& UiOption::GetFramerate() {
+const float& UiOption::GetFramerate() {
 	return _framerate;
 }
 
-VOID UiOption::SetFramerate(FLOAT i) {
+void UiOption::SetFramerate(float i) {
 
 	if (i < 0)
 		i = 0;
@@ -1140,22 +1140,22 @@ const ImVec4& UiOption::GetWindowBGColor() {
 	return _windowBg;
 }
 
-const FLOAT& UiOption::GetWindowWidth() {
+const float& UiOption::GetWindowWidth() {
 	return _windowWidth;
 }
 
-VOID UiOption::SetWindowWidth(const FLOAT& width) {
+void UiOption::SetWindowWidth(const float& width) {
 	_windowWidth = width;
 }
 
-const FLOAT& UiOption::GetRefreshTime() {
+const float& UiOption::GetRefreshTime() {
 	return _refreshTime;
 }
 
-const CHAR* UiOption::GetUseInterface() {
+const char* UiOption::GetUseInterface() {
 	return _selectedInterface;
 }
-const BOOL& UiOption::isUseImage()
+const bool& UiOption::isUseImage()
 {
 	return _isUseImage;
 }

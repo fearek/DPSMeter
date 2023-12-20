@@ -3,22 +3,22 @@
 class CCriticalSection
 {
 public:
-    CCriticalSection(VOID)
+    CCriticalSection(void)
     {
         InitializeCriticalSection(&mSync);
     }
 
-    virtual ~CCriticalSection(VOID)
+    virtual ~CCriticalSection(void)
     {
         DeleteCriticalSection(&mSync);
     }
 
-    inline VOID Enter(VOID)
+    inline void Enter(void)
     {
         EnterCriticalSection(&mSync);
     }
 
-    inline VOID Leave(VOID)
+    inline void Leave(void)
     {
         LeaveCriticalSection(&mSync);
     }

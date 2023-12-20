@@ -5,11 +5,11 @@
 #include ".\UI\PlotWindow.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketBuffIn::SWPacketBuffIn(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketBuffIn::SWPacketBuffIn(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketBuffIn::Do() {
+void SWPacketBuffIn::Do() {
 
 	BUFFMETER.GetLock();
 	{
@@ -38,11 +38,11 @@ VOID SWPacketBuffIn::Do() {
 
 }
 
-VOID SWPacketBuffIn::Log() {
+void SWPacketBuffIn::Log() {
 
 }
 
-VOID SWPacketBuffIn::Debug() {
+void SWPacketBuffIn::Debug() {
 
 	SWPACKETBUFFIN* buff = (SWPACKETBUFFIN*)(_data + sizeof(SWHEADER));
 

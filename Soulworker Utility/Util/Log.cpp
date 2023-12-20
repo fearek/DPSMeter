@@ -1,10 +1,10 @@
 #include "pch.h"
 Log LogInstance;
 
-BOOL Log::WriteLog(char* data, ...)
+bool Log::WriteLog(char* data, ...)
 {
     if (shouldLog) {
-        if (!file) return FALSE;
+        if (!file) return false;
         SYSTEMTIME SystemTime;
         char CurrentDate[32] = { 0, };
         char buffer[4096] = { 0 };
@@ -34,15 +34,53 @@ BOOL Log::WriteLog(char* data, ...)
     }
     else
     {
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 
 }
-BOOL Log::WriteLogNoDate(LPTSTR data, ...)
+bool Log::WriteLog(std::string data, ...)
 {
     if (shouldLog) {
-        if (!file) return FALSE;
+        if (!file) return false;
+        SYSTEMTIME SystemTime;
+        char CurrentDate[32] = { 0, };
+        char buffer[4096] = { 0 };
+        char CurrentFileName[MAX_PATH] = { 0, };
+        va_list ap;
+        va_start(ap, data);
+        vsprintf_s(buffer, 4096, data.c_str(), ap);
+        va_end(ap);
+
+        GetLocalTime(&SystemTime);
+        sprintf_s(CurrentDate, 32, "%d-%d-%d %d:%d:%d",
+            SystemTime.wYear,
+            SystemTime.wMonth,
+            SystemTime.wDay,
+            SystemTime.wHour,
+            SystemTime.wMinute,
+            SystemTime.wSecond);
+
+        sprintf_s(CurrentFileName, MAX_PATH, "LOG_%d-%d-%d %d.log",
+            SystemTime.wYear,
+            SystemTime.wMonth,
+            SystemTime.wDay,
+            SystemTime.wHour);
+
+        fprintf(file, "[%s] %s\n", CurrentDate, buffer);
+        fflush(file);
+    }
+    else
+    {
+        return false;
+    }
+    return true;
+
+}
+bool Log::WriteLogNoDate(LPTSTR data, ...)
+{
+    if (shouldLog) {
+        if (!file) return false;
         SYSTEMTIME SystemTime;
         char CurrentDate[32] = { 0, };
         char buffer[4096] = { 0 };
@@ -63,15 +101,15 @@ BOOL Log::WriteLogNoDate(LPTSTR data, ...)
     }
     else
     {
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 void Log::Enable()
 {
     SYSTEMTIME SystemTime;
     GetLocalTime(&SystemTime);
-    CHAR CurrentFileName[MAX_PATH] = { 0, };
+    char CurrentFileName[MAX_PATH] = { 0, };
     sprintf_s(CurrentFileName, MAX_PATH, "LOG_%d-%d-%d %d.log",
         SystemTime.wYear,
         SystemTime.wMonth,

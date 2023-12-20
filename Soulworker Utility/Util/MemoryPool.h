@@ -4,48 +4,48 @@ template <class T, int ALLOC_BLOCK_SIZE = 50>
 class MemoryPool : public MultiThreadSync<T>
 {
 public:
-    static VOID* operator new(std::size_t allocLength)
+    static void* operator new(std::size_t allocLength)
     {
         MultiThreadSync<T>::template ThreadSync Sync;
 
         if (!mFreePointer)
             allocBlock();
 
-        UCHAR* ReturnPointer = mFreePointer;
-        mFreePointer = *reinterpret_cast<UCHAR**>(ReturnPointer);
+        unsigned char* ReturnPointer = mFreePointer;
+        mFreePointer = *reinterpret_cast<unsigned char**>(ReturnPointer);
 
         return ReturnPointer;
     }
 
-    static VOID operator delete(VOID* deletePointer)
+    static void operator delete(void* deletePointer)
     {
         MultiThreadSync<T>::template ThreadSync Sync;
 
-        *reinterpret_cast<UCHAR**>(deletePointer) = mFreePointer;
+        *reinterpret_cast<unsigned char**>(deletePointer) = mFreePointer;
 
-        mFreePointer = static_cast<UCHAR*>(deletePointer);
+        mFreePointer = static_cast<unsigned char*>(deletePointer);
     }
 
 private:
-    static VOID    allocBlock()
+    static void    allocBlock()
     {
-        mFreePointer = new UCHAR[sizeof(T) * ALLOC_BLOCK_SIZE];
+        mFreePointer = new unsigned char[sizeof(T) * ALLOC_BLOCK_SIZE];
 
-        UCHAR** Current = reinterpret_cast<UCHAR**>(mFreePointer);
-        UCHAR* Next = mFreePointer;
+        unsigned char** Current = reinterpret_cast<unsigned char**>(mFreePointer);
+        unsigned char* Next = mFreePointer;
 
-        for (INT i = 0; i < ALLOC_BLOCK_SIZE - 1; ++i)
+        for (int i = 0; i < ALLOC_BLOCK_SIZE - 1; ++i)
         {
             Next += sizeof(T);
             *Current = Next;
-            Current = reinterpret_cast<UCHAR**>(Next);
+            Current = reinterpret_cast<unsigned char**>(Next);
         }
 
         *Current = 0;
     }
 
 private:
-    static UCHAR* mFreePointer;
+    static unsigned char* mFreePointer;
 
 protected:
     virtual ~MemoryPool()
@@ -54,4 +54,4 @@ protected:
 };
 
 template <class T, int ALLOC_BLOCK_SIZE>
-UCHAR* MemoryPool<T, ALLOC_BLOCK_SIZE>::mFreePointer;
+unsigned char* MemoryPool<T, ALLOC_BLOCK_SIZE>::mFreePointer;

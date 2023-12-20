@@ -3,13 +3,13 @@
 
 #pragma pack(push, 1)
 typedef struct _SWPACKETGESTUREUSED {
-	UINT32 _playerID;
-	UINT32 _gestureId;
-	FLOAT _locationX;
-	FLOAT _locationY;
-	FLOAT _locationZ;
-	FLOAT _direction;
-	FLOAT _screen;
+	uint32_t _playerID;
+	uint32_t _gestureId;
+	float _locationX;
+	float _locationY;
+	float _locationZ;
+	float _direction;
+	float _screen;
 }SWPACKETGESTUREUSED;
 #pragma pack(pop)
 
@@ -19,10 +19,10 @@ protected:
 	SWPacketGestureUsed() {}
 
 public:
-	SWPacketGestureUsed(SWHEADER* swheader, BYTE* data);
+	SWPacketGestureUsed(SWHEADER* swheader, uint8_t* data);
 	~SWPacketGestureUsed() {}
 
-	VOID Do();
-	VOID Debug();
-	VOID Log();
+	void Do();
+	void Debug();
+	void Log();
 };

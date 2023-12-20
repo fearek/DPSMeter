@@ -19,28 +19,28 @@ private:
 	ImFileDialogInfo _fileDialogInfo;
 	bool _fileDialogOpen = false;
 
-	CHAR _searchData[MAX_PATH] = { 0 };
-	CHAR _searchData2[MAX_PATH] = { 0 };
-	INT32 _currentIndex = 0;
+	char _searchData[MAX_PATH] = { 0 };
+	char _searchData2[MAX_PATH] = { 0 };
+	int32_t _currentIndex = 0;
 
 	Combat* _ci = nullptr;
-	std::vector<std::pair<UINT32, std::string>> _combatTmp;
+	std::vector<std::pair<uint32_t, std::string>> _combatTmp;
 	std::mutex _mutex;
 
 	std::vector<std::pair<HISTORY_INFO*, std::string>> _historyTmp;
 
-	VOID handleDialogInfo();
-	VOID HistoryWindow();
+	void handleDialogInfo();
+	void HistoryWindow();
 
-	VOID CombatWindow();
-	VOID ForceUpdateCombatTemp(Combat* pCombat);
+	void CombatWindow();
+	void ForceUpdateCombatTemp(Combat* pCombat);
 public:
 
-	VOID OpenWindow();
-	VOID Update();
+	void OpenWindow();
+	void Update();
 
 	UtillWindow();
 	~UtillWindow();
 
-	VOID ClearCombatTemp();
+	void ClearCombatTemp();
 };

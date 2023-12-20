@@ -1,7 +1,7 @@
 #include "pch.h"
 #include ".\Damage Meter\SWDamageSkill.h"
 
-SWDamageSkill::SWDamageSkill(UINT32 id, UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount){
+SWDamageSkill::SWDamageSkill(uint32_t id, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount){
 	_id = id;
 	_damage = damage;
 	_critDamage = critDamage;
@@ -15,17 +15,17 @@ SWDamageSkill::SWDamageSkill(UINT32 id, UINT64 damage, UINT64 critDamage, USHORT
 #endif
 }
 
-VOID SWDamageSkill::SetNameFromDB()
+void SWDamageSkill::SetNameFromDB()
 {
 	ZeroMemory(_name, SKILL_NAME_LEN);
 	SWDB.GetSkillName(_id, _name, SKILL_NAME_LEN);
 }
 
-BOOL SWDamageSkill::SortFunction(SWDamageSkill* skillA, SWDamageSkill* skillB) {
+bool SWDamageSkill::SortFunction(SWDamageSkill* skillA, SWDamageSkill* skillB) {
 	return skillA->GetDamage() > skillB->GetDamage();
 }
 
-VOID SWDamageSkill::AddDamage(UINT64 damage, UINT64 critDamage, USHORT hitCount, USHORT critHitCount) {
+void SWDamageSkill::AddDamage(uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount) {
 	_damage += damage;
 	_critDamage += critDamage;
 	_hitCount += hitCount;
@@ -36,31 +36,31 @@ VOID SWDamageSkill::AddDamage(UINT64 damage, UINT64 critDamage, USHORT hitCount,
 #endif
 }
 
-UINT32 SWDamageSkill::GetID() {
+uint32_t SWDamageSkill::GetID() {
 	return _id;
 }
 
-UINT64 SWDamageSkill::GetDamage() {
+uint64_t SWDamageSkill::GetDamage() {
 	return _damage;
 }
 
-UINT64 SWDamageSkill::GetCritDamage() {
+uint64_t SWDamageSkill::GetCritDamage() {
 	return _critDamage;
 }
 
-USHORT SWDamageSkill::GetHitCount() {
+uint16_t SWDamageSkill::GetHitCount() {
 	return _hitCount;
 }
 
-USHORT SWDamageSkill::GetCritHitCount() {
+uint16_t SWDamageSkill::GetCritHitCount() {
 	return _critHitCount;
 }
 
-USHORT SWDamageSkill::GetSkillUsed()
+uint16_t SWDamageSkill::GetSkillUsed()
 {
 	return _skillCasts;
 }
 
-CHAR* SWDamageSkill::GetName() {
+char* SWDamageSkill::GetName() {
 	return _name;
 }

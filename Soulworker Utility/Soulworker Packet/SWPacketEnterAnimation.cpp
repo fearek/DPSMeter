@@ -4,11 +4,11 @@
 #include ".\Soulworker Packet\SWPacketEnterAnimation.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketEnterAnimation::SWPacketEnterAnimation(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
+SWPacketEnterAnimation::SWPacketEnterAnimation(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
 
 }
 
-VOID SWPacketEnterAnimation::Do() {
+void SWPacketEnterAnimation::Do() {
 
 	SWPACKETENTERANIMATION* packet = (SWPACKETENTERANIMATION*)(_data + sizeof(SWHEADER));
 
@@ -21,7 +21,7 @@ VOID SWPacketEnterAnimation::Do() {
 		{
 			CombatLog* pCombatLog = new CombatLog;
 			pCombatLog->_type = (packet->_type2 == 1 ? CombatLogType::INVINCIBLE_SET : CombatLogType::INVINCIBLE_UNSET);
-			pCombatLog->_val1 = static_cast<DOUBLE>(packet->_player_id);
+			pCombatLog->_val1 = static_cast<double>(packet->_player_id);
 			COMBATMETER.Insert(packet->_player_id, CombatType::PLAYER, pCombatLog);
 		}
 		break;
@@ -35,9 +35,9 @@ VOID SWPacketEnterAnimation::Do() {
 	}
 }
 
-VOID SWPacketEnterAnimation::Log() {
+void SWPacketEnterAnimation::Log() {
 
 }
 
-VOID SWPacketEnterAnimation::Debug() {
+void SWPacketEnterAnimation::Debug() {
 }
