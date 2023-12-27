@@ -46,7 +46,7 @@ public:
 
 	void Update();
 	void ClearTable();
-	void ResizeTalbe();
+	void ResizeTable();
 
 	int64_t _lastSendTimestamp = 0;
 	uint32_t _tick = 0;

@@ -96,7 +96,7 @@ DWORD Language::SetCurrentLang(char* langFile)
 	return error;
 }
 
-std::string Language::GetText(const char* text, std::unordered_map<std::string, std::string>* vector)
+const std::string& Language::GetText(const char* text, std::unordered_map<std::string, std::string>* vector)//returning a reference because returning just a std::string would cause a copy and we take const char* often and they could run out of scope causing mayhem.
 {
 	if (vector == nullptr)
 		vector = &_textList;

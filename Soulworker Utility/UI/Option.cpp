@@ -43,7 +43,7 @@ UiOption::~UiOption()
 }
 
 std::vector<ImFontObj> fonts;
-void UpdateFontList()
+void UiOption::UpdateFontList()
 {
 	fonts.clear();
 	std::wstring path(L"Font/");
@@ -89,7 +89,7 @@ bool UiOption::ShowFontSelector() {
 	}
 	if (ImGui::Button("Refresh fonts"))
 	{
-		UpdateFontList();
+		UIOPTION.UpdateFontList();
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Set font"))
@@ -172,7 +172,7 @@ bool UiOption::ShowTableOption() {
 	for (int i = 0; i < job.size(); i++) {
 		ImGui::PushID(i);
 		ImGui::ColorEdit4("##Color", (float*)&_jobColor[i], ImGuiColorEditFlags_None);
-		ImGui::SameLine();	ImGui::Text(job[i].data());
+		ImGui::SameLine();	ImGui::Text(job[i].c_str());
 
 		if (memcmp(&_jobColor[i], &_jobBasicColor[i], sizeof(ImVec4)) != 0) {
 			ImGui::SameLine(0.0f, style.ItemInnerSpacing.x); 
@@ -342,7 +342,7 @@ void UiOption::OpenOption() {
 
 	if (DAMAGEMETER.size() < 1) {
 		Helper();
-		PLAYERTABLE.ResizeTalbe();
+		PLAYERTABLE.ResizeTable();
 	}
 
 	char label[128] = { 0 };
@@ -1010,7 +1010,7 @@ bool UiOption::SetBasicOption() {
 	HOTKEY.InsertHotkeyStop(DIK_LCONTROL, DIK_DELETE, -1);
 
 	Helper();
-	PLAYERTABLE.ResizeTalbe();
+	PLAYERTABLE.ResizeTable();
 	_open = true;
 
 	return true;

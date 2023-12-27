@@ -45,7 +45,7 @@ void PlayerTable::SetupFontScale() {
 	_tableFontScale = _globalFontScale * UIOPTION.GetTableFontScale();
 }
 
-void PlayerTable::ResizeTalbe() {
+void PlayerTable::ResizeTable() {
 	_tableResize = true;
 }
 
@@ -250,6 +250,7 @@ void PlayerTable::BeginPopupMenu() {
 		}
 
 		if (ImGui::MenuItem(LANGMANAGER.GetText("STR_MENU_OPTIONS").c_str())) {
+			UIOPTION.UpdateFontList();
 			UIOPTION.OpenOption();
 		}
 
