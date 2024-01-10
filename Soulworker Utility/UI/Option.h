@@ -70,7 +70,7 @@ private:
 public:
 	UiOption();
 	~UiOption();
-	void UpdateFontList()
+	void UpdateFontList();
 	const bool& isOption();
 	void OpenOption();
 	void Update();
