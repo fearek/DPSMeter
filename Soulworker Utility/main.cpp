@@ -145,11 +145,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 					if ((errorCode = SAVEDATA.Init())) {
 						sprintf_s(errorMsg, "Init SaveData failed, err: %lu", errorCode);
 						if (errorCode == ERROR_FILE_CORRUPT) {
-							std::string saveDataVersionError = LANGMANAGER.GetText("STR_SAVEDATA_VERSION_ERROR");
+							std::string saveDataVersionError = std::string(LANGMANAGER.GetText("STR_SAVEDATA_VERSION_ERROR"));
 							ANSItoUTF8(saveDataVersionError.data(), errorMsg, sizeof(errorMsg));
 						}
 						else if (errorCode == ERROR_FILE_SYSTEM_LIMITATION) {
-							std::string saveDataMultipleError = LANGMANAGER.GetText("STR_SAVEDATA_MULTIPLE_ERROR");
+							std::string saveDataMultipleError = std::string(LANGMANAGER.GetText("STR_SAVEDATA_MULTIPLE_ERROR"));
 							ANSItoUTF8(saveDataMultipleError.data(), errorMsg, sizeof(errorMsg));
 						}
 						break;

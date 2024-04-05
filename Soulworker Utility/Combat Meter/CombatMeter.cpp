@@ -52,7 +52,7 @@ std::string CombatMeter::ConvertCombatLogVal(CombatLog* pCombatLog, CombatType t
 	std::string outPut;
 
 	sprintf_s(tmp, "STR_UTILLWINDOW_COMBAT_LOG_TYPE_%d", pCombatLog->_type);
-	std::string typeTexts = LANGMANAGER.GetText(tmp);
+	std::string typeTexts = std::string(LANGMANAGER.GetText(tmp));
 	const char* typeText = typeTexts.c_str();
 
 	switch (pCombatLog->_type)
@@ -65,7 +65,7 @@ std::string CombatMeter::ConvertCombatLogVal(CombatLog* pCombatLog, CombatType t
 		else
 			sprintf_s(tmp, "STR_SPECIAL_STAT_TYPE_%d", static_cast<int32_t>(pCombatLog->_val1));
 
-		std::string statTypeText = LANGMANAGER.GetText(tmp);
+		std::string statTypeText = std::string(LANGMANAGER.GetText(tmp));
 
 		char comma[128] = { 0 };
 		TextCommmaIncludeDecimal(pCombatLog->_val2, sizeof(comma), comma);

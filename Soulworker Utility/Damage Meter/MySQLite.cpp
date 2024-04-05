@@ -74,7 +74,7 @@ bool MySQL::InitSkillDB() {
 	}
 
 //	const char* sql2 = "SELECT Name From Skill Where Id = ?";
-	std::string sql2 = std::string("SELECT Name_") + LANGMANAGER.GetText("STR_SQL_SUFFIX") + " From Skill Where Id = ?";
+	std::string sql2 = std::string("SELECT Name_") + std::string(LANGMANAGER.GetText("STR_SQL_SUFFIX")) + " From Skill Where Id = ?";
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_skill_stmt, 0) != SQLITE_OK) {
 		LogInstance.WriteLog(const_cast<char*>("Error in sqlite3_prepare_v2 : %s"), sqlite3_errmsg(_db));
@@ -100,7 +100,7 @@ bool MySQL::InitMonsterDB() {
 	}
 
 	//std::string sql2 = "SELECT Name_" LANG " From Monster Where Db1 = ? and Db2 = ?";
-	std::string sql2 = "SELECT Name_" + LANGMANAGER.GetText("STR_SQL_SUFFIX") + ", type From Monster Where Id = ?";
+	std::string sql2 = "SELECT Name_" + std::string(LANGMANAGER.GetText("STR_SQL_SUFFIX")) + ", type From Monster Where Id = ?";
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_monster_stmt, 0) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in sqlite3_prepare_v2 : %s", sqlite3_errmsg(_db));
@@ -122,7 +122,7 @@ bool MySQL::InitMapDB() {
 
 		return false;
 	}
-	std::string sql2 = "SELECT Name_" + LANGMANAGER.GetText("STR_SQL_SUFFIX") + " From Map Where Id = ?";
+	std::string sql2 = "SELECT Name_" + std::string(LANGMANAGER.GetText("STR_SQL_SUFFIX")) + " From Map Where Id = ?";
 
 	if (sqlite3_prepare_v2(_db, sql2.c_str(), -1, &_map_stmt, 0) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in sqlite3_prepare_v2 MAP : %s", sqlite3_errmsg(_db));
@@ -342,7 +342,7 @@ bool MySQL::GetMapName(uint32_t mapID, char* out_buffer, size_t out_buffer_lengt
 		return false;
 
 	if (mapID == 0) {
-		strcpy_s(out_buffer, out_buffer_length, LANGMANAGER.GetText("STR_WORLD_NO_INFORMATION").c_str());
+		strcpy_s(out_buffer, out_buffer_length, LANGMANAGER.GetText("STR_WORLD_NO_INFORMATION").data());
 		return true;
 	}
 

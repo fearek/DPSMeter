@@ -353,11 +353,11 @@ void SWDamageMeter::InsertPlayerMetadata(uint32_t id, char* str, uint8_t job) {
 
 const char* SWDamageMeter::GetPlayerName(uint32_t id) {
 	if ((_historyMode && id == _historyMyID) || (!_historyMode && id == _myID))
-		return LANGMANAGER.GetText("STR_TABLE_YOU").c_str();
+		return LANGMANAGER.GetText("STR_TABLE_YOU").data();
 
 	auto search = GetPlayerMetaDataByHistory()->find(id);
 	if (search == GetPlayerMetaDataByHistory()->end()) {
-		return LANGMANAGER.GetText("PLAYER_NAME_CANT_FIND").c_str();
+		return LANGMANAGER.GetText("PLAYER_NAME_CANT_FIND").data();
 	}
 	return search->second->_name;
 }
@@ -379,7 +379,7 @@ SWDamageMeter::SW_PLAYER_METADATA* SWDamageMeter::GetPlayerMetaDataIfNotExistsCr
 	if (search == _playerMetadata.end()) {
 		metaData = new SW_PLAYER_METADATA;
 		metaData->_id = id;
-		strcpy_s(metaData->_name, MAX_NAME_LEN, LANGMANAGER.GetText("PLAYER_NAME_CANT_FIND").c_str());
+		strcpy_s(metaData->_name, MAX_NAME_LEN, LANGMANAGER.GetText("PLAYER_NAME_CANT_FIND").data());
 		metaData->_job = PLAYER_JOB_CANT_FIND;
 		_playerMetadata[id] = metaData;
 	}

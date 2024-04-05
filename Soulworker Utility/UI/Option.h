@@ -29,6 +29,7 @@ private:
 	float _tableFontScale;
 	bool _is1K;
 	bool _is1M;
+	bool _is10K;
 	bool _isSoloMode;
 	bool _hideName;
 	ImVec2 _cellPadding;
@@ -85,6 +86,7 @@ public:
 	const ImVec4& GetInActiveColor();
 	const ImVec4& GetWindowBGColor();
 	const bool& is1K();
+	const bool& is10K();
 	const bool& is1M();
 	const bool& isSoloMode();
 	const bool& doHideName();

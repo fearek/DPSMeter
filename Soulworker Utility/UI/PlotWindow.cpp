@@ -167,7 +167,7 @@ void PlotWindow::Update()
 	if (_isOpen) {
 
 		char label[128] = { 0 };
-		sprintf_s(label, "%s###MeowGraph", LANGMANAGER.GetText("STR_MENU_MEOW").c_str());
+		sprintf_s(label, "%s###MeowGraph", LANGMANAGER.GetText("STR_MENU_MEOW").data());
 
 		ImGui::Begin(label, &_isOpen, ImGuiWindowFlags_None);
 
@@ -188,7 +188,7 @@ void PlotWindow::Update()
 
 void PlotWindow::UpdatePlotTab()
 {
-	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_PLOTWINDOW_DPSGRAPH").c_str()))
+	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_PLOTWINDOW_DPSGRAPH").data()))
 	{
 		auto timeList = _pi->GetTimeList();
 		auto dpsList = _pi->GetDPSList();
@@ -230,9 +230,9 @@ void PlotWindow::UpdatePlotTab()
 			}
 		}
 		if (ImPlot::BeginPlot(
-			LANGMANAGER.GetText("STR_PLOTWINDOW_DPSGRAPH").c_str(),
-			LANGMANAGER.GetText("STR_PLOTWINDOW_TIME_SEC").c_str(),
-			LANGMANAGER.GetText("STR_PLOTWINDOW_DPSGRAPH").c_str(), ImVec2(-1, 0), ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit)) {
+			LANGMANAGER.GetText("STR_PLOTWINDOW_DPSGRAPH").data(),
+			LANGMANAGER.GetText("STR_PLOTWINDOW_TIME_SEC").data(),
+			LANGMANAGER.GetText("STR_PLOTWINDOW_DPSGRAPH").data(), ImVec2(-1, 0), ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit)) {
 			auto it = metaInfos.begin();
 			for (; it != metaInfos.end(); it++) {
 				uint32_t id = (*it)->_id;
@@ -249,7 +249,7 @@ void PlotWindow::UpdatePlotTab()
 
 void PlotWindow::UpdateAbPlotTab()
 {
-	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_PLOTWINDOW_ABGRAPH").c_str()))
+	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_PLOTWINDOW_ABGRAPH").data()))
 	{
 		auto _abTimeList = _pi->GetABTimeList();
 		auto _abList = _pi->GetABList();
@@ -272,10 +272,10 @@ void PlotWindow::UpdateAbPlotTab()
 		}
 		
 		if (ImPlot::BeginPlot(
-			LANGMANAGER.GetText("STR_PLOTWINDOW_ABGRAPH").c_str(),
-			LANGMANAGER.GetText("STR_PLOTWINDOW_TIME_SEC").c_str(),
-			LANGMANAGER.GetText("STR_PLOTWINDOW_ABGRAPH").c_str(), ImVec2(-1, 0), ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
-			ImPlot::PlotLine(LANGMANAGER.GetText("STR_TABLE_YOU").c_str(), _abTimeList.data(), _abList.data(), static_cast<int>(_abList.size()));
+			LANGMANAGER.GetText("STR_PLOTWINDOW_ABGRAPH").data(),
+			LANGMANAGER.GetText("STR_PLOTWINDOW_TIME_SEC").data(),
+			LANGMANAGER.GetText("STR_PLOTWINDOW_ABGRAPH").data(), ImVec2(-1, 0), ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
+			ImPlot::PlotLine(LANGMANAGER.GetText("STR_TABLE_YOU").data(), _abTimeList.data(), _abList.data(), static_cast<int>(_abList.size()));
 			ImPlot::EndPlot();
 		}
 		ImGui::EndTabItem();
@@ -284,7 +284,7 @@ void PlotWindow::UpdateAbPlotTab()
 
 void PlotWindow::UpdateBdPlotTab()
 {
-	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_PLOTWINDOW_BDGRAPH").c_str()))
+	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_PLOTWINDOW_BDGRAPH").data()))
 	{
 		auto _bdTimeList = _pi->GetBDTimeList();
 		auto _bdList = _pi->GetBDList();
@@ -320,10 +320,10 @@ void PlotWindow::UpdateBdPlotTab()
 			}
 		}
 		if (ImPlot::BeginPlot(
-			LANGMANAGER.GetText("STR_PLOTWINDOW_BDGRAPH").c_str(),
-			LANGMANAGER.GetText("STR_PLOTWINDOW_TIME_SEC").c_str(),
-			LANGMANAGER.GetText("STR_PLOTWINDOW_BDGRAPH").c_str(), ImVec2(-1, 0), ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
-			ImPlot::PlotLine(LANGMANAGER.GetText("STR_TABLE_YOU").c_str(), _bdTimeList.data(), _bdList.data(), static_cast<int>(_bdList.size()));
+			LANGMANAGER.GetText("STR_PLOTWINDOW_BDGRAPH").data(),
+			LANGMANAGER.GetText("STR_PLOTWINDOW_TIME_SEC").data(),
+			LANGMANAGER.GetText("STR_PLOTWINDOW_BDGRAPH").data(), ImVec2(-1, 0), ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
+			ImPlot::PlotLine(LANGMANAGER.GetText("STR_TABLE_YOU").data(), _bdTimeList.data(), _bdList.data(), static_cast<int>(_bdList.size()));
 			ImPlot::EndPlot();
 		}
 		ImGui::EndTabItem();
@@ -332,7 +332,7 @@ void PlotWindow::UpdateBdPlotTab()
 
 void PlotWindow::UpdateJqPlotTab()
 {
-	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_PLOTWINDOW_JQGRAPH").c_str()))
+	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_PLOTWINDOW_JQGRAPH").data()))
 	{
 		auto _jqTimeList = _pi->GetJQTimeList();
 		auto _jqList = _pi->GetJQList();
@@ -354,10 +354,10 @@ void PlotWindow::UpdateJqPlotTab()
 		}
 
 		if (ImPlot::BeginPlot(
-			LANGMANAGER.GetText("STR_PLOTWINDOW_JQGRAPH").c_str(),
-			LANGMANAGER.GetText("STR_PLOTWINDOW_TIME_SEC").c_str(),
-			LANGMANAGER.GetText("STR_PLOTWINDOW_JQGRAPH").c_str(), ImVec2(-1, 0), ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
-			ImPlot::PlotLine(LANGMANAGER.GetText("STR_TABLE_YOU").c_str(), _jqTimeList.data(), _jqList.data(), static_cast<int>(_jqList.size()));
+			LANGMANAGER.GetText("STR_PLOTWINDOW_JQGRAPH").data(),
+			LANGMANAGER.GetText("STR_PLOTWINDOW_TIME_SEC").data(),
+			LANGMANAGER.GetText("STR_PLOTWINDOW_JQGRAPH").data(), ImVec2(-1, 0), ImPlotAxisFlags_None, ImPlotAxisFlags_None)) {
+			ImPlot::PlotLine(LANGMANAGER.GetText("STR_TABLE_YOU").data(), _jqTimeList.data(), _jqList.data(), static_cast<int>(_jqList.size()));
 			ImPlot::EndPlot();
 		}
 		ImGui::EndTabItem();
@@ -366,7 +366,7 @@ void PlotWindow::UpdateJqPlotTab()
 
 void PlotWindow::UpdateBossHpPlotTab()
 {
-	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_PLOTWINDOW_BOSSHPGRAPH").c_str()))
+	if (ImGui::BeginTabItem(LANGMANAGER.GetText("STR_PLOTWINDOW_BOSSHPGRAPH").data()))
 	{
 		UpdateBossHpPlotCombo();
 
@@ -453,10 +453,10 @@ void PlotWindow::UpdateBossHpPlotGraph()
 	}
 
 	if (ImPlot::BeginPlot(
-		LANGMANAGER.GetText("STR_PLOTWINDOW_BOSSHPGRAPH").c_str(),
-		LANGMANAGER.GetText("STR_PLOTWINDOW_TIME_SEC").c_str(),
-		LANGMANAGER.GetText("STR_PLOTWINDOW_BOSSHPGRAPH").c_str(), ImVec2(-1, 0), ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit)) {
-		ImPlot::PlotLine(LANGMANAGER.GetText("STR_PLOTWINDOW_BOSSHPGRAPH_UNIT").c_str(), timeList[_selectedBossHpComboID].data(), bossHpList[_selectedBossHpComboID].data(), static_cast<int>(bossHpList[_selectedBossHpComboID].size()));
+		LANGMANAGER.GetText("STR_PLOTWINDOW_BOSSHPGRAPH").data(),
+		LANGMANAGER.GetText("STR_PLOTWINDOW_TIME_SEC").data(),
+		LANGMANAGER.GetText("STR_PLOTWINDOW_BOSSHPGRAPH").data(), ImVec2(-1, 0), ImPlotAxisFlags_None, ImPlotAxisFlags_AutoFit)) {
+		ImPlot::PlotLine(LANGMANAGER.GetText("STR_PLOTWINDOW_BOSSHPGRAPH_UNIT").data(), timeList[_selectedBossHpComboID].data(), bossHpList[_selectedBossHpComboID].data(), static_cast<int>(bossHpList[_selectedBossHpComboID].size()));
 		ImPlot::EndPlot();
 	}
 }

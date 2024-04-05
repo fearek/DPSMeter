@@ -96,7 +96,7 @@ DWORD Language::SetCurrentLang(char* langFile)
 	return error;
 }
 
-const std::string& Language::GetText(const char* text, std::unordered_map<std::string, std::string>* vector)//returning a reference because returning just a std::string would cause a copy and we take const char* often and they could run out of scope causing mayhem.
+const std::string_view Language::GetText(const char* text, std::unordered_map<std::string, std::string>* vector) // this code is fucking awful but I dont care enough to refactor
 {
 	if (vector == nullptr)
 		vector = &_textList;
@@ -129,7 +129,7 @@ std::unordered_map<std::string, std::string> Language::GetAllLangFile()
 
 					if (!langData.empty()) {
 
-						std::string langName = GetText("STR_LANG_NAME", &langData);
+						std::string langName = std::string(GetText("STR_LANG_NAME", &langData));
 
 						list.emplace(fileName, langName);
 					}

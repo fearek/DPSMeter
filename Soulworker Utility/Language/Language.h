@@ -22,7 +22,7 @@ public:
 		return _currentLang;
 	}
 	DWORD SetCurrentLang(char* langFile);
-	const std::string& GetText(const char* text, std::unordered_map<std::string, std::string>* vector = nullptr);
+	const std::string_view GetText(const char* text, std::unordered_map<std::string, std::string>* vector = nullptr);
 	std::unordered_map<std::string, std::string> GetAllLangFile();
 	auto GetLangFile(char* langFile, bool outputERROR = true);
 	std::unordered_map<std::string, std::string> MapLangData(char* langFile, bool useReplace = true);
