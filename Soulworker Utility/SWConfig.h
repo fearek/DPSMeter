@@ -1,7 +1,7 @@
 #pragma once
 #define MAJORNUMBER 1
 #define MINORNUMBER 7
-#define BUILDNUMBER 0
+#define BUILDNUMBER 1
 #define MODIFICATIONNUMBER 0
 #define STR(value) #value
 #define STRINGIZE(value) STR(value)

@@ -33,7 +33,7 @@ bool getBytes(std::vector<unsigned char>& buffer, unsigned int size)
 	}
 	return true;
 }
-DWORD ReceiveCallback(void* prc) {
+/*DWORD ReceiveCallback(void* prc) {
 
 	//handle connection and packets
 	int max_sd, activity;
@@ -83,11 +83,20 @@ DWORD ReceiveCallback(void* prc) {
 		}
 	}
 	return 0;
+}*/
+
+typedef void (*RunPacketLoopFunc)(SWPacketMaker* obj, void (SWPacketMaker::* func)(std::vector<unsigned char>&));
+DWORD ReceiveCallback(void* prc)
+{
+	auto dll = LoadLibrary("SoulMeterIPC.dll");
+	auto func = (RunPacketLoopFunc)GetProcAddress(dll, "?runPacketLoop@@YAXPEAVSWPacketMaker@@P81@EAAXAEAV?$vector@EV?$allocator@E@std@@@std@@@Z@Z");
+	func(&SWPACKETMAKER,&SWPacketMaker::CreateSWPacket);
+	return TRUE;
 }
 bool SWPacketMaker::Init() {
 	WSADATA wsaData;
 	//init connection
-	int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	/*int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (iResult != 0) {
 		LogInstance.WriteLog("WSAStartup failed: %d", iResult);
 		return iResult;
@@ -123,7 +132,7 @@ bool SWPacketMaker::Init() {
 		int error = WSAGetLastError();
 		LogInstance.WriteLog("listen failed: %d", error);
 		return error;
-	}
+	}*/
 	HANDLE thread = CreateThread(NULL, 0, ReceiveCallback, this, 0, NULL);
 	if (thread != NULL)
 	{
@@ -158,11 +167,10 @@ SWHEADER* SWPacketMaker::GetSWHeader(std::vector<unsigned char>& packet) {
 
 uint8_t* SWPacketMaker::GetSWData(std::vector<unsigned char>& packet) {
 
-	return (uint8_t*)(&packet[0]);
+	return (uint8_t*)(&packet[0]); 
 }
 
 void SWPacketMaker::CreateSWPacket(std::vector<unsigned char>& packet) {
-
 	SWHEADER* swheader = GetSWHeader(packet);
 	uint8_t* data = GetSWData(packet);
 

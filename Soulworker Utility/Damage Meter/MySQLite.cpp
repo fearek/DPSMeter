@@ -64,7 +64,7 @@ bool MySQL::InitSkillDB() {
 
 	char* errbuf = nullptr;
 
-	const char* sql = "CREATE TABLE IF NOT EXISTS Skill(Id intEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
+	const char* sql = "CREATE TABLE IF NOT EXISTS Skill(Id INTEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
 		LogInstance.WriteLog(const_cast<char*>("Error in InitSkillDB : %s"), errbuf);
@@ -90,7 +90,7 @@ bool MySQL::InitMonsterDB() {
 	char* errbuf = nullptr;
 
 	//const char* sql = "CREATE TABLE IF NOT EXISTS Monster(Db1 intEGER, Db2 intEGER, Name_KR TEXT NOT NULL, PRIMARY KEY(Db1, Db2));";
-	const char* sql = "CREATE TABLE IF NOT EXISTS Monster(Id intEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
+	const char* sql = "CREATE TABLE IF NOT EXISTS Monster(Id INTEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT, type INTEGER);";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in InitMonsterDB : %s", errbuf);
@@ -114,7 +114,7 @@ bool MySQL::InitMonsterDB() {
 bool MySQL::InitMapDB() {
 	char* errbuf = nullptr;
 
-	const char* sql = "CREATE TABLE IF NOT EXISTS Map(Id intEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
+	const char* sql = "CREATE TABLE IF NOT EXISTS Map(Id INTEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in InitMapDB : %s", errbuf);
@@ -141,7 +141,7 @@ bool MySQL::InitMapDB() {
 bool MySQL::InitBuffDB() {
 	char* errbuf = nullptr;
 
-	const char* sql = "CREATE TABLE IF NOT EXISTS Buff (Id intEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT, Desc_EN TEXT, Desc_TC TEXT, Desc_JP TEXT, Desc_KR TEXT)";
+	const char* sql = "CREATE TABLE IF NOT EXISTS Buff (Id INTEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT, Desc_EN TEXT, Desc_TC TEXT, Desc_JP TEXT, Desc_KR TEXT)";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
 		LogInstance.WriteLog(const_cast<char*>("Error in InitBuffDB : %s"), errbuf);
@@ -372,7 +372,7 @@ bool MySQL::GetBuffName(uint32_t buffId, char* out_buffer, size_t out_buffer_len
 		return false;
 
 	if (buffId == 0) {
-		strcpy_s(out_buffer, out_buffer_length,u8"Unknown");
+		strcpy_s(out_buffer, out_buffer_length,"Unknown");
 		return true;
 	}
 

@@ -44,6 +44,12 @@ static std::unordered_set<uint32_t> pauseIdList({
 	44002014, // Beletto Normal P1
 	44002010, // Beletto Hard P1 
 
+	/* VS Hero Solo */
+	31301006, // Flemma P1
+
+	/* VS Hero */
+	31301014, // Flemma P1
+
 	});
 
 static std::unordered_set<uint32_t> endIdList({
@@ -91,7 +97,13 @@ static std::unordered_set<uint32_t> endIdList({
 
 	/* CD */
 	44002015, // Beletto Normal P2
-	44002011 // Beletto Hard P2
+	44002011, // Beletto Hard P2
+
+	/* VS Hero Solo */
+	31301007, // Flemma P2
+
+	/* VS Hero */
+	31301015, // Flemma P2
 
 	});
 
@@ -107,6 +119,15 @@ static std::unordered_set<uint32_t> resumeIgnoreIdList({
 	/* HH Hero */
 	44002038, 44002031, 44002035, 44002033, 44002052, // Normal
 	44002054, 44002036, 44002033, 44002034, 44002032, // Hard
+
+	/* VS Hero Solo */
+	30301002, 30301004, 30301005, // Tombstone
+	30301007, 30301008, 30301009, 30301010, // Anasyth
+	30301012, // Frost Crystal
+
+	/* VS Hero */
+	30301003, 30301006, 30301001, // Tombstone
+
 
 	});
 
@@ -155,6 +176,12 @@ static std::unordered_set<uint32_t> changeAggroIdList({
 	44002015, // Beletto Normal P2
 	44002011, // Beletto Hard P2
 
+	/* VS Hero Solo */
+	31301006, 31301007, // Flemma P1, P2
+
+	/* VS Hero */
+	31301014, 31301015, // Flemma P1, P2
+
 	});
 
 static std::unordered_set<uint32_t> dpsIgnoreIdList({
@@ -187,6 +214,14 @@ static std::unordered_set<uint32_t> dpsIgnoreIdList({
 	44002038, 44002031, 44002035, 44002033, 44002052, // Normal
 	44002054, 44002036, 44002033, 44002034, 44002032, // Hard
 
+	/* VS Hero Solo */
+	30301002, 30301004, 30301005, // Tombstone
+	30301007, 30301008, 30301009, 30301010, // Anasyth
+	30301012, // Frost Crystal
+
+	/* VS Hero */
+	30301003, 30301006, 30301001, // Tombstone
+
 	});
 
 static std::unordered_set<uint32_t> LunarFallBossListId({
@@ -197,7 +232,6 @@ static std::unordered_set<uint32_t> LunarFallBossListId({
 	31309101, // Azure Force. Arculus
 	31309102, // Azure Force. Edgar
 	31309151, // Junk Queen
-
 	});
 
 
@@ -270,6 +304,20 @@ static std::unordered_map<uint32_t, std::vector<uint32_t>> StrictModeList({
 		21203,
 		{
 			13901201, 13901301
+		}
+	},
+	// VS Hero Solo
+	{
+		21031,
+		{
+			31301006, 31301007,
+		}
+	},
+	// VS Hero
+	{
+		21032,
+		{
+			31301014, 31301015,
 		}
 	},
 });
