@@ -8,7 +8,7 @@ void CombatMeter::Insert(uint32_t id, CombatType type, CombatLog* cl)
 {
 	COMBATMETER.GetLock();
 	{
-		bool success = false;
+		bool success = FALSE;
 		do
 		{
 			if (_historyMode || _isEnd || DAMAGEMETER.isTownMap())
@@ -35,7 +35,7 @@ void CombatMeter::Insert(uint32_t id, CombatType type, CombatLog* cl)
 			}
 
 			_ci->Insert(id, type, cl);
-			success = true;
+			success = TRUE;
 		} while (false);
 
 		if (!success)
@@ -54,7 +54,6 @@ std::string CombatMeter::ConvertCombatLogVal(CombatLog* pCombatLog, CombatType t
 	sprintf_s(tmp, "STR_UTILLWINDOW_COMBAT_LOG_TYPE_%d", pCombatLog->_type);
 	std::string typeTexts = std::string(LANGMANAGER.GetText(tmp));
 	const char* typeText = typeTexts.c_str();
-
 	switch (pCombatLog->_type)
 	{
 	case CombatLogType::CHANGED_STATS:

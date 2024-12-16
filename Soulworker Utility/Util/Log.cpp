@@ -77,7 +77,7 @@ bool Log::WriteLog(std::string data, ...)
     return true;
 
 }
-bool Log::WriteLogNoDate(LPTSTR data, ...)
+bool Log::WriteLogNoDate(const char * data, ...)
 {
     if (shouldLog) {
         if (!file) return false;
@@ -117,7 +117,7 @@ void Log::Enable()
         SystemTime.wHour);
     if (!file)
     {
-        fopen_s(&file,CurrentFileName, "w");
+        fopen_s(&file, CurrentFileName, "w");
         if (file == NULL)
         {
             shouldLog = false;

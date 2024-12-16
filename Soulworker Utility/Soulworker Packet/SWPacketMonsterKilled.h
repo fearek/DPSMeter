@@ -4,7 +4,7 @@
 #pragma pack(push, 1)
 typedef struct _SWPACKETMONSTERKILLED {
 	uint32_t _killedId;
-	//uint8_t _unknown01[4];//3
+	//BYTE _unknown01[4];//3
 }SWPACKETMONSTERKILLED;
 #pragma pack(pop)
 
@@ -14,7 +14,7 @@ protected:
 	SWPacketMonsterKilled() {}
 
 public:
-	SWPacketMonsterKilled(SWHEADER* swheader, uint8_t* data);
+	SWPacketMonsterKilled(SWHEADER* swheader, BYTE* data);
 	~SWPacketMonsterKilled() {}
 
 	void Do();

@@ -26,7 +26,7 @@ public:
 	SWCPacket(SWCHEADER* swheader, BYTE* data);
 	virtual ~SWCPacket() {}
 
-	virtual VOID Debug();
-	virtual VOID Log();
-	virtual VOID Do();
+	virtual void Debug();
+	virtual void Log();
+	virtual void Do();
 };

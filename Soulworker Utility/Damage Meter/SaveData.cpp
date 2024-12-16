@@ -29,7 +29,7 @@ DWORD SWSaveData::Init(std::string fileName)
 		else
 			_saveFileName = fileName;
 		// Open save data, set deny read/write
-		while (true)
+		while (TRUE)
 		{
 			_saveFile.open(_saveFileName, std::ios::in | std::ios::out | std::ios::binary, _SH_DENYRW);
 			if (!_saveFile.is_open())
@@ -71,12 +71,12 @@ DWORD SWSaveData::Init(std::string fileName)
 
 bool SWSaveData::Load()
 {
-	int64_t fileSize = GetCurrentLength();
-	int64_t processedHistory = 0;
+	LONG64 fileSize = GetCurrentLength();
+	LONG64 processedHistory = 0;
 	// file version
 	if (fileSize >= sizeof(_saveVersion))
 	{
-		int64_t offset = 0;
+		LONG64 offset = 0;
 		uint32_t fileVersion = 0;
 
 		ReadData((unsigned char*)&fileVersion, sizeof(_saveVersion), offset);
@@ -97,14 +97,14 @@ bool SWSaveData::Load()
 
 	}
 	else {
-		_fileNotExist = true;
+		_fileNotExist = TRUE;
 	}
 
-	_inited = true;
+	_inited = TRUE;
 
 	if (processedHistory > 0)
 	{
-		int64_t clearCount = processedHistory - HISTORY_SIZE;
+		LONG64 clearCount = processedHistory - HISTORY_SIZE;
 #if DEBUG_SAVEDATA_DELETE == 1
 		LogInstance.WriteLog("[SWSaveData::Load] Loaded data = %llu", processedHistory);
 #endif
@@ -115,9 +115,9 @@ bool SWSaveData::Load()
 	return true;
 }
 
-void SWSaveData::ReadSaveData(int64_t& offset)
+void SWSaveData::ReadSaveData(LONG64& offset)
 {
-	int64_t dataSize = GetNextSaveDataLength(offset);
+	LONG64 dataSize = GetNextSaveDataLength(offset);
 	if (dataSize > 0)
 	{
 		unsigned char* pSaveData = new unsigned char[dataSize];
@@ -131,15 +131,15 @@ void SWSaveData::ReadSaveData(int64_t& offset)
 	}
 }
 
-void SWSaveData::Crypt(unsigned char* src, unsigned char* dest, int64_t len)
+void SWSaveData::Crypt(unsigned char* src, unsigned char* dest, LONG64 len)
 {
-	for (int64_t i = 0; i < len; i++)
+	for (LONG64 i = 0; i < len; i++)
 		dest[i] = src[i] ^ (12 + 14);
 }
 
-int64_t SWSaveData::GetCurrentLength()
+LONG64 SWSaveData::GetCurrentLength()
 {
-	int64_t size = 0;
+	LONG64 size = 0;
 
 	_saveFile.seekg(0, std::ios::end);
 
@@ -184,13 +184,13 @@ void SWSaveData::Save(flatbuffers::FlatBufferBuilder& fbb)
 				// write save data version
 				if (_fileNotExist)
 				{
-					_fileNotExist = false;
+					_fileNotExist = FALSE;
 					WriteData((unsigned char*)&_saveVersion, sizeof(uint32_t), &tmpFile);
 				}
 
 				// write savedata size
-				int64_t size = fbb.GetSize();
-				WriteData((unsigned char*)&size, sizeof(int64_t), &tmpFile);
+				LONG64 size = fbb.GetSize();
+				WriteData((unsigned char*)&size, sizeof(LONG64), &tmpFile);
 
 				// write savedata
 				WriteData((unsigned char*)fbb.GetBufferPointer(), size, &tmpFile);
@@ -220,7 +220,7 @@ void SWSaveData::Save(flatbuffers::FlatBufferBuilder& fbb)
 	}
 }
 
-void SWSaveData::Delete(int64_t index, int64_t clearCount)
+void SWSaveData::Delete(LONG64 index, LONG64 clearCount)
 {
 	bool isLock = _mutex.try_lock();
 	{
@@ -230,7 +230,7 @@ void SWSaveData::Delete(int64_t index, int64_t clearCount)
 			if (!_inited || !_saveFile.is_open())
 				break;
 
-			int64_t currentSize = GetCurrentLength();
+			LONG64 currentSize = GetCurrentLength();
 			if (currentSize <= sizeof(_saveVersion))
 				break;
 
@@ -247,15 +247,15 @@ void SWSaveData::Delete(int64_t index, int64_t clearCount)
 
 			WriteData((unsigned char*)&_saveVersion, sizeof(uint32_t), &tmpFile);
 
-			int64_t offset = sizeof(_saveVersion);
-			int64_t i = 0;
-			int64_t prevSize = 0;
+			LONG64 offset = sizeof(_saveVersion);
+			LONG64 i = 0;
+			LONG64 prevSize = 0;
 			unsigned char* tmpData = nullptr;
 			while (currentSize > offset)
 			{
 				i++;
 
-				int64_t dataSize = GetNextSaveDataLength(offset);
+				LONG64 dataSize = GetNextSaveDataLength(offset);
 				if (index != i && i > clearCount)
 				{
 					if (dataSize > prevSize)
@@ -321,7 +321,7 @@ void SWSaveData::Clone(std::string filename)
 	}
 }
 
-void SWSaveData::WriteData(unsigned char* buf, int64_t size, std::fstream* pFS)
+void SWSaveData::WriteData(unsigned char* buf, LONG64 size, std::fstream* pFS)
 {
 	if (pFS == nullptr)
 		pFS = &_saveFile;
@@ -335,7 +335,7 @@ void SWSaveData::WriteData(unsigned char* buf, int64_t size, std::fstream* pFS)
 	delete[] tmp;
 }
 
-void SWSaveData::ReadData(unsigned char* buf, int64_t size, int64_t offset)
+void SWSaveData::ReadData(unsigned char* buf, LONG64 size, LONG64 offset)
 {
 	_saveFile.seekg(offset, std::ios::beg);
 
@@ -344,12 +344,12 @@ void SWSaveData::ReadData(unsigned char* buf, int64_t size, int64_t offset)
 	Crypt(buf, buf, size);
 }
 
-int64_t SWSaveData::GetNextSaveDataLength(int64_t& offset)
+LONG64 SWSaveData::GetNextSaveDataLength(LONG64& offset)
 {
-	int64_t dataSize = 0;
+	LONG64 dataSize = 0;
 
-	ReadData((unsigned char*)&dataSize, sizeof(int64_t), offset);
-	offset += sizeof(int64_t);
+	ReadData((unsigned char*)&dataSize, sizeof(LONG64), offset);
+	offset += sizeof(LONG64);
 
 	return dataSize;
 }

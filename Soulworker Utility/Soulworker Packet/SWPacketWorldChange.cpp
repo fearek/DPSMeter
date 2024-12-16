@@ -3,7 +3,7 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacketWorldChange.h"
 
-SWPacketWorldChange::SWPacketWorldChange(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
+SWPacketWorldChange::SWPacketWorldChange(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
 
@@ -16,7 +16,7 @@ void SWPacketWorldChange::Do() {
 	DAMAGEMETER.SetMyID(world_change->_id);
 	DAMAGEMETER.SetWorldID(world_change->_worldID);
 
-	DAMAGEMETER.SetMazeState(false);
+	DAMAGEMETER.SetMazeState(FALSE);
 }
 
 void SWPacketWorldChange::Log() {

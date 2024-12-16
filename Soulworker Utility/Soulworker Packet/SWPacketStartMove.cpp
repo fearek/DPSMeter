@@ -3,7 +3,7 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacketStartMove.h"
 
-SWPacketStartMove::SWPacketStartMove(SWHEADER* swheader, uint8_t* data) {
+SWPacketStartMove::SWPacketStartMove(SWHEADER* swheader, BYTE* data) {
 	_swheader = swheader;
 	_data = data;
 }
@@ -18,7 +18,7 @@ void SWPacketStartMove::Log() {
 
 void SWPacketStartMove::Debug() {
 
-	//uint16_t op = _byteswap_ushort(_swheader->_op);
+	//unsigned short op = _byteswap_unsigned short(_swheader->_op);
 	//_SWPACKETSTARTMOVE* move = (_SWPACKETSTARTMOVE*)(_data + sizeof(SWHEADER));
 
 	//if (_swheader->_op != 0x3403) {
@@ -32,42 +32,42 @@ void SWPacketStartMove::Debug() {
 	//	printf("%02x ", _data[i]);
 	//printf("\n");
 
-	//LogInstance.MyLog(_T("Unkown Packet : %04x\n"), op);
+	//Log::MyLog("Unkown Packet : %04x\n", op);
 	//for (int i = sizeof(SWHEADER); i < _swheader->_size; i++)
-	//	LogInstance.MyLog(_T("%02x "), _data[i]);
-	//LogInstance.MyLog(_T("\n"));
+	//	Log::MyLog("%02x ", _data[i]);
+	//Log::MyLog("\n");
 
-	//LogInstance.MyLog(_T("player ID : %08x / map ID : %u / X : %f, Y : %f, Z : %f\n"), move->_playerId, move->_mapId, move->_locationX, move->_locationY, move->_locationZ);
-	//LogInstance.MyLog(_T("direction %f / endLocationX %f / endLocationX %f\n"), move->_direction, move->_endLocationX, move->_endLocationY);
-	//LogInstance.MyLog(_T("speed : %f\n "), move->_speed);
+	//Log::MyLog("player ID : %08x / map ID : %u / X : %f, Y : %f, Z : %f\n", move->_playerId, move->_mapId, move->_locationX, move->_locationY, move->_locationZ);
+	//Log::MyLog("direction %f / endLocationX %f / endLocationX %f\n", move->_direction, move->_endLocationX, move->_endLocationY);
+	//Log::MyLog("speed : %f\n ", move->_speed);
 
-	//LogInstance.MyLog(_T("Unknown01 : "));
+	//Log::MyLog("Unknown01 : ");
 	//for (int i = 0; i < sizeof(move->_unknown01); i++) {
-	//	LogInstance.MyLog(_T("%02x "), move->_unknown01[i]);
+	//	Log::MyLog("%02x ", move->_unknown01[i]);
 	//}
-	//LogInstance.MyLog(_T(" / "));
+	//Log::MyLog(" / ");
 
-	//LogInstance.MyLog(_T("Unknown02 : "));
+	//Log::MyLog("Unknown02 : ");
 	//for (int i = 0; i < sizeof(move->_unknown02); i++) {
-	//	LogInstance.MyLog(_T("%02x "), move->_unknown02[i]);
+	//	Log::MyLog("%02x ", move->_unknown02[i]);
 	//}
-	//LogInstance.MyLog(_T(" / "));
+	//Log::MyLog(" / ");
 
-	//LogInstance.MyLog(_T("_screen : "));
+	//Log::MyLog("_screen : ");
 	//for (int i = 0; i < sizeof(move->_screen); i++) {
-	//	LogInstance.MyLog(_T("%02x "), move->_screen[i]);
+	//	Log::MyLog("%02x ", move->_screen[i]);
 	//}
-	//LogInstance.MyLog(_T(" / \n"));
+	//Log::MyLog(" / \n");
 	//
-	//LogInstance.MyLog(_T("unknown 04 : %02x"), move->_unknown04);
+	//Log::MyLog("unknown 04 : %02x", move->_unknown04);
 
-	//LogInstance.MyLog(_T(" / "));
+	//Log::MyLog(" / ");
 
-	//LogInstance.MyLog(_T("Unknown05 : "));
+	//Log::MyLog("Unknown05 : ");
 	//for (int i = 0; i < sizeof(move->_unknown05); i++) {
-	//	LogInstance.MyLog(_T("%02x "), move->_unknown05[i]);
+	//	Log::MyLog("%02x ", move->_unknown05[i]);
 	//}
-	//LogInstance.MyLog(_T(" / \n"));
+	//Log::MyLog(" / \n");
 
 	return;
 }

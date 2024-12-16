@@ -7,16 +7,15 @@
 #include ".\Damage Meter\MonsterList.h"
 #include ".\UI\Option.h"
 #include <unordered_map>
-#include "SimpleIni.h"
 #include ".\Third Party\FlatBuffers\include\SW_HISTORY_.h"
-
+#include "SimpleIni.h"
 using namespace SoulMeterFBS::History;
 
 #define MAX_NAME_LEN 64
 //#define MAX_MAP_LEN 32
 #define MAX_MAP_LEN 64
 
-#define PLAYER_JOB_CANT_FIND 11
+#define PLAYER_JOB_CANT_FIND 99
 
 #ifdef _DEBUG
 #define DEBUG_DAMAGEMETER_OWNER_ID 0
@@ -32,12 +31,7 @@ using namespace SoulMeterFBS::History;
 //  forward declaration
 // https://stackoverflow.com/questions/41502310/c-inclusion-of-typedef-struct-from-inside-a-class
 // https://en.cppreference.com/w/cpp/language/class#Forward_declaration
-struct ImFontObj
-{
-	std::string path;
-	std::string filename;
-	bool selectable = false;
-};
+
 typedef struct _SW_OWNER_ID_STRUCT {
 	uint32_t _id;
 	uint32_t _owner_id;
@@ -48,6 +42,13 @@ typedef struct _SW_DB2_STRUCT {
 	uint32_t _db2;
 	int32_t _type;
 }SW_DB2_STRUCT;
+
+struct ImFontObj
+{
+	std::string path;
+	std::string filename;
+	bool selectable = false;
+};
 
 static std::vector<uint32_t> _dwSkills({
 
@@ -110,6 +111,12 @@ static std::vector<uint32_t> _dwSkills({
 	96000111,
 	97000111,
 
+	// Dhana
+	105000111,
+	105000211,
+	106000111, // Desire
+	107000111, // EX
+
 	});
 
 class SWDamageMeter : public Singleton<SWDamageMeter> {
@@ -126,12 +133,16 @@ private:
 	float _maxAttack = 0.0;
 	float _critDamage = 0.0;
 	float _bossDamage = 0.0;
+	
 public:
 	uint32_t _id = 0;
 	char _name[MAX_NAME_LEN];
-	uint8_t _job = 0;
+	BYTE _job = 0;
 	uint64_t _avgABSum = 0;
 	uint64_t _avgABPreviousTime = 0;
+
+	uint64_t _avgABSumU = 0;
+	uint64_t _avgABPreviousTimeU = 0;
 
 	uint64_t _avgBDSum = 0;
 	uint64_t _avgBDPreviousTime = 0;
@@ -181,11 +192,12 @@ public:
 		_job = 0;
 		_avgABSum = 0;
 		_avgABPreviousTime = 0;
+		_avgABPreviousTimeU = 0;
 		_avgBDSum = 0;
 		_avgBDPreviousTime = 0;
 	}
 
-	void UpdateStat(uint16_t statType, float statValue) {
+	void UpdateStat(unsigned short statType, float statValue) {
 		switch (statType) {
 		case StatType::SG:
 			_sg = statValue;
@@ -228,7 +240,9 @@ public:
 				uint64_t time = (uint64_t)((double)DAMAGEMETER.GetTime()); // timer time
 				float correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
 				_avgABSum += static_cast<uint64_t>((time - _avgABPreviousTime) * correctedAB);
+				_avgABSumU += static_cast<uint64_t>((time - _avgABPreviousTime) * _armorBreak);
 				_avgABPreviousTime = time;
+				_avgABPreviousTimeU = time;
 
 				if (_armorBreak >= 100) {
 					if (!_fullABStarted) {
@@ -265,12 +279,12 @@ public:
 			break;
 
 		default:
-			//LogInstance.WriteLog(_T("[DEBUG] [statType = %x], [statValue = %f]\n"), statType, statValue);
+			//LogInstance.WriteLog("[DEBUG] [statType = %x], [statValue = %f]\n", statType, statValue);
 			break;
 		}
 	}
 
-	void UpdateSpecialStat(uint16_t statType, float statValue) {
+	void UpdateSpecialStat(unsigned short statType, float statValue) {
 		switch (statType) {
 		case SpecialStatType::BossDamageAddRate:
 			_bossDamage = statValue;
@@ -281,7 +295,7 @@ public:
 			}
 			break;
 		default:
-			//LogInstance.WriteLog(_T("[DEBUG] [statType = %x], [statValue = %f]\n"), statType, statValue);
+			//LogInstance.WriteLog("[DEBUG] [statType = %x], [statValue = %f]\n", statType, statValue);
 			break;
 		}
 	}
@@ -310,7 +324,9 @@ public:
 
 		float correctedAB = (_armorBreak > 100) ? 100 : _armorBreak;
 		_avgABSum += static_cast<uint64_t>((currentTime - _avgABPreviousTime) * correctedAB);
+		_avgABSumU += static_cast<uint64_t>((currentTime - _avgABPreviousTimeU) * _armorBreak);
 		_avgABPreviousTime = currentTime;
+		_avgABPreviousTimeU = currentTime;
 
 		_avgBDSum += static_cast<uint64_t>((currentTime - _avgBDPreviousTime) * _bossDamage);
 		_avgBDPreviousTime = currentTime;
@@ -359,6 +375,11 @@ public:
 				currentAB = currentAB > 100.0 ? 100.0 : currentAB; // 
 				uint64_t calculatedAvgAB = static_cast<uint64_t>((_avgABSum + avgTimeDifference * currentAB));
 				(*player)->SetHistoryAvgAB((double)calculatedAvgAB / currentTime);
+
+				uint64_t avgTimeDifferenceU = currentTime - _avgABPreviousTimeU;
+				double currentABU = GetStat(StatType::ArmorBreak);
+				uint64_t calculatedAvgABU = static_cast<uint64_t>((_avgABSumU + avgTimeDifferenceU * currentABU));
+				(*player)->SetHistoryAvgABU((double)calculatedAvgABU / currentTime);
 
 				avgTimeDifference = currentTime - _avgBDPreviousTime;
 				uint64_t calculatedAvgBD = static_cast<uint64_t>((_avgBDSum + avgTimeDifference * _bossDamage));
@@ -429,6 +450,9 @@ public:
 
 		_avgABSum = 0;
 		_avgABPreviousTime = 0;
+
+		_avgABSumU = 0;
+		_avgABPreviousTimeU = 0;
 
 		_avgBDSum = 0;
 		_avgBDPreviousTime = 0;
@@ -680,7 +704,7 @@ public:
 		_AggroTime = _AggroPrevTime + ((double)(endTime - _AggroStartTime) / 1000);
 	}
 
-	float GetStat(uint16_t statType) {
+	float GetStat(unsigned short statType) {
 
 		switch (statType) {
 		case StatType::SG:
@@ -704,7 +728,7 @@ public:
 		return -1;
 	}
 
-	float GetSpecialStat(uint16_t statType) {
+	float GetSpecialStat(unsigned short statType) {
 
 		switch (statType) {
 		case SpecialStatType::BossDamageAddRate:
@@ -775,14 +799,12 @@ private:
 
 	char _mapName[MAX_MAP_LEN];
 	uint32_t _myID;
-	uint16_t _worldID;
-	uint32_t _ping = 0;
+	unsigned short _worldID;
 
-	uint16_t _historyWorldID;
+	unsigned short _historyWorldID;
 	uint64_t _historyTime;
 	uint32_t _historyMyID;
-	void* _historyHI;
-	uint32_t _historyPing = 0;
+	LPVOID _historyHI;
 
 	uint32_t _aggroedId;
 	uint32_t _realClearTime;
@@ -790,7 +812,7 @@ private:
 	bool _mazeEnd;
 	bool _historyMode;
 
-	void InsertPlayerInfo(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint16_t maxCombo, uint32_t monsterID, uint32_t skillID);
+	void InsertPlayerInfo(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, unsigned short maxCombo, uint32_t monsterID, uint32_t skillID);
 	void Sort();
 	void Restore();
 
@@ -800,53 +822,57 @@ private:
 
 	int32_t _currentHistoryId = -1;
 
-	bool _testMode = false;
+	bool _testMode = FALSE;
 
 public:
+	int mswideness = 1;
+	bool shouldRebuildAtlas = false;
+	bool shouldLogMonsterStats = false;
+	uint32_t _ping = 0;
+	uint32_t _historyPing = 0;
+	ImFontObj selectedFont;
+	CSimpleIniA ini;
+	void SaveConfig();
 	SWDamageMeter() :   _myID(0), _worldID(0), _mazeEnd(0), _historyMode(0), _historyWorldID(0), _historyTime(0) {}
 	~SWDamageMeter();
 
 	void GetLock();
 	void FreeLock();
-	bool shouldRebuildAtlas = false;
-	bool shouldLogMstrStats = true;
-	ImFontObj selectedFont;
-	CSimpleIniA ini;
-	int mswideness = 1;
-	void AddDamage(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint16_t maxCombo, uint32_t monsterID, uint32_t skillID);
+
+	void AddDamage(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, unsigned short maxCombo, uint32_t monsterID, uint32_t skillID);
 	void AddPlayerGetDamage(uint32_t playerId, uint64_t totalDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint32_t monsterID, uint32_t skillID);
 	void AddEnlighten(uint32_t playerId, float value);
+	void AddFever(uint32_t playerId);
 	void AddSkillUsed(uint32_t playerId, uint32_t skillId);
 	void AddDodgeUsed(uint32_t playerId);
 	void AddDeath(uint32_t playerId);
-	void BuffIn(uint32_t playerId, uint16_t buffId, uint8_t stack, uint32_t giverId);
-	void BuffOut(uint32_t playerId, uint16_t buffId);
-	uint64_t GetStartTime();
-	uint32_t GetPing();
+	void BuffIn(uint32_t playerId, unsigned short buffId, BYTE stack, uint32_t giverId);
+	void BuffOut(uint32_t playerId, unsigned short buffId);
+
 	void InsertOwnerID(uint32_t id, uint32_t owner_id);
 	uint32_t GetOwnerID(uint32_t id);
 
 	void InsertDB(uint32_t id, uint32_t db2);
 	SW_DB2_STRUCT* GetMonsterDB(uint32_t id);
-	void SetPing(uint32_t ping);
-	void SetWorldID(uint16_t worldID);
-	uint16_t GetWorldID();
+
+	void SetWorldID(unsigned short worldID);
+	unsigned short GetWorldID();
 	const char* GetWorldName();
 	bool isTownMap();
 
 	void SetAggro(uint32_t id, uint32_t targetedId);
 	uint32_t GetAggro();
 
-	void InsertPlayerMetadata(uint32_t id, char* str, uint8_t job);
+	void InsertPlayerMetadata(uint32_t id, char* str, BYTE job);
 	const char* GetPlayerName(uint32_t id);
-	uint8_t GetPlayerJob(uint32_t id);
+	BYTE GetPlayerJob(uint32_t id);
 
-	void UpdateSpecialStat(uint32_t id, uint16_t statType, float statValue);
-	void UpdateStat(uint32_t id, uint16_t statType, float statValue, bool isSpecial = false);
+	void UpdateSpecialStat(uint32_t id, unsigned short statType, float statValue);
+	void UpdateStat(uint32_t id, unsigned short statType, float statValue, bool isSpecial = FALSE);
 
 	void SetMyID(uint32_t id);
 
-	uint32_t GetMyID(bool useHistoryID = false);
+	uint32_t GetMyID(bool useHistoryID = FALSE);
 
 	bool CheckPlayer(uint32_t id);
 
@@ -854,7 +880,7 @@ public:
 	std::vector<SWDamagePlayer*>::const_iterator GetPlayerInfo(uint32_t id);
 	std::vector<SWDamagePlayer*>::const_iterator begin();
 	std::vector<SWDamagePlayer*>::const_iterator end();
-	const SIZE_T size();
+	const size_t size();
 
 	std::unordered_map<uint32_t, SW_PLAYER_METADATA*>* GetPlayerMetaDataByHistory();
 
@@ -869,15 +895,16 @@ public:
 	void Start();
 	void Clear();
 	void Toggle();
-
+	uint64_t GetStartTime();
+	uint32_t GetPing();
+	void SetPing(uint32_t ping);
 	uint64_t GetTime();
 
 	void SetMazeState(bool end);
-
-	void SetHistory(void* hi);
+	void SetHistory(LPVOID hi);
 	bool isHistoryMode();
 
-	void ClearInfo(bool clear = false);
+	void ClearInfo(bool clear = FALSE);
 	void ClearDB();
 
 	int32_t GetCurrentHistoryId()
@@ -892,15 +919,15 @@ public:
 
 	void SetTestMode()
 	{
-		_testMode = true;
+		_testMode = TRUE;
 	}
 
 	void ClearTestMode()
 	{
-		_testMode = false;
+		_testMode = FALSE;
 	}
 
-	void* GetHistoryHI()
+	LPVOID GetHistoryHI()
 	{
 		return _historyHI;
 	}
@@ -933,11 +960,11 @@ public:
 			if (find != _playerUseAwaken.end())
 			{
 				if (GetTime() <= find->second + wTimeOut)
-					return true;
+					return TRUE;
 			}
 
 		} while (false);
 
-		return false;
+		return FALSE;
 	}
 };

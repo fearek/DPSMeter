@@ -3,7 +3,7 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacketAkasic.h"
 
-SWPacketAkasic::SWPacketAkasic(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
+SWPacketAkasic::SWPacketAkasic(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
 

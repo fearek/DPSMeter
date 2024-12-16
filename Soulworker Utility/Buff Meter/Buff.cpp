@@ -2,7 +2,7 @@
 #include ".\Buff Meter\Buff.h"
 #include ".\Damage Meter\MySQLite.h"
 
-Buff::Buff(uint16_t buffID, uint8_t stack) : _buffID(buffID), _stack(stack) {
+Buff::Buff(unsigned short buffID, BYTE stack) : _buffID(buffID), _stack(stack) {
 	_timePoint = std::chrono::system_clock::now();
 	_time = 0;
 
@@ -36,7 +36,7 @@ void Buff::Active() {
 		return;
 
 	_timePoint = std::chrono::system_clock::now();
-	_isActive = true;
+	_isActive = TRUE;
 }
 
 void Buff::InActive() {
@@ -50,14 +50,14 @@ void Buff::InActive() {
 		_timePoint = std::chrono::system_clock::now();
 	}
 
-	_isActive = false;
+	_isActive = FALSE;
 }
 
-const uint16_t& Buff::GetBuffID() {
+const unsigned short& Buff::GetBuffID() {
 	return _buffID;
 }
 
-const uint8_t& Buff::GetStack() {
+const BYTE& Buff::GetStack() {
 	return _stack;
 }
 

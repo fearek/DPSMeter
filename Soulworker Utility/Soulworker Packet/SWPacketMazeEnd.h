@@ -4,7 +4,7 @@
 #pragma pack(push, 1)
 
 typedef struct _SWPACKETMAZEEND {
-	uint8_t _rank; // 0 : F, 1: C, 2: B, 3: A, 4 : S, 5: SS
+	BYTE _rank; // 0 : F, 1: C, 2: B, 3: A, 4 : S, 5: SS
 	uint32_t _playScore;
 	uint32_t _clearScore;
 	uint32_t _clearTime; // 1587 = 158.7s
@@ -18,7 +18,7 @@ protected:
 	SWPacketMazeEnd() {}
 
 public:
-	SWPacketMazeEnd(SWHEADER* swheader, uint8_t* data);
+	SWPacketMazeEnd(SWHEADER* swheader, BYTE* data);
 	~SWPacketMazeEnd() {}
 
 	void Do();

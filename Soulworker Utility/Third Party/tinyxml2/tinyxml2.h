@@ -573,7 +573,7 @@ public:
         return !IsUTF8Continuation(p) && isspace( static_cast<unsigned char>(p) );
     }
 
-    inline static bool IsNameStartChar( unsigned char ch ) {
+    inline static bool IsNameStartchar( unsigned char ch ) {
         if ( ch >= 128 ) {
             // This is a heuristic guess in attempt to not implement Unicode-aware isalpha()
             return true;
@@ -584,8 +584,8 @@ public:
         return ch == ':' || ch == '_';
     }
 
-    inline static bool IsNameChar( unsigned char ch ) {
-        return IsNameStartChar( ch )
+    inline static bool IsNamechar( unsigned char ch ) {
+        return IsNameStartchar( ch )
                || isdigit( ch )
                || ch == '.'
                || ch == '-';
@@ -596,14 +596,14 @@ public:
         return p && *p == '0' && ( *(p + 1) == 'x' || *(p + 1) == 'X');
     }
 
-    inline static bool StringEqual( const char* p, const char* q, int nChar=INT_MAX )  {
+    inline static bool StringEqual( const char* p, const char* q, int nchar=INT_MAX )  {
         if ( p == q ) {
             return true;
         }
         TIXMLASSERT( p );
         TIXMLASSERT( q );
-        TIXMLASSERT( nChar >= 0 );
-        return strncmp( p, q, nChar ) == 0;
+        TIXMLASSERT( nchar >= 0 );
+        return strncmp( p, q, nchar ) == 0;
     }
 
     inline static bool IsUTF8Continuation( const char p ) {
@@ -613,7 +613,7 @@ public:
     static const char* ReadBOM( const char* p, bool* hasBOM );
     // p is the starting location,
     // the UTF-8 value of the entity will be placed in value, and length filled in.
-    static const char* GetCharacterRef( const char* p, char* value, int* length );
+    static const char* GetcharacterRef( const char* p, char* value, int* length );
     static void ConvertUTF32ToUTF8( unsigned long input, char* output, int* length );
 
     // converts primitive types to strings
@@ -628,21 +628,21 @@ public:
     // converts strings to primitive types
     static bool	ToInt( const char* str, int* value );
     static bool ToUnsigned( const char* str, unsigned* value );
-    static bool	ToBool( const char* str, bool* value );
-    static bool	ToFloat( const char* str, float* value );
-    static bool ToDouble( const char* str, double* value );
-	static bool ToInt64(const char* str, int64_t* value);
+    static bool	Tobool( const char* str, bool* value );
+    static bool	Tofloat( const char* str, float* value );
+    static bool Todouble( const char* str, double* value );
+	static bool Toint64_t(const char* str, int64_t* value);
     static bool ToUnsigned64(const char* str, uint64_t* value);
 	// Changes what is serialized for a boolean value.
 	// Default to "true" and "false". Shouldn't be changed
 	// unless you have a special testing or compatibility need.
 	// Be careful: static, global, & not thread safe.
 	// Be sure to set static const memory as parameters.
-	static void SetBoolSerialization(const char* writeTrue, const char* writeFalse);
+	static void SetboolSerialization(const char* writeTrue, const char* writeFalse);
 
 private:
-	static const char* writeBoolTrue;
-	static const char* writeBoolFalse;
+	static const char* writeboolTrue;
+	static const char* writeboolFalse;
 };
 
 
@@ -1165,9 +1165,9 @@ public:
 		return i;
 	}
 
-	int64_t Int64Value() const {
+	int64_t int64_tValue() const {
 		int64_t i = 0;
-		QueryInt64Value(&i);
+		Queryint64_tValue(&i);
 		return i;
 	}
 
@@ -1184,21 +1184,21 @@ public:
         return i;
     }
     /// Query as a boolean. See IntValue()
-    bool	 BoolValue() const				{
+    bool	 boolValue() const				{
         bool b=false;
-        QueryBoolValue( &b );
+        QueryboolValue( &b );
         return b;
     }
     /// Query as a double. See IntValue()
-    double 	 DoubleValue() const			{
+    double 	 doubleValue() const			{
         double d=0;
-        QueryDoubleValue( &d );
+        QuerydoubleValue( &d );
         return d;
     }
     /// Query as a float. See IntValue()
-    float	 FloatValue() const				{
+    float	 floatValue() const				{
         float f=0;
-        QueryFloatValue( &f );
+        QueryfloatValue( &f );
         return f;
     }
 
@@ -1210,15 +1210,15 @@ public:
     /// See QueryIntValue
     XMLError QueryUnsignedValue( unsigned int* value ) const;
 	/// See QueryIntValue
-	XMLError QueryInt64Value(int64_t* value) const;
+	XMLError Queryint64_tValue(int64_t* value) const;
     /// See QueryIntValue
     XMLError QueryUnsigned64Value(uint64_t* value) const;
 	/// See QueryIntValue
-    XMLError QueryBoolValue( bool* value ) const;
+    XMLError QueryboolValue( bool* value ) const;
     /// See QueryIntValue
-    XMLError QueryDoubleValue( double* value ) const;
+    XMLError QuerydoubleValue( double* value ) const;
     /// See QueryIntValue
-    XMLError QueryFloatValue( float* value ) const;
+    XMLError QueryfloatValue( float* value ) const;
 
     /// Set the attribute to a string value.
     void SetAttribute( const char* value );
@@ -1317,15 +1317,15 @@ public:
     /// See IntAttribute()
 	unsigned UnsignedAttribute(const char* name, unsigned defaultValue = 0) const;
 	/// See IntAttribute()
-	int64_t Int64Attribute(const char* name, int64_t defaultValue = 0) const;
+	int64_t int64_tAttribute(const char* name, int64_t defaultValue = 0) const;
     /// See IntAttribute()
     uint64_t Unsigned64Attribute(const char* name, uint64_t defaultValue = 0) const;
 	/// See IntAttribute()
-	bool BoolAttribute(const char* name, bool defaultValue = false) const;
+	bool boolAttribute(const char* name, bool defaultValue = false) const;
     /// See IntAttribute()
-	double DoubleAttribute(const char* name, double defaultValue = 0) const;
+	double doubleAttribute(const char* name, double defaultValue = 0) const;
     /// See IntAttribute()
-	float FloatAttribute(const char* name, float defaultValue = 0) const;
+	float floatAttribute(const char* name, float defaultValue = 0) const;
 
     /** Given an attribute name, QueryIntAttribute() returns
     	XML_SUCCESS, XML_WRONG_ATTRIBUTE_TYPE if the conversion
@@ -1358,12 +1358,12 @@ public:
     }
 
 	/// See QueryIntAttribute()
-	XMLError QueryInt64Attribute(const char* name, int64_t* value) const {
+	XMLError Queryint64_tAttribute(const char* name, int64_t* value) const {
 		const XMLAttribute* a = FindAttribute(name);
 		if (!a) {
 			return XML_NO_ATTRIBUTE;
 		}
-		return a->QueryInt64Value(value);
+		return a->Queryint64_tValue(value);
 	}
 
     /// See QueryIntAttribute()
@@ -1376,28 +1376,28 @@ public:
     }
 
 	/// See QueryIntAttribute()
-    XMLError QueryBoolAttribute( const char* name, bool* value ) const				{
+    XMLError QueryboolAttribute( const char* name, bool* value ) const				{
         const XMLAttribute* a = FindAttribute( name );
         if ( !a ) {
             return XML_NO_ATTRIBUTE;
         }
-        return a->QueryBoolValue( value );
+        return a->QueryboolValue( value );
     }
     /// See QueryIntAttribute()
-    XMLError QueryDoubleAttribute( const char* name, double* value ) const			{
+    XMLError QuerydoubleAttribute( const char* name, double* value ) const			{
         const XMLAttribute* a = FindAttribute( name );
         if ( !a ) {
             return XML_NO_ATTRIBUTE;
         }
-        return a->QueryDoubleValue( value );
+        return a->QuerydoubleValue( value );
     }
     /// See QueryIntAttribute()
-    XMLError QueryFloatAttribute( const char* name, float* value ) const			{
+    XMLError QueryfloatAttribute( const char* name, float* value ) const			{
         const XMLAttribute* a = FindAttribute( name );
         if ( !a ) {
             return XML_NO_ATTRIBUTE;
         }
-        return a->QueryFloatValue( value );
+        return a->QueryfloatValue( value );
     }
 
 	/// See QueryIntAttribute()
@@ -1438,7 +1438,7 @@ public:
 	}
 
 	XMLError QueryAttribute(const char* name, int64_t* value) const {
-		return QueryInt64Attribute(name, value);
+		return Queryint64_tAttribute(name, value);
 	}
 
     XMLError QueryAttribute(const char* name, uint64_t* value) const {
@@ -1446,15 +1446,15 @@ public:
     }
 
     XMLError QueryAttribute( const char* name, bool* value ) const {
-		return QueryBoolAttribute( name, value );
+		return QueryboolAttribute( name, value );
 	}
 
 	XMLError QueryAttribute( const char* name, double* value ) const {
-		return QueryDoubleAttribute( name, value );
+		return QuerydoubleAttribute( name, value );
 	}
 
 	XMLError QueryAttribute( const char* name, float* value ) const {
-		return QueryFloatAttribute( name, value );
+		return QueryfloatAttribute( name, value );
 	}
 
 	XMLError QueryAttribute(const char* name, const char** value) const {
@@ -1616,7 +1616,7 @@ public:
     		const XMLElement* xElement = pointElement->FirstChildElement( "x" );
     		const XMLElement* yElement = pointElement->FirstChildElement( "y" );
     		xElement->QueryIntText( &x );
-    		yElement->QueryFloatText( &y );
+    		yElement->QueryfloatText( &y );
     	@endverbatim
 
     	@returns XML_SUCCESS (0) on success, XML_CAN_NOT_CONVERT_TEXT if the text cannot be converted
@@ -1627,30 +1627,30 @@ public:
     /// See QueryIntText()
     XMLError QueryUnsignedText( unsigned* uval ) const;
 	/// See QueryIntText()
-	XMLError QueryInt64Text(int64_t* uval) const;
+	XMLError Queryint64_tText(int64_t* uval) const;
 	/// See QueryIntText()
 	XMLError QueryUnsigned64Text(uint64_t* uval) const;
 	/// See QueryIntText()
-    XMLError QueryBoolText( bool* bval ) const;
+    XMLError QueryboolText( bool* bval ) const;
     /// See QueryIntText()
-    XMLError QueryDoubleText( double* dval ) const;
+    XMLError QuerydoubleText( double* dval ) const;
     /// See QueryIntText()
-    XMLError QueryFloatText( float* fval ) const;
+    XMLError QueryfloatText( float* fval ) const;
 
 	int IntText(int defaultValue = 0) const;
 
 	/// See QueryIntText()
 	unsigned UnsignedText(unsigned defaultValue = 0) const;
 	/// See QueryIntText()
-	int64_t Int64Text(int64_t defaultValue = 0) const;
+	int64_t int64_tText(int64_t defaultValue = 0) const;
     /// See QueryIntText()
     uint64_t Unsigned64Text(uint64_t defaultValue = 0) const;
 	/// See QueryIntText()
-	bool BoolText(bool defaultValue = false) const;
+	bool boolText(bool defaultValue = false) const;
 	/// See QueryIntText()
-	double DoubleText(double defaultValue = 0) const;
+	double doubleText(double defaultValue = 0) const;
 	/// See QueryIntText()
-    float FloatText(float defaultValue = 0) const;
+    float floatText(float defaultValue = 0) const;
 
     /**
         Convenience method to create a new XMLElement and add it as last (right)

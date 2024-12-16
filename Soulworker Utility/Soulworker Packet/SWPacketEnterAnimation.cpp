@@ -4,7 +4,7 @@
 #include ".\Soulworker Packet\SWPacketEnterAnimation.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketEnterAnimation::SWPacketEnterAnimation(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
+SWPacketEnterAnimation::SWPacketEnterAnimation(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
 

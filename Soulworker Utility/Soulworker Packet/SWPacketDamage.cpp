@@ -6,23 +6,23 @@
 #include ".\Damage Meter\MySQLite.h"
 #include ".\Damage Meter\MapList.h"
 
-SWPacketDamage::SWPacketDamage(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
+SWPacketDamage::SWPacketDamage(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
 
 void SWPacketDamage::AttackOfMonster()
 {
-	uint8_t playerNum = *(_data + sizeof(SWHEADER));
+	BYTE playerNum = *(_data + sizeof(SWHEADER));
 	SWPACKETDAMAGE_PLAYER* monster = (SWPACKETDAMAGE_PLAYER*)((_data + sizeof(_SWPACKETDAMAGE_MONSTER) * playerNum) + sizeof(SWHEADER) + 1);
-	//LogInstance.MyLog(_T("skill ID : %u\n"), monster->_skillID);
+	//Log::MyLog("skill ID : %u\n", monster->_skillID);
 
 
 	for (int i = 0; i < playerNum; i++) {
 		SWPACKETDAMAGE_MONSTER* player = (SWPACKETDAMAGE_MONSTER*)((_data + sizeof(SWPACKETDAMAGE_MONSTER) * i) + sizeof(SWHEADER) + 1);
-		//LogInstance.MyLog(_T("hitted Player : %08x / damageType : %d\n"), player->_monsterID, player->_damageType);
+		//Log::MyLog("hitted Player : %08x / damageType : %d\n", player->_monsterID, player->_damageType);
 
 		if (DAMAGEMETER.CheckPlayer(player->_monsterID)) {
-			//LogInstance.MyLog(_T("hitted Player : %08x / damage : %u\n"), player->_monsterID, player->_totalDMG);
+			//Log::MyLog("hitted Player : %08x / damage : %u\n", player->_monsterID, player->_totalDMG);
 		}
 		
 		//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [PlayerNum = 0x%01x] [PlayerID = %04x]"), playerNum, player->_monsterID);
@@ -33,7 +33,7 @@ void SWPacketDamage::AttackOfMonster()
 
 void SWPacketDamage::Do() {
 
-	uint8_t monsterNum = *(_data + sizeof(SWHEADER));
+	BYTE monsterNum = *(_data + sizeof(SWHEADER));
 	SWPACKETDAMAGE_PLAYER* player = (SWPACKETDAMAGE_PLAYER*)((_data + sizeof(_SWPACKETDAMAGE_MONSTER) * monsterNum) + sizeof(SWHEADER) + 1);
 
 	if (player->_playerID == NULL) {
@@ -65,7 +65,7 @@ void SWPacketDamage::Do() {
 	for (int i = 0; i < monsterNum; i++) {
 		SWPACKETDAMAGE_MONSTER* monster = (SWPACKETDAMAGE_MONSTER*)((_data + sizeof(SWPACKETDAMAGE_MONSTER) * i) + sizeof(SWHEADER) + 1);
 
-		//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[PLAYER] [DamageType = %d]")), monster->_damageType);
+		//LogInstance.WriteLog("[PLAYER] [DamageType = %d]", monster->_damageType);
 			//DAMAGEMETER.AddDamage(player->_playerID, monster->_totalDMG, monster->_criticalDMG, player->_maxCombo != 0 ? 1 : 0, player->_maxCombo != 0 ? CheckCritical(monster->_damageType) : 0, player->_maxCombo, monster->_monsterID, player->_skillID);
 
 		//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [MonsterNum = 0x%01x] [MonsterID = %04x] [PlayerID = %04x] [CheckPlayer = %d] [GetOwnerID = %04x] [OwnerCheckPlayer = %d]"),
@@ -108,7 +108,7 @@ void SWPacketDamage::Do() {
 					DAMAGEMETER.Suspend();
 				}
 				else if (isEndId) {
-					DAMAGEMETER.SetMazeState(true);
+					DAMAGEMETER.SetMazeState(TRUE);
 					DAMAGEMETER.Suspend();
 				}
 			}
@@ -118,11 +118,11 @@ void SWPacketDamage::Do() {
 
 void SWPacketDamage::Debug() {
 
-	/*uint8_t monsterNum = *(_data + sizeof(SWHEADER));
+	/*BYTE monsterNum = *(_data + sizeof(SWHEADER));
 	SWPACKETDAMAGE_PLAYER* player = (SWPACKETDAMAGE_PLAYER*)((_data + sizeof(_SWPACKETDAMAGE_MONSTER) * monsterNum) + sizeof(SWHEADER) + 2);
 
 	//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [MonsterNum = %d] [PlayerID = %08x] [CheckPlayer = %d] [GetOwnerID = %08x] [OwnerCheckPlayer = %d]"), monsterNum, player->_playerID, DAMAGEMETER.CheckPlayer(player->_playerID), DAMAGEMETER.GetOwnerID(player->_playerID), DAMAGEMETER.CheckPlayer(DAMAGEMETER.GetOwnerID(player->_playerID)));
-	//LogInstance.MyLog("1234");
+	//Log::MyLog("1234");
 
 	//if (DAMAGEMETER.CheckPlayer(player->_playerID)) {
 	//	return;
@@ -150,12 +150,12 @@ void SWPacketDamage::Debug() {
 		//	return;
 		//}
 
-		/*LogInstance.MyLog(_T("unknown02\n"));
+		/*Log::MyLog("unknown02\n");
 		for (int i = 0; i < 14; i++)
-			LogInstance.MyLog(_T("%02x "), monster->_unknown02[i]);
-		LogInstance.MyLog(_T("\n"));
+			Log::MyLog("%02x ", monster->_unknown02[i]);
+		Log::MyLog("\n");
 
-		LogInstance.MyLog(_T("Unknown 01 : %02x"), monster->_unknown01);
+		Log::MyLog("Unknown 01 : %02x", monster->_unknown01);
 
 		LogInstance.WriteLog(const_cast<char*>("\t[unknown01 = %02x] [UnknownF1 = %f] [UnknownF2 = %f] [UnknownF3 = %f]"),
 		monster->_unknown01,monster->_unknownF1, monster->_unknownF2, monster->_unknownF3);

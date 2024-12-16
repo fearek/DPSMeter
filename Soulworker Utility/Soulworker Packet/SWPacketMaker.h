@@ -2,8 +2,7 @@
 
 #include ".\Soulworker Packet\PacketType.h"
 #include ".\Soulworker Packet\SWPacket.h"
-#include ".\Soulworker Packet\SWCPacket.h"
-#include <Winsock2.h>
+
 #define SWPACKETMAKER SWPacketMaker::getInstance()
 
 #ifdef _DEBUG
@@ -14,12 +13,12 @@
 
 class SWPacketMaker : public Singleton<SWPacketMaker> {
 private:
+	
 
 public:
 
 
 	bool Init();
 	SWHEADER* GetSWHeader(std::vector<unsigned char>& packet);
-	uint8_t* GetSWData(std::vector<unsigned char>&  packet);
-	void CreateSWPacket(std::vector<unsigned char>&  packet);
+	void CreateSWPacket(std::vector<unsigned char>& packet);
 };

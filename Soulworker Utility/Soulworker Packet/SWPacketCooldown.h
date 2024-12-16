@@ -13,7 +13,7 @@ protected:
 	SWPacketCooldown() {}
 
 public:
-	SWPacketCooldown(SWHEADER* swheader, uint8_t* data);
+	SWPacketCooldown(SWHEADER* swheader, BYTE* data);
 	~SWPacketCooldown() {}
 
 	void Do();

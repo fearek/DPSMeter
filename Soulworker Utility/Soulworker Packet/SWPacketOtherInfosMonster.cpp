@@ -2,92 +2,69 @@
 #include ".\Soulworker Packet\SWPacket.h"
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Soulworker Packet\SWPacketOtherInfosMonster.h"
-#include ".\Damage Meter\MySQLite.h"
+#include ".\Soulworker Packet\SWPacketInInfoMonster.h"
 #include ".\Combat Meter\CombatMeter.h"
-#include <sstream>
-SWPacketMonsterInfo::SWPacketMonsterInfo(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
+
+SWPacketOtherInfosMonster::SWPacketOtherInfosMonster(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
 
-void SWPacketMonsterInfo::Do() {
-	uint64_t offset = 0;
-	uint16_t monsterAmount = *(uint16_t*)(_data + sizeof(SWHEADER));
-	offset += sizeof(uint16_t);
-	/*char* str = new char[(_swheader->_size * 3) + 1];
-	size_t stroffset = 0;
-	for (size_t i = 0; i < _swheader->_size; i++)
-	{
-		unsigned char thisbyte = *(unsigned char*)(_data+i);
-		sprintf_s(&str[stroffset], (_swheader->_size * 3) + 1, "%02X ",thisbyte);
-		stroffset+=3;
-	}
-	str[(_swheader->_size*3)+1] = 0x00;
-	LogInstance.WriteLog("Bytes: %s\n",str);
-	delete[] str;*/
-	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("Monster amount: %d\n")),monsterAmount);
-	for (size_t i = 0; i < monsterAmount; i++)
-	{
-		SWPACKETMONSTERINFO* obj_create = (SWPACKETMONSTERINFO*)(_data + sizeof(SWHEADER) + offset);
-		offset += sizeof(SWPACKETMONSTERINFO);
-		std::stringstream ss;
-		for (size_t ii = 0; ii < obj_create->statamount; ii++)
+void SWPacketOtherInfosMonster::Do() {
+
+	short counts = *(_data + sizeof(SWHEADER));
+	short offset = sizeof(SWHEADER) + sizeof(counts);
+	for (short i = 0; i < counts; i++) {
+
+		SWPACKET_IN_INFO_MONSTER1* pktHeader = (SWPACKET_IN_INFO_MONSTER1*)(_data + offset);
+		offset += sizeof(SWPACKET_IN_INFO_MONSTER1);
+		if (pktHeader->data1Count > 0)
 		{
-			SWPACKETMONSTERSTATINFO* stat = (SWPACKETMONSTERSTATINFO*)(_data + sizeof(SWHEADER) + offset);
-			CombatLog* pCombatLog = new CombatLog;
-			pCombatLog->_type = CombatLogType::CHANGED_STATS;
-			pCombatLog->_val1 = stat->type;
-			pCombatLog->_val2 = stat->val;
-			COMBATMETER.Insert(obj_create->_realDB2, CombatType::MONSTER, pCombatLog);
-			offset += sizeof(SWPACKETMONSTERSTATINFO);
-			if (DAMAGEMETER.shouldLogMstrStats) {
-				ss << SWDB.GetStatName(stat->type) << ": " << stat->val << "\n";
+			for (int i = 0; i < pktHeader->data1Count; i++)
+			{
+				SWPACKET_IN_INFO_MONSTER_DATA1* pMonsterData = (SWPACKET_IN_INFO_MONSTER_DATA1*)(_data + offset);
+
+				CombatLog* pCombatLog = new CombatLog;
+				pCombatLog->_type = CombatLogType::CHANGED_STATS;
+				pCombatLog->_val1 = pMonsterData->type;
+				pCombatLog->_val2 = pMonsterData->val;
+				COMBATMETER.Insert(pktHeader->realDB2, CombatType::MONSTER, pCombatLog);
+
+				offset += sizeof(SWPACKET_IN_INFO_MONSTER_DATA1);
 			}
 		}
-		SWPACKETMONSTERINFOFOOTER* footer = (SWPACKETMONSTERINFOFOOTER*)(_data + sizeof(SWHEADER) + offset);
-		offset += sizeof(SWPACKETMONSTERINFOFOOTER);
-		if (DAMAGEMETER.shouldLogMstrStats) {
-			ss << "Unknown:\n";
-		}
-		for (size_t ii = 0; ii < footer->unknownCount; ii++)
-		{
-			SWPACKETMONSTERINFOUNKNOWN* unknown = (SWPACKETMONSTERINFOUNKNOWN*)(_data + sizeof(SWHEADER) + offset);
-			offset += sizeof(SWPACKETMONSTERINFOUNKNOWN);
-		}
-		DAMAGEMETER.InsertOwnerID(obj_create->_id, obj_create->_owner_id);
-		DAMAGEMETER.InsertDB(obj_create->_id, obj_create->_realDB2);
-		if (DAMAGEMETER.shouldLogMstrStats) {
-			char name[256] = { 0 };
-			SWDB.GetMonsterName(obj_create->_realDB2, &name[0], 255);
-			LogInstance.WriteLog("Name: %s Monster id: %u realid: %u owner: %X\nStats:\n", name, obj_create->_id, obj_create->_realDB2, obj_create->_owner_id);
-			LogInstance.WriteLog("%s", ss.str().c_str());
-		}
+
+		DAMAGEMETER.InsertOwnerID(pktHeader->id, pktHeader->owner_id);
+		DAMAGEMETER.InsertDB(pktHeader->id, pktHeader->realDB2);
+
+		SWPACKET_IN_INFO_MONSTER2* pktFooter = (SWPACKET_IN_INFO_MONSTER2*)(_data + offset);
+		offset += sizeof(SWPACKET_IN_INFO_MONSTER2);
+		if (pktFooter->data2Count > 0)
+			offset += (pktFooter->data2Count * sizeof(SWPACKET_IN_INFO_MONSTER_DATA2));
 	}
 }
 
-void SWPacketMonsterInfo::Log() {
+void SWPacketOtherInfosMonster::Log() {
 
 }
 
 
-void SWPacketMonsterInfo::Debug() {
+void SWPacketOtherInfosMonster::Debug() {
 
+	/*short counts = *(_data + sizeof(SWHEADER));
+	short offset = sizeof(SWHEADER) + sizeof(counts);
+	for (short i = 0; i < counts; i++) {
 
-	SWPACKETMONSTERINFO* obj_create = (SWPACKETMONSTERINFO*)(_data + sizeof(SWHEADER));
+		SWPACKET_IN_INFO_MONSTER1* pktHeader = (SWPACKET_IN_INFO_MONSTER1*)(_data + offset);
+		offset += sizeof(SWPACKET_IN_INFO_MONSTER1);
+		if (pktHeader->data1Count > 0)
+			offset += (pktHeader->data1Count * sizeof(SWPACKET_IN_INFO_MONSTER1));
 
-	//LogInstance.MyLog(_T("unknown02\n"));
-	//for (int i = 0; i < 17; i++)
-	//	LogInstance.MyLog(_T("%02x "), obj_create->_unknown02[i]);
-	//LogInstance.MyLog(_T("\n"));
+		SWPACKET_IN_INFO_MONSTER2* pktFooter = (SWPACKET_IN_INFO_MONSTER2*)(_data + offset);
+		offset += sizeof(SWPACKET_IN_INFO_MONSTER2);
+		if (pktFooter->data2Count > 0)
+			offset += (pktFooter->data2Count * sizeof(SWPACKET_IN_INFO_MONSTER2));
 
-	//LogInstance.MyLog(_T("unknown03\n"));
-	//for (int i = 0; i < 54; i++)
-	//	LogInstance.MyLog(_T("%02x "), obj_create->_unknown03[i]);
-	//LogInstance.MyLog(_T("\n"));
-
-	//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [Created Object] [X = %f] [Y = %f] [Z = %f]"), obj_create->_locationX, obj_create->_locationY, obj_create->_locationZ);
-	//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [Created Object] [X = %f] [Y = %f] [Z = %f]"), obj_create->_unknownFloat1, obj_create->_unknownFloat2, obj_create->_unknownFloat3);
-
-	//LogInstance.MyLog(const_cast<char*>("[DEBUG] [Created Object] [ID = %u] [Owner ID = %08x] [DB2 = %u] [RealDB2 = %u]\n"), obj_create->_id, obj_create->_owner_id, obj_create->_db2, obj_create->_realDB2);
-
-	//LogInstance.WriteLog(const_cast<char*>("[DEBUG] [Created Object] [ID = %08x] [Owner ID = %08x] [DB2 = %u] [RealDB2 = %u]"), obj_create->_id, obj_create->_owner_id, obj_create->_db2, obj_create->_realDB2);
+		LogInstance.WriteLog("[SWPacketOtherInfosMonster] MonsterID: %u, DB2: %u, data1: %d, data2: %d", pktHeader->id, pktHeader->realDB2, pktHeader->data1Count, pktFooter->data2Count);
+	}*/
+	
 }

@@ -6,7 +6,7 @@
 typedef struct _SWPacketMazeUpdateStatePacket {
 	
 	uint32_t _stateID;
-	uint8_t _state;
+	BYTE _state;
 
 }SWPacketMazeUpdateStatePacket;
 #pragma pack(pop)
@@ -16,7 +16,7 @@ protected:
 	SWPacketMazeUpdateState() {}
 
 public:
-	SWPacketMazeUpdateState(SWHEADER* swheader, uint8_t* data);
+	SWPacketMazeUpdateState(SWHEADER* swheader, BYTE* data);
 	~SWPacketMazeUpdateState() {}
 
 	void Do();

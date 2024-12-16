@@ -67,10 +67,10 @@ void SWPacket::Debug() {
 	//	printf("%02x ", _data[i]);
 	//printf("\n");
 
-	//LogInstance.MyLog(_T("Unkown Packet : %04x\n"), op);
+	//LogInstance.MyLog("Unkown Packet : %04x\n", op);
 	//for (int i = sizeof(SWHEADER); i < _swheader->_size; i++)
-	//	LogInstance.MyLog(_T("%02x "), _data[i]);
-	//LogInstance.MyLog(_T("\n"));
+	//	LogInstance.MyLog("%02x ", _data[i]);
+	//LogInstance.MyLog("\n");
 
 	
 	return;

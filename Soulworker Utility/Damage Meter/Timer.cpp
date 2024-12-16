@@ -13,7 +13,7 @@ Timer::~Timer() {
 }
 
 void Timer::Run() {
-	
+
 	if (_status == TIMER_STATUS::end) {
 		_startTimePoint = GetCurrentTimeStamp();
 		_suspendedTime = 0;
@@ -40,7 +40,7 @@ void Timer::Suspend() {
 }
 
 void Timer::Stop() {
-	
+
 	_status = TIMER_STATUS::end;
 }
 

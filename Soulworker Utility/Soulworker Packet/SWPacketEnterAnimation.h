@@ -17,7 +17,7 @@ protected:
 	SWPacketEnterAnimation() {}
 
 public:
-	SWPacketEnterAnimation(SWHEADER* swheader, uint8_t* data);
+	SWPacketEnterAnimation(SWHEADER* swheader, BYTE* data);
 	~SWPacketEnterAnimation() {}
 
 	void Do();

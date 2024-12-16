@@ -5,7 +5,7 @@
 #include ".\Combat Meter\Combat.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketStatChange::SWPacketStatChange(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
+SWPacketStatChange::SWPacketStatChange(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
 
@@ -17,7 +17,7 @@ void SWPacketStatChange::Do() {
 
 	SWPACKETSTATCHANGE_HEADER* stat_header = (SWPACKETSTATCHANGE_HEADER*)(_data + sizeof(SWHEADER));
 
-	uint8_t* p_data;
+	BYTE* p_data;
 	if (stat_header->_unknown01 == 0) {
 		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER);
 	}
@@ -36,7 +36,7 @@ void SWPacketStatChange::Do() {
 #endif
 		}
 		else {
-			//LogInstance.MyLog(_T("[DEBUG] [ID %08x] [statType = %x], [statValue = %f]\n"), stat_header->_playerID, party_data->_statType, party_data->_statValue);
+			//Log::MyLog("[DEBUG] [ID %08x] [statType = %x], [statValue = %f]\n", stat_header->_playerID, party_data->_statType, party_data->_statValue);
 			DAMAGEMETER.UpdateStat(stat_header->_playerID, party_data->_statType, party_data->_statValue);
 
 			CombatLog* pCombatLog = new CombatLog;
@@ -57,7 +57,7 @@ void SWPacketStatChange::Log() {
 void SWPacketStatChange::Debug() {
 	SWPACKETSTATCHANGE_HEADER* stat_header = (SWPACKETSTATCHANGE_HEADER*)(_data + sizeof(SWHEADER));
 
-	uint8_t* p_data;
+	BYTE* p_data;
 	if (stat_header->_unknown01 == 0) {
 		p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETSTATCHANGE_HEADER);
 	}
@@ -70,7 +70,7 @@ void SWPacketStatChange::Debug() {
 		SWPACKETSTATCHANGE_DATA* party_data = (SWPACKETSTATCHANGE_DATA*)p_data;
 
 		DAMAGEMETER.UpdateStat(stat_header->_playerID, party_data->_statType, party_data->_statValue);
-		//LogInstance.WriteLog(_T("[DEBUG] [ID %08x] [statType = %x], [statValue = %f]\n"), stat_header->_playerID, party_data->_statType, party_data->_statValue);
+		//LogInstance.WriteLog("[DEBUG] [ID %08x] [statType = %x], [statValue = %f]\n", stat_header->_playerID, party_data->_statType, party_data->_statValue);
 		p_data += sizeof(SWPACKETSTATCHANGE_DATA);
 
 	}

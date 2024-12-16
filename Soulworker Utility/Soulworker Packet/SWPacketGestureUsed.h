@@ -19,7 +19,7 @@ protected:
 	SWPacketGestureUsed() {}
 
 public:
-	SWPacketGestureUsed(SWHEADER* swheader, uint8_t* data);
+	SWPacketGestureUsed(SWHEADER* swheader, BYTE* data);
 	~SWPacketGestureUsed() {}
 
 	void Do();

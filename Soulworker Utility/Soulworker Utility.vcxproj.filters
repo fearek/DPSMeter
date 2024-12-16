@@ -91,12 +91,6 @@
     <Filter Include="SWPacket\Packet\0x12 Party">
       <UniqueIdentifier>{8a52c1c9-53c2-4467-a722-9343d97ae956}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SWSPacket">
-      <UniqueIdentifier>{7ab77b79-1128-4b3c-98b9-89786dbdcfa1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SWSPacket\0x06 Combat">
-      <UniqueIdentifier>{b3f3088d-8f3a-4d47-8ec1-fa0db1924152}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SWPacket\Packet\0x23">
       <UniqueIdentifier>{7f555519-1ef8-4524-ab04-21d92bad646d}</UniqueIdentifier>
     </Filter>
@@ -119,10 +113,7 @@
       <UniqueIdentifier>{658c129f-87f4-4757-a778-a9a9eac9ff2d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Discord">
-      <UniqueIdentifier>{a95b653a-09af-49fc-a53f-dc0f2c6839ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SWCPacket">
-      <UniqueIdentifier>{912d9a89-7356-4782-9d10-f0db5bb524a6}</UniqueIdentifier>
+      <UniqueIdentifier>{d468da43-42ef-454d-b882-7f26da74da5c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -279,9 +270,6 @@
     <ClInclude Include="Third Party\imgui\implot_internal.h">
       <Filter>UI\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Soulworker Packet\SWSPacketMySkillUsed.h">
-      <Filter>SWSPacket\0x06 Combat</Filter>
-    </ClInclude>
     <ClInclude Include="Soulworker Packet\SWPacketSpawnedCharInfo.h">
       <Filter>SWPacket\Packet\0x04 World</Filter>
     </ClInclude>
@@ -302,9 +290,6 @@
     </ClInclude>
     <ClInclude Include="Soulworker Packet\SWPacketMonsterKilled.h">
       <Filter>SWPacket\Packet\0x17 Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="Soulworker Packet\SWSPacketMyDodgeUsed.h">
-      <Filter>SWSPacket\0x06 Combat</Filter>
     </ClInclude>
     <ClInclude Include="Soulworker Packet\SWPacketDead.h">
       <Filter>SWPacket\Packet\0x03</Filter>
@@ -332,9 +317,6 @@
     </ClInclude>
     <ClInclude Include="Damage Meter\MapList.h">
       <Filter>Damge Meter</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\http\httplib.h">
-      <Filter>Utiliry\헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Damage Meter\FlatBufferUtil.h">
       <Filter>헤더 파일</Filter>
@@ -366,20 +348,17 @@
     <ClInclude Include="SWConfig.h">
       <Filter>PCH</Filter>
     </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWPacketSquad.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWPacketBrooch.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>UI\DirectX11</Filter>
+    </ClInclude>
     <ClInclude Include="SimpleIni.h">
       <Filter>Utiliry\헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DiscordPresence.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="DiscordPresence.cpp">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\storage_manager.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\store_manager.h">
-      <Filter>Discord</Filter>
     </ClInclude>
     <ClInclude Include="Third Party\discord\types.h">
       <Filter>Discord</Filter>
@@ -429,11 +408,26 @@
     <ClInclude Include="Third Party\discord\relationship_manager.h">
       <Filter>Discord</Filter>
     </ClInclude>
-    <ClInclude Include="UI\stb_image.h">
-      <Filter>UI\DirectX11</Filter>
+    <ClInclude Include="Third Party\discord\storage_manager.h">
+      <Filter>Discord</Filter>
     </ClInclude>
-    <ClInclude Include="Soulworker Packet\SWPacketSquad.h">
-      <Filter>SWPacket\Packet\0x12 Party</Filter>
+    <ClInclude Include="Third Party\discord\store_manager.h">
+      <Filter>Discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWCPacket.h">
+      <Filter>SWPacket</Filter>
+    </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWCPing.h">
+      <Filter>SWPacket</Filter>
+    </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWCPresence.h">
+      <Filter>SWPacket</Filter>
+    </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWSPacketMySkillUsed.h">
+      <Filter>SWPacket\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Soulworker Packet\SWSPacketMyDodgeUsed.h">
+      <Filter>SWPacket\Packet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -587,9 +581,6 @@
     <ClCompile Include="Third Party\imgui\implot_items.cpp">
       <Filter>UI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Soulworker Packet\SWSPacketMySkillUsed.cpp">
-      <Filter>SWSPacket\0x06 Combat</Filter>
-    </ClCompile>
     <ClCompile Include="Soulworker Packet\SWPacketSpawnedCharInfo.cpp">
       <Filter>SWPacket\Packet\0x04 World</Filter>
     </ClCompile>
@@ -610,9 +601,6 @@
     </ClCompile>
     <ClCompile Include="Soulworker Packet\SWPacketMonsterKilled.cpp">
       <Filter>SWPacket\Packet\0x17 Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="Soulworker Packet\SWSPacketMyDodgeUsed.cpp">
-      <Filter>SWSPacket\0x06 Combat</Filter>
     </ClCompile>
     <ClCompile Include="Soulworker Packet\SWPacketDead.cpp">
       <Filter>SWPacket\Packet\0x03</Filter>
@@ -659,11 +647,11 @@
     <ClCompile Include="Soulworker Packet\SWPacketEnterAnimation.cpp">
       <Filter>SWPacket\Packet\0x05</Filter>
     </ClCompile>
-    <ClCompile Include="Third Party\discord\storage_manager.cpp">
-      <Filter>Discord</Filter>
+    <ClCompile Include="Soulworker Packet\SWPacketSquad.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Third Party\discord\store_manager.cpp">
-      <Filter>Discord</Filter>
+    <ClCompile Include="Soulworker Packet\SWPacketBrooch.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Third Party\discord\types.cpp">
       <Filter>Discord</Filter>
@@ -704,17 +692,26 @@
     <ClCompile Include="Third Party\discord\relationship_manager.cpp">
       <Filter>Discord</Filter>
     </ClCompile>
-    <ClCompile Include="Soulworker Packet\SWCPresence.cpp">
-      <Filter>SWCPacket</Filter>
+    <ClCompile Include="Third Party\discord\storage_manager.cpp">
+      <Filter>Discord</Filter>
     </ClCompile>
-    <ClCompile Include="Soulworker Packet\SWCPing.cpp">
-      <Filter>SWCPacket</Filter>
+    <ClCompile Include="Third Party\discord\store_manager.cpp">
+      <Filter>Discord</Filter>
     </ClCompile>
     <ClCompile Include="Soulworker Packet\SWCPacket.cpp">
-      <Filter>SWCPacket</Filter>
+      <Filter>SWPacket</Filter>
     </ClCompile>
-    <ClCompile Include="Soulworker Packet\SWPacketSquad.cpp">
-      <Filter>SWPacket\Packet\0x12 Party</Filter>
+    <ClCompile Include="Soulworker Packet\SWCPing.cpp">
+      <Filter>SWPacket</Filter>
+    </ClCompile>
+    <ClCompile Include="Soulworker Packet\SWCPresence.cpp">
+      <Filter>SWPacket</Filter>
+    </ClCompile>
+    <ClCompile Include="Soulworker Packet\SWSPacketMyDodgeUsed.cpp">
+      <Filter>SWPacket\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Soulworker Packet\SWSPacketMySkillUsed.cpp">
+      <Filter>SWPacket\Packet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

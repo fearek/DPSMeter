@@ -140,7 +140,7 @@ void SpecificInformation::UpdateSkillTotalTable()
 			ImGui::TableNextColumn();
 
 			// In Full AB
-			if ((*player)->GetID() == DAMAGEMETER.GetMyID(true))
+			if ((*player)->GetID() == DAMAGEMETER.GetMyID(TRUE))
 			{
 				sprintf_s(label, 128, "%d", itr->second->_in_full_ab_count);
 			}
@@ -260,7 +260,7 @@ void SpecificInformation::UpdateSkillTable() {
 			ImGui::TableNextColumn();
 
 			// DPS
-			DOUBLE dps = ((DOUBLE)(*itr)->GetDamage()) / _tableTime;
+			double dps = ((double)(*itr)->GetDamage()) / _tableTime;
 			if (UIOPTION.is1K()) {
 				dps /= 1000;
 				sprintf_s(label, 128, "%.0lf", dps);
@@ -286,6 +286,7 @@ void SpecificInformation::UpdateSkillTable() {
 			else if (UIOPTION.is10K())
 				strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_10K").data());
 			ImGui::Text(comma);
+
 			ImGui::TableNextColumn();
 
 			// D%
@@ -295,7 +296,7 @@ void SpecificInformation::UpdateSkillTable() {
 			ImGui::TableNextColumn();
 
 			// DAMAGE
-			UINT64 damage = (*itr)->GetDamage();
+			uint64_t damage = (*itr)->GetDamage();
 			if (UIOPTION.is1K())
 				damage /= 1000;
 			else if (UIOPTION.is1M())

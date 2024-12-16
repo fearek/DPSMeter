@@ -6,10 +6,10 @@
 
 typedef struct _SWPACKETWORLDCHANGE {
 	uint32_t _id;
-	uint8_t _unknwon1[20];
-	uint16_t _worldID;
-	uint8_t _unknwon2[10];
-	uint16_t _serverIPLen;
+	BYTE _unknwon1[20];
+	unsigned short _worldID;
+	BYTE _unknwon2[10];
+	unsigned short _serverIPLen;
 	uint8_t _serverIP;
 }SWPACKETWORLDCHANGE;
 
@@ -20,7 +20,7 @@ protected:
 	SWPacketWorldChange() {}
 
 public:
-	SWPacketWorldChange(SWHEADER* swheader, uint8_t* data);
+	SWPacketWorldChange(SWHEADER* swheader, BYTE* data);
 	~SWPacketWorldChange() {}
 
 	void Do();

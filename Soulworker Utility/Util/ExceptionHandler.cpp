@@ -19,7 +19,7 @@ LONG WINAPI UnHandledExceptionFilter(struct _EXCEPTION_POINTERS* exceptionInfo)
     HMODULE DllHandle = NULL;
 
     // DBGHELP.
-    DllHandle = LoadLibrary(_T("DBGHELP.DLL"));
+    DllHandle = LoadLibrary(L"DBGHELP.DLL");
 
     if (DllHandle)
     {
@@ -33,7 +33,7 @@ LONG WINAPI UnHandledExceptionFilter(struct _EXCEPTION_POINTERS* exceptionInfo)
 
             GetLocalTime(&SystemTime);
 
-            _sntprintf_s(DumpPath, MAX_PATH, _T("%d-%d-%d %d_%d_%d.dmp"),
+            _sntprintf_s(DumpPath, MAX_PATH, L"%d-%d-%d %d_%d_%d.dmp",
                 SystemTime.wYear,
                 SystemTime.wMonth,
                 SystemTime.wDay,

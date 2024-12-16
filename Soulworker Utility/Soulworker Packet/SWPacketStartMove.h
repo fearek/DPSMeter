@@ -6,19 +6,19 @@
 
 typedef struct _SWPACKETSTARTMOVE {
 	uint32_t _playerId;
-	uint8_t _unknown01[4];
-	uint16_t _mapId;
-	uint8_t _unknown02[2];
+	BYTE _unknown01[4];
+	unsigned short _mapId;
+	BYTE _unknown02[2];
 	float _locationX;
 	float _locationY;
 	float _locationZ;
 	float _direction;
 	float _endLocationX;
 	float _endLocationY;
-	uint8_t _screen[4];
-	uint8_t _unknown04;
+	BYTE _screen[4];
+	BYTE _unknown04;
 	float _speed;
-	uint8_t _unknown05[6];
+	BYTE _unknown05[6];
 }SWPACKETSTARTMOVE;
 
 #pragma pack(pop)
@@ -28,7 +28,7 @@ protected:
 	SWPacketStartMove() {}
 
 public:
-	SWPacketStartMove(SWHEADER* swheader, uint8_t* data);
+	SWPacketStartMove(SWHEADER* swheader, BYTE* data);
 	~SWPacketStartMove() {}
 
 	void Do();

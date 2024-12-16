@@ -40,15 +40,36 @@ SWDamageMeter::~SWDamageMeter() {
 
 	FreeLock();
 }
-
+void SWDamageMeter::SaveConfig() {
+	bool meteropen = DAMAGEMETER.ini.GetBoolValue("Loader", "OpenMeterOnInjection", true);;
+	DAMAGEMETER.ini.SetBoolValue("Loader", "OpenMeterOnInjection", meteropen);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "LogFile", LogInstance.shouldLog);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "LogMonsterStats", DAMAGEMETER.shouldLogMonsterStats);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "RichPresence", DISCORD.shouldUpdate);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "HideName", DISCORD.hideName);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "HideClass", DISCORD.hideClass);
+	DAMAGEMETER.ini.SetLongValue("Meter", "TimerAcc", DAMAGEMETER.mswideness);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "UseImage", UIOPTION._isUseImage);
+	DAMAGEMETER.ini.SaveFile("meterconfig.ini");
+}
 void SWDamageMeter::GetLock() {
 	_mutex.lock();
 }
 void SWDamageMeter::FreeLock() {
 	_mutex.unlock();
 }
-
-void SWDamageMeter::InsertPlayerInfo(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint16_t maxCombo, uint32_t monsterID, uint32_t skillID) {
+uint32_t SWDamageMeter::GetPing()
+{
+	if (!_historyMode)
+		return _ping;
+	else
+		return _historyPing;
+}
+void SWDamageMeter::SetPing(uint32_t ping)
+{
+	_ping = ping;
+}
+void SWDamageMeter::InsertPlayerInfo(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, unsigned short maxCombo, uint32_t monsterID, uint32_t skillID) {
 	auto itr = _playerInfo.begin();
 
 	for (; itr != _playerInfo.end(); itr++) {
@@ -61,11 +82,11 @@ void SWDamageMeter::InsertPlayerInfo(uint32_t id, uint64_t totalDMG, uint64_t so
 	_playerInfo.push_back(new SWDamagePlayer(id, totalDMG, soulstoneDMG, damageType, maxCombo, monsterID, skillID));
 }
 
-void SWDamageMeter::AddDamage(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint16_t maxCombo, uint32_t monsterID, uint32_t skillID) {
+void SWDamageMeter::AddDamage(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, unsigned short maxCombo, uint32_t monsterID, uint32_t skillID) {
 	if (_mazeEnd)
 		return;
 
-	uint16_t usWorldID = GetWorldID();
+	unsigned short usWorldID = GetWorldID();
 	// Meter must know mazeId to work correctly
 	if (usWorldID == 0)
 		return;
@@ -186,6 +207,26 @@ void SWDamageMeter::AddEnlighten(uint32_t playerId, float value)
 	}
 }
 
+void SWDamageMeter::AddFever(uint32_t playerId)
+{
+	if (!isRun() || GetTime() == 0)
+		return;
+
+	auto itr = _playerInfo.begin();
+	for (; itr != _playerInfo.end(); itr++) {
+		if (playerId == (*itr)->GetID()) {
+			(*itr)->AddFever();
+			return;
+		}
+	}
+
+	if (CheckPlayer(playerId)) {
+		SWDamagePlayer* newPlayer = new SWDamagePlayer(playerId);
+		newPlayer->AddFever();
+		_playerInfo.push_back(newPlayer);
+	}
+}
+
 void SWDamageMeter::AddSkillUsed(uint32_t playerId, uint32_t skillId)
 {
 
@@ -259,7 +300,7 @@ void SWDamageMeter::AddDeath(uint32_t playerId)
 	_playerInfo.push_back(newPlayer);
 }
 
-void SWDamageMeter::BuffIn(uint32_t playerId, uint16_t buffId, uint8_t stack, uint32_t giverId)
+void SWDamageMeter::BuffIn(uint32_t playerId, unsigned short buffId, BYTE stack, uint32_t giverId)
 {
 	if (_mazeEnd)
 		return;
@@ -275,7 +316,7 @@ void SWDamageMeter::BuffIn(uint32_t playerId, uint16_t buffId, uint8_t stack, ui
 	}
 }
 
-void SWDamageMeter::BuffOut(uint32_t playerId, uint16_t buffId)
+void SWDamageMeter::BuffOut(uint32_t playerId, unsigned short buffId)
 {
 	if (_mazeEnd)
 		return;
@@ -299,7 +340,7 @@ void SWDamageMeter::InsertOwnerID(uint32_t id, uint32_t owner_id) {
 	for (; itr != _ownerInfo.end(); itr++) {
 		if ((*itr)->_id == id) {
 #if DEBUG_DAMAGEMETER_OWNER_ID == 1
-			LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [INSERT OWNER] [MODIFY] [ID = %08x] [OWNER = %08x]")), id, owner_id);
+			LogInstance.WriteLog("[DEBUG] [INSERT OWNER] [MODIFY] [ID = %08x] [OWNER = %08x]"), id, owner_id);
 #endif
 			(*itr)->_owner_id = owner_id;
 			return;
@@ -311,7 +352,7 @@ void SWDamageMeter::InsertOwnerID(uint32_t id, uint32_t owner_id) {
 	obj->_owner_id = owner_id;
 
 #if DEBUG_DAMAGEMETER_OWNER_ID == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [INSERT OWNER] [NEW] [ID = %08x] [OWNER = %08x]")), obj->_id, obj->_owner_id);
+	LogInstance.WriteLog("[DEBUG] [INSERT OWNER] [NEW] [ID = %08x] [OWNER = %08x]"), obj->_id, obj->_owner_id);
 #endif
 
 	_ownerInfo.push_back(obj);
@@ -329,7 +370,7 @@ uint32_t SWDamageMeter::GetOwnerID(uint32_t id) {
 	return 0xffffffff;
 }
 
-void SWDamageMeter::InsertPlayerMetadata(uint32_t id, char* str, uint8_t job) {
+void SWDamageMeter::InsertPlayerMetadata(uint32_t id, char* str, BYTE job) {
 
 	auto search = _playerMetadata.find(id);
 
@@ -362,7 +403,7 @@ const char* SWDamageMeter::GetPlayerName(uint32_t id) {
 	return search->second->_name;
 }
 
-uint8_t SWDamageMeter::GetPlayerJob(uint32_t id) {
+BYTE SWDamageMeter::GetPlayerJob(uint32_t id) {
 
 	auto search = GetPlayerMetaDataByHistory()->find(id);
 	if (search == GetPlayerMetaDataByHistory()->end()) {
@@ -390,12 +431,12 @@ SWDamageMeter::SW_PLAYER_METADATA* SWDamageMeter::GetPlayerMetaDataIfNotExistsCr
 	return metaData;
 }
 
-void SWDamageMeter::UpdateSpecialStat(uint32_t id, uint16_t statType, float statValue)
+void SWDamageMeter::UpdateSpecialStat(uint32_t id, unsigned short statType, float statValue)
 {
-	UpdateStat(id, statType, statValue, true);
+	UpdateStat(id, statType, statValue, TRUE);
 }
 
-void SWDamageMeter::UpdateStat(uint32_t id, uint16_t statType, float statValue, bool isSpecial)
+void SWDamageMeter::UpdateStat(uint32_t id, unsigned short statType, float statValue, bool isSpecial)
 {
 	//if (_historyMode) {
 	//	return;
@@ -422,7 +463,7 @@ void SWDamageMeter::InsertDB(uint32_t id, uint32_t db2) {
 	for (; itr != _dbInfo.end(); itr++) {
 		if ((*itr)->_id == id) {
 #if DEBUG_DAMAGEMETER_DB == 1
-			LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [INSERT DB] [MODIFY] [ID = %04x] [DB1 = %d] [DB2 = %d]")), id, GetWorldID(), db2);
+			LogInstance.WriteLog("[DEBUG] [INSERT DB] [MODIFY] [ID = %04x] [DB1 = %d] [DB2 = %d]"), id, GetWorldID(), db2);
 #endif
 			(*itr)->_db2 = db2;
 			return;
@@ -438,7 +479,7 @@ void SWDamageMeter::InsertDB(uint32_t id, uint32_t db2) {
 	db->_type = type;
 
 #if DEBUG_DAMAGEMETER_DB == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [INSERT DB] [NEW] [ID = %04x] [DB2 = %d]")), db->_id, db->_db2);
+	LogInstance.WriteLog("[DEBUG] [INSERT DB] [NEW] [ID = %04x] [DB2 = %d]"), db->_id, db->_db2);
 #endif
 
 	_dbInfo.push_back(db);
@@ -448,7 +489,7 @@ SW_DB2_STRUCT* SWDamageMeter::GetMonsterDB(uint32_t id) {
 
 	for (auto itr = _dbInfo.begin(); itr != _dbInfo.end(); itr++) {
 #if DEBUG_DAMAGEMETER_DB == 1
-		LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [GetMonsterDB] [FIND ID = %04x] [ID = %04x] [DB2 = %d]")), id, (*itr)->_id, (*itr)->_db2);
+		LogInstance.WriteLog("[DEBUG] [GetMonsterDB] [FIND ID = %04x] [ID = %04x] [DB2 = %d]"), id, (*itr)->_id, (*itr)->_db2);
 #endif
 		if ((*itr)->_id == id) {
 			return *itr;
@@ -458,15 +499,15 @@ SW_DB2_STRUCT* SWDamageMeter::GetMonsterDB(uint32_t id) {
 	return nullptr;
 }
 
-void SWDamageMeter::SetWorldID(uint16_t worldID) {
+void SWDamageMeter::SetWorldID(unsigned short worldID) {
 	_worldID = worldID;
 
 #if DEBUG_DAMAGEMETER_WORLD == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [Set World] [World ID = %d]")), _worldID);
+	LogInstance.WriteLog("[DEBUG] [Set World] [World ID = %d]"), _worldID);
 #endif
 }
 
-uint16_t SWDamageMeter::GetWorldID() {
+unsigned short SWDamageMeter::GetWorldID() {
 
 	if (!_historyMode)
 		return _worldID;
@@ -519,7 +560,7 @@ void SWDamageMeter::SetMyID(uint32_t id) {
 	_myID = id;
 
 #if DEBUG_DAMAGEMETER_MYID == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[DEBUG] [Set MyID] [My ID = %08x]")), _myID);
+	LogInstance.WriteLog("[DEBUG] [Set MyID] [My ID = %08x]", _myID);
 #endif
 }
 
@@ -531,9 +572,9 @@ uint32_t SWDamageMeter::GetMyID(bool useHistoryID) {
 
 bool SWDamageMeter::CheckPlayer(uint32_t id) {
 	if (id < 10000000)
-		return true;
+		return TRUE;
 	else
-		return false;
+		return FALSE;
 }
 
 std::vector<SWDamagePlayer*>* SWDamageMeter::GetPlayerInfoByHistory()
@@ -575,7 +616,7 @@ std::vector<SWDamagePlayer*>::const_iterator SWDamageMeter::end() {
 	return GetPlayerInfoByHistory()->end();
 }
 
-const SIZE_T SWDamageMeter::size() {
+const size_t SWDamageMeter::size() {
 	return GetPlayerInfoByHistory()->size();
 }
 
@@ -602,22 +643,11 @@ bool SWDamageMeter::isRun() {
 uint64_t SWDamageMeter::GetStartTime() {
 	return _timer._startTimePoint;
 }
-uint32_t SWDamageMeter::GetPing()
-{
-	if (!_historyMode)
-		return _ping;
-	else
-		return _historyPing;
-}
-void SWDamageMeter::SetPing(uint32_t ping)
-{
-	_ping = ping;
-}
 void SWDamageMeter::Suspend() {
 
 	if (_historyMode) {
 		Restore();
-		_historyMode = false;
+		_historyMode = FALSE;
 	}
 
 	_timer.Suspend();
@@ -633,7 +663,7 @@ void SWDamageMeter::Start() {
 
 	if (_historyMode) {
 		Restore();
-		_historyMode = false;
+		_historyMode = FALSE;
 	}
 	_timer.Run();
 	PLOTWINDOW.Start();
@@ -680,7 +710,7 @@ void SWDamageMeter::Clear() {
 
 			if (_testMode)
 			{
-				ClearInfo(false);
+				ClearInfo(FALSE);
 				pHI->Clear();
 				delete pHI;
 			}
@@ -703,15 +733,15 @@ void SWDamageMeter::Clear() {
 		}
 		else {
 			// not player data
-			COMBATMETER.Clear(true);
+			COMBATMETER.Clear(TRUE);
 		}
-		_mazeEnd = false;
+		_mazeEnd = FALSE;
 	}
 	else {
 		Restore();
-		_historyMode = false;
+		_historyMode = FALSE;
 	}
-	_testMode = false;
+	_testMode = FALSE;
 	_timer.Stop();
 }
 
@@ -781,7 +811,7 @@ void SWDamageMeter::ClearDB()
 	_dbInfo.clear();
 }
 
-void SWDamageMeter::SetHistory(void* pHi) {
+void SWDamageMeter::SetHistory(LPVOID pHi) {
 
 	if (pHi == nullptr)
 		return;
@@ -807,7 +837,7 @@ void SWDamageMeter::SetHistory(void* pHi) {
 	_historyMyID = hi->_myID;
 	_historyHI = hi;
 
-	_historyMode = true;
+	_historyMode = TRUE;
 }
 
 bool SWDamageMeter::isHistoryMode()

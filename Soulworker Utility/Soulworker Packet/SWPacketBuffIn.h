@@ -4,11 +4,11 @@
 #pragma pack(push, 1)
 typedef struct _SWPACKETBUFFIN {
 	uint32_t _playerID;
-	uint16_t _buffID;
+	unsigned short _buffID;
 	float _duration;
-	uint8_t _stack;
+	BYTE _stack;
 	uint32_t _giverID;
-	uint8_t _unknown02;
+	BYTE _unknown02;
 }SWPACKETBUFFIN;
 #pragma pack(pop)
 
@@ -17,7 +17,7 @@ protected:
 	SWPacketBuffIn() {}
 
 public:
-	SWPacketBuffIn(SWHEADER* swheader, uint8_t* data);
+	SWPacketBuffIn(SWHEADER* swheader, BYTE* data);
 	~SWPacketBuffIn() {}
 
 	void Do();

@@ -3,28 +3,28 @@
 #include ".\Soulworker Packet\SWPacket.h"
 
 #pragma pack(push, 1)
-typedef struct _SWPacketCharacterUpdateSpecialOptionListHeader {
+typedef struct _SWPacketcharacterUpdateSpecialOptionListHeader {
 
 	uint32_t _playerID;
-	uint8_t _listCount;
+	BYTE _listCount;
 
-}SWPacketCharacterUpdateSpecialOptionListHeader;
+}SWPacketcharacterUpdateSpecialOptionListHeader;
 
-typedef struct _SWPacketCharacterUpdateSpecialOptionVal {
+typedef struct _SWPacketcharacterUpdateSpecialOptionVal {
 
-	uint16_t _listID;
+	unsigned short _listID;
 	float _listVal;
 
-}SWPacketCharacterUpdateSpecialOptionVal;
+}SWPacketcharacterUpdateSpecialOptionVal;
 #pragma pack(pop)
 
-class SWPacketCharacterUpdateSpecialOptionList : public SWPacket {
+class SWPacketcharacterUpdateSpecialOptionList : public SWPacket {
 protected:
-	SWPacketCharacterUpdateSpecialOptionList() {}
+	SWPacketcharacterUpdateSpecialOptionList() {}
 
 public:
-	SWPacketCharacterUpdateSpecialOptionList(SWHEADER* swheader, uint8_t* data);
-	~SWPacketCharacterUpdateSpecialOptionList() {}
+	SWPacketcharacterUpdateSpecialOptionList(SWHEADER* swheader, BYTE* data);
+	~SWPacketcharacterUpdateSpecialOptionList() {}
 
 	void Do();
 	void Log();

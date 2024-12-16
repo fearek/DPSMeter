@@ -7,6 +7,7 @@
 #include ".\FlatBuffers\include\SW_PLOTINFO_.h"
 #include ".\Damage Meter\FlatBufferUtil.h"
 
+
 using namespace SoulMeterFBS::History;
 
 struct metaInfo {
@@ -44,14 +45,14 @@ private:
 
 	bool _allowed = false;
 
-	bool _isHistoryMode = false;
+	bool _isHistoryMode = FALSE;
 
 public:
 
 	void AddData(uint32_t id, std::string name, double DPS, double time, bool isFirstElement);
 	void AddAbData(double DPS, double time);
 	void AddBdData(double DPS, double time);
-	void AddJqData(uint8_t stack, double time);
+	void AddJqData(BYTE stack, double time);
 	void AddBossHpData(uint32_t id, uint64_t HP, double time);
 	std::vector<metaInfo*> GetMetaInfo()
 	{
@@ -120,27 +121,27 @@ public:
 		}
 		auto fcvMetaInfo = fbb.CreateVector(vMetaInfo);
 
-		// _tIntDoubleList
-		std::vector<flatbuffers::Offset<_tIntDoubleList>> vIntDouble;
+		// _tIntdoubleList
+		std::vector<flatbuffers::Offset<_tIntDoubleList>> vIntdouble;
 
 		// DPS
-		FLATBUFFERUTIL.tIntDoubleListConverter(fbb, vIntDouble, _dpsList);
-		auto fcvDpsList = fbb.CreateVector(vIntDouble);
+		FLATBUFFERUTIL.tIntDoubleListConverter(fbb, vIntdouble, _dpsList);
+		auto fcvDpsList = fbb.CreateVector(vIntdouble);
 
-		vIntDouble.clear();
-		FLATBUFFERUTIL.tIntDoubleListConverter(fbb, vIntDouble, _timeList);
-		auto fcvDpsTimeList = fbb.CreateVector(vIntDouble);
+		vIntdouble.clear();
+		FLATBUFFERUTIL.tIntDoubleListConverter(fbb, vIntdouble, _timeList);
+		auto fcvDpsTimeList = fbb.CreateVector(vIntdouble);
 
 		// BossHP
-		vIntDouble.clear();
-		FLATBUFFERUTIL.tIntDoubleListConverter(fbb, vIntDouble, _bossHpList);
-		auto fcvBossHpList = fbb.CreateVector(vIntDouble);
+		vIntdouble.clear();
+		FLATBUFFERUTIL.tIntDoubleListConverter(fbb, vIntdouble, _bossHpList);
+		auto fcvBossHpList = fbb.CreateVector(vIntdouble);
 
-		vIntDouble.clear();
-		FLATBUFFERUTIL.tIntDoubleListConverter(fbb, vIntDouble, _bossTimeList);
-		auto fcvBossTimeList = fbb.CreateVector(vIntDouble);
+		vIntdouble.clear();
+		FLATBUFFERUTIL.tIntDoubleListConverter(fbb, vIntdouble, _bossTimeList);
+		auto fcvBossTimeList = fbb.CreateVector(vIntdouble);
 
-		// vector<double>
+		// std::vector<double>
 		auto fcvABList = fbb.CreateVector(_abList);
 		auto fcvABTimeList = fbb.CreateVector(_abTimeList);
 
@@ -181,38 +182,38 @@ public:
 			_metaInfos.push_back(newMetaInfo);
 		}
 
-		// _tIntDoubleList
+		// _tIntdoubleList
 		// DPS
 		for (auto itr = tPlotInfo->_dps_list()->begin(); itr != tPlotInfo->_dps_list()->end(); itr++)
 		{
-			FLATBUFFERUTIL.tIntDoubleListReverser(*itr, _dpsList);
+			FLATBUFFERUTIL.tIntdoubleListReverser(*itr, _dpsList);
 		}
 		for (auto itr = tPlotInfo->_dps_time_list()->begin(); itr != tPlotInfo->_dps_time_list()->end(); itr++)
 		{
-			FLATBUFFERUTIL.tIntDoubleListReverser(*itr, _timeList);
+			FLATBUFFERUTIL.tIntdoubleListReverser(*itr, _timeList);
 		}
 
 		// BOSS HP
 		for (auto itr = tPlotInfo->_boss_hp_list()->begin(); itr != tPlotInfo->_boss_hp_list()->end(); itr++)
 		{
-			FLATBUFFERUTIL.tIntDoubleListReverser(*itr, _bossHpList);
+			FLATBUFFERUTIL.tIntdoubleListReverser(*itr, _bossHpList);
 		}
 		for (auto itr = tPlotInfo->_boss_time_list()->begin(); itr != tPlotInfo->_boss_time_list()->end(); itr++)
 		{
-			FLATBUFFERUTIL.tIntDoubleListReverser(*itr, _bossTimeList);
+			FLATBUFFERUTIL.tIntdoubleListReverser(*itr, _bossTimeList);
 		}
 
-		// vector<double>
-		FLATBUFFERUTIL.fbvDoubleReverser(tPlotInfo->_ab_list(), _abList);
-		FLATBUFFERUTIL.fbvDoubleReverser(tPlotInfo->_ab_time_list(), _abTimeList);
+		// std::vector<double>
+		FLATBUFFERUTIL.fbvdoubleReverser(tPlotInfo->_ab_list(), _abList);
+		FLATBUFFERUTIL.fbvdoubleReverser(tPlotInfo->_ab_time_list(), _abTimeList);
 
-		FLATBUFFERUTIL.fbvDoubleReverser(tPlotInfo->_bd_list(), _bdList);
-		FLATBUFFERUTIL.fbvDoubleReverser(tPlotInfo->_bd_time_list(), _bdTimeList);
+		FLATBUFFERUTIL.fbvdoubleReverser(tPlotInfo->_bd_list(), _bdList);
+		FLATBUFFERUTIL.fbvdoubleReverser(tPlotInfo->_bd_time_list(), _bdTimeList);
 
-		FLATBUFFERUTIL.fbvDoubleReverser(tPlotInfo->_jq_list(), _jqList);
-		FLATBUFFERUTIL.fbvDoubleReverser(tPlotInfo->_jq_time_list(), _jqTimeList);
+		FLATBUFFERUTIL.fbvdoubleReverser(tPlotInfo->_jq_list(), _jqList);
+		FLATBUFFERUTIL.fbvdoubleReverser(tPlotInfo->_jq_time_list(), _jqTimeList);
 
-		_isHistoryMode = true;
+		_isHistoryMode = TRUE;
 	}
 };
 
@@ -239,7 +240,7 @@ public:
 	void AddData(uint32_t id, std::string name, double DPS, double time, bool isFirstElement);
 	void AddAbData(double DPS, double time);
 	void AddBdData(double DPS, double time);
-	void AddJqData(uint8_t stack, double time);
+	void AddJqData(BYTE stack, double time);
 	void AddBossHpData(uint32_t id, uint64_t HP, double time);
 
 	void OpenWindow();

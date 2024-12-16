@@ -42,7 +42,7 @@ distribution.
 	   const char *format [,
 		  argument] ...
 	);*/
-	static inline int TIXML_SNPRINTF( char* buffer, size_t size, const char* format, ... )
+	static inline int TIXML_SNPRintF( char* buffer, size_t size, const char* format, ... )
 	{
 		va_list va;
 		va_start( va, format );
@@ -51,25 +51,25 @@ distribution.
 		return result;
 	}
 
-	static inline int TIXML_VSNPRINTF( char* buffer, size_t size, const char* format, va_list va )
+	static inline int TIXML_VSNPRintF( char* buffer, size_t size, const char* format, va_list va )
 	{
 		const int result = vsnprintf_s( buffer, size, _TRUNCATE, format, va );
 		return result;
 	}
 
-	#define TIXML_VSCPRINTF	_vscprintf
+	#define TIXML_VSCPRintF	_vscprintf
 	#define TIXML_SSCANF	sscanf_s
 #elif defined _MSC_VER
 	// Microsoft Visual Studio 2003 and earlier or WinCE
-	#define TIXML_SNPRINTF	_snprintf
-	#define TIXML_VSNPRINTF _vsnprintf
+	#define TIXML_SNPRintF	_snprintf
+	#define TIXML_VSNPRintF _vsnprintf
 	#define TIXML_SSCANF	sscanf
 	#if (_MSC_VER < 1400 ) && (!defined WINCE)
 		// Microsoft Visual Studio 2003 and not WinCE.
-		#define TIXML_VSCPRINTF   _vscprintf // VS2003's C runtime has this, but VC6 C runtime or WinCE SDK doesn't have.
+		#define TIXML_VSCPRintF   _vscprintf // VS2003's C runtime has this, but VC6 C runtime or WinCE SDK doesn't have.
 	#else
 		// Microsoft Visual Studio 2003 and earlier or WinCE.
-		static inline int TIXML_VSCPRINTF( const char* format, va_list va )
+		static inline int TIXML_VSCPRintF( const char* format, va_list va )
 		{
 			int len = 512;
 			for (;;) {
@@ -90,9 +90,9 @@ distribution.
 #else
 	// GCC version 3 and higher
 	//#warning( "Using sn* functions." )
-	#define TIXML_SNPRINTF	snprintf
-	#define TIXML_VSNPRINTF	vsnprintf
-	static inline int TIXML_VSCPRINTF( const char* format, va_list va )
+	#define TIXML_SNPRintF	snprintf
+	#define TIXML_VSNPRintF	vsnprintf
+	static inline int TIXML_VSCPRintF( const char* format, va_list va )
 	{
 		int len = vsnprintf( 0, 0, format, va );
 		TIXMLASSERT( len >= 0 );
@@ -121,7 +121,7 @@ static const char LF = LINE_FEED;
 static const char CARRIAGE_RETURN		= static_cast<char>(0x0d);			// CR gets filtered out
 static const char CR = CARRIAGE_RETURN;
 static const char SINGLE_QUOTE			= '\'';
-static const char DOUBLE_QUOTE			= '\"';
+static const char double_QUOTE			= '\"';
 
 // Bunch of unicode info at:
 //		http://www.unicode.org/faq/utf_bom.html
@@ -142,7 +142,7 @@ struct Entity {
 
 static const int NUM_ENTITIES = 5;
 static const Entity entities[NUM_ENTITIES] = {
-    { "quot", 4,	DOUBLE_QUOTE },
+    { "quot", 4,	double_QUOTE },
     { "amp", 3,		'&'  },
     { "apos", 4,	SINGLE_QUOTE },
     { "lt",	2, 		'<'	 },
@@ -212,12 +212,12 @@ char* StrPair::ParseText( char* p, const char* endTag, int strFlags, int* curLin
 	TIXMLASSERT(curLineNumPtr);
 
     char* start = p;
-    const char  endChar = *endTag;
+    const char  endchar = *endTag;
     size_t length = strlen( endTag );
 
     // Inner loop of text parsing.
     while ( *p ) {
-        if ( *p == endChar && strncmp( p, endTag, length ) == 0 ) {
+        if ( *p == endchar && strncmp( p, endTag, length ) == 0 ) {
             Set( start, p, strFlags );
             return p + length;
         } else if (*p == '\n') {
@@ -235,13 +235,13 @@ char* StrPair::ParseName( char* p )
     if ( !p || !(*p) ) {
         return 0;
     }
-    if ( !XMLUtil::IsNameStartChar( (unsigned char) *p ) ) {
+    if ( !XMLUtil::IsNameStartchar( (unsigned char) *p ) ) {
         return 0;
     }
 
     char* const start = p;
     ++p;
-    while ( *p && XMLUtil::IsNameChar( (unsigned char) *p ) ) {
+    while ( *p && XMLUtil::IsNamechar( (unsigned char) *p ) ) {
         ++p;
     }
 
@@ -325,7 +325,7 @@ const char* StrPair::GetStr()
                         const int buflen = 10;
                         char buf[buflen] = { 0 };
                         int len = 0;
-                        const char* adjusted = const_cast<char*>( XMLUtil::GetCharacterRef( p, buf, &len ) );
+                        const char* adjusted = const_cast<char*>( XMLUtil::GetcharacterRef( p, buf, &len ) );
                         if ( adjusted == 0 ) {
                             *q = *p;
                             ++p;
@@ -384,16 +384,16 @@ const char* StrPair::GetStr()
 
 // --------- XMLUtil ----------- //
 
-const char* XMLUtil::writeBoolTrue  = "true";
-const char* XMLUtil::writeBoolFalse = "false";
+const char* XMLUtil::writeboolTrue  = "true";
+const char* XMLUtil::writeboolFalse = "false";
 
-void XMLUtil::SetBoolSerialization(const char* writeTrue, const char* writeFalse)
+void XMLUtil::SetboolSerialization(const char* writeTrue, const char* writeFalse)
 {
 	static const char* defTrue  = "true";
 	static const char* defFalse = "false";
 
-	writeBoolTrue = (writeTrue) ? writeTrue : defTrue;
-	writeBoolFalse = (writeFalse) ? writeFalse : defFalse;
+	writeboolTrue = (writeTrue) ? writeTrue : defTrue;
+	writeboolFalse = (writeFalse) ? writeFalse : defFalse;
 }
 
 
@@ -468,7 +468,7 @@ void XMLUtil::ConvertUTF32ToUTF8( unsigned long input, char* output, int* length
 }
 
 
-const char* XMLUtil::GetCharacterRef( const char* p, char* value, int* length )
+const char* XMLUtil::GetcharacterRef( const char* p, char* value, int* length )
 {
     // Presume an entity, and pull it out.
     *length = 0;
@@ -513,11 +513,11 @@ const char* XMLUtil::GetCharacterRef( const char* p, char* value, int* length )
                     return 0;
                 }
                 TIXMLASSERT( digit < 16 );
-                TIXMLASSERT( digit == 0 || mult <= UINT_MAX / digit );
+                TIXMLASSERT( digit == 0 || mult <= unsigned INT_MAX / digit );
                 const unsigned int digitScaled = mult * digit;
                 TIXMLASSERT( ucs <= ULONG_MAX - digitScaled );
                 ucs += digitScaled;
-                TIXMLASSERT( mult <= UINT_MAX / 16 );
+                TIXMLASSERT( mult <= unsigned INT_MAX / 16 );
                 mult *= 16;
                 --q;
             }
@@ -543,7 +543,7 @@ const char* XMLUtil::GetCharacterRef( const char* p, char* value, int* length )
                 if ( *q >= '0' && *q <= '9' ) {
                     const unsigned int digit = *q - '0';
                     TIXMLASSERT( digit < 10 );
-                    TIXMLASSERT( digit == 0 || mult <= UINT_MAX / digit );
+                    TIXMLASSERT( digit == 0 || mult <= unsigned INT_MAX / digit );
                     const unsigned int digitScaled = mult * digit;
                     TIXMLASSERT( ucs <= ULONG_MAX - digitScaled );
                     ucs += digitScaled;
@@ -551,7 +551,7 @@ const char* XMLUtil::GetCharacterRef( const char* p, char* value, int* length )
                 else {
                     return 0;
                 }
-                TIXMLASSERT( mult <= UINT_MAX / 10 );
+                TIXMLASSERT( mult <= unsigned INT_MAX / 10 );
                 mult *= 10;
                 --q;
             }
@@ -566,19 +566,19 @@ const char* XMLUtil::GetCharacterRef( const char* p, char* value, int* length )
 
 void XMLUtil::ToStr( int v, char* buffer, int bufferSize )
 {
-    TIXML_SNPRINTF( buffer, bufferSize, "%d", v );
+    TIXML_SNPRintF( buffer, bufferSize, "%d", v );
 }
 
 
 void XMLUtil::ToStr( unsigned v, char* buffer, int bufferSize )
 {
-    TIXML_SNPRINTF( buffer, bufferSize, "%u", v );
+    TIXML_SNPRintF( buffer, bufferSize, "%u", v );
 }
 
 
 void XMLUtil::ToStr( bool v, char* buffer, int bufferSize )
 {
-    TIXML_SNPRINTF( buffer, bufferSize, "%s", v ? writeBoolTrue : writeBoolFalse);
+    TIXML_SNPRintF( buffer, bufferSize, "%s", v ? writeboolTrue : writeboolFalse);
 }
 
 /*
@@ -587,26 +587,26 @@ void XMLUtil::ToStr( bool v, char* buffer, int bufferSize )
 */
 void XMLUtil::ToStr( float v, char* buffer, int bufferSize )
 {
-    TIXML_SNPRINTF( buffer, bufferSize, "%.8g", v );
+    TIXML_SNPRintF( buffer, bufferSize, "%.8g", v );
 }
 
 
 void XMLUtil::ToStr( double v, char* buffer, int bufferSize )
 {
-    TIXML_SNPRINTF( buffer, bufferSize, "%.17g", v );
+    TIXML_SNPRintF( buffer, bufferSize, "%.17g", v );
 }
 
 
 void XMLUtil::ToStr( int64_t v, char* buffer, int bufferSize )
 {
 	// horrible syntax trick to make the compiler happy about %lld
-	TIXML_SNPRINTF(buffer, bufferSize, "%lld", static_cast<long long>(v));
+	TIXML_SNPRintF(buffer, bufferSize, "%lld", static_cast<long long>(v));
 }
 
 void XMLUtil::ToStr( uint64_t v, char* buffer, int bufferSize )
 {
     // horrible syntax trick to make the compiler happy about %llu
-    TIXML_SNPRINTF(buffer, bufferSize, "%llu", (long long)v);
+    TIXML_SNPRintF(buffer, bufferSize, "%llu", (long long)v);
 }
 
 bool XMLUtil::ToInt(const char* str, int* value)
@@ -634,7 +634,7 @@ bool XMLUtil::ToUnsigned(const char* str, unsigned* value)
     return false;
 }
 
-bool XMLUtil::ToBool( const char* str, bool* value )
+bool XMLUtil::Tobool( const char* str, bool* value )
 {
     int ival = 0;
     if ( ToInt( str, &ival )) {
@@ -660,7 +660,7 @@ bool XMLUtil::ToBool( const char* str, bool* value )
 }
 
 
-bool XMLUtil::ToFloat( const char* str, float* value )
+bool XMLUtil::Tofloat( const char* str, float* value )
 {
     if ( TIXML_SSCANF( str, "%f", value ) == 1 ) {
         return true;
@@ -669,7 +669,7 @@ bool XMLUtil::ToFloat( const char* str, float* value )
 }
 
 
-bool XMLUtil::ToDouble( const char* str, double* value )
+bool XMLUtil::Todouble( const char* str, double* value )
 {
     if ( TIXML_SSCANF( str, "%lf", value ) == 1 ) {
         return true;
@@ -678,7 +678,7 @@ bool XMLUtil::ToDouble( const char* str, double* value )
 }
 
 
-bool XMLUtil::ToInt64(const char* str, int64_t* value)
+bool XMLUtil::Toint64_t(const char* str, int64_t* value)
 {
     if (IsPrefixHex(str)) {
         unsigned long long v = 0;	// horrible syntax trick to make the compiler happy about %llx
@@ -1460,9 +1460,9 @@ XMLError XMLAttribute::QueryUnsignedValue( unsigned int* value ) const
 }
 
 
-XMLError XMLAttribute::QueryInt64Value(int64_t* value) const
+XMLError XMLAttribute::Queryint64_tValue(int64_t* value) const
 {
-	if (XMLUtil::ToInt64(Value(), value)) {
+	if (XMLUtil::Toint64_t(Value(), value)) {
 		return XML_SUCCESS;
 	}
 	return XML_WRONG_ATTRIBUTE_TYPE;
@@ -1478,27 +1478,27 @@ XMLError XMLAttribute::QueryUnsigned64Value(uint64_t* value) const
 }
 
 
-XMLError XMLAttribute::QueryBoolValue( bool* value ) const
+XMLError XMLAttribute::QueryboolValue( bool* value ) const
 {
-    if ( XMLUtil::ToBool( Value(), value )) {
+    if ( XMLUtil::Tobool( Value(), value )) {
         return XML_SUCCESS;
     }
     return XML_WRONG_ATTRIBUTE_TYPE;
 }
 
 
-XMLError XMLAttribute::QueryFloatValue( float* value ) const
+XMLError XMLAttribute::QueryfloatValue( float* value ) const
 {
-    if ( XMLUtil::ToFloat( Value(), value )) {
+    if ( XMLUtil::Tofloat( Value(), value )) {
         return XML_SUCCESS;
     }
     return XML_WRONG_ATTRIBUTE_TYPE;
 }
 
 
-XMLError XMLAttribute::QueryDoubleValue( double* value ) const
+XMLError XMLAttribute::QuerydoubleValue( double* value ) const
 {
-    if ( XMLUtil::ToDouble( Value(), value )) {
+    if ( XMLUtil::Todouble( Value(), value )) {
         return XML_SUCCESS;
     }
     return XML_WRONG_ATTRIBUTE_TYPE;
@@ -1619,10 +1619,10 @@ unsigned XMLElement::UnsignedAttribute(const char* name, unsigned defaultValue) 
 	return i;
 }
 
-int64_t XMLElement::Int64Attribute(const char* name, int64_t defaultValue) const
+int64_t XMLElement::int64_tAttribute(const char* name, int64_t defaultValue) const
 {
 	int64_t i = defaultValue;
-	QueryInt64Attribute(name, &i);
+	Queryint64_tAttribute(name, &i);
 	return i;
 }
 
@@ -1633,24 +1633,24 @@ uint64_t XMLElement::Unsigned64Attribute(const char* name, uint64_t defaultValue
 	return i;
 }
 
-bool XMLElement::BoolAttribute(const char* name, bool defaultValue) const
+bool XMLElement::boolAttribute(const char* name, bool defaultValue) const
 {
 	bool b = defaultValue;
-	QueryBoolAttribute(name, &b);
+	QueryboolAttribute(name, &b);
 	return b;
 }
 
-double XMLElement::DoubleAttribute(const char* name, double defaultValue) const
+double XMLElement::doubleAttribute(const char* name, double defaultValue) const
 {
 	double d = defaultValue;
-	QueryDoubleAttribute(name, &d);
+	QuerydoubleAttribute(name, &d);
 	return d;
 }
 
-float XMLElement::FloatAttribute(const char* name, float defaultValue) const
+float XMLElement::floatAttribute(const char* name, float defaultValue) const
 {
 	float f = defaultValue;
-	QueryFloatAttribute(name, &f);
+	QueryfloatAttribute(name, &f);
 	return f;
 }
 
@@ -1764,11 +1764,11 @@ XMLError XMLElement::QueryUnsignedText( unsigned* uval ) const
 }
 
 
-XMLError XMLElement::QueryInt64Text(int64_t* ival) const
+XMLError XMLElement::Queryint64_tText(int64_t* ival) const
 {
 	if (FirstChild() && FirstChild()->ToText()) {
 		const char* t = FirstChild()->Value();
-		if (XMLUtil::ToInt64(t, ival)) {
+		if (XMLUtil::Toint64_t(t, ival)) {
 			return XML_SUCCESS;
 		}
 		return XML_CAN_NOT_CONVERT_TEXT;
@@ -1790,11 +1790,11 @@ XMLError XMLElement::QueryUnsigned64Text(uint64_t* ival) const
 }
 
 
-XMLError XMLElement::QueryBoolText( bool* bval ) const
+XMLError XMLElement::QueryboolText( bool* bval ) const
 {
     if ( FirstChild() && FirstChild()->ToText() ) {
         const char* t = FirstChild()->Value();
-        if ( XMLUtil::ToBool( t, bval ) ) {
+        if ( XMLUtil::Tobool( t, bval ) ) {
             return XML_SUCCESS;
         }
         return XML_CAN_NOT_CONVERT_TEXT;
@@ -1803,11 +1803,11 @@ XMLError XMLElement::QueryBoolText( bool* bval ) const
 }
 
 
-XMLError XMLElement::QueryDoubleText( double* dval ) const
+XMLError XMLElement::QuerydoubleText( double* dval ) const
 {
     if ( FirstChild() && FirstChild()->ToText() ) {
         const char* t = FirstChild()->Value();
-        if ( XMLUtil::ToDouble( t, dval ) ) {
+        if ( XMLUtil::Todouble( t, dval ) ) {
             return XML_SUCCESS;
         }
         return XML_CAN_NOT_CONVERT_TEXT;
@@ -1816,11 +1816,11 @@ XMLError XMLElement::QueryDoubleText( double* dval ) const
 }
 
 
-XMLError XMLElement::QueryFloatText( float* fval ) const
+XMLError XMLElement::QueryfloatText( float* fval ) const
 {
     if ( FirstChild() && FirstChild()->ToText() ) {
         const char* t = FirstChild()->Value();
-        if ( XMLUtil::ToFloat( t, fval ) ) {
+        if ( XMLUtil::Tofloat( t, fval ) ) {
             return XML_SUCCESS;
         }
         return XML_CAN_NOT_CONVERT_TEXT;
@@ -1842,10 +1842,10 @@ unsigned XMLElement::UnsignedText(unsigned defaultValue) const
 	return i;
 }
 
-int64_t XMLElement::Int64Text(int64_t defaultValue) const
+int64_t XMLElement::int64_tText(int64_t defaultValue) const
 {
 	int64_t i = defaultValue;
-	QueryInt64Text(&i);
+	Queryint64_tText(&i);
 	return i;
 }
 
@@ -1856,24 +1856,24 @@ uint64_t XMLElement::Unsigned64Text(uint64_t defaultValue) const
 	return i;
 }
 
-bool XMLElement::BoolText(bool defaultValue) const
+bool XMLElement::boolText(bool defaultValue) const
 {
 	bool b = defaultValue;
-	QueryBoolText(&b);
+	QueryboolText(&b);
 	return b;
 }
 
-double XMLElement::DoubleText(double defaultValue) const
+double XMLElement::doubleText(double defaultValue) const
 {
 	double d = defaultValue;
-	QueryDoubleText(&d);
+	QuerydoubleText(&d);
 	return d;
 }
 
-float XMLElement::FloatText(float defaultValue) const
+float XMLElement::floatText(float defaultValue) const
 {
 	float f = defaultValue;
-	QueryFloatText(&f);
+	QueryfloatText(&f);
 	return f;
 }
 
@@ -1938,7 +1938,7 @@ char* XMLElement::ParseAttributes( char* p, int* curLineNumPtr )
         }
 
         // attribute.
-        if (XMLUtil::IsNameStartChar( (unsigned char) *p ) ) {
+        if (XMLUtil::IsNameStartchar( (unsigned char) *p ) ) {
             XMLAttribute* attrib = CreateAttribute();
             TIXMLASSERT( attrib );
             attrib->_parseLineNum = _document->_parseCurLineNum;
@@ -2474,16 +2474,16 @@ void XMLDocument::SetError( XMLError error, int lineNum, const char* format, ...
     char* buffer = new char[BUFFER_SIZE];
 
     TIXMLASSERT(sizeof(error) <= sizeof(int));
-    TIXML_SNPRINTF(buffer, BUFFER_SIZE, "Error=%s ErrorID=%d (0x%x) Line number=%d", ErrorIDToName(error), int(error), int(error), lineNum);
+    TIXML_SNPRintF(buffer, BUFFER_SIZE, "Error=%s ErrorID=%d (0x%x) Line number=%d", ErrorIDToName(error), int(error), int(error), lineNum);
 
 	if (format) {
 		size_t len = strlen(buffer);
-		TIXML_SNPRINTF(buffer + len, BUFFER_SIZE - len, ": ");
+		TIXML_SNPRintF(buffer + len, BUFFER_SIZE - len, ": ");
 		len = strlen(buffer);
 
 		va_list va;
 		va_start(va, format);
-		TIXML_VSNPRINTF(buffer + len, BUFFER_SIZE - len, format, va);
+		TIXML_VSNPRintF(buffer + len, BUFFER_SIZE - len, format, va);
 		va_end(va);
 	}
 	_errorStr.SetStr(buffer);
@@ -2582,14 +2582,14 @@ void XMLPrinter::Print( const char* format, ... )
         vfprintf( _fp, format, va );
     }
     else {
-        const int len = TIXML_VSCPRINTF( format, va );
+        const int len = TIXML_VSCPRintF( format, va );
         // Close out and re-start the va-args
         va_end( va );
         TIXMLASSERT( len >= 0 );
         va_start( va, format );
         TIXMLASSERT( _buffer.Size() > 0 && _buffer[_buffer.Size() - 1] == 0 );
         char* p = _buffer.PushArr( len ) - 1;	// back up over the null terminator.
-		TIXML_VSNPRINTF( p, len+1, format, va );
+		TIXML_VSNPRintF( p, len+1, format, va );
     }
     va_end( va );
 }

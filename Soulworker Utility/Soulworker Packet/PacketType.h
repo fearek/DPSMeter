@@ -7,12 +7,12 @@
 /* 0x03 */
 #include ".\Soulworker Packet\SWPacketStatChange.h"
 #include ".\Soulworker Packet\SWPacketDead.h"
-#include ".\Soulworker Packet\SWPacketCharacterUpdateSpecialOptionList.h"
+#include ".\Soulworker Packet\SWPacketcharacterUpdateSpecialOptionList.h"
 
 /* 0x04 */
 #include ".\Soulworker Packet\SWPacketWorldChange.h"
 #include ".\Soulworker Packet\SWPacketMazeStart.h"
-#include ".\Soulworker Packet\SWPacketSpawnedCharInfo.h"
+#include ".\Soulworker Packet\SWPacketSpawnedcharInfo.h"
 #include ".\Soulworker Packet\SWPacketInInfoMonster.h"
 #include ".\Soulworker Packet\SWPacketOtherInfosMonster.h"
 
@@ -39,6 +39,9 @@
 #include ".\Soulworker Packet\SWPacketChat.h"
 // chat_whisper
 
+/* 0x0864*/
+#include ".\Soulworker Packet\SWPacketBrooch.h"
+
 /* 0x11 Maze */
 #include ".\Soulworker Packet\SWPacketMazeEnd.h"
 #include ".\Soulworker Packet\SWPacketMazeUpdateState.h"
@@ -46,7 +49,7 @@
 /* 0x12 */
 #include ".\Soulworker Packet\SWPacketParty.h"
 #include ".\Soulworker Packet\SWPacketPartyListInfo.h"
-#include ".\Soulworker Packet\SWPacketSquad.h"
+
 /* 0x17 Monster */
 #include ".\Soulworker Packet\SWPacketMonsterStatUpdate.h"
 #include ".\Soulworker Packet\SWPacketMonsterKilled.h"
@@ -58,13 +61,17 @@
 /* 0x2e */
 #include ".\Soulworker Packet\SWPacketBigParty.h"
 
+/* VP */
+#include ".\Soulworker Packet\SWPacketSquad.h"
+
 // SWSPacket
 #include ".\Soulworker Packet\SWSPacketMySkillUsed.h"
 #include ".\Soulworker Packet\SWSPacketMyDodgeUsed.h"
 
-//SWCPacket
+// SWCustom
 #include ".\Soulworker Packet\SWCPing.h"
 #include ".\Soulworker Packet\SWCPresence.h"
+
 
 // opcode0106: 01=mainCMD, 06=subCMD
 enum RecvOPcode {
@@ -73,12 +80,12 @@ enum RecvOPcode {
 	/* 0x03 */
 	STATCHANGE = 0x0334,
 	DEAD = 0x0341,
-	charACTER_UPDATE_SPECIAL_OPTION_LIST = 0x0347,
+	CHARACTER_UPDATE_SPECIAL_OPTION_LIST = 0x0347,
 
 	/* 0x04 */
 	WORLDCHANGE = 0x0402,
 	MAZESTART = 0x0408,
-	SPAWNED_charINFO = 0x0411,
+	SPAWNED_CHARINFO = 0x0411,
 	IN_INFO_MONSTER = 0x0415,	
 	OTHER_INFOS_MONSTER = 0x0423,
 
@@ -104,6 +111,9 @@ enum RecvOPcode {
 	CHAT = 0x0701,
 	CHAT_WHISPER = 0x0702,
 
+	/* 0x08 */
+	BROOCH = 0x0864,
+
 	/* 0x11 Maze */
 	MAZEEND = 0x1175,
 	MAZE_UPDATE_STATE = 0x1121,
@@ -111,8 +121,6 @@ enum RecvOPcode {
 	/* 0x12 Party */
 	PARTY = 0x1209,
 	PARTY_LIST_INFO = 0x1236,
-	/* VP */
-	SQUAD = 0x1261,
 
 	/* 0x17 Monster */
 	MONSTER_STAT_UPDATE = 0x1712,
@@ -124,6 +132,9 @@ enum RecvOPcode {
 
 	/* 0x2e */
 	BIG_PARTY = 0x2e09,
+
+	/* VP */
+	SQUAD = 0x1261
 };
 
 enum class SendOPCode

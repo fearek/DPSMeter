@@ -5,13 +5,14 @@
 #include <unordered_set>
 #include <map>
 #include ".\Third Party\FlatBuffers\include\SW_HISTORY_.h"
+
 using namespace SoulMeterFBS::History;
 
 #define DEBUG_DAMAGE_PLAYER 0
 
 struct SkillCount {
-	uint16_t _count;
-	uint16_t _in_full_ab_count;
+	unsigned short _count;
+	unsigned short _in_full_ab_count;
 };
 
 class SWDamagePlayer : public MemoryPool<SWDamagePlayer, 30> {
@@ -19,46 +20,49 @@ private:
 	uint32_t _id;
 	uint64_t _damage;
 	uint64_t _soulstoneDamage;
-	uint16_t _hitCount;
-	uint16_t _critHitCount;
-	uint16_t _maxCombo;
-	uint16_t _hitCountForCritRate;
-	uint16_t _critHitCountForCritRate;
-	uint16_t _missCount;
-	uint16_t _soulstoneCount;
+	unsigned short _hitCount;
+	unsigned short _critHitCount;
+	unsigned short _maxCombo;
+	unsigned short _hitCountForCritRate;
+	unsigned short _critHitCountForCritRate;
+	unsigned short _missCount;
+	unsigned short _soulstoneCount;
 	uint64_t _damageForSoulstone;
 	uint64_t _soulstoneDamageForSoulstone;
-	uint16_t _hitCountForArmorBreak;
+	unsigned short _hitCountForArmorBreak;
 	float _armorBreak;
 	float _sg;
 	float _stamina;
 	float _sv;
 	float _attackSpeed;
 	float _partialDamage;
-	uint16_t _getHitAll;
-	uint16_t _getHit;
-	uint16_t _getHitBS;
-	uint16_t _getHitMissed;
-	uint16_t _getHitMissedReal;
+	unsigned short _getHitAll;
+	unsigned short _getHit;
+	unsigned short _getHitBS;
+	unsigned short _getHitMissed;
+	unsigned short _getHitMissedReal;
 	float _enlightenSum;
-	uint16_t _gigaEnlightenProc;
-	uint16_t _teraEnlightenProc;
-	uint16_t _skillCounts = 0;
-	uint16_t _dodgeCounts = 0;
-	uint16_t _deathCounts = 0;
+	unsigned short _gigaEnlightenProc;
+	unsigned short _teraEnlightenProc;
+	unsigned short _teraFeverProc;
+	unsigned short _skillCounts = 0;
+	unsigned short _dodgeCounts = 0;
+	unsigned short _deathCounts = 0;
 
 	double _historyAvgAB = 0.0;
+	double _historyAvgABU = 0.0;
 	double _historyAvgBD = 0.0;
-
+	
 	double _historygear90 = 0.0;
 	double _historygear50 = 0.0;
 	double _historyacc01 = 0.0;
 	double _historyacc02 = 0.0;
 
 	double _historyLosedHP = 0.0;
-	uint8_t _JqStack = 0;
+	BYTE _JqStack = 0;
 
 	double _historyABTime = 0;
+	double _historyABTimeU = 0;
 
 	double _historyAggroTime = 0;
 
@@ -66,7 +70,7 @@ private:
 	double _historyAvgAS = 0.0;
 
 	std::vector<SWDamageMonster*> _monsterInfo;
-	void InsertMonsterInfo(uint32_t monsterID, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount, uint32_t skillID);
+	void InsertMonsterInfo(uint32_t monsterID, uint64_t damage, uint64_t critDamage, unsigned short hitCount, unsigned short critHitCount, uint32_t skillID);
 	void Sort();
 
 protected:
@@ -76,7 +80,7 @@ public:
 	SWDamagePlayer() : _id(0), _damage(0), _soulstoneDamage(0), _hitCount(0), _critHitCount(0), _maxCombo(0),
 		_hitCountForCritRate(0), _critHitCountForCritRate(0), _soulstoneCount(0), _hitCountForArmorBreak(0),
 		_armorBreak(0), _sg(0), _stamina(0), _sv(0), _attackSpeed(0), _partialDamage(0.0f) { }
-	SWDamagePlayer(uint32_t id, uint64_t damage, uint64_t soulstoneDamage, SWPACKETDAMAGE_DAMAGETYPE damageType, uint16_t maxCombo, uint32_t monsterID, uint32_t skillID);
+	SWDamagePlayer(uint32_t id, uint64_t damage, uint64_t soulstoneDamage, SWPACKETDAMAGE_DAMAGETYPE damageType, unsigned short maxCombo, uint32_t monsterID, uint32_t skillID);
 	SWDamagePlayer(uint32_t id);
 	~SWDamagePlayer();
 
@@ -87,33 +91,38 @@ public:
 	uint32_t GetID();
 	uint64_t GetDamage();
 	uint64_t GetSoulstoneDamage();
-	uint16_t GetHitCount();
-	uint16_t GetCritHitCount();
-	uint16_t GetMaxCombo();
+	unsigned short GetHitCount();
+	unsigned short GetCritHitCount();
+	unsigned short GetMaxCombo();
 	uint64_t GetMonsterTotalDamage();
-	uint16_t GetHitCountForCritRate();
-	uint16_t GetCritHitCountForCritRate();
-	uint16_t GetMissCount();
-	uint16_t GetSoulstoneCount();
+	unsigned short GetHitCountForCritRate();
+	unsigned short GetCritHitCountForCritRate();
+	unsigned short GetMissCount();
+	unsigned short GetSoulstoneCount();
 	uint64_t GetDamageForSoulstone();
 	uint64_t GetSoulStoneDamageForSoulstone();
-	uint16_t GetGetHitAll();
-	uint16_t GetGetHit();
-	uint16_t GetGetHitBS();
-	uint16_t GetGetHitMissed();
-	uint16_t GetGetHitMissedReal();
+	unsigned short GetGetHitAll();
+	unsigned short GetGetHit();
+	unsigned short GetGetHitBS();
+	unsigned short GetGetHitMissed();
+	unsigned short GetGetHitMissedReal();
 	float GetEnlightenSum();
-	uint16_t GetGigaEnlighten();
-	uint16_t GetTeraEnlighten();
-	uint16_t GetSkillUsed();
-	uint16_t GetDodgeUsed();
-	uint16_t GetDeathCount();
+	unsigned short GetGigaEnlighten();
+	unsigned short GetTeraEnlighten();
+	unsigned short GetTeraFever();
+	unsigned short GetSkillUsed();
+	unsigned short GetDodgeUsed();
+	unsigned short GetDeathCount();
 
 	double GetHistoryABTime();
+	double GetHistoryABTimeU();
 	void SetHistoryABTime(double historyABTime);
+	void SetHistoryABTimeU(double historyABTime);
 
 	void SetHistoryAvgAB(double historyAvgAB);
+	void SetHistoryAvgABU(double historyAvgAB);
 	double GetHistoryAvgAB();
+	double GetHistoryAvgABU();
 
 	void SetHistoryAvgBD(double historyAvgBD);
 	double GetHistoryAvgBD();
@@ -133,11 +142,12 @@ public:
 	void setHistoryLosedHP(double losedHP);
 	double GetHistoryLosedHP();
 
-	void SetJqStack(uint8_t stack);
-	uint8_t GetJqStack();
+	void SetJqStack(BYTE stack);
+	BYTE GetJqStack();
 
 	void AddGetDamage(uint64_t totalDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint32_t monsterID, uint32_t skillID);
 	void AddEnlighten(float value);
+	void AddFever();
 	void AddSkillUsed(uint32_t skillId);
 	void AddDodgeUsed();
 	void AddDeathCount();
@@ -145,9 +155,9 @@ public:
 	std::vector<SWDamageMonster*>::const_iterator GetMonsterInfo(unsigned int id);
 	std::vector<SWDamageMonster*>::const_iterator begin();
 	std::vector<SWDamageMonster*>::const_iterator end();
-	const SIZE_T size();
+	const size_t size();
 
-	void AddDamage(uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint16_t maxCombo, uint32_t monsterID, uint32_t skillID);
+	void AddDamage(uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, unsigned short maxCombo, uint32_t monsterID, uint32_t skillID);
 
 	void Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tDamagePlayer>>& vDamagePlayer)
 	{
@@ -206,11 +216,13 @@ public:
 
 		tdpb.add__gigaenlightenproc(_gigaEnlightenProc);
 		tdpb.add__teraenlightenproc(_teraEnlightenProc);
+		tdpb.add__terafevernproc(_teraFeverProc);
 		tdpb.add__skillcounts(_skillCounts);
 		tdpb.add__dodgecounts(_dodgeCounts);
 		tdpb.add__deathcounts(_deathCounts);
 
 		tdpb.add__historyavgab(_historyAvgAB);
+		tdpb.add__historyavgabu(_historyAvgABU);
 		tdpb.add__historyavgbd(_historyAvgBD);
 		tdpb.add__historygear90(_historygear90);
 		tdpb.add__historygear50(_historygear50);
@@ -220,6 +232,7 @@ public:
 		tdpb.add__historylosedhp(_historyLosedHP);
 		tdpb.add__jqstack(_JqStack);
 		tdpb.add__historyabtime(_historyABTime);
+		tdpb.add__historyabtimeu(_historyABTimeU);
 
 		tdpb.add__monsterinfo(fcvDamageMonster);
 		tdpb.add__skillcount(fcvSkillCount);
@@ -284,11 +297,13 @@ public:
 
 		_gigaEnlightenProc = tDamagePlayer->_gigaenlightenproc();
 		_teraEnlightenProc = tDamagePlayer->_teraenlightenproc();
+		_teraFeverProc = tDamagePlayer->_terafevernproc();
 		_skillCounts = tDamagePlayer->_skillcounts();
 		_dodgeCounts = tDamagePlayer->_dodgecounts();
 		_deathCounts = tDamagePlayer->_deathcounts();
 
 		_historyAvgAB = tDamagePlayer->_historyavgab();
+		_historyAvgABU = tDamagePlayer->_historyavgabu();
 		_historyAvgBD = tDamagePlayer->_historyavgbd();
 		_historygear90 = tDamagePlayer->_historygear90();
 		_historygear50 = tDamagePlayer->_historygear50();
@@ -298,6 +313,7 @@ public:
 		_historyLosedHP = tDamagePlayer->_historylosedhp();
 		_JqStack = tDamagePlayer->_jqstack();
 		_historyABTime = tDamagePlayer->_historyabtime();
+		_historyABTimeU = tDamagePlayer->_historyabtimeu();
 
 		_historyAggroTime = tDamagePlayer->_historyaggrotime();
 

@@ -2,7 +2,7 @@
 #include "pch.h"
 #include <unordered_set>
 
-static std::unordered_set<uint16_t> rankMap({
+static std::unordered_set<unsigned short> rankMap({
 
 	/* AL */
 	//21073,
@@ -15,16 +15,19 @@ static std::unordered_set<uint16_t> rankMap({
 
 	/* BS */
 	23018,
+
 	/* TF */
 	24019,
+
 	/* CD */
 	25019,
+
 	/* HHH */
 	25022,
 
 	});
 
-static std::unordered_set<uint16_t> townMap({
+static std::unordered_set<unsigned short> townMap({
 
 	/* Invalid Map */
 	0,

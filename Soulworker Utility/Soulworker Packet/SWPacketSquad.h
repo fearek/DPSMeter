@@ -12,7 +12,7 @@ protected:
 	SWPacketSquad() {}
 
 public:
-	SWPacketSquad(SWHEADER* swheader, uint8_t* data);
+	SWPacketSquad(SWHEADER* swheader, BYTE* data);
 	~SWPacketSquad() {}
 
 	void Do();

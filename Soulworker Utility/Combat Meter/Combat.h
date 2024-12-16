@@ -46,7 +46,7 @@ private:
 	uint32_t _id;
 	uint32_t _type;
 	std::vector<std::pair<uint64_t, CombatLog*>> _log;
-	bool _isHistory = false;
+	bool _isHistory = FALSE;
 
 protected:
 	Combat(const Combat& other) {}
@@ -116,7 +116,7 @@ public:
 	}
 	void UnSerialization(const _tCombat* pCombat)
 	{
-		_isHistory = true;
+		_isHistory = TRUE;
 
 		_id = pCombat->_id();
 		_type = pCombat->_type();
@@ -148,7 +148,7 @@ class CombatInterface : public MemoryPool<CombatInterface> {
 
 private:
 	std::unordered_map<uint32_t, Combat*> _combat;
-	bool _isHistory = false;
+	bool _isHistory = FALSE;
 
 protected:
 	CombatInterface(const CombatInterface& other) {}
@@ -188,7 +188,7 @@ public:
 	}
 	void UnSerialization(const _tCombatInterface* pCombatInterface)
 	{
-		_isHistory = true;
+		_isHistory = TRUE;
 
 		for (auto itr = pCombatInterface->_combat()->begin(); itr != pCombatInterface->_combat()->end(); itr++)
 		{

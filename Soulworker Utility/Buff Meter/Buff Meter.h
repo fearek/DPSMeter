@@ -11,18 +11,18 @@ typedef struct _PLAYERBUFF {
 private:
 	uint32_t _playerID;
 	std::vector<Buff*> _buffInfo;
-	bool _isHistoryMode = false;
+	bool _isHistoryMode = FALSE;
 
 protected:
 	_PLAYERBUFF(const _PLAYERBUFF& other) {}
 
 public:
 	_PLAYERBUFF() {}
-	_PLAYERBUFF(uint32_t playerID, uint16_t buffid, uint8_t stack);
+	_PLAYERBUFF(uint32_t playerID, unsigned short buffid, BYTE stack);
 	~_PLAYERBUFF();
 
-	void AddBuff(uint16_t buffid, uint8_t stack);
-	void EndBuff(uint16_t buffid, bool endAll = false);
+	void AddBuff(unsigned short buffid, BYTE stack);
+	void EndBuff(unsigned short buffid, bool endAll = FALSE);
 
 	const uint32_t& GetPlayerID();
 
@@ -58,7 +58,7 @@ public:
 		// _tBuff
 		_playerID = tBuff->_id();
 
-		_isHistoryMode = true;
+		_isHistoryMode = TRUE;
 	}
 }PLAYERBUF;
 
@@ -78,8 +78,8 @@ public:
 	void SetPlayerInfo(std::vector<PLAYERBUF*> it);
 	void Clear();
 
-	void AddBuff(uint32_t playerID, uint16_t buffid, uint8_t stack);
-	void EndBuff(uint32_t playerID, uint16_t buffid, bool endAll = false);
+	void AddBuff(uint32_t playerID, unsigned short buffid, BYTE stack);
+	void EndBuff(uint32_t playerID, unsigned short buffid, bool endAll = FALSE);
 	void EndAllBuff();
 
 	std::vector<PLAYERBUF*>::const_iterator find(uint32_t playerID);

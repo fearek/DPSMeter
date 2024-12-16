@@ -30,9 +30,9 @@ public:
 	HISTORY_DATA* _historyData;
 	uint32_t _myID;
 	uint32_t _realClearTime;
-	bool _isSaveData = false;
+	bool _isSaveData = FALSE;
 
-	void Setup(HISTORY_DATA* historyData, uint32_t worldID, uint64_t time, uint32_t myID, bool isSaveData = false, SYSTEMTIME* saveTime = nullptr, uint32_t realClearTime = 0);
+	void Setup(HISTORY_DATA* historyData, uint32_t worldID, uint64_t time, uint32_t myID, bool isSaveData = FALSE, SYSTEMTIME* saveTime = nullptr, uint32_t realClearTime = 0);
 	void Clear();
 
 	flatbuffers::Offset<_tHistory> Serialization(flatbuffers::FlatBufferBuilder& fbb, HISTORY_DATA* historyData);
@@ -40,19 +40,19 @@ public:
 
 class SWDamageMeterHistory : public Singleton<SWDamageMeterHistory> {
 private:
-	std::vector<void*> _historys;
+	std::vector<LPVOID> _historys;
 	int _curIndex = 0;
 	
 	std::mutex _mutex;
 
-	bool _stopAddHistory = false;
+	bool _stopAddHistory = FALSE;
 
 public:
 	SWDamageMeterHistory() : _curIndex(0) {}
 	~SWDamageMeterHistory();
 
 	void push_back(HISTORY_INFO* pHi);
-	void ClearHistory(HISTORY_INFO* pHI = nullptr, bool deleteFirst = true);
+	void ClearHistory(HISTORY_INFO* pHI = nullptr, bool deleteFirst = TRUE);
 	void ClearAll();
 	void ClearVector();
 

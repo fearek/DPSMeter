@@ -38,9 +38,9 @@ std::unordered_map<std::string, std::string> Language::MapLangData(char* langFil
 
 	// get json data
 	auto langData = GetLangFile(langFile);
-	if (!langData.empty()) 
+	if (!langData.empty())
 	{
-		for (json::iterator itr = langData.begin(); itr != langData.end(); itr++) 
+		for (json::iterator itr = langData.begin(); itr != langData.end(); itr++)
 			list[itr.key()] = itr.value().get<std::string>();
 
 		if (useReplace)
@@ -100,7 +100,7 @@ const std::string_view Language::GetText(const char* text, std::unordered_map<st
 {
 	if (vector == nullptr)
 		vector = &_textList;
-	
+
 	if (vector->find(text) == vector->end()) {
 		std::string_view findStr(text);
 		if (std::find(_notFoundText.begin(), _notFoundText.end(), findStr) == _notFoundText.end())

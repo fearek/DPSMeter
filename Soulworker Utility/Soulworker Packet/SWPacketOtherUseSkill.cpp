@@ -6,14 +6,14 @@
 #include ".\UI\UtillWindow.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketOtherUseSkill::SWPacketOtherUseSkill(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
+SWPacketOtherUseSkill::SWPacketOtherUseSkill(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
 
 void SWPacketOtherUseSkill::Do() {
 	//	SWPACKETCHAT_HEADER* chat_header = (SWPACKETCHAT_HEADER*)(_data + sizeof(SWHEADER));
 
-	//	uint8_t* p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETCHAT_HEADER);
+	//	BYTE* p_data = _data + sizeof(SWHEADER) + sizeof(SWPACKETCHAT_HEADER);
 
 	SWPACKET_OTHERUSESKILL* otherSkill = (SWPACKET_OTHERUSESKILL*)(_data + sizeof(SWHEADER));
 
@@ -21,7 +21,7 @@ void SWPacketOtherUseSkill::Do() {
 
 	// check id
 	uint32_t userId = otherSkill->_playerId;
-	bool isPlayer = true;
+	bool isPlayer = TRUE;
 	if (!DAMAGEMETER.CheckPlayer(userId)) {
 		// is summon
 		uint32_t ownerId = DAMAGEMETER.GetOwnerID(userId);
@@ -31,7 +31,7 @@ void SWPacketOtherUseSkill::Do() {
 		{
 			SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(userId);
 			if (db != nullptr) {
-				isPlayer = false;
+				isPlayer = FALSE;
 				userId = db->_db2;
 			}
 		}
@@ -56,16 +56,16 @@ void SWPacketOtherUseSkill::Do() {
 			}
 
 			if (db2 == 31310101) {
-				//LogInstance.MyLog(_T("1"));
+				//Log::MyLog("1");
 				ZeroMemory(_skillName, SKILL_NAME_LEN);
-			//	LogInstance.MyLog(_T("2"));
+			//	Log::MyLog("2");
 				SWDB.GetSkillName(otherSkill->_skillId, _skillName, SKILL_NAME_LEN);
-				//LogInstance.MyLog(_T("3"));
+				//Log::MyLog("3");
 				string test = u8" [";
 				test.append(_skillName);
 				test.append(u8"]");
 				UTILLWINDOW.AddLog(test);
-				//LogInstance.MyLog(test.c_str());
+				//Log::MyLog(test.c_str());
 			}
 		}
 	}*/
@@ -79,19 +79,19 @@ void SWPacketOtherUseSkill::Log() {
 
 void SWPacketOtherUseSkill::Debug() {
 
-	//LogInstance.MyLog(_T("UseSkill Packet\n"));
+	//Log::MyLog("UseSkill Packet\n");
 	//for (int i = sizeof(SWHEADER); i < _swheader->_size; i++)
-	//	LogInstance.MyLog(_T("%02x "), _data[i]);
-	//LogInstance.MyLog(_T("\n"));
+	//	Log::MyLog("%02x ", _data[i]);
+	//Log::MyLog("\n");
 
 	//SWPACKET_OTHERUSESKILL* otherSkill = (SWPACKET_OTHERUSESKILL*)(_data + sizeof(SWHEADER));
 
-	//LogInstance.MyLog(_T("id : %08x / skill : %u / x : %f / y : %f / z : %f\n"), otherSkill->_playerId, otherSkill->_skillId, otherSkill->_locationX, otherSkill->_locationY, otherSkill->_locationZ);
+	//Log::MyLog("id : %08x / skill : %u / x : %f / y : %f / z : %f\n", otherSkill->_playerId, otherSkill->_skillId, otherSkill->_locationX, otherSkill->_locationY, otherSkill->_locationZ);
 
-	//LogInstance.MyLog(_T("Unknown01 : "));
+	//Log::MyLog("Unknown01 : ");
 	//for (int i = 0; i < sizeof(otherSkill->_unknown01); i++) {
-	//	LogInstance.MyLog(_T("%02x "), otherSkill->_unknown01[i]);
+	//	Log::MyLog("%02x ", otherSkill->_unknown01[i]);
 	//}
-	//LogInstance.MyLog(_T("\n"));
+	//Log::MyLog("\n");
 
 }

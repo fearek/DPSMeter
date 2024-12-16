@@ -8,6 +8,7 @@
 #include ".\Combat Meter\CombatMeter.h"
 #include ".\Combat Meter\Combat.h"
 
+
 using namespace SoulMeterFBS::History;
 
 #define UTILLWINDOW UtillWindow::getInstance()

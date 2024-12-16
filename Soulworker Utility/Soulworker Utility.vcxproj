@@ -79,12 +79,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\libipc\include;$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>SoulMeter</TargetName>
-    <IncludePath>$(ProjectDir)\libipc\include;$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -104,7 +102,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\Soulworker Utility;..\Soulworker Utility\Third Party;..\Soulworker Utility\Third Party\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -114,34 +112,32 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Soulworker Utility\Third Party\WinDivert\x64;..\Soulworker Utility\Third Party\SQLite\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;SQLite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WinDivert.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;SQLite.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
-      <GenerateMapFile>true</GenerateMapFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;DEBUG_RECV_DISPLAYPKT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Soulworker Utility\Third Party\openssl\include;..\Soulworker Utility\Third Party\Npcap\Include;..\Soulworker Utility;..\Soulworker Utility\Third Party;..\Soulworker Utility\Third Party\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Soulworker Utility\Third Party\openssl\include;..\Soulworker Utility;..\Soulworker Utility\Third Party;..\Soulworker Utility\Third Party\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FunctionLevelLinking>
       </FunctionLevelLinking>
-      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Soulworker Utility\Third Party\openssl\lib\VC;..\Soulworker Utility\Third Party\Npcap\Lib\x64;..\Soulworker Utility\Third Party\WinDivert\x64;..\Soulworker Utility\Third Party\SQLite\lib;..\Soulworker Utility\Third Party\PcapPlusPlus\x64\Debug;..\Soulworker Utility\Third Party\PcapPlusPlus\pthread\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;SQLite.lib;ws2_32.lib;discord_game_sdk.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Soulworker Utility\Third Party\openssl\lib\VC;..\Soulworker Utility\Third Party\WinDivert\x64;..\Soulworker Utility\Third Party\SQLite\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>WinDivert.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;SQLite.lib;Iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -156,34 +152,31 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Soulworker Utility\Third Party\Npcap\Include;..\Soulworker Utility\Third Party\openssl\include;..\Soulworker Utility;..\Soulworker Utility\Third Party;..\Soulworker Utility\Third Party\imgui;..\Soulworker Utility\Third Party\FlatBuffers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <AdditionalIncludeDirectories>..\Soulworker Utility\Third Party\openssl\include;..\Soulworker Utility;..\Soulworker Utility\Third Party;..\Soulworker Utility\Third Party\imgui;..\Soulworker Utility\Third Party\FlatBuffers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <UndefinePreprocessorDefinitions>%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
-      <AdditionalOptions>/Zc:char8_t- /utf-8 /wd4996 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zc:char8_t- /utf-8 %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
-      <Optimization>Disabled</Optimization>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Soulworker Utility\Third Party\Npcap\Lib\x64;..\Soulworker Utility\Third Party\openssl\lib\VC;..\Soulworker Utility\Third Party\WinDivert\x64;..\Soulworker Utility\Third Party\SQLite\lib;..\Soulworker Utility\Third Party\PcapPlusPlus\x64\Release;..\Soulworker Utility\Third Party\PcapPlusPlus\pthread\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;SQLite.lib;ws2_32.lib;discord_game_sdk.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Soulworker Utility\Third Party\openssl\lib\VC;..\Soulworker Utility\Third Party\WinDivert\x64;..\Soulworker Utility\Third Party\SQLite\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;SQLite.lib;discord_game_sdk.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
-      <GenerateMapFile>true</GenerateMapFile>
-      <AssemblyDebug>false</AssemblyDebug>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -202,18 +195,20 @@
     <ClInclude Include="Damage Meter\SWDamagePlayer.h" />
     <ClInclude Include="Damage Meter\SWDamageSkill.h" />
     <ClInclude Include="Damage Meter\Timer.h" />
-    <ClInclude Include="DiscordPresence.h" />
     <ClInclude Include="Language\Language.h" />
-    <ClInclude Include="DiscordPresence.cpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SimpleIni.h" />
     <ClInclude Include="Soulworker Packet\PacketInfo.h" />
     <ClInclude Include="Soulworker Packet\PacketType.h" />
+    <ClInclude Include="Soulworker Packet\SWCPacket.h" />
+    <ClInclude Include="Soulworker Packet\SWCPing.h" />
+    <ClInclude Include="Soulworker Packet\SWCPresence.h" />
     <ClInclude Include="Soulworker Packet\SWPacket.h" />
     <ClInclude Include="Soulworker Packet\SWPacketAggroChanged.h" />
     <ClInclude Include="Soulworker Packet\SWPacketAkasic.h" />
     <ClInclude Include="Soulworker Packet\SWPacketBigParty.h" />
+    <ClInclude Include="Soulworker Packet\SWPacketBrooch.h" />
     <ClInclude Include="Soulworker Packet\SWPacketBuffIn.h" />
     <ClInclude Include="Soulworker Packet\SWPacketBuffOut.h" />
     <ClInclude Include="Soulworker Packet\SWPacketCharacterUpdateSpecialOptionList.h" />
@@ -243,6 +238,7 @@
     <ClInclude Include="Soulworker Packet\SWPacketWorldChange.h" />
     <ClInclude Include="Soulworker Packet\SWSPacketMyDodgeUsed.h" />
     <ClInclude Include="Soulworker Packet\SWSPacketMySkillUsed.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="SWConfig.h" />
     <ClInclude Include="Third Party\discord\achievement_manager.h" />
     <ClInclude Include="Third Party\discord\activity_manager.h" />
@@ -262,7 +258,6 @@
     <ClInclude Include="Third Party\discord\types.h" />
     <ClInclude Include="Third Party\discord\user_manager.h" />
     <ClInclude Include="Third Party\discord\voice_manager.h" />
-    <ClInclude Include="Third Party\http\httplib.h" />
     <ClInclude Include="Third Party\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="Third Party\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="Third Party\imgui\Custom.h" />
@@ -280,7 +275,6 @@
     <ClInclude Include="UI\PlayerTable.h" />
     <ClInclude Include="UI\PlotWindow.h" />
     <ClInclude Include="UI\SpecificInfomation.h" />
-    <ClInclude Include="UI\stb_image.h" />
     <ClInclude Include="UI\UiWindow.h" />
     <ClInclude Include="UI\UtillWindow.h" />
     <ClInclude Include="Util\CriticalSection.h" />
@@ -307,7 +301,7 @@
     <ClCompile Include="Language\Language.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Soulworker Packet\SWCPacket.cpp" />
     <ClCompile Include="Soulworker Packet\SWCPing.cpp" />
@@ -316,6 +310,7 @@
     <ClCompile Include="Soulworker Packet\SWPacketAggroChanged.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketAkasic.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketBigParty.cpp" />
+    <ClCompile Include="Soulworker Packet\SWPacketBrooch.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketBuffIn.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketBuffOut.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketCharacterUpdateSpecialOptionList.cpp" />
@@ -326,6 +321,7 @@
     <ClCompile Include="Soulworker Packet\SWPacketEnterAnimation.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketGestureUsed.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketHeartbeat.cpp" />
+    <ClCompile Include="Soulworker Packet\SWPacketSquad.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketMaker.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketMazeEnd.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketMazeStart.cpp" />
@@ -338,7 +334,6 @@
     <ClCompile Include="Soulworker Packet\SWPacketParty.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketPartyListInfo.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketSpawnedCharInfo.cpp" />
-    <ClCompile Include="Soulworker Packet\SWPacketSquad.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketStartMove.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketStatChange.cpp" />
     <ClCompile Include="Soulworker Packet\SWPacketUseSkill.cpp" />

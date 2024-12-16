@@ -4371,7 +4371,7 @@ static int stbi__parse_uncompressed_block(stbi__zbuf* a)
     int len, nlen, k;
     if (a->num_bits & 7)
         stbi__zreceive(a, a->num_bits & 7); // discard
-     // drain the bit-packed data into header
+    // drain the bit-packed data into header
     k = 0;
     while (a->num_bits > 0) {
         header[k++] = (stbi_uc)(a->code_buffer & 255); // suppress MSVC run-time check
@@ -5579,7 +5579,7 @@ static void* stbi__bmp_load(stbi__context* s, int* x, int* y, int* comp, int req
     else
         target = s->img_n; // if they want monochrome, we'll post-convert
 
-     // sanity-check size
+    // sanity-check size
     if (!stbi__mad3sizes_valid(target, s->img_x, s->img_y, 0))
         return stbi__errpuc("too large", "Corrupt BMP");
 

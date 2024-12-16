@@ -27,26 +27,26 @@ private:
 
 	float _columnFontScale;
 	float _tableFontScale;
-	bool _is1K;
-	bool _is1M;
-	bool _is10K;
-	bool _isSoloMode;
-	bool _hideName;
+	BOOL _is1K;
+	BOOL _is1M;
+	BOOL _is10K;
+	BOOL _isSoloMode;
+	BOOL _hideName;
 	ImVec2 _cellPadding;
 	float _framerate;
 	float _windowBorderSize;
 	float _windowWidth;
 	float _refreshTime;
-	bool _isTopMost;
-	bool _teamTA_LF;
+	BOOL _isTopMost;
+	BOOL _teamTA_LF;
 	int32_t _teamTA_LF_Mode = 1;
 	char _selectedLang[128] = { 0 };
-	bool _isSoloRankMode;
-	bool _isUseSaveData;
-	bool _isUseImage;
-	bool _oriIsUseSaveData;
-	char _selectedInterface[MAX_PATH] = { 0 };
-	bool _isDontSaveUnfinishedMaze;
+	BOOL _isSoloRankMode;
+	BOOL _isUseSaveData;
+	
+	BOOL _oriIsUseSaveData;
+	char _selectedFontFile[MAX_PATH] = { 0 };
+	BOOL _isDontSaveUnfinishedMaze;
 
 	bool ShowTableOption();
 	bool ShowHotkeySetting();
@@ -54,6 +54,7 @@ private:
 	void ChangeLang();
 
 	void ShowTeamTALFSelector();
+
 
 	void Helper();
 
@@ -66,12 +67,11 @@ private:
 
 	std::unordered_map<std::string, std::string> _allLangList = LANGMANAGER.GetAllLangFile();
 
-	std::map<std::string, std::string> _interfaceList;
 
 public:
 	UiOption();
 	~UiOption();
-	void UpdateFontList();
+
 	const bool& isOption();
 	void OpenOption();
 	void Update();
@@ -86,19 +86,19 @@ public:
 	const ImVec4& GetInActiveColor();
 	const ImVec4& GetWindowBGColor();
 	const bool& is1K();
-	const bool& is10K();
 	const bool& is1M();
+	const bool& is10K();
 	const bool& isSoloMode();
 	const bool& doHideName();
 	const bool& isTopMost();
+	const bool& isUseImage();
 	const bool& isTeamTALF();
 	const int32_t& TeamTALFMode();
 	const bool& isSoloRankMode();
-	const int32_t& GetCaptureMode();
 	const bool& isUseSaveData();
-	const char* GetUseInterface();
+	const char* GetFontFile();
 	const bool& isDontSaveUnfinishedMaze();
-	const bool& isUseImage();
+
 	bool ToggleTopMost();
 
 	const float& GetFramerate();
@@ -109,5 +109,6 @@ public:
 
 	const float& GetRefreshTime();
 
-	bool SaveOption(bool skipWarning = false);
+	bool SaveOption(bool skipWarning = FALSE);
+	BOOL _isUseImage;
 };

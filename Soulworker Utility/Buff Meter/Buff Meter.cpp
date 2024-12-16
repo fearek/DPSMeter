@@ -2,7 +2,7 @@
 #include ".\Buff Meter\Buff.h"
 #include ".\Buff Meter\Buff Meter.h"
 
-_PLAYERBUFF::_PLAYERBUFF(uint32_t playerID, uint16_t buffid, uint8_t stack) : _playerID(playerID) {
+_PLAYERBUFF::_PLAYERBUFF(uint32_t playerID, unsigned short buffid, BYTE stack) : _playerID(playerID) {
 	_buffInfo.push_back(new Buff(buffid, stack));
 }
 
@@ -14,12 +14,12 @@ _PLAYERBUFF::~_PLAYERBUFF(){
 	_buffInfo.clear();
 }
 
-void _PLAYERBUFF::AddBuff(uint16_t buffid, uint8_t stack) {
+void _PLAYERBUFF::AddBuff(unsigned short buffid, BYTE stack) {
 	
 	if (_isHistoryMode)
 		return;
 
-	bool find = false;
+	bool find = FALSE;
 
 	for (auto itr = _buffInfo.begin(); itr != _buffInfo.end(); itr++) {
 		if ((*itr)->GetBuffID() == buffid)
@@ -28,7 +28,7 @@ void _PLAYERBUFF::AddBuff(uint16_t buffid, uint8_t stack) {
 				(*itr)->InActive();
 			else if (stack == (*itr)->GetStack()) {
 				(*itr)->Active();
-				find = true;
+				find = TRUE;
 			}
 		}
 	}
@@ -37,7 +37,7 @@ void _PLAYERBUFF::AddBuff(uint16_t buffid, uint8_t stack) {
 		_buffInfo.push_back(new Buff(buffid, stack));
 }
 
-void _PLAYERBUFF::EndBuff(uint16_t buffid, bool endAll) {
+void _PLAYERBUFF::EndBuff(unsigned short buffid, bool endAll) {
 
 	if (_isHistoryMode)
 		return;
@@ -88,7 +88,7 @@ void BuffMeter::SetPlayerInfo(std::vector<PLAYERBUF*> it) {
 	_playerBuffInfo = it;
 }
 
-void BuffMeter::AddBuff(uint32_t playerID, uint16_t buffid, uint8_t stack) {
+void BuffMeter::AddBuff(uint32_t playerID, unsigned short buffid, BYTE stack) {
 
 	if (_historyMode)
 		return;
@@ -103,7 +103,7 @@ void BuffMeter::AddBuff(uint32_t playerID, uint16_t buffid, uint8_t stack) {
 	_playerBuffInfo.push_back(new PLAYERBUF(playerID, buffid, stack));
 }
 
-void BuffMeter::EndBuff(uint32_t playerID, uint16_t buffid, bool endAll) {
+void BuffMeter::EndBuff(uint32_t playerID, unsigned short buffid, bool endAll) {
 
 	if (_historyMode)
 		return;
@@ -118,7 +118,7 @@ void BuffMeter::EndBuff(uint32_t playerID, uint16_t buffid, bool endAll) {
 
 void BuffMeter::EndAllBuff() {
 
-	EndBuff(0, 0, true);
+	EndBuff(0, 0, TRUE);
 }
 
 std::vector<PLAYERBUF*>::const_iterator BuffMeter::find(uint32_t playerID) {

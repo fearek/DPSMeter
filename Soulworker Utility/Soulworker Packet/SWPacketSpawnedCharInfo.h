@@ -6,18 +6,18 @@
 
 typedef struct _SWPACKETSPAWNEDcharINFO_HEADER {
 	uint32_t _playerId;
-	uint16_t _nameSize;
+	unsigned short _nameSize;
 }SWPACKETSPAWNEDcharINFO_HEADER;
 
 #pragma pack(pop)
 
-class SWPacketSpawnedCharInfo : public SWPacket {
+class SWPacketSpawnedcharInfo : public SWPacket {
 protected:
-	SWPacketSpawnedCharInfo() {}
+	SWPacketSpawnedcharInfo() {}
 
 public:
-	SWPacketSpawnedCharInfo(SWHEADER* swheader, uint8_t* data);
-	~SWPacketSpawnedCharInfo() {}
+	SWPacketSpawnedcharInfo(SWHEADER* swheader, BYTE* data);
+	~SWPacketSpawnedcharInfo() {}
 
 	void Do();
 	void Log();

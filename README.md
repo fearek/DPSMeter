@@ -1,27 +1,32 @@
- <a href="https://www.buymeacoffee.com/fearr" target="_blank">
-	<img
-	 src="image.jpg"
-	 width="400px"
-	 />
- </a>
+# SoulMeter by AFN
 
-Soulworker DPS Meter for Global Server
+## Donate
 
-CTRL + DEL : Reset
+<a href='https://ko-fi.com/B0B8SC4MT' target='_blank'><img height='50' style='border:0px;height:50px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
+## Information
 
-This meter requires a loader, on its own its just a imgui window
+This program allows to capture damage information in SW using network packets (WinDivert).
 
-Get loader here: https://discord.com/invite/H7jZpcVJhq
+Currently supports EN, TC, JP, KR versions. Meter is also available in those 4 languages.
 
-Also, USE AT YOUR OWN RISK
-I recommend not to talk about dps meter at in-game public chat
+Currently managed branches:
+- JP (Main): [https://github.com/AFNGP/SoulMeter](https://github.com/AFNGP/SoulMeter)
+- KR (KRSW): [https://github.com/AFNGP/SoulMeter/tree/KRSW](https://github.com/AFNGP/SoulMeter/tree/KRSW)
+- GLB (GLBSW): [https://github.com/AFNGP/SoulMeter/tree/GLBSW](https://github.com/AFNGP/SoulMeter/tree/GLBSW)
 
+Previous contributors:
+- [NEON](https://github.com/neonr-0)
+- [ga0321](https://github.com/ga0321)
+- [nyanchii](https://github.com/nyanchii)
+- [Min Young Park](https://github.com/Park3740)
 
-original repo [Park3740/SoulMeter]
+Special thanks:
+- [fearek](https://github.com/fearek)
+- [Asaduji (Aitor)](https://github.com/Asaduji)
+- [Pops](https://github.com/KouhaiPops)
 
-How to use
----------------------
+## How to use
 
 Hotkey - CTRL + DEL : Reset
 
@@ -29,18 +34,25 @@ Right click title bar can display more features
 
 Can get player details with left click table of character name row
 
-option.xml,imgui.ini,meterconfig.ini is user settings
+option.xml and imgui.ini is user settings
 
 
 Q&A
 ---------------------
 
-Q: Can't display my language
+Q: How to keep settings when upgrading to new version?
 
-A: Put font file with your language to Font folder and select it with Font Selector.
+A: Copy option.xml and imgui.ini to new version folder
 
-Q: How to use?
 
-A: Get loader from Discord (link above), all instructions are there.
+Notice
 ---------------------
-Special thanks @Nyanchii, @ga0321, @AFNGP
+You need to run DPS meter before entering maze
+
+Also, USE AT YOUR OWN RISK
+
+I recommend not to talk about dps meter at in-game public chat
+
+Issue and suggest: https://discord.gg/zxFpQPFjE5
+
+If you can't open, try install this: https://github.com/abbodi1406/vcredist/releases

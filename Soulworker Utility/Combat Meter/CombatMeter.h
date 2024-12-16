@@ -44,7 +44,7 @@ public:
 			FreeLock();
 		}
 	}
-	void Clear(bool realClear = false)
+	void Clear(bool realClear = FALSE)
 	{
 		GetLock();
 		{
@@ -63,7 +63,7 @@ public:
 	{
 		GetLock();
 		{
-			_isEnd = true;
+			_isEnd = TRUE;
 			FreeLock();
 		}
 	}

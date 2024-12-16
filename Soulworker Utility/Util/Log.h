@@ -4,7 +4,7 @@ class Log
 {
 private:
     FILE* file;
-    bool shouldLog = false;
+    
 public:
     ~Log()
     {
@@ -19,7 +19,8 @@ public:
     }
     bool WriteLog(std::string data, ...);
     bool WriteLog(char* data, ...);
-    bool WriteLogNoDate(LPTSTR data, ...);
+    bool WriteLogNoDate(const char* data, ...);
     void Enable();
+    bool shouldLog = false;
 };
 extern Log LogInstance;

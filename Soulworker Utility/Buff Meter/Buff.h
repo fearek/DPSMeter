@@ -9,8 +9,8 @@ using namespace SoulMeterFBS::History;
 
 class Buff : public MemoryPool<Buff> {
 private:
-	uint16_t _buffID;
-	uint8_t _stack;
+	unsigned short _buffID;
+	BYTE _stack;
 	char _name[BUFF_NAME_LEN];
 	char _desc[BUFF_DESC_LEN];
 
@@ -19,22 +19,22 @@ private:
 
 	bool _isActive;
 
-	bool _isHistoryMode = false;
+	bool _isHistoryMode = FALSE;
 
 protected:
 	Buff(const Buff& other) {}
 
 public:
 	Buff() {}
-	Buff(uint16_t buffID, uint8_t stack);
+	Buff(unsigned short buffID, BYTE stack);
 	
 	void Update();
 
 	void Active();
 	void InActive();
 
-	const uint16_t& GetBuffID();
-	const uint8_t& GetStack();
+	const unsigned short& GetBuffID();
+	const BYTE& GetStack();
 	const float& GetTime();
 	const char* GetName();
 	const char* GetDesc();
@@ -60,6 +60,6 @@ public:
 
 		SetNameFromDB();
 
-		_isHistoryMode = true;
+		_isHistoryMode = TRUE;
 	}
 };

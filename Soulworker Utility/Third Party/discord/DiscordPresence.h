@@ -6,9 +6,9 @@ private:
 public:
 	discord::Core* core{};
 	DWORD Init();
-	VOID RunCallbacks();
-	VOID UpdatePresence(std::string nick,UINT32 maze, UINT8 playerclass);
-	VOID ClearPresence();
+	void RunCallbacks();
+	void UpdatePresence(std::string nick,uint32_t maze, uint8_t playerclass);
+	void ClearPresence();
 	bool shouldLoad = true;
 	bool shouldUpdate = true;
 	bool isInitialized = false;

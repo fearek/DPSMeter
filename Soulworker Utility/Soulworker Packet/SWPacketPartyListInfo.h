@@ -12,7 +12,7 @@ protected:
 	SWPacketPartyListInfo() {}
 
 public:
-	SWPacketPartyListInfo(SWHEADER* swheader, uint8_t* data);
+	SWPacketPartyListInfo(SWHEADER* swheader, BYTE* data);
 	~SWPacketPartyListInfo() {}
 
 	void Do();

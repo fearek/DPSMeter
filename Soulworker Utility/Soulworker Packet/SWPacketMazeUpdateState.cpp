@@ -4,7 +4,7 @@
 #include ".\UI\Option.h"
 #include ".\Damage Meter\MapList.h"
 
-SWPacketMazeUpdateState::SWPacketMazeUpdateState(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
+SWPacketMazeUpdateState::SWPacketMazeUpdateState(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
 
@@ -24,7 +24,7 @@ void SWPacketMazeUpdateState::Do() {
 	case 0x01:
 		if (UIOPTION.isDontSaveUnfinishedMaze())
 			DAMAGEMETER.SetTestMode();
-		DAMAGEMETER.SetMazeState(false);
+		DAMAGEMETER.SetMazeState(FALSE);
 		DAMAGEMETER.Start();
 		break;
 		// Play boss animation
@@ -36,7 +36,7 @@ void SWPacketMazeUpdateState::Do() {
 		// Maze end
 	case 0x04:
 		DAMAGEMETER.ClearTestMode();
-		DAMAGEMETER.SetMazeState(true);
+		DAMAGEMETER.SetMazeState(TRUE);
 		DAMAGEMETER.Suspend();
 		break;
 	}

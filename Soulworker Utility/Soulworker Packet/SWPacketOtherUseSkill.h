@@ -11,7 +11,7 @@ typedef struct _SWPACKET_OTHERUSESKILL {
 	float _locationY;
 	float _locationZ;
 	float _direction;
-	//uint8_t _unknown01[19]; // 0430new
+	//BYTE _unknown01[19]; // 0430new
 }SWPACKET_OTHERUSESKILL;
 
 #pragma pack(pop)
@@ -25,7 +25,7 @@ protected:
 	SWPacketOtherUseSkill() {}
 
 public:
-	SWPacketOtherUseSkill(SWHEADER* swheader, uint8_t* data);
+	SWPacketOtherUseSkill(SWHEADER* swheader, BYTE* data);
 	~SWPacketOtherUseSkill() {}
 
 	void Do();

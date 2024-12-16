@@ -12,7 +12,7 @@
 #include <io.h>
 #include <chrono>
 #include <thread>
-#include ".\discord\DiscordPresence.h"
+
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, unsigned int msg, WPARAM wParam, LPARAM lParam);
 
@@ -69,12 +69,12 @@ bool UiWindow::Init(unsigned int x, unsigned int y, unsigned int width, unsigned
 	
 	if (!RegisterClassEx(&wc)) {
 		LogInstance.WriteLog("Error in RegisterClassEx");
-		return false;
+		return FALSE;
 	}
 
-	if ((_hWnd = CreateWindowEx(WS_EX_TOPMOST, wc.lpszClassName, _T(""), WS_POPUP, x, y, width, height, NULL, NULL, _hInst, NULL)) == NULL) {
+	if ((_hWnd = CreateWindowEx(WS_EX_TOPMOST, wc.lpszClassName, L"FeAr SoulMeter", WS_POPUP, x, y, width, height, NULL, NULL, _hInst, NULL)) == NULL) {
 		LogInstance.WriteLog("Error in CreateWindowEx : %x", GetLastError());
-		return false;
+		return FALSE;
 	}
 //	SetLayeredWindowAttributes(_hWnd, 0, 180, LWA_ALPHA);
 //	SetLayeredWindowAttributes(_hWnd, 0, RGB(0, 0, 0), LWA_COLORKEY);
@@ -87,36 +87,36 @@ bool UiWindow::Init(unsigned int x, unsigned int y, unsigned int width, unsigned
 
 	if (!DIRECTX11.Init()) {
 		LogInstance.WriteLog("Error in DirectX Init");
-		return false;
+		return FALSE;
 	}
 
 	if (!DXINPUT.Init(_hInst, _hWnd)) {
 		LogInstance.WriteLog("Error in Direct Input Init");
-		return false;
+		return FALSE;
 	}
 
 	if ((_swapChain = DIRECTX11.CreateSwapChain(_hWnd)) == nullptr) {
 		LogInstance.WriteLog("Error in CreateSwapChain");
-		return false;
+		return FALSE;
 	}
 
 	if ((_renderTargetView = DIRECTX11.CreateRenderTarget(_swapChain)) == nullptr) {
 		LogInstance.WriteLog("Error in CreateRenderTarget");
-		return false;
+		return FALSE;
 	}
 	
 	if (!InitImGUI()) {
 		LogInstance.WriteLog("Error in Init ImGUI");
-		return false;
+		return FALSE;
 	}
 	
-	return true;
+	return TRUE;
 }
 
 bool UiWindow::InitImGUI() {
 
 	if (!IMGUI_CHECKVERSION())
-		return false;
+		return FALSE;
 	
 
 	_imGuiContext = ImGui::CreateContext();
@@ -140,76 +140,26 @@ bool UiWindow::InitImGUI() {
 
 	
 	if (!ImGui_ImplWin32_Init(_hWnd))
-		return false;
+		return FALSE;
 	
 	if (!ImGui_ImplDX11_Init(DIRECTX11.GetDevice(), DIRECTX11.GetDeviceContext()))
-		return false;
+		return FALSE;
 
 	SetFontList();
 	UIOPTION.Init();
 
-	return true;
+	return TRUE;
 }
 
 bool UiWindow::SetFontList() {
-
-	_finddata_t fd;
-	const char* path = ".\\Font\\";
-	const char* filter = "*.ttf";
-	std::vector<std::string> vsFontPathPool;
-
-	std::string fontDir(path);
-	fontDir.append(filter);
-
-	auto handle = _findfirst(fontDir.c_str(), &fd);
-
+	if (DAMAGEMETER.selectedFont.path.empty())
+		return FALSE;
 	ImGuiIO& io = ImGui::GetIO();
 	ImFontConfig config;
 	config.OversampleH = 1;
 	config.OversampleV = 1;
-
-	if (handle == -1)
-	{
-		char szSysPath[MAX_PATH] = { 0 };
-		if (GetWindowsDirectoryA(szSysPath, MAX_PATH) != 0)
-		{
-			const char* szWindowsFontsDir = "\\Fonts\\";
-			std::string sFindDefaultFontPath(szSysPath);
-			sFindDefaultFontPath.append(szWindowsFontsDir);
-			sFindDefaultFontPath.append("msjh.*");
-
-			_finddata_t defaultFontFD;
-			auto pFont = _findfirst(sFindDefaultFontPath.c_str(), &defaultFontFD);
-
-			if (pFont != -1)
-			{
-				std::string fnExt = defaultFontFD.name;
-				if (fnExt.substr(fnExt.find_last_of(".") + 1) == "ttc" || fnExt.substr(fnExt.find_last_of(".") + 1) == "ttf")
-				{
-					sFindDefaultFontPath = szSysPath;
-					sFindDefaultFontPath.append(szWindowsFontsDir);
-					sFindDefaultFontPath.append(defaultFontFD.name);
-					vsFontPathPool.push_back(sFindDefaultFontPath);
-				}
-			}
-		}
-	}
-	else {
-		do {
-			char fontPath[MAX_BUFFER_LENGTH] = { 0 };
-			strcat_s(fontPath, path);
-			strcat_s(fontPath, fd.name);
-
-			vsFontPathPool.push_back(fontPath);
-		} while (_findnext(handle, &fd) != -1);
-
-		_findclose(handle);
-	}
-
-	for (auto itr = vsFontPathPool.begin(); itr != vsFontPathPool.end(); itr++)
-		io.Fonts->AddFontFromFileTTF((*itr).c_str(), 32, &config, io.Fonts->GetGlyphRangesChineseAndKoreaFull());
-
-	return true;
+	ImFont* font = io.Fonts->AddFontFromFileTTF(DAMAGEMETER.selectedFont.path.c_str(), 32, &config, io.Fonts->GetGlyphRangesChineseAndKoreaFull());
+	return TRUE;
 }
 
 void UiWindow::Run() {
@@ -230,7 +180,6 @@ void UiWindow::Run() {
 }
 
 void UiWindow::Update() {
-	DISCORD.RunCallbacks();
 	if (DAMAGEMETER.shouldRebuildAtlas)
 	{
 		DAMAGEMETER.shouldRebuildAtlas = false;
@@ -242,12 +191,13 @@ void UiWindow::Update() {
 		ImFont* font = io.Fonts->AddFontFromFileTTF(DAMAGEMETER.selectedFont.path.c_str(), 32, &config, io.Fonts->GetGlyphRangesChineseAndKoreaFull());
 		if (font == nullptr)
 		{
-			LogInstance.WriteLog("Failed setting font.");
+			LogInstance.WriteLog("Failed setting font %s", DAMAGEMETER.selectedFont.path.c_str());
 			return;
 		}
 		ImGui_ImplDX11_InvalidateDeviceObjects();
 		LogInstance.WriteLog("Set font to %s", DAMAGEMETER.selectedFont.filename.c_str());
 	}
+
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -291,7 +241,7 @@ void UiWindow::DrawScene() {
 LRESULT UiWindow::WndProc(HWND hWnd, unsigned int msg, WPARAM wParam, LPARAM lParam) {
 
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
-		return true;
+		return TRUE;
 
 	switch (msg) {
 	case WM_SIZE:
@@ -308,7 +258,7 @@ LRESULT UiWindow::WndProc(HWND hWnd, unsigned int msg, WPARAM wParam, LPARAM lPa
 	case WM_QUIT:
 	case WM_CLOSE:
 	case WM_DESTROY:
-		UIOPTION.SaveOption(true);
+		UIOPTION.SaveOption(TRUE);
 		PostQuitMessage(0);
 		return 0;
 	}

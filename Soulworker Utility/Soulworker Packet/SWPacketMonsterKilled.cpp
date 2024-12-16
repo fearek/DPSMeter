@@ -3,7 +3,7 @@
 #include ".\Damage Meter\Damage Meter.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketMonsterKilled::SWPacketMonsterKilled(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
+SWPacketMonsterKilled::SWPacketMonsterKilled(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
 

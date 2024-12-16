@@ -7,11 +7,10 @@
 #include ".\UI\UiWindow.h"
 #include ".\UI\UtillWindow.h"
 #include ".\UI\PlotWindow.h"
-#include ".\UI\DX11.h"
 #include ".\Soulworker Packet\PacketInfo.h"
 #include ".\Soulworker Packet\SWPacketMaker.h"
 #include "SWConfig.h"
-
+#include ".\UI\DX11.h"
 
 PlayerTable::PlayerTable() : _tableResize(0), _globalFontScale(0), _columnFontScale(0), _tableFontScale(0), _curWindowSize(0), _tableTime(0), _accumulatedTime(0)
 {
@@ -45,8 +44,8 @@ void PlayerTable::SetupFontScale() {
 	_tableFontScale = _globalFontScale * UIOPTION.GetTableFontScale();
 }
 
-void PlayerTable::ResizeTable() {
-	_tableResize = true;
+void PlayerTable::ResizeTalbe() {
+	_tableResize = TRUE;
 }
 
 void PlayerTable::Update() {
@@ -86,7 +85,6 @@ void PlayerTable::Update() {
 
 		if (!UIOPTION.isOption())
 			windowFlag = windowFlag | ImGuiWindowFlags_NoResize;
-		
 
 		char title[1024] = { 0 };
 		unsigned int miliseconds = ((unsigned int)DAMAGEMETER.GetTime() % 1000);
@@ -101,7 +99,7 @@ void PlayerTable::Update() {
 		//and if 3 then do nothing basically so we display all to 999
 		std::string milisecondsstring = std::to_string(miliseconds);
 		//turning it into a string before so we dont display leading 0's so timer is more readable
-		sprintf_s(title, 1024, "%s - %02d:%02d.%s [v%s_@FeAr&ga] %s: %ums discord.com/invite/H7jZpcVJhq ###DamageMeter",
+		sprintf_s(title, 1024, "%s - %02d:%02d.%s [v%s_@FeAr&AFN] %s: %ums discord.com/invite/H7jZpcVJhq ###DamageMeter",
 			DAMAGEMETER.GetWorldName(),
 			(unsigned int)DAMAGEMETER.GetTime() / (60 * 1000), (unsigned int)(DAMAGEMETER.GetTime() / 1000) % 60, milisecondsstring.c_str(),
 			APP_VERSION,
@@ -144,7 +142,7 @@ void PlayerTable::Update() {
 
 void PlayerTable::SetWindowSize() {
 
-	_tableResize = false;
+	_tableResize = FALSE;
 
 	ImGuiStyle& style = ImGui::GetStyle();
 
@@ -161,10 +159,10 @@ void PlayerTable::SetMainWindowSize() {
 
 
 	if (UIOPTION.isTopMost()) {
-		SetWindowPos(UIWINDOW.GetHWND(), HWND_TOPMOST, static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(size.x + 1), static_cast<int>(size.y + 1), SWP_NOACTIVATE | SWP_SHOWWINDOW);
+		SetWindowPos(UIWINDOW.GetHWND(), HWND_TOPMOST, static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(size.x + 1), static_cast<int>(size.y + 1), SWP_NOACTIVATE);
 	}
 	else {
-		SetWindowPos(UIWINDOW.GetHWND(), HWND_NOTOPMOST, static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(size.x + 1), static_cast<int>(size.y + 1), SWP_NOACTIVATE | SWP_SHOWWINDOW);
+		SetWindowPos(UIWINDOW.GetHWND(), HWND_NOTOPMOST, static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(size.x + 1), static_cast<int>(size.y + 1), SWP_NOACTIVATE);
 	}
 
 	//SetWindowPos(UIWINDOW.GetHWND(), HWND_NOTOPMOST, pos.x, pos.y, size.x + 1, size.y + 1, SWP_NOACTIVATE);
@@ -237,7 +235,7 @@ void PlayerTable::BeginPopupMenu() {
 				if (bChangeHistory)
 				{
 					DAMAGEMETER.SetCurrentHistoryId(iSelectedID);
-					DAMAGEMETER.SetHistory((void*)pSelectedHI);
+					DAMAGEMETER.SetHistory((LPVOID)pSelectedHI);
 					bChangeHistory = false;
 				}
 				HISTORY.FreeLock();
@@ -250,7 +248,6 @@ void PlayerTable::BeginPopupMenu() {
 		}
 
 		if (ImGui::MenuItem(LANGMANAGER.GetText("STR_MENU_OPTIONS").data())) {
-			UIOPTION.UpdateFontList();
 			UIOPTION.OpenOption();
 		}
 
@@ -267,7 +264,7 @@ void PlayerTable::SetupTable() {
 	ImGuiTableFlags tableFlags = ImGuiTableFlags_None;
 	tableFlags |= (ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Resizable);
 
-	const int columnSize = 46;
+	const int columnSize = 48;
 	if (ImGui::BeginTable("###Player Table", columnSize, tableFlags)) {
 
 		ImGuiTableColumnFlags columnFlags = ImGuiTableColumnFlags_None;
@@ -296,6 +293,7 @@ void PlayerTable::SetupTable() {
 		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_SOULSTONE_PROC").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_SOULSTONE_DAMAGE").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_AVERAGE_AB").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_AVERAGE_AB_U").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_AVERAGE_BD").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_MISS").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_MISS_RATE").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
@@ -310,6 +308,7 @@ void PlayerTable::SetupTable() {
 		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_EVADE_RATE_B").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_GIGA_ENLIGHTEN").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_TERA_ENLIGHTEN").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
+		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_TERA_FEVER").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_LOSED_HP").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_DODGE_COUNT").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
 		ImGui::TableSetupColumn(LANGMANAGER.GetText("STR_TABLE_DEATH").data(), columnFlags | ImGuiTableColumnFlags_WidthFixed, -1);
@@ -337,36 +336,7 @@ void PlayerTable::SetupTable() {
 	}
 
 }
-#define SET_BIT(var,val, bitIndex) var |= (val << bitIndex)
-enum PlayerStatuses {
-	NONE = 0,
-	AGGROED = 1,
-	CHILD_AGGROED = 2,
-	AGGROED_CHILD_AGGROED = 3,
-	AWAKENED = 4,
-	AGGROED_AWAKENED = 5,
-	CHILD_AGGROED_AWAKENED = 6,
-	ALL = 7
-};
-class PlayerStatus
-{
-	enum BITS {
-		IS_AGGROED,
-		IS_CHILD_AGGROED,
-		IS_AWAKENED
-	};
-	unsigned char flags = 0;
-public:
-	PlayerStatus(bool isAggroed, bool isChildAggroed, bool isAwakened)
-	{
-		SET_BIT(flags, isAggroed, IS_AGGROED);
-		SET_BIT(flags, isChildAggroed, IS_CHILD_AGGROED);
-		SET_BIT(flags, isAwakened, IS_AWAKENED);
-	}
-	operator unsigned char() { return flags; }
-	operator int() { return flags; }
 
-};
 void PlayerTable::UpdateTable(float windowWidth) {
 	uint64_t max_Damage = 1;
 	char comma[128] = { 0 }; char label[128] = { 0 };
@@ -379,7 +349,7 @@ void PlayerTable::UpdateTable(float windowWidth) {
 		}
 
 		// Skip Unknown Player
-		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) == LANGMANAGER.GetText("PLAYER_NAME_CANT_FIND"))
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) == LANGMANAGER.GetText("PLAYER_NAME_CANT_FIND").data())
 			continue;
 
 		// 
@@ -396,742 +366,801 @@ void PlayerTable::UpdateTable(float windowWidth) {
 		ImGui::TableNextRow();
 		ImGui::TableNextColumn();
 
+
 		DrawBar(windowWidth, damage_percent, UIOPTION.GetJobColor(DAMAGEMETER.GetPlayerJob((*itr)->GetID())));
 		uint64_t milliTableTime = (uint64_t)((double)_tableTime * 1000);
+
 		// NAME
 		const char* playerName = DAMAGEMETER.GetPlayerName((*itr)->GetID());
-		if (UIOPTION.doHideName() && playerName != LANGMANAGER.GetText("STR_TABLE_YOU")) {
+		if (UIOPTION.doHideName() && playerName != LANGMANAGER.GetText("STR_TABLE_YOU").data()) {
 			playerName = "";
 		}
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		ImVec4 saved = ImVec4(style.Colors[0].x, style.Colors[0].y, style.Colors[0].z, style.Colors[0].w);
-
+		
 		uint32_t playerId = (*itr)->GetID();
-		bool isAggro = (playerId == DAMAGEMETER.GetAggro());
-		bool isChildAggro = (playerId == DAMAGEMETER.GetOwnerID(DAMAGEMETER.GetAggro()));
-		bool isAwakened = DAMAGEMETER.PlayerInAwakening(playerId);
-		unsigned char status = PlayerStatus(isAggro, isChildAggro, isAwakened);
-		switch (status)
-		{
-		case AGGROED:
-			style.Colors[0] = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); //red
-			break;
-		case CHILD_AGGROED:
-			style.Colors[0] = ImVec4(0.0f, 0.0f, 1.0f, 1.0f); //blue
-			break;
-		case AGGROED_CHILD_AGGROED:
-			style.Colors[0] = ImVec4(1.0f, 0.0f, 1.0f, 1.0f); //purple
-			break;
-		case AWAKENED:
-			style.Colors[0] = ImVec4(1.0f, 1.0f, 0.0f, 1.0f); //yellow
-			break;
-		case AGGROED_AWAKENED:
-			style.Colors[0] = ImVec4(1.0f, 0.5f, 0.0f, 1.0f); //orange
-			break;
-		case CHILD_AGGROED_AWAKENED:
-			style.Colors[0] = ImVec4(0.0f, 1.0f, 0.0f, 1.0f); //green
-			break;
-		case ALL:
-			style.Colors[0] = ImVec4(0.5f, 0.25f, 0.0f, 1.0f); //brown
-			break;
+		if (playerId == DAMAGEMETER.GetAggro()) {
+			style.Colors[0] = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
 		}
-			bool useImage = UIOPTION.isUseImage();
+		else if (playerId == DAMAGEMETER.GetOwnerID(DAMAGEMETER.GetAggro())) {
+			style.Colors[0] = ImVec4(0.0f, 0.0f, 1.0f, 1.0f);
+		}
+
+		if (DAMAGEMETER.PlayerInAwakening(playerId)) {
+			style.Colors[0] = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+		}
+		bool useImage = UIOPTION.isUseImage();
 
 
-			Texture playerTexture = DIRECTX11.getCharacterTexture(DAMAGEMETER.GetPlayerJob((*itr)->GetID()));
+		Texture playerTexture = DIRECTX11.getcharacterTexture(DAMAGEMETER.GetPlayerJob((*itr)->GetID()));
 
-			if (useImage && playerTexture.ptr) {
-				ImGui::SetCursorPosX((ImGui::GetColumnWidth() * 0.5f) - ((ImGui::CalcTextSize(playerName).x + playerTexture.xSize) / 2)); //because font size can change, we need to use texture size to center properly
-			}
-			else
-			{
-				ImGui::SetCursorPosX(ImGui::GetColumnWidth() * 0.5f - (ImGui::CalcTextSize(playerName).x / 2)); // we dont use texture here so center text only, have to do it myself because disabled text centering for this part as it was breaking rendering
-			}
-			if (useImage && playerTexture.ptr) {
-				ImGui::Image((void*)playerTexture.ptr, ImVec2(playerTexture.xSize, playerTexture.ySize));
-				ImGui::SameLine();
-			}
-			ImGui::TextAlignCenter::UnSetTextAlignCenter(); //some gay custom function, breaks text align with image
-			if (ImGui::Selectable(playerName, false, ImGuiSelectableFlags_SpanAllColumns))
-				ToggleSelectInfo((*itr)->GetID());
+		if (useImage && playerTexture.ptr) {
+			ImGui::SetCursorPosX((ImGui::GetColumnWidth() * 0.5f) - ((ImGui::CalcTextSize(playerName).x + playerTexture.xSize) / 2)); //because font size can change, we need to use texture size to center properly
+		}
+		else
+		{
+			ImGui::SetCursorPosX(ImGui::GetColumnWidth() * 0.5f - (ImGui::CalcTextSize(playerName).x / 2)); // we dont use texture here so center text only, have to do it myself because disabled text centering for this part as it was breaking rendering
+		}
+		if (useImage && playerTexture.ptr) {
+			ImGui::Image((void*)playerTexture.ptr, ImVec2((float)playerTexture.xSize, (float)playerTexture.ySize));
+			ImGui::SameLine();
+		}
+		ImGui::TextAlignCenter::UnSetTextAlignCenter(); //some gay custom function, breaks text align with image
+		if (ImGui::Selectable(playerName, false, ImGuiSelectableFlags_SpanAllColumns))
+			ToggleSelectInfo((*itr)->GetID());
 
-			ImGui::TextAlignCenter::SetTextAlignCenter();
+		ImGui::TextAlignCenter::SetTextAlignCenter();
 
-			ImGui::TableNextColumn();
-			style.Colors[0] = saved;
+		ImGui::TableNextColumn();
+		style.Colors[0] = saved;
 
 
-			// DPS
-			if (_tableTime < 1) {
-				ImGui::Text("-");
-			}
+		// DPS
+		if (_tableTime < 1) {
+			ImGui::Text("-");
+		}
+		else {
+			double dps = ((double)(*itr)->GetDamage()) / _tableTime;
+			if (UIOPTION.is1K()) 
+				dps /= 1000;
+			else if (UIOPTION.is1M()) 
+				dps /= 1000000;
+			else if (UIOPTION.is10K())
+				dps /= 10000;
+			if (UIOPTION.is1M()) 
+				TextCommmaIncludeDecimal(dps, sizeof(comma), comma);
 			else {
-				DOUBLE dps = ((DOUBLE)(*itr)->GetDamage()) / _tableTime;
-				if (UIOPTION.is1K())
-					dps /= 1000;
-				else if (UIOPTION.is1M())
-					dps /= 1000000;
-				else if (UIOPTION.is10K())
-					dps /= 10000;
-				if (UIOPTION.is1M())
-					TextCommmaIncludeDecimal(dps, sizeof(comma), comma);
-				else {
-					sprintf_s(label, 128, "%.0lf", dps);
-					TextCommma(label, comma);
-				}
-				if (UIOPTION.is1K())
-					strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_1K").data());
-				else if (UIOPTION.is1M())
-					strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_1M").data());
-				else if (UIOPTION.is10K())
-					strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_10K").data());
-				ImGui::Text(comma);
-
-				bool isFirstElement = ((itr - DAMAGEMETER.begin()) == 0);
-				PLOTWINDOW.AddData((*itr)->GetID(), DAMAGEMETER.GetPlayerName((*itr)->GetID()), dps, _tableTime, isFirstElement);
-			}
-
-
-			ImGui::TableNextColumn();
-
-			// D%
-			if (DAMAGEMETER.GetPlayerTotalDamage() == 0) {
-				sprintf_s(label, 128, "%.0lf", (float)0);
-				ImGui::Text(label);
-			}
-			else {
-				sprintf_s(label, 128, "%.0lf", ((double)(*itr)->GetDamage() / (double)DAMAGEMETER.GetPlayerTotalDamage()) * 100);
-				ImGui::Text(label);
-			}
-
-			ImGui::TableNextColumn();
-
-			// DAMAGE
-			uint64_t damage = (*itr)->GetDamage();
-			if (UIOPTION.is1K())
-				damage /= 1000;
-			else if (UIOPTION.is1M())
-				damage /= 1000000;
-			sprintf_s(label, 128, "%llu", damage);
-			TextCommma(label, comma);
-			if (UIOPTION.is1K())
-				strcat_s(comma, 128, "K");
-			else if (UIOPTION.is1M())
-				strcat_s(comma, 128, "M");
-			ImGui::Text(comma);
-
-			ImGui::TableNextColumn();
-
-			// HIT
-			sprintf_s(label, 128, "%d", (*itr)->GetHitCount());
-			TextCommma(label, comma);
-			ImGui::Text(comma);
-
-			ImGui::TableNextColumn();
-
-			// CRIT
-			float crit = 0;
-
-			if ((*itr)->GetHitCount() != 0)
-				crit = (float)(*itr)->GetCritHitCountForCritRate() / (float)(*itr)->GetHitCountForCritRate() * 100;
-
-			sprintf_s(label, 128, "%.1f", crit);
-			ImGui::Text(label);
-
-			ImGui::TableNextColumn();
-
-			// HIT/S
-			if (_tableTime == (float)0) {
-				sprintf_s(label, 128, "%d", 0);
-				ImGui::Text(label);
-			}
-			else {
-				sprintf_s(label, 128, "%.2lf", (double)(*itr)->GetHitCount() / _tableTime);
-				ImGui::Text(label);
-
-			}
-			ImGui::TableNextColumn();
-
-			//CRIT/S
-			if (_tableTime == (float)0) {
-				sprintf_s(label, 128, "%d", 0);
-				ImGui::Text(label);
-			}
-			else {
-				sprintf_s(label, 128, "%.2lf", (double)(*itr)->GetCritHitCount() / _tableTime);
-				ImGui::Text(label);
-			}
-
-			ImGui::TableNextColumn();
-
-			// Skill/s
-			if (_tableTime == 0.0f) {
-				sprintf_s(label, 128, "-");
-				ImGui::Text(label);
-			}
-			else {
-				sprintf_s(label, 128, "%.2lf", (double)(*itr)->GetSkillUsed() / _tableTime);
-				ImGui::Text(label);
-			}
-
-			ImGui::TableNextColumn();
-
-
-			// MAXC
-			sprintf_s(label, 128, "%d", (*itr)->GetMaxCombo());
-			TextCommma(label, comma);
-			ImGui::Text(comma);
-
-			ImGui::TableNextColumn();
-
-			uint32_t playerID = (*itr)->GetID();
-			SWDamageMeter::SW_PLAYER_METADATA* playerMetaData = DAMAGEMETER.GetPlayerMetaData(playerID);
-
-			// Not found stat data
-			if (playerMetaData == NULL) {
-				continue;
-			}
-
-			if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU") || _tableTime < 1) {
-				// Attack+Crit SUM
-				sprintf_s(label, 128, "-");
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-
-				// SG
-				sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::SG));
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-				// AttackSpeed
-				sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::AttackSpeed));
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-
-				// AB
-				sprintf_s(label, 128, "-");
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-				// BD
-				sprintf_s(label, 128, "-");
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-				// STAM
-				sprintf_s(label, 128, "-");
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-				// SV
-				sprintf_s(label, 128, "-");
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-			}
-			else {
-				// Attack+Crit SUM
-				double gongchihap = (double)playerMetaData->GetStat(StatType::MaxAttack) + (double)playerMetaData->GetStat(StatType::CritDamage);
-				if (UIOPTION.is1K())
-					gongchihap /= 1000;
-				else if (UIOPTION.is1M())
-					gongchihap /= 1000000;
-				sprintf_s(label, 128, "%.0f", gongchihap);
+				sprintf_s(label, 128, "%.0lf", dps);
 				TextCommma(label, comma);
-				if (UIOPTION.is1K())
-					strcat_s(comma, 128, "K");
-				else if (UIOPTION.is1M())
-					strcat_s(comma, 128, "M");
-				ImGui::Text(comma);
-				ImGui::TableNextColumn();
-
-				static float statTmp = 0;
-
-				// SG
-				sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::SG));
-				ImGui::Text(label);
-
-				ImGui::TableNextColumn();
-				// AttackSpeed
-				sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::AttackSpeed));
-				ImGui::Text(label);
-
-				ImGui::TableNextColumn();
-				// AB
-				statTmp = playerMetaData->GetStat(StatType::ArmorBreak);
-				sprintf_s(label, 128, "%.1f", statTmp);
-				PLOTWINDOW.AddAbData(statTmp, _tableTime);
-				ImGui::Text(label);
-
-				ImGui::TableNextColumn();
-				// BD
-				statTmp = playerMetaData->GetSpecialStat(SpecialStatType::BossDamageAddRate);
-				sprintf_s(label, 128, "%.1f", statTmp);
-				PLOTWINDOW.AddBdData(statTmp, _tableTime);
-				ImGui::Text(label);
-
-				ImGui::TableNextColumn();
-				// stamina
-				sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::Stamina));
-				ImGui::Text(label);
-
-				ImGui::TableNextColumn();
-				// SV
-				sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::SV));
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
 			}
+			if (UIOPTION.is1K())
+				strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_1K").data());
+			else if (UIOPTION.is1M()) 
+				strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_1M").data());
+			else if (UIOPTION.is10K())
+				strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_10K").data());
+			ImGui::Text(comma);
+
+			bool isFirstElement = ((itr - DAMAGEMETER.begin()) == 0);
+			PLOTWINDOW.AddData((*itr)->GetID(), DAMAGEMETER.GetPlayerName((*itr)->GetID()), dps, _tableTime, isFirstElement);
+		}
+		
+
+		ImGui::TableNextColumn();
+
+		// D%
+		if (DAMAGEMETER.GetPlayerTotalDamage() == 0) {
+			sprintf_s(label, 128, "%.0lf", (float)0);
+			ImGui::Text(label);
+		}
+		else {
+			sprintf_s(label, 128, "%.0lf", ((double)(*itr)->GetDamage() / (double)DAMAGEMETER.GetPlayerTotalDamage()) * 100);
+			ImGui::Text(label);
+		}
+
+		ImGui::TableNextColumn();
+
+		// DAMAGE
+		uint64_t damage = (*itr)->GetDamage();
+		if (UIOPTION.is1K())
+			damage /= 1000;
+		else if (UIOPTION.is1M())
+			damage /= 1000000;
+		else if (UIOPTION.is10K())
+			damage /= 10000;
+		sprintf_s(label, 128, "%llu", damage);
+		TextCommma(label, comma);
+		if (UIOPTION.is1K())
+			strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_1K").data());
+		else if (UIOPTION.is1M())
+			strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_1M").data());
+		else if (UIOPTION.is10K())
+			strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_10K").data());
+		ImGui::Text(comma);
+
+		ImGui::TableNextColumn();
+
+		// HIT
+		sprintf_s(label, 128, "%d", (*itr)->GetHitCount());
+		TextCommma(label, comma);
+		ImGui::Text(comma);
+
+		ImGui::TableNextColumn();
+
+		// CRIT
+		float crit = 0;
+
+		if ((*itr)->GetHitCount() != 0)
+			crit = (float)(*itr)->GetCritHitCountForCritRate() / (float)(*itr)->GetHitCountForCritRate() * 100;
+
+		sprintf_s(label, 128, "%.1f", crit);
+		ImGui::Text(label);
+
+		ImGui::TableNextColumn();
+
+		// HIT/S
+		if (_tableTime == (float)0) {
+			sprintf_s(label, 128, "%d", 0);
+			ImGui::Text(label);
+		}
+		else {
+			sprintf_s(label, 128, "%.2lf", (double)(*itr)->GetHitCount() / _tableTime);
+			ImGui::Text(label);
+
+		}
+		ImGui::TableNextColumn();
+
+		//CRIT/S
+		if (_tableTime == (float)0) {
+			sprintf_s(label, 128, "%d", 0);
+			ImGui::Text(label);
+		}
+		else {
+			sprintf_s(label, 128, "%.2lf", (double)(*itr)->GetCritHitCount() / _tableTime);
+			ImGui::Text(label);
+		}
+
+		ImGui::TableNextColumn();
+
+		// Skill/s
+		if (_tableTime == 0.0f) {
+			sprintf_s(label, 128, "-");
+			ImGui::Text(label);
+		}
+		else {
+			sprintf_s(label, 128, "%.2lf", (double)(*itr)->GetSkillUsed() / _tableTime);
+			ImGui::Text(label);
+		}
+
+		ImGui::TableNextColumn();
 
 
+		// MAXC
+		sprintf_s(label, 128, "%d", (*itr)->GetMaxCombo());
+		TextCommma(label, comma);
+		ImGui::Text(comma);
 
-			// Soulstone all percent
-			double soulstoneAllPercent;
-			if ((*itr)->GetDamage() == 0) {
-				soulstoneAllPercent = 0.0;
-			}
-			else {
-				soulstoneAllPercent = ((double)(*itr)->GetSoulstoneDamage()) / (*itr)->GetDamage() * 100;
-			}
+		ImGui::TableNextColumn();
 
-			sprintf_s(label, 128, "%.1f", soulstoneAllPercent);
+		uint32_t playerID = (*itr)->GetID();
+		SWDamageMeter::SW_PLAYER_METADATA* playerMetaData = DAMAGEMETER.GetPlayerMetaData(playerID);
+
+		// Not found stat data
+		if (playerMetaData == NULL) {
+			continue;
+		}
+
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU").data() || _tableTime < 1) {
+			// Attack+Crit SUM
+			sprintf_s(label, 128, "-");
 			ImGui::Text(label);
 			ImGui::TableNextColumn();
 
-			// Soulstone crit rate
-			double soulstoneProcRate;
-			if ((*itr)->GetCritHitCountForCritRate() == 0) {
-				soulstoneProcRate = 0.0;
-			}
-			else {
-				soulstoneProcRate = ((double)(*itr)->GetSoulstoneCount()) / (*itr)->GetHitCountForCritRate() * 100;
-			}
-
-			sprintf_s(label, 128, "%.1f", soulstoneProcRate);
+			// SG
+			sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::SG));
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+			// AttackSpeed
+			sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::AttackSpeed));
 			ImGui::Text(label);
 			ImGui::TableNextColumn();
 
-			// Soulstone damage %
-			double soulstoneDamage;
-			if ((*itr)->GetDamageForSoulstone() == 0) {
-				soulstoneDamage = 0.0;
-			}
-			else {
-				soulstoneDamage = ((double)(*itr)->GetSoulStoneDamageForSoulstone()) / (*itr)->GetDamageForSoulstone() * 100;
-			}
-			sprintf_s(label, 128, "%.1f", soulstoneDamage);
+			// AB
+			sprintf_s(label, 128, "-");
 			ImGui::Text(label);
 			ImGui::TableNextColumn();
-
-			// history data tmp
-			static double savedResultAB = 0;
-
-			if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU") || _tableTime == 0) {
-				sprintf_s(label, 128, "-");
+			// BD
+			sprintf_s(label, 128, "-");
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+			// STAM
+			sprintf_s(label, 128, "-");
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+			// SV
+			sprintf_s(label, 128, "-");
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+		}
+		else {
+			// Attack+Crit SUM
+			// TODO: Re-enable M option if we ever get there 
+			double gongchihap = (double)playerMetaData->GetStat(StatType::MaxAttack) + (double)playerMetaData->GetStat(StatType::CritDamage);
+			if (UIOPTION.is1K())
+				gongchihap /= 1000;
+			else if (UIOPTION.is1M()) {
+				if (!strcmp(LANGMANAGER.GetText("STR_DISPLAY_DEFAULT_UNIT").data(), "K"))
+					gongchihap /= 1000;
+				else if (!strcmp(LANGMANAGER.GetText("STR_DISPLAY_DEFAULT_UNIT").data(), "10K"))
+					gongchihap /= 10000;
+				// gongchihap /= 1000000
 			}
-			else if (DAMAGEMETER.isHistoryMode()) {
-				savedResultAB = (*itr)->GetHistoryAvgAB();
+			else if (UIOPTION.is10K())
+				gongchihap /= 10000;
+			sprintf_s(label, 128, "%.0f", gongchihap);
+			TextCommma(label, comma);
+			if (UIOPTION.is1K())
+				strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_1K").data());
+			else if (UIOPTION.is1M()) {
+				if (!strcmp(LANGMANAGER.GetText("STR_DISPLAY_DEFAULT_UNIT").data(), "K"))
+					strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_1K").data());
+				else if (!strcmp(LANGMANAGER.GetText("STR_DISPLAY_DEFAULT_UNIT").data(), "10K"))
+					strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_10K").data());
+				// strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_1M"));
+			}
+			else if (UIOPTION.is10K())
+				strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_10K").data());
+			ImGui::Text(comma);
+			ImGui::TableNextColumn();
+
+			static float statTmp = 0;
+
+			// SG
+			sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::SG));
+			ImGui::Text(label);
+
+			ImGui::TableNextColumn();
+			// AttackSpeed
+			sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::AttackSpeed));
+			ImGui::Text(label);
+
+			ImGui::TableNextColumn();
+			// AB
+			statTmp = playerMetaData->GetStat(StatType::ArmorBreak);
+			sprintf_s(label, 128, "%.1f", statTmp);
+			PLOTWINDOW.AddAbData(statTmp, _tableTime);
+			ImGui::Text(label);
+			
+			ImGui::TableNextColumn();
+			// BD
+			statTmp = playerMetaData->GetSpecialStat(SpecialStatType::BossDamageAddRate);
+			sprintf_s(label, 128, "%.1f", statTmp);
+			PLOTWINDOW.AddBdData(statTmp, _tableTime);
+			ImGui::Text(label);
+
+			ImGui::TableNextColumn();
+			// stamina
+			sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::Stamina));
+			ImGui::Text(label);
+
+			ImGui::TableNextColumn();
+			// SV
+			sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::SV));
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+		}
+
+
+
+		// Soulstone all percent
+		double soulstoneAllPercent;
+		if ((*itr)->GetDamage() == 0) {
+			soulstoneAllPercent = 0.0;
+		}
+		else {
+			soulstoneAllPercent = ((double)(*itr)->GetSoulstoneDamage()) / (*itr)->GetDamage() * 100;
+		}
+
+		sprintf_s(label, 128, "%.1f", soulstoneAllPercent);
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		// Soulstone crit rate
+		double soulstoneProcRate;
+		if ((*itr)->GetCritHitCountForCritRate() == 0) {
+			soulstoneProcRate = 0.0;
+		}
+		else {
+			soulstoneProcRate = ((double)(*itr)->GetSoulstoneCount()) / (*itr)->GetHitCountForCritRate() * 100;
+		}
+
+		sprintf_s(label, 128, "%.1f", soulstoneProcRate);
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		// Soulstone damage %
+		double soulstoneDamage;
+		if ((*itr)->GetDamageForSoulstone() == 0) {
+			soulstoneDamage = 0.0;
+		}
+		else {
+			soulstoneDamage = ((double)(*itr)->GetSoulStoneDamageForSoulstone()) / (*itr)->GetDamageForSoulstone() * 100;
+		}
+		sprintf_s(label, 128, "%.1f", soulstoneDamage);
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		// history data tmp
+		static double savedResultAB = 0;
+
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU").data() || _tableTime == 0) {
+			sprintf_s(label, 128, "-");
+		}
+		else if (DAMAGEMETER.isHistoryMode()) {
+			savedResultAB = (*itr)->GetHistoryAvgAB();
+			sprintf_s(label, 128, "%.1f", savedResultAB);
+		}
+		else {
+
+			if ((int64_t)(milliTableTime - playerMetaData->_avgABPreviousTime) < 0) {
 				sprintf_s(label, 128, "%.1f", savedResultAB);
 			}
 			else {
+				uint64_t timeDifference = (milliTableTime - playerMetaData->_avgABPreviousTime);
+				double currentAB = playerMetaData->GetStat(StatType::ArmorBreak);
+				currentAB = currentAB > 100.0 ? 100.0 : currentAB;
+				uint64_t calculatedAvgAB = static_cast<uint64_t>((playerMetaData->_avgABSum + timeDifference * currentAB));
 
-				if ((int64_t)(milliTableTime - playerMetaData->_avgABPreviousTime) < 0) {
-					sprintf_s(label, 128, "%.1f", savedResultAB);
-				}
-				else {
-					uint64_t timeDifference = (milliTableTime - playerMetaData->_avgABPreviousTime);
-					double currentAB = playerMetaData->GetStat(StatType::ArmorBreak);
-					currentAB = currentAB > 100.0 ? 100.0 : currentAB;
-					uint64_t calculatedAvgAB = static_cast<uint64_t>((playerMetaData->_avgABSum + timeDifference * currentAB));
-
-					savedResultAB = (double)calculatedAvgAB / milliTableTime;
-					sprintf_s(label, 128, "%.1f", savedResultAB);
-				}
+				savedResultAB = (double)calculatedAvgAB / milliTableTime;
+				sprintf_s(label, 128, "%.1f", savedResultAB);
 			}
+		}
 
-			ImGui::Text(label);
-			ImGui::TableNextColumn();
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
 
-			// BD
-			static double savedResultBD = 0;
+		// history data tmp
+		static double savedResultABU = 0;
 
-			if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU") || _tableTime == 0) {
-				sprintf_s(label, 128, "-");
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU").data() || _tableTime == 0) {
+			sprintf_s(label, 128, "-");
+		}
+		else if (DAMAGEMETER.isHistoryMode()) {
+			savedResultABU = (*itr)->GetHistoryAvgABU();
+			sprintf_s(label, 128, "%.1f", savedResultABU);
+		}
+		else {
+
+			if ((int64_t)(milliTableTime - playerMetaData->_avgABPreviousTimeU) < 0) {
+				sprintf_s(label, 128, "%.1f", savedResultABU);
 			}
-			else if (DAMAGEMETER.isHistoryMode()) {
-				savedResultBD = (*itr)->GetHistoryAvgBD();
+			else {
+				uint64_t timeDifference = (milliTableTime - playerMetaData->_avgABPreviousTimeU);
+				double currentABU = playerMetaData->GetStat(StatType::ArmorBreak);
+				uint64_t calculatedAvgABU = static_cast<uint64_t>((playerMetaData->_avgABSumU + timeDifference * currentABU));
+
+				savedResultABU = (double)calculatedAvgABU / milliTableTime;
+				sprintf_s(label, 128, "%.1f", savedResultABU);
+			}
+		}
+
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		// BD
+		static double savedResultBD = 0;
+
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU").data() || _tableTime == 0) {
+			sprintf_s(label, 128, "-");
+		}
+		else if (DAMAGEMETER.isHistoryMode()) {
+			savedResultBD = (*itr)->GetHistoryAvgBD();
+			sprintf_s(label, 128, "%.1f", savedResultBD);
+		}
+		else {
+
+			if ((int64_t)(milliTableTime - playerMetaData->_avgBDPreviousTime) < 0) {
 				sprintf_s(label, 128, "%.1f", savedResultBD);
 			}
 			else {
+				uint64_t timeDifference = (milliTableTime - playerMetaData->_avgBDPreviousTime);
+				double currentBD = playerMetaData->GetSpecialStat(SpecialStatType::BossDamageAddRate);
+				uint64_t calculatedAvgBD = static_cast<uint64_t>((playerMetaData->_avgBDSum + timeDifference * currentBD));
 
-				if ((int64_t)(milliTableTime - playerMetaData->_avgBDPreviousTime) < 0) {
-					sprintf_s(label, 128, "%.1f", savedResultBD);
-				}
-				else {
-					uint64_t timeDifference = (milliTableTime - playerMetaData->_avgBDPreviousTime);
-					double currentBD = playerMetaData->GetSpecialStat(SpecialStatType::BossDamageAddRate);
-					uint64_t calculatedAvgBD = static_cast<uint64_t>((playerMetaData->_avgBDSum + timeDifference * currentBD));
-
-					savedResultBD = (double)calculatedAvgBD / milliTableTime;
-					sprintf_s(label, 128, "%.1f", savedResultBD);
-				}
+				savedResultBD = (double)calculatedAvgBD / milliTableTime;
+				sprintf_s(label, 128, "%.1f", savedResultBD);
 			}
+		}
 
-			ImGui::Text(label);
-			ImGui::TableNextColumn();
-			// Miss
-			sprintf_s(label, 128, "%d", (*itr)->GetMissCount());
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+		// Miss
+		sprintf_s(label, 128, "%d", (*itr)->GetMissCount());
+		TextCommma(label, comma);
+		ImGui::Text(comma);
+
+		ImGui::TableNextColumn();
+		// Miss%
+		if ((*itr)->GetMissCount() == 0 || (*itr)->GetHitCountForCritRate() == 0) {
+			sprintf_s(label, 128, "%.1f", 0.0);
+		}
+		else {
+			sprintf_s(label, 128, "%.1f", (double)(*itr)->GetMissCount() / (*itr)->GetHitCountForCritRate() * 100);
+		}
+
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		// MissDamageRate
+		sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::PartialDamage));
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		// GetHit(Include Zero Damage)
+		sprintf_s(label, 128, "%d", (*itr)->GetGetHitAll());
+		TextCommma(label, comma);
+		ImGui::Text(comma);
+
+		ImGui::TableNextColumn();
+
+		// GetHit
+		sprintf_s(label, 128, "%d", (*itr)->GetGetHit());
+		TextCommma(label, comma);
+		ImGui::Text(comma);
+
+		ImGui::TableNextColumn();
+
+		// GetHit(BS)
+		sprintf_s(label, 128, "%d", (*itr)->GetGetHitBS());
+		TextCommma(label, comma);
+		ImGui::Text(comma);
+
+		ImGui::TableNextColumn();
+
+		// BS Gear
+		static double gear90savedResult = 0.0;
+		static double gear50savedResult = 0.0;
+		static double acc01savedResult = 0.0;
+		static double acc02savedResult = 0.0;
+
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU").data() || _tableTime == 0) {
+			sprintf_s(label, 128, "-");
 			TextCommma(label, comma);
 			ImGui::Text(comma);
-
-			ImGui::TableNextColumn();
-			// Miss%
-			if ((*itr)->GetMissCount() == 0 || (*itr)->GetHitCountForCritRate() == 0) {
-				sprintf_s(label, 128, "%.1f", 0.0);
-			}
-			else {
-				sprintf_s(label, 128, "%.1f", (double)(*itr)->GetMissCount() / (*itr)->GetHitCountForCritRate() * 100);
-			}
-
-			ImGui::Text(label);
 			ImGui::TableNextColumn();
 
-			// MissDamageRate
-			sprintf_s(label, 128, "%.1f", playerMetaData->GetStat(StatType::PartialDamage));
-			ImGui::Text(label);
-			ImGui::TableNextColumn();
-
-			// GetHit(Include Zero Damage)
-			sprintf_s(label, 128, "%d", (*itr)->GetGetHitAll());
+			sprintf_s(label, 128, "-");
 			TextCommma(label, comma);
 			ImGui::Text(comma);
-
 			ImGui::TableNextColumn();
 
-			// GetHit
-			sprintf_s(label, 128, "%d", (*itr)->GetGetHit());
+			sprintf_s(label, 128, "-");
 			TextCommma(label, comma);
 			ImGui::Text(comma);
-
 			ImGui::TableNextColumn();
+		}
 
-			// GetHit(BS)
-			sprintf_s(label, 128, "%d", (*itr)->GetGetHitBS());
+		else if (DAMAGEMETER.isHistoryMode()) {
+			double gearSavedResultSum = (*itr)->GetHistoryBS(90) + (*itr)->GetHistoryBS(50);
+			acc01savedResult = (*itr)->GetHistoryBS(1);
+			acc02savedResult = (*itr)->GetHistoryBS(2);
+
+			sprintf_s(label, 128, "%.0f", gearSavedResultSum + (*itr)->GetHistoryBS(1));
 			TextCommma(label, comma);
 			ImGui::Text(comma);
-
 			ImGui::TableNextColumn();
 
-			// BS Gear
-			static double gear90savedResult = 0.0;
-			static double gear50savedResult = 0.0;
-			static double acc01savedResult = 0.0;
-			static double acc02savedResult = 0.0;
+			sprintf_s(label, 128, "%.0f", gearSavedResultSum + (*itr)->GetHistoryBS(2));
+			TextCommma(label, comma);
+			ImGui::Text(comma);
+			ImGui::TableNextColumn();
 
-			if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU") || _tableTime == 0) {
-				sprintf_s(label, 128, "-");
-				TextCommma(label, comma);
-				ImGui::Text(comma);
-				ImGui::TableNextColumn();
+			sprintf_s(label, 128, "%.0f", gearSavedResultSum + 650);
+			TextCommma(label, comma);
+			ImGui::Text(comma);
+			ImGui::TableNextColumn();
+		}
+		else {
 
-				sprintf_s(label, 128, "-");
-				TextCommma(label, comma);
-				ImGui::Text(comma);
-				ImGui::TableNextColumn();
-
-				sprintf_s(label, 128, "-");
-				TextCommma(label, comma);
-				ImGui::Text(comma);
-				ImGui::TableNextColumn();
+			uint64_t bs3GearOngoing = playerMetaData->CalBsGear3Set(false, milliTableTime);
+			if (bs3GearOngoing != 0 && _accumulatedTime == 0) {
+				gear90savedResult = (double)(playerMetaData->_gear90Sum + bs3GearOngoing) / milliTableTime;
+			}
+			if (bs3GearOngoing == 0 && _accumulatedTime == 0) {
+				gear90savedResult = (double)playerMetaData->_gear90Sum / milliTableTime;
 			}
 
-			else if (DAMAGEMETER.isHistoryMode()) {
-				double gearSavedResultSum = (*itr)->GetHistoryBS(90) + (*itr)->GetHistoryBS(50);
-				acc01savedResult = (*itr)->GetHistoryBS(1);
-				acc02savedResult = (*itr)->GetHistoryBS(2);
-
-				sprintf_s(label, 128, "%.0f", gearSavedResultSum + (*itr)->GetHistoryBS(1));
-				TextCommma(label, comma);
-				ImGui::Text(comma);
-				ImGui::TableNextColumn();
-
-				sprintf_s(label, 128, "%.0f", gearSavedResultSum + (*itr)->GetHistoryBS(2));
-				TextCommma(label, comma);
-				ImGui::Text(comma);
-				ImGui::TableNextColumn();
-
-				sprintf_s(label, 128, "%.0f", gearSavedResultSum + 650);
-				TextCommma(label, comma);
-				ImGui::Text(comma);
-				ImGui::TableNextColumn();
+			uint64_t bs4GearOngoing = playerMetaData->CalBsGear4Set(false, milliTableTime);
+			if (bs4GearOngoing != 0 && _accumulatedTime == 0) {
+				gear50savedResult = (double)(playerMetaData->_gear50Sum + bs4GearOngoing) / milliTableTime;
 			}
-			else {
-
-				uint64_t bs3GearOngoing = playerMetaData->CalBsGear3Set(false, milliTableTime);
-				if (bs3GearOngoing != 0 && _accumulatedTime == 0) {
-					gear90savedResult = (double)(playerMetaData->_gear90Sum + bs3GearOngoing) / milliTableTime;
-				}
-				if (bs3GearOngoing == 0 && _accumulatedTime == 0) {
-					gear90savedResult = (double)playerMetaData->_gear90Sum / milliTableTime;
-				}
-
-				uint64_t bs4GearOngoing = playerMetaData->CalBsGear4Set(false, milliTableTime);
-				if (bs4GearOngoing != 0 && _accumulatedTime == 0) {
-					gear50savedResult = (double)(playerMetaData->_gear50Sum + bs4GearOngoing) / milliTableTime;
-				}
-				if (bs4GearOngoing == 0 && _accumulatedTime == 0) {
-					gear50savedResult = (double)(playerMetaData->_gear50Sum) / milliTableTime;
-				}
-
-				uint64_t bsAcc1Ongoing = playerMetaData->CalBsAccSet1(false, milliTableTime);
-				if (bsAcc1Ongoing != 0 && _accumulatedTime == 0) {
-					acc01savedResult = (double)(playerMetaData->_acc01Sum + bsAcc1Ongoing) / milliTableTime;
-				}
-				if (bsAcc1Ongoing == 0 && _accumulatedTime == 0) {
-					acc01savedResult = (double)(playerMetaData->_acc01Sum) / milliTableTime;
-				}
-
-				uint64_t bsAcc2Ongoing = playerMetaData->CalBsAccSet2(false, milliTableTime);
-				if (bsAcc2Ongoing != 0 && _accumulatedTime == 0) {
-					acc02savedResult = (double)(playerMetaData->_acc02Sum + bsAcc2Ongoing) / milliTableTime;
-				}
-				if (bsAcc2Ongoing == 0 && _accumulatedTime == 0) {
-					acc02savedResult = (double)(playerMetaData->_acc02Sum) / milliTableTime;
-				}
-
-				double gearSum = gear50savedResult + gear90savedResult;
-
-				sprintf_s(label, 128, "%.0f", gearSum + acc01savedResult);
-				TextCommma(label, comma);
-				ImGui::Text(comma);
-				ImGui::TableNextColumn();
-
-				sprintf_s(label, 128, "%.0f", gearSum + acc02savedResult);
-				TextCommma(label, comma);
-				ImGui::Text(comma);
-				ImGui::TableNextColumn();
-
-				sprintf_s(label, 128, "%.0f", gearSum + 650);
-				TextCommma(label, comma);
-				ImGui::Text(comma);
-				ImGui::TableNextColumn();
-
-				//if ((int64)(milliTableTime - playerMetaData->_gear90PreviousTime) < 0) {
-				//	sprintf_s(label, 128, "%.1f", gear90savedResult);
-				//}
-				//else if (playerMetaData->_gear90Started == false) {
-				//	sprintf_s(label, 128, "0.0");
-				//}
-				//else {
-				//	uint64_t timeDifference = (milliTableTime - playerMetaData->_gear90PreviousTime);
-				//	timeDifference = (timeDifference >= 5000) ? 5000 : timeDifference;
-
-				//	uint64_t gear90Sum = (playerMetaData->_gear90Sum + timeDifference * 500);
-
-				//	gear90savedResult = (double)gear90Sum / milliTableTime;
-				//	sprintf_s(label, 128, "%.1f", gear90savedResult);
-				//}
-
-
+			if (bs4GearOngoing == 0 && _accumulatedTime == 0) {
+				gear50savedResult = (double)(playerMetaData->_gear50Sum) / milliTableTime;
 			}
 
-			//
+			uint64_t bsAcc1Ongoing = playerMetaData->CalBsAccSet1(false, milliTableTime);
+			if (bsAcc1Ongoing != 0 && _accumulatedTime == 0) {
+				acc01savedResult = (double)(playerMetaData->_acc01Sum + bsAcc1Ongoing) / milliTableTime;
+			}
+			if (bsAcc1Ongoing == 0 && _accumulatedTime == 0) {
+				acc01savedResult = (double)(playerMetaData->_acc01Sum) / milliTableTime;
+			}
 
-			// Evade A
-			if ((*itr)->GetGetHitAll() == 0) {
-				sprintf_s(label, 128, "-");
+			uint64_t bsAcc2Ongoing = playerMetaData->CalBsAccSet2(false, milliTableTime);
+			if (bsAcc2Ongoing != 0 && _accumulatedTime == 0) {
+				acc02savedResult = (double)(playerMetaData->_acc02Sum + bsAcc2Ongoing) / milliTableTime;
 			}
-			else {
-				sprintf_s(label, 128, "%.1f%%", (double)(*itr)->GetGetHitMissed() / (*itr)->GetGetHitAll() * 100);
+			if (bsAcc2Ongoing == 0 && _accumulatedTime == 0) {
+				acc02savedResult = (double)(playerMetaData->_acc02Sum) / milliTableTime;
 			}
+
+			double gearSum = gear50savedResult + gear90savedResult;
+
+			sprintf_s(label, 128, "%.0f", gearSum + acc01savedResult);
+			TextCommma(label, comma);
+			ImGui::Text(comma);
+			ImGui::TableNextColumn();
+
+			sprintf_s(label, 128, "%.0f", gearSum + acc02savedResult);
+			TextCommma(label, comma);
+			ImGui::Text(comma);
+			ImGui::TableNextColumn();
+
+			sprintf_s(label, 128, "%.0f", gearSum + 650);
+			TextCommma(label, comma);
+			ImGui::Text(comma);
+			ImGui::TableNextColumn();
+
+			//if ((int64_t)(milliTableTime - playerMetaData->_gear90PreviousTime) < 0) {
+			//	sprintf_s(label, 128, "%.1f", gear90savedResult);
+			//}
+			//else if (playerMetaData->_gear90Started == false) {
+			//	sprintf_s(label, 128, "0.0");
+			//}
+			//else {
+			//	uint64_t timeDifference = (milliTableTime - playerMetaData->_gear90PreviousTime);
+			//	timeDifference = (timeDifference >= 5000) ? 5000 : timeDifference;
+
+			//	uint64_t gear90Sum = (playerMetaData->_gear90Sum + timeDifference * 500);
+
+			//	gear90savedResult = (double)gear90Sum / milliTableTime;
+			//	sprintf_s(label, 128, "%.1f", gear90savedResult);
+			//}
+
+
+		}
+
+		//
+
+		// Evade A
+		if ((*itr)->GetGetHitAll() == 0) {
+			sprintf_s(label, 128, "-");
+		}
+		else {
+			sprintf_s(label, 128, "%.1f%%", (double)(*itr)->GetGetHitMissed() / (*itr)->GetGetHitAll() * 100);
+		}
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		// Evade B
+		if ((*itr)->GetGetHit() == 0) {
+			sprintf_s(label, 128, "-");
+		}
+		else {
+			sprintf_s(label, 128, "%.1f%%", (double)(*itr)->GetGetHitMissedReal() / (*itr)->GetGetHit() * 100);
+		}
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+
+		// Enlighten
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU").data() || _tableTime == 0) {
+			sprintf_s(label, 128, "-");
 			ImGui::Text(label);
 			ImGui::TableNextColumn();
 
-			// Evade B
-			if ((*itr)->GetGetHit() == 0) {
-				sprintf_s(label, 128, "-");
-			}
-			else {
-				sprintf_s(label, 128, "%.1f%%", (double)(*itr)->GetGetHitMissedReal() / (*itr)->GetGetHit() * 100);
-			}
+			sprintf_s(label, 128, "-");
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+		}
+		else {
+			sprintf_s(label, 128, "%u", (*itr)->GetGigaEnlighten());
 			ImGui::Text(label);
 			ImGui::TableNextColumn();
 
+			sprintf_s(label, 128, "%u", (*itr)->GetTeraEnlighten());
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+		}
 
-			// Enlighten
-			if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU") || _tableTime == 0) {
-				sprintf_s(label, 128, "-");
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
+		// Fever
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU").data() || _tableTime == 0) {
+			sprintf_s(label, 128, "-");
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+		}
+		else {
+			sprintf_s(label, 128, "%u", (*itr)->GetTeraFever());
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+		}
 
-				sprintf_s(label, 128, "-");
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-			}
-			else {
-				sprintf_s(label, 128, "%u", (*itr)->GetGigaEnlighten());
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-
-				sprintf_s(label, 128, "%u", (*itr)->GetTeraEnlighten());
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-			}
-
-			// HP
-			double losedHP = 0.0;
-			if (DAMAGEMETER.isHistoryMode()) {
-				losedHP = (*itr)->GetHistoryLosedHP();
-			}
-			else {
-				losedHP = playerMetaData->_losedHp;
-			}
-			if (UIOPTION.is1K())
+		// HP
+		// TODO: Re-enable M if we ever get there
+		double losedHP = 0.0;
+		if (DAMAGEMETER.isHistoryMode()) {
+			losedHP = (*itr)->GetHistoryLosedHP();
+		}
+		else {
+			losedHP = playerMetaData->_losedHp;
+		}
+		if (UIOPTION.is1K())
+			losedHP /= 1000;
+		else if (UIOPTION.is1M()) {
+			if (!strcmp(LANGMANAGER.GetText("STR_DISPLAY_DEFAULT_UNIT").data(), "K"))
 				losedHP /= 1000;
-			else if (UIOPTION.is1M())
-				losedHP /= 1000000;
-			sprintf_s(label, 128, "%.0f", losedHP);
-			TextCommma(label, comma);
+			else if (!strcmp(LANGMANAGER.GetText("STR_DISPLAY_DEFAULT_UNIT").data(), "10K"))
+				losedHP /= 10000;
+			// losedHP /= 1000000;
+		}
+		else if (UIOPTION.is10K())
+			losedHP /= 10000;
+		sprintf_s(label, 128, "%.0f", losedHP);
+		TextCommma(label, comma);
 
-			if (UIOPTION.is1K())
-				strcat_s(comma, 128, "K");
-			else if (UIOPTION.is1M())
-				strcat_s(comma, 128, "M");
+		if (UIOPTION.is1K())
+			strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_1K").data());
+		else if (UIOPTION.is1M())
+		{
+			if (!strcmp(LANGMANAGER.GetText("STR_DISPLAY_DEFAULT_UNIT").data(), "K"))
+				strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_1K").data());
+			else if (!strcmp(LANGMANAGER.GetText("STR_DISPLAY_DEFAULT_UNIT").data(), "10K"))
+				strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_10K").data());
+			// strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_1M"));
+		}
+		else if (UIOPTION.is10K())
+			strcat_s(comma, 128, LANGMANAGER.GetText("STR_DISPLAY_UNIT_10K").data());
 
-			ImGui::Text(comma);
-			ImGui::TableNextColumn();
+		ImGui::Text(comma);
+		ImGui::TableNextColumn();
 
-			// Dodge
-			if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU") || _tableTime == 0) {
-				sprintf_s(label, 128, "-");
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-			}
-			else {
-				sprintf_s(label, 128, "%u", (*itr)->GetDodgeUsed());
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-			}
-
-			// Death Counter
-			sprintf_s(label, 128, "%u", (*itr)->GetDeathCount());
+		// Dodge
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU").data() || _tableTime == 0) {
+			sprintf_s(label, 128, "-");
 			ImGui::Text(label);
 			ImGui::TableNextColumn();
-
-			static double savedResultFullAB = 0;
-			// Full AB Time
-			if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) == LANGMANAGER.GetText("STR_TABLE_YOU")) {
-				if (DAMAGEMETER.isHistoryMode()) {
-					savedResultFullAB = (*itr)->GetHistoryABTime();
-				}
-				else {
-					playerMetaData->CalcFullABTime(DAMAGEMETER.GetTime());
-					savedResultFullAB = playerMetaData->_fullABTime;
-				}
-				sprintf_s(label, 128, "%.1f", savedResultFullAB);
-			}
-			else {
-				sprintf_s(label, 128, "-");
-			}
+		}
+		else {
+			sprintf_s(label, 128, "%u", (*itr)->GetDodgeUsed());
 			ImGui::Text(label);
 			ImGui::TableNextColumn();
+		}
 
-			// Full AB Percent
-			if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) == LANGMANAGER.GetText("STR_TABLE_YOU")) {
-				sprintf_s(label, 128, "%.0f", ((double)(savedResultFullAB * 1000) / DAMAGEMETER.GetTime()) * 100);
-			}
-			else {
-				sprintf_s(label, 128, "-");
-			}
-			ImGui::Text(label);
-			ImGui::TableNextColumn();
+		// Death Counter
+		sprintf_s(label, 128, "%u", (*itr)->GetDeathCount());
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
 
-			// Enli/Skill(%)
-			if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU") || _tableTime == 0 || (*itr)->GetSkillUsed() <= 0) {
-				sprintf_s(label, 128, "-");
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-
-				sprintf_s(label, 128, "-");
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-			}
-			else {
-				sprintf_s(label, 128, "%.1f", ((double)(*itr)->GetGigaEnlighten() / (*itr)->GetSkillUsed()) * 100);
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-
-				sprintf_s(label, 128, "%.1f", ((double)(*itr)->GetTeraEnlighten() / (*itr)->GetSkillUsed()) * 100);
-				ImGui::Text(label);
-				ImGui::TableNextColumn();
-			}
-
-			// Aggro Percent
-			static double savedResultAggroTime = 0;
+		static double savedResultFullAB = 0;
+		// Full AB Time
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) == LANGMANAGER.GetText("STR_TABLE_YOU").data()) {
 			if (DAMAGEMETER.isHistoryMode()) {
-				savedResultAggroTime = (*itr)->GetHistoryAggroTime();
+				savedResultFullAB = (*itr)->GetHistoryABTime();
 			}
 			else {
-				playerMetaData->CalcAggroTime(DAMAGEMETER.GetTime());
-				savedResultAggroTime = playerMetaData->_AggroTime;
+				playerMetaData->CalcFullABTime(DAMAGEMETER.GetTime());
+				savedResultFullAB = playerMetaData->_fullABTime;
 			}
-			sprintf_s(label, 128, "%.0f", ((double)(savedResultAggroTime * 1000) / DAMAGEMETER.GetTime()) * 100);
+			sprintf_s(label, 128, "%.1f", savedResultFullAB);
+		}
+		else {
+			sprintf_s(label, 128, "-");
+		}
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		// Full AB Percent
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) == LANGMANAGER.GetText("STR_TABLE_YOU").data()) {
+			sprintf_s(label, 128, "%.0f", ((double)(savedResultFullAB * 1000) / DAMAGEMETER.GetTime()) * 100);
+		}
+		else {
+			sprintf_s(label, 128, "-");
+		}
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		// Enli/Skill(%)
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU").data() || _tableTime == 0 || (*itr)->GetSkillUsed() <= 0) {
+			sprintf_s(label, 128, "-");
 			ImGui::Text(label);
 			ImGui::TableNextColumn();
 
-			static double savedResultFullAS = 0;
-			// Full AS Time
-			if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) == LANGMANAGER.GetText("STR_TABLE_YOU")) {
-				if (DAMAGEMETER.isHistoryMode()) {
-					savedResultFullAS = (*itr)->GetHistoryASTime();
-				}
-				else {
-					playerMetaData->CalcFullASTime(DAMAGEMETER.GetTime());
-					savedResultFullAS = playerMetaData->_fullASTime;
-				}
-				sprintf_s(label, 128, "%.1f", savedResultFullAS);
-			}
-			else {
-				sprintf_s(label, 128, "-");
-			}
+			sprintf_s(label, 128, "-");
+			ImGui::Text(label);
+			ImGui::TableNextColumn();
+		}
+		else {
+			sprintf_s(label, 128, "%.1f", ((double)(*itr)->GetGigaEnlighten() / (*itr)->GetSkillUsed()) * 100);
 			ImGui::Text(label);
 			ImGui::TableNextColumn();
 
-			// Full AS Percent
-			if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) == LANGMANAGER.GetText("STR_TABLE_YOU")) {
-				sprintf_s(label, 128, "%.0f", ((double)(savedResultFullAS * 1000) / DAMAGEMETER.GetTime()) * 100);
-			}
-			else {
-				sprintf_s(label, 128, "-");
-			}
+			sprintf_s(label, 128, "%.1f", ((double)(*itr)->GetTeraEnlighten() / (*itr)->GetSkillUsed()) * 100);
 			ImGui::Text(label);
 			ImGui::TableNextColumn();
+		}
 
-			// AS
-			static double savedResultAS = 0;
-			if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU") || _tableTime == 0) {
-				sprintf_s(label, 128, "-");
+		// Aggro Percent
+		static double savedResultAggroTime = 0;
+		if (DAMAGEMETER.isHistoryMode()) {
+			savedResultAggroTime = (*itr)->GetHistoryAggroTime();
+		}
+		else {
+			playerMetaData->CalcAggroTime(DAMAGEMETER.GetTime());
+			savedResultAggroTime = playerMetaData->_AggroTime;
+		}
+		sprintf_s(label, 128, "%.0f", ((double)(savedResultAggroTime * 1000) / DAMAGEMETER.GetTime()) * 100);
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		static double savedResultFullAS = 0;
+		// Full AS Time
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) == LANGMANAGER.GetText("STR_TABLE_YOU").data()) {
+			if (DAMAGEMETER.isHistoryMode()) {
+				savedResultFullAS = (*itr)->GetHistoryASTime();
 			}
-			else if (DAMAGEMETER.isHistoryMode()) {
-				savedResultAS = (*itr)->GetHistoryAvgAS();
+			else {
+				playerMetaData->CalcFullASTime(DAMAGEMETER.GetTime());
+				savedResultFullAS = playerMetaData->_fullASTime;
+			}
+			sprintf_s(label, 128, "%.1f", savedResultFullAS);
+		}
+		else {
+			sprintf_s(label, 128, "-");
+		}
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		// Full AS Percent
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) == LANGMANAGER.GetText("STR_TABLE_YOU").data()) {
+			sprintf_s(label, 128, "%.0f", ((double)(savedResultFullAS * 1000) / DAMAGEMETER.GetTime()) * 100);
+		}
+		else {
+			sprintf_s(label, 128, "-");
+		}
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		// AS
+		static double savedResultAS = 0;
+		if (DAMAGEMETER.GetPlayerName((*itr)->GetID()) != LANGMANAGER.GetText("STR_TABLE_YOU").data() || _tableTime == 0) {
+			sprintf_s(label, 128, "-");
+		}
+		else if (DAMAGEMETER.isHistoryMode()) {
+			savedResultAS = (*itr)->GetHistoryAvgAS();
+			sprintf_s(label, 128, "%.1f", savedResultAS);
+		}
+		else {
+
+			if ((int64_t)(milliTableTime - playerMetaData->_avgASPreviousTime) < 0) {
 				sprintf_s(label, 128, "%.1f", savedResultAS);
 			}
 			else {
+				uint64_t timeDifference = (milliTableTime - playerMetaData->_avgASPreviousTime);
+				double currentAS = playerMetaData->GetStat(StatType::AttackSpeed);
+				uint64_t calculatedAvgAS = static_cast<uint64_t>((playerMetaData->_avgASSum + timeDifference * currentAS));
 
-				if ((int64_t)(milliTableTime - playerMetaData->_avgASPreviousTime) < 0) {
-					sprintf_s(label, 128, "%.1f", savedResultAS);
-				}
-				else {
-					uint64_t timeDifference = (milliTableTime - playerMetaData->_avgASPreviousTime);
-					double currentAS = playerMetaData->GetStat(StatType::AttackSpeed);
-					uint64_t calculatedAvgAS = static_cast<uint64_t>((playerMetaData->_avgASSum + timeDifference * currentAS));
-
-					savedResultAS = (double)calculatedAvgAS / milliTableTime;
-					sprintf_s(label, 128, "%.1f", savedResultAS);
-				}
+				savedResultAS = (double)calculatedAvgAS / milliTableTime;
+				sprintf_s(label, 128, "%.1f", savedResultAS);
 			}
-			ImGui::Text(label);
-			ImGui::TableNextColumn();
-
-			//  (etc)
-			PLOTWINDOW.AddJqData((*itr)->GetJqStack(), _tableTime);
 		}
+		ImGui::Text(label);
+		ImGui::TableNextColumn();
+
+		//  (etc)
+		PLOTWINDOW.AddJqData((*itr)->GetJqStack(), _tableTime);
 	}
+}
 
 void PlayerTable::DrawBar(float window_Width, float percent, ImU32 color) {
 
@@ -1141,10 +1170,10 @@ void PlayerTable::DrawBar(float window_Width, float percent, ImU32 color) {
 	float height = ImGui::GetFontSize();
 	ImVec2 line = ImGui::GetCursorScreenPos();
 
-	line.x = FLOOR(line.x);
-	ImGui::TablePushBackgroundChannel(); //without this image drawing will break bar
+	line.x = FLOOR(line.x);	line.y = line.y;
+	height = height;
+
 	draw_list->AddRectFilled(ImVec2(line.x, line.y), ImVec2(line.x + result_width, line.y + height), color, 0, 0);
-	ImGui::TablePopBackgroundChannel();
 }
 
 bool PlayerTable::ToggleSelectInfo(uint32_t id) {
@@ -1157,7 +1186,7 @@ bool PlayerTable::ToggleSelectInfo(uint32_t id) {
 		}
 	}
 
-	SELECTED_PLAYER* selectinfo = new SELECTED_PLAYER(id, true, new SpecificInformation(id));
+	SELECTED_PLAYER* selectinfo = new SELECTED_PLAYER(id, TRUE, new SpecificInformation(id));
 	_selectInfo.push_back(selectinfo);
 
 	return selectinfo->_isSelected;
@@ -1166,7 +1195,7 @@ bool PlayerTable::ToggleSelectInfo(uint32_t id) {
 void PlayerTable::ShowSelectedTable() {
 
 	for (auto itr = _selectInfo.begin(); itr != _selectInfo.end(); itr++) {
-		if ((*itr)->_isSelected == true) {
+		if ((*itr)->_isSelected == TRUE) {
 			(*itr)->_specificInfo->Update(&(*itr)->_isSelected, itr - _selectInfo.begin());
 		}
 	}

@@ -4,35 +4,35 @@
 
 bool DXInput::Init(HINSTANCE hinst, HWND hWnd) {
 	
-	HRESULT result = DirectInput8Create(hinst, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&_directInput, NULL);
+	HRESULT result = DirectInput8Create(hinst, DIRECTINPUT_VERSION, IID_IDirectInput8, (LPVOID*)&_directInput, NULL);
 
 	if (FAILED(result)) {
 		LogInstance.WriteLog("Error in DirectInput8Create");
-		return false;
+		return FALSE;
 	}
 	
 
 	if (FAILED(_directInput->CreateDevice(GUID_SysKeyboard, &_keyboard, NULL))) {
 		LogInstance.WriteLog("Error in CreateDevice");
-		return false;
+		return FALSE;
 	}
 
 	if (FAILED(_keyboard->SetDataFormat(&c_dfDIKeyboard))) {
 		LogInstance.WriteLog("Error in SetDataFormat");
-		return false;
+		return FALSE;
 	}
 
 	if (FAILED(_keyboard->SetCooperativeLevel(hWnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE))) {
 		LogInstance.WriteLog("Error in SetCooperativeLevel");
-		return false;
+		return FALSE;
 	}
 
 	if (FAILED(_keyboard->Acquire())) {
 		LogInstance.WriteLog("Error in Acquire");
-		return false;
+		return FALSE;
 	}
 
-	return true;
+	return TRUE;
 }
 
 void DXInput::Shutdown() {
@@ -52,7 +52,7 @@ void DXInput::Shutdown() {
 
 bool DXInput::Update() {
 
-	HRESULT result = _keyboard->GetDeviceState(sizeof(_keyboardState), (void*)&_keyboardState);
+	HRESULT result = _keyboard->GetDeviceState(sizeof(_keyboardState), (LPVOID)&_keyboardState);
 
 	if (FAILED(result))
 	{
@@ -62,15 +62,15 @@ bool DXInput::Update() {
 		}
 		else
 		{
-			return false;
+			return FALSE;
 		}
 	}
 
 	for (int i = 0; i < 256; i++) {
-		_inputInfo[i].Update(_keyboardState[i] & 0x80 ? true : false);
+		_inputInfo[i].Update(_keyboardState[i] & 0x80 ? TRUE : FALSE);
 	}
 
-	return true;
+	return TRUE;
 }
 
 bool DXInput::isKeyDown(unsigned int i) {
@@ -78,7 +78,7 @@ bool DXInput::isKeyDown(unsigned int i) {
 	if (i >= 0 && i < GetStateSize())
 		return _inputInfo[i].isDown();
 	else
-		return false;
+		return FALSE;
 }
 
 bool DXInput::isKeyRelease(unsigned int i) {
@@ -86,7 +86,7 @@ bool DXInput::isKeyRelease(unsigned int i) {
 	if (i >= 0 && i < GetStateSize())
 		return _inputInfo[i].isRelease();
 	else
-		return false;
+		return FALSE;
 }
 
 bool DXInput::isKeyPressed(unsigned int i) {
@@ -94,14 +94,14 @@ bool DXInput::isKeyPressed(unsigned int i) {
 	if (i >= 0 && i < GetStateSize())
 		return _inputInfo[i].isPress();
 	else
-		return false;
+		return FALSE;
 }
 
 bool DXInput::isKeyIdle(unsigned int i) {
 	if (i >= 0 && i < GetStateSize())
 		return _inputInfo[i].isIdle();
 	else
-		return false;
+		return FALSE;
 }
 
 unsigned int DXInput::GetStateSize() {

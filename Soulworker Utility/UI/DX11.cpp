@@ -2,7 +2,8 @@
 #include ".\UI\DX11.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include ".\UI\stb_image.h"
-DX11::DX11() : _4xMsaaQuality(0), _enable4xMsaa(false), _d3dDevice(nullptr), _d3dDeviceContext(nullptr) {
+
+DX11::DX11() : _4xMsaaQuality(0), _enable4xMsaa(FALSE), _d3dDevice(nullptr), _d3dDeviceContext(nullptr) {
 
 }
 
@@ -13,7 +14,7 @@ DX11::~DX11() {
 bool DX11::CreateDevice() {
 
 	if (_d3dDevice)
-		return true;
+		return TRUE;
 
 	unsigned int createDeviceFlags = 0;
 
@@ -38,7 +39,7 @@ bool DX11::CreateDevice() {
 
 	if (FAILED(hr)) {
 		LogInstance.WriteLog("[DirectX11] [CreateDevice FAILED]\n");
-		return false;
+		return FALSE;
 	}
 	for (size_t i = 0; i < charTexturesFiles.size(); i++) //chars start at 1, 0 is unknown
 	{
@@ -60,7 +61,7 @@ bool DX11::CreateDevice() {
 			}
 		}
 	}
-	return true;
+	return TRUE;
 }
 
 void DX11::Check4XMSAA() {
@@ -71,11 +72,11 @@ void DX11::Check4XMSAA() {
 	HRESULT hr = _d3dDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &_4xMsaaQuality);
 
 	if (FAILED(hr) || _4xMsaaQuality < 1) {
-		_enable4xMsaa = false;
+		_enable4xMsaa = FALSE;
 		return;
 	}
 
-	_enable4xMsaa = true;
+	_enable4xMsaa = TRUE;
 }
 
 void DX11::CleanDevice() {
@@ -96,12 +97,12 @@ bool DX11::Init() {
 	
 	if (!CreateDevice()) {
 		CleanDevice();
-		return false;
+		return FALSE;
 	}
 
 	Check4XMSAA();
 
-	return true;
+	return TRUE;
 }
 
 IDXGISwapChain* DX11::CreateSwapChain(HWND hWnd) {
@@ -131,7 +132,7 @@ IDXGISwapChain* DX11::CreateSwapChain(HWND hWnd) {
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	sd.BufferCount = 2;
 	sd.OutputWindow = hWnd;
-	sd.Windowed = true;
+	sd.Windowed = TRUE;
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
@@ -153,7 +154,7 @@ IDXGISwapChain* DX11::CreateSwapChain(HWND hWnd) {
 		if (FAILED(dxgiFactory->CreateSwapChain(_d3dDevice, &sd, &swapChain)))
 			break;
 
-	} while (false);
+	} while (FALSE);
 
 	if (dxgiDevice != nullptr)
 		dxgiDevice->Release();
@@ -180,7 +181,7 @@ ID3D11RenderTargetView* DX11::CreateRenderTarget(IDXGISwapChain* swapChain) {
 			break;
 
 		_d3dDevice->CreateRenderTargetView(backBuffer, 0, &renderTargetView);
-	} while (false);
+	} while (FALSE);
 
 	if(backBuffer != nullptr)
 		backBuffer->Release();
@@ -238,12 +239,12 @@ bool DX11::LoadTextureFromFile(const char* filename, ID3D11ShaderResourceView** 
 
 	return true;
 }
-Texture DX11::getCharacterTexture(int jobid)
+Texture DX11::getcharacterTexture(int jobid)
 {
 	Texture ret;
 	if (jobid < 0)
 		return ret;
-	if (jobid > charTextures.size()-1)
+	if (jobid > charTextures.size() - 1)
 		return ret;
 	ret.ptr = charTextures[jobid];
 	ret.xSize = (int)((float)(ImGui::GetFontSize()));

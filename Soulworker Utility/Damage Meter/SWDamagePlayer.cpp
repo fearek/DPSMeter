@@ -6,7 +6,7 @@
 #include ".\MySQLite.h"
 #include ".\UI\Option.h"
 
-SWDamagePlayer::SWDamagePlayer(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint16_t maxCombo, uint32_t monsterID, uint32_t skillID) {
+SWDamagePlayer::SWDamagePlayer(uint32_t id, uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, unsigned short maxCombo, uint32_t monsterID, uint32_t skillID) {
 	_id = id;
 	AddDamage(totalDMG, soulstoneDMG, damageType, maxCombo, monsterID, skillID);
 }
@@ -32,12 +32,12 @@ bool SWDamagePlayer::SortFunction(SWDamagePlayer* playerA, SWDamagePlayer* playe
 	return playerA->GetDamage() > playerB->GetDamage();
 }
 
-void SWDamagePlayer::InsertMonsterInfo(uint32_t monsterID, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount, uint32_t skillID) {
+void SWDamagePlayer::InsertMonsterInfo(uint32_t monsterID, uint64_t damage, uint64_t critDamage, unsigned short hitCount, unsigned short critHitCount, uint32_t skillID) {
 
 	auto itr = _monsterInfo.begin();
 
 	SW_DB2_STRUCT* db = DAMAGEMETER.GetMonsterDB(monsterID);
-	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[Monster] [MonsterID = %d] [DB2 = %d]")), monsterID, db->_db2);
+	//LogInstance.WriteLog("[Monster] [MonsterID = %d] [DB2 = %d]"), monsterID, db->_db2);
 
 	uint32_t db2 = 0;
 
@@ -59,9 +59,9 @@ void SWDamagePlayer::Sort() {
 	sort(_monsterInfo.begin(), _monsterInfo.end(), SWDamageMonster::SortFunction);
 }
 
-void SWDamagePlayer::AddDamage(uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, uint16_t maxCombo, uint32_t monsterID, uint32_t skillID)
+void SWDamagePlayer::AddDamage(uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKETDAMAGE_DAMAGETYPE damageType, unsigned short maxCombo, uint32_t monsterID, uint32_t skillID)
 {
-	//LogInstance.WriteLog(const_cast<LPTSTR>(_T("[PLAYER] [DamageType = %d]")), damageType.CRIT);
+	//LogInstance.WriteLog("[PLAYER] [DamageType = %d]", damageType.CRIT);
 
 	if (DAMAGEMETER.isHistoryMode())
 		return;
@@ -103,7 +103,7 @@ void SWDamagePlayer::AddDamage(uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKE
 		_maxCombo = maxCombo;
 	}
 
-	uint16_t worldID = DAMAGEMETER.GetWorldID();
+	unsigned short worldID = DAMAGEMETER.GetWorldID();
 
 	auto stList = StrictModeList.find(worldID);
 	bool isStrictMode = false;
@@ -127,7 +127,7 @@ void SWDamagePlayer::AddDamage(uint64_t totalDMG, uint64_t soulstoneDMG, SWPACKE
 	}
 
 #if DEBUG_DAMAGE_PLAYER == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("[PLAYER] [ID = %d] [MonsterID = %04x] [DMG = %llu] [hitCount = %d] [cirtHitCount = %d] [maxCombo = %d]")), _id, monsterID, _damage, _hitCount, _critHitCount, _maxCombo);
+	LogInstance.WriteLog("[PLAYER] [ID = %d] [MonsterID = %04x] [DMG = %llu] [hitCount = %d] [cirtHitCount = %d] [maxCombo = %d]", _id, monsterID, _damage, _hitCount, _critHitCount, _maxCombo);
 #endif
 
 	InsertMonsterInfo(monsterID, totalDMG, soulstoneDMG, 1, damageType.CRIT, skillID);
@@ -146,15 +146,15 @@ uint64_t SWDamagePlayer::GetSoulstoneDamage() {
 	return _soulstoneDamage;
 }
 
-uint16_t SWDamagePlayer::GetHitCount() {
+unsigned short SWDamagePlayer::GetHitCount() {
 	return _hitCount;
 }
 
-uint16_t SWDamagePlayer::GetCritHitCount() {
+unsigned short SWDamagePlayer::GetCritHitCount() {
 	return _critHitCount;
 }
 
-uint16_t SWDamagePlayer::GetMaxCombo() {
+unsigned short SWDamagePlayer::GetMaxCombo() {
 	return _maxCombo;
 }
 
@@ -168,17 +168,17 @@ uint64_t SWDamagePlayer::GetMonsterTotalDamage() {
 	return monsterTotalDamage;
 }
 
-uint16_t SWDamagePlayer::GetHitCountForCritRate()
+unsigned short SWDamagePlayer::GetHitCountForCritRate()
 {
 	return _hitCountForCritRate;
 }
 
-uint16_t SWDamagePlayer::GetCritHitCountForCritRate()
+unsigned short SWDamagePlayer::GetCritHitCountForCritRate()
 {
 	return _critHitCountForCritRate;
 }
 
-uint16_t SWDamagePlayer::GetSoulstoneCount()
+unsigned short SWDamagePlayer::GetSoulstoneCount()
 {
 	return _soulstoneCount;
 }
@@ -193,32 +193,32 @@ uint64_t SWDamagePlayer::GetSoulStoneDamageForSoulstone()
 	return _soulstoneDamageForSoulstone;
 }
 
-uint16_t SWDamagePlayer::GetGetHitAll()
+unsigned short SWDamagePlayer::GetGetHitAll()
 {
 	return _getHitAll;
 }
 
-uint16_t SWDamagePlayer::GetGetHit()
+unsigned short SWDamagePlayer::GetGetHit()
 {
 	return _getHit;
 }
 
-uint16_t SWDamagePlayer::GetGetHitBS()
+unsigned short SWDamagePlayer::GetGetHitBS()
 {
 	return _getHitBS;
 }
 
-uint16_t SWDamagePlayer::GetGetHitMissed()
+unsigned short SWDamagePlayer::GetGetHitMissed()
 {
 	return _getHitMissed;
 }
 
-uint16_t SWDamagePlayer::GetGetHitMissedReal()
+unsigned short SWDamagePlayer::GetGetHitMissedReal()
 {
 	return _getHitMissedReal;
 }
 
-uint16_t SWDamagePlayer::GetMissCount()
+unsigned short SWDamagePlayer::GetMissCount()
 {
 	return _missCount;
 }
@@ -241,9 +241,19 @@ double SWDamagePlayer::GetHistoryABTime()
 	return _historyABTime;
 }
 
+double SWDamagePlayer::GetHistoryABTimeU()
+{
+	return _historyABTimeU;
+}
+
 void SWDamagePlayer::SetHistoryABTime(double historyABTime)
 {
 	_historyABTime = historyABTime;
+}
+
+void SWDamagePlayer::SetHistoryABTimeU(double historyABTime)
+{
+	_historyABTimeU = historyABTime;
 }
 
 void SWDamagePlayer::SetHistoryAvgAB(double historyAvgAB)
@@ -251,9 +261,19 @@ void SWDamagePlayer::SetHistoryAvgAB(double historyAvgAB)
 	_historyAvgAB = historyAvgAB;
 }
 
+void SWDamagePlayer::SetHistoryAvgABU(double historyAvgAB)
+{
+	_historyAvgABU = historyAvgAB;
+}
+
 double SWDamagePlayer::GetHistoryAvgAB()
 {
 	return _historyAvgAB;
+}
+
+double SWDamagePlayer::GetHistoryAvgABU()
+{
+	return _historyAvgABU;
 }
 
 void SWDamagePlayer::SetHistoryAvgBD(double historyAvgBD)
@@ -301,14 +321,19 @@ float SWDamagePlayer::GetEnlightenSum()
 	return _enlightenSum;
 }
 
-uint16_t SWDamagePlayer::GetGigaEnlighten()
+unsigned short SWDamagePlayer::GetGigaEnlighten()
 {
 	return _gigaEnlightenProc;
 }
 
-uint16_t SWDamagePlayer::GetTeraEnlighten()
+unsigned short SWDamagePlayer::GetTeraEnlighten()
 {
 	return _teraEnlightenProc;
+}
+
+unsigned short SWDamagePlayer::GetTeraFever()
+{
+	return _teraFeverProc;
 }
 
 void SWDamagePlayer::setHistoryBS(int type, double value)
@@ -425,27 +450,32 @@ void SWDamagePlayer::AddEnlighten(float value)
 	}
 }
 
-uint16_t SWDamagePlayer::GetSkillUsed()
+void SWDamagePlayer::AddFever()
+{
+	_teraFeverProc++;
+}
+
+unsigned short SWDamagePlayer::GetSkillUsed()
 {
 	return _skillCounts;
 }
 
-uint16_t SWDamagePlayer::GetDodgeUsed()
+unsigned short SWDamagePlayer::GetDodgeUsed()
 {
 	return _dodgeCounts;
 }
 
-uint16_t SWDamagePlayer::GetDeathCount()
+unsigned short SWDamagePlayer::GetDeathCount()
 {
 	return _deathCounts;
 }
 
-void SWDamagePlayer::SetJqStack(uint8_t stack)
+void SWDamagePlayer::SetJqStack(BYTE stack)
 {
 	_JqStack = stack;
 }
 
-uint8_t SWDamagePlayer::GetJqStack() {
+BYTE SWDamagePlayer::GetJqStack() {
 	return _JqStack;
 }
 
@@ -458,6 +488,6 @@ std::vector<SWDamageMonster*>::const_iterator SWDamagePlayer::end() {
 	return _monsterInfo.end();
 }
 
-const SIZE_T SWDamagePlayer::size() {
+const size_t SWDamagePlayer::size() {
 	return _monsterInfo.size();
 }

@@ -12,7 +12,7 @@ typedef struct _SWPACKET_MYSKILLUSED {
 	float _locationY;
 	float _locationZ;
 	float _direction;
-	uint8_t _unknown01[30];
+	BYTE _unknown01[30];
 }SWPACKET_MYSKILLUSED;
 
 #pragma pack(pop)
@@ -21,16 +21,16 @@ typedef struct _SWPACKET_MYSKILLUSED {
 class SWSPacketMySkillUsed : public SWPacket {
 protected:
 	SWHEADER* _swheader;
-	uint8_t* _data;
+	BYTE* _data;
 
 	SWSPacketMySkillUsed() {}
 	SWSPacketMySkillUsed(SWPacket& other) {}
 
 public:
-	SWSPacketMySkillUsed(SWHEADER* swheader, uint8_t* data);
+	SWSPacketMySkillUsed(SWHEADER* swheader, BYTE* data);
 	virtual ~SWSPacketMySkillUsed() {}
 
-	virtual void Debug();
-	virtual void Log();
-	virtual void Do();
+	virtual VOID Debug();
+	virtual VOID Log();
+	virtual VOID Do();
 };

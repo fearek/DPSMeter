@@ -36,7 +36,7 @@ DWORD DiscordCustomPresence::Init()
 	LogInstance.WriteLog("Initialized discord");
 	return TRUE;
 }
-VOID DiscordCustomPresence::RunCallbacks()
+void DiscordCustomPresence::RunCallbacks()
 {
 	try {
 		if (core) {
@@ -95,7 +95,7 @@ std::string getCharacterName(int id)
 		return "UNKNOWN";
 	}
 }
-VOID DiscordCustomPresence::UpdatePresence(std::string nick, UINT32 maze, UINT8 playerclass)
+void DiscordCustomPresence::UpdatePresence(std::string nick, uint32_t maze, uint8_t playerclass)
 {
 	if (!shouldLoad || !shouldUpdate || !isInitialized)
 	{
@@ -128,7 +128,7 @@ VOID DiscordCustomPresence::UpdatePresence(std::string nick, UINT32 maze, UINT8 
 	core->ActivityManager().UpdateActivity(Activity, [](discord::Result callback) {if (callback != discord::Result::Ok) { LogInstance.WriteLog("Failed to update presence: %u", callback); }});
 
 }
-VOID DiscordCustomPresence::ClearPresence()
+void DiscordCustomPresence::ClearPresence()
 {
 	if (isInitialized) {
 		core->ActivityManager().ClearActivity([](discord::Result callback) {if (callback != discord::Result::Ok) { LogInstance.WriteLog("Failed to clear presence: %u", callback); }});

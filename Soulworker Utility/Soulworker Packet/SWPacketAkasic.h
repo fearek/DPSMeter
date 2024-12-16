@@ -16,7 +16,7 @@ protected:
 	SWPacketAkasic() {}
 
 public:
-	SWPacketAkasic(SWHEADER* swheader, uint8_t* data);
+	SWPacketAkasic(SWHEADER* swheader, BYTE* data);
 	~SWPacketAkasic() {}
 
 	void Do();

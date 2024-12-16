@@ -14,7 +14,7 @@ protected:
 	SWPacketAggroChanged() {}
 
 public:
-	SWPacketAggroChanged(SWHEADER* swheader, uint8_t* data);
+	SWPacketAggroChanged(SWHEADER* swheader, BYTE* data);
 	~SWPacketAggroChanged() {}
 
 	void Do();

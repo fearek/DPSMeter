@@ -109,11 +109,11 @@ void SWDamageMeterHistory::ClearHistory(HISTORY_INFO* pHI, bool deleteFirst)
 		pHI = (HISTORY_INFO*)*_historys.begin();
 	}
 
-	auto itr = find(_historys.begin(), _historys.end(), (void*)pHI);
+	auto itr = find(_historys.begin(), _historys.end(), (LPVOID)pHI);
 
 	if (UIOPTION.isUseSaveData())
 	{
-		int64_t index = 0;
+		LONG64 index = 0;
 		if (deleteFirst)
 			index = 1;
 		else {
@@ -296,7 +296,7 @@ void SWDamageMeterHistory::UnSerialization(const _tHistory* pHistory)
 	pSysTime->wMilliseconds = pHistory->_save_time()->milliseconds();
 
 	HISTORY_INFO* pHI = new HISTORY_INFO;
-	pHI->Setup(pHD, pHistory->_word_id(), pHistory->_time(), pHistory->_my_id(), true, pSysTime, pHistory->_real_clear_time());
+	pHI->Setup(pHD, pHistory->_word_id(), pHistory->_time(), pHistory->_my_id(), TRUE, pSysTime, pHistory->_real_clear_time());
 
 	bool canLock = _mutex.try_lock();
 	{

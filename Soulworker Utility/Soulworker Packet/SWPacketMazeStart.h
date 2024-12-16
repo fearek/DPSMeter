@@ -6,7 +6,7 @@ protected:
 	SWPacketMazeStart() {}
 
 public:
-	SWPacketMazeStart(SWHEADER* swheader, uint8_t* data);
+	SWPacketMazeStart(SWHEADER* swheader, BYTE* data);
 	~SWPacketMazeStart() {}
 
 	void Do();

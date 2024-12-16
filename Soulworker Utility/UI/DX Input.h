@@ -55,10 +55,10 @@ public:
 		}
 	}
 
-	bool isDown() { if (status == INPUT_STATUS::Down) return true; return false; }
-	bool isPress() { if (status == INPUT_STATUS::Press) return true; return false; }
-	bool isRelease() { if (status == INPUT_STATUS::Release) return true; return false; }
-	bool isIdle() { if (status == INPUT_STATUS::Idle) return true; return false; }
+	bool isDown() { if (status == INPUT_STATUS::Down) return TRUE; return FALSE; }
+	bool isPress() { if (status == INPUT_STATUS::Press) return TRUE; return FALSE; }
+	bool isRelease() { if (status == INPUT_STATUS::Release) return TRUE; return FALSE; }
+	bool isIdle() { if (status == INPUT_STATUS::Idle) return TRUE; return FALSE; }
 }INPUTINFO;
 
 class DXInput : public Singleton<DXInput> {

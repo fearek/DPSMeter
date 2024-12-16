@@ -5,7 +5,7 @@
 
 #define DEBUG_DAMAGE_MONSTER 0
 
-SWDamageMonster::SWDamageMonster(uint32_t id, uint32_t db2, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount, uint32_t skillID) {
+SWDamageMonster::SWDamageMonster(uint32_t id, uint32_t db2, uint64_t damage, uint64_t critDamage, unsigned short hitCount, unsigned short critHitCount, uint32_t skillID) {
 	_id = id;
 	_db2 = db2;
 	_damage = damage;
@@ -18,7 +18,7 @@ SWDamageMonster::SWDamageMonster(uint32_t id, uint32_t db2, uint64_t damage, uin
 	SWDB.GetMonsterType(db2, &_type);
 
 #if DEBUG_DAMAGE_MONSTER == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("\t[MONSTER] [ID = %d] [DB2 = %d] [NAME = %s] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d]")), _id, _db2, _name, _damage, _critDamage, _hitCount, _critHitCount);
+	LogInstance.WriteLog("\t[MONSTER] [ID = %d] [DB2 = %d] [NAME = %s] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d]", _id, _db2, _name, _damage, _critDamage, _hitCount, _critHitCount);
 #endif
 	
 
@@ -44,21 +44,21 @@ bool SWDamageMonster::SortFunction(SWDamageMonster* monsterA, SWDamageMonster* m
 	return monsterA->GetDamage() > monsterB->GetDamage();
 }
 
-void SWDamageMonster::AddDamage(uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount, uint32_t skillID) {
+void SWDamageMonster::AddDamage(uint64_t damage, uint64_t critDamage, unsigned short hitCount, unsigned short critHitCount, uint32_t skillID) {
 	_damage += damage;
 	_critDamage += critDamage;
 	_hitCount += hitCount;
 	_critHitCount += critHitCount;
 
 #if DEBUG_DAMAGE_MONSTER == 1
-	LogInstance.WriteLog(const_cast<LPTSTR>(_T("\t[MONSTER] [ID = %d] [DB2 = %d] [NAME = %s] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d]")), _id, _db2, _name, _damage, _critDamage, _hitCount, _critHitCount);
+	LogInstance.WriteLog("\t[MONSTER] [ID = %d] [DB2 = %d] [NAME = %s] [DMG = %llu] [cirDMG = %llu] [hitCount = %d] [cirtHitCount = %d]", _id, _db2, _name, _damage, _critDamage, _hitCount, _critHitCount);
 #endif
 
 	InsertSkillInfo(skillID, damage, critDamage, hitCount, critHitCount);
 	Sort();
 }
 
-void SWDamageMonster::InsertSkillInfo(uint32_t skillID, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount) {
+void SWDamageMonster::InsertSkillInfo(uint32_t skillID, uint64_t damage, uint64_t critDamage, unsigned short hitCount, unsigned short critHitCount) {
 
 	auto itr = _skillinfo.begin();
 
@@ -84,7 +84,7 @@ int32_t SWDamageMonster::GetType() {
 	return _type;
 }
 
-//uint16_t SWDamageMonster::GetDB1() {
+//unsigned short SWDamageMonster::GetDB1() {
 //	return _db1;
 //}
 
@@ -100,11 +100,11 @@ uint64_t SWDamageMonster::GetCritDamage() {
 	return _critDamage;
 }
 
-uint16_t SWDamageMonster::GetHitCount() {
+unsigned short SWDamageMonster::GetHitCount() {
 	return _hitCount;
 }
 
-uint16_t SWDamageMonster::GetCritHitCount() {
+unsigned short SWDamageMonster::GetCritHitCount() {
 	return _critHitCount;
 }
 
@@ -129,6 +129,6 @@ std::vector<SWDamageSkill*>::const_iterator SWDamageMonster::end() {
 	return _skillinfo.end();
 }
 
-const SIZE_T SWDamageMonster::size() {
+const size_t SWDamageMonster::size() {
 	return _skillinfo.size();
 }

@@ -17,6 +17,7 @@ void SWCPresence::Do() {
 		meta->_job = presencepacket->playerclass;
 	}
 	DISCORD.UpdatePresence(utf8name, presencepacket->maze, presencepacket->playerclass);
+	DAMAGEMETER.SetWorldID(presencepacket->maze);
 	return;
 }
 

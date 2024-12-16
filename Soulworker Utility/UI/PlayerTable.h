@@ -46,11 +46,12 @@ public:
 
 	void Update();
 	void ClearTable();
-	void ResizeTable();
+	void ResizeTalbe();
 
-	int64_t _lastSendTimestamp = 0;
+	LONG64 _lastSendTimestamp = 0;
+	LONG64 _ping = 0;
 	uint32_t _tick = 0;
-	bool _isNewestVersion = true;
+	bool _isNewestVersion = TRUE;
 
 	float GetTableTime()
 	{

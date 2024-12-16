@@ -38,8 +38,7 @@ void UtillWindow::handleDialogInfo()
 									exit(1);
 								}
 								char label[256] = { 0 };
-								std::string historyLoadFailed = std::string(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_LOAD_FAILED"));
-								ANSItoUTF8(historyLoadFailed.data(), label, sizeof(label));
+								ANSItoUTF8(std::string(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_LOAD_FAILED")).data(), label, sizeof(label));
 								MessageBoxA(UIWINDOW.GetHWND(), label, "ERROR", MB_ICONERROR | MB_OK);
 							}
 							SAVEDATA.FreeLock();
@@ -63,7 +62,7 @@ void UtillWindow::HistoryWindow()
 
 		if (UIOPTION.isUseSaveData())
 		{
-			sprintf_s(label, "%s(%s %d) : %s", LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_USING").data(), LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_MAX").data(), HISTORY_SIZE, SAVEDATA.CurrentSaveDataPath().data());
+			sprintf_s(label, "%s(%s %d) : %s", LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_USING").data(), LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_MAX").data(), HISTORY_SIZE, SAVEDATA.CurrentSaveDataPath().c_str());
 		}
 		else {
 			sprintf_s(label, "%s(%s %d)", LANGMANAGER.GetText("STR_MENU_HISTORY").data(), LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_MAX").data(), HISTORY_SIZE);
@@ -107,8 +106,7 @@ void UtillWindow::HistoryWindow()
 			{
 				DAMAGEMETER.GetLock();
 				{
-					std::string historyClearAllConfirm = std::string(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_CLEARALL_CONFIRM"));
-					ANSItoUTF8(historyClearAllConfirm.data(), label, sizeof(label));
+					ANSItoUTF8(std::string(LANGMANAGER.GetText("STR_UTILLWINDOW_HISTORY_CLEARALL_CONFIRM")).data(), label, sizeof(label));
 					if (!DAMAGEMETER.isRun() && HISTORY.size() > 0 && MessageBoxA(UIWINDOW.GetHWND(), label, "WARNING", MB_ICONWARNING | MB_YESNO | MB_TOPMOST) == IDYES)
 					{
 						DAMAGEMETER.Clear();
@@ -133,7 +131,7 @@ void UtillWindow::HistoryWindow()
 						HISTORY_INFO* HI = (HISTORY_INFO*)DAMAGEMETER.GetHistoryHI();
 						DAMAGEMETER.Clear();
 
-						HISTORY.ClearHistory(HI, false);
+						HISTORY.ClearHistory(HI, FALSE);
 						_currentIndex = -1;
 					}
 					DAMAGEMETER.FreeLock();
@@ -208,7 +206,7 @@ void UtillWindow::HistoryWindow()
 					if (!DAMAGEMETER.isRun()) {
 						DAMAGEMETER.Clear();
 						DAMAGEMETER.SetCurrentHistoryId(i);
-						DAMAGEMETER.SetHistory((void*)itr->first);
+						DAMAGEMETER.SetHistory((LPVOID)itr->first);
 					}
 				}
 			}

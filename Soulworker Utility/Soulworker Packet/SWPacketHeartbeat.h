@@ -3,9 +3,9 @@
 
 #pragma pack(push, 1)
 typedef struct _SWPACKETHEARTBEAT {
-	uint8_t _unknown01; //0430new
+	BYTE _unknown01; //0430new
 	uint32_t _tick; // tick
-	uint8_t _unknown02[4];
+	BYTE _unknown02[4];
 }SWPACKETHEARTBEAT;
 
 #pragma pack(pop)
@@ -17,7 +17,7 @@ protected:
 	int64_t _ts;
 
 public:
-	SWPacketHeartbeat(SWHEADER* swheader, uint8_t* data);
+	SWPacketHeartbeat(SWHEADER* swheader, BYTE* data, uint64_t ts);
 	~SWPacketHeartbeat() {}
 
 	void Do();

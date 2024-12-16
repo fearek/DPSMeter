@@ -3,6 +3,7 @@
 #include ".\Third Party\FlatBuffers\include\SW_HISTORY_.h"
 #include ".\Damage Meter\History.h"
 
+
 using namespace SoulMeterFBS::History;
 
 #define SAVEDATA SWSaveData::getInstance()
@@ -21,17 +22,17 @@ private:
 	std::string _saveFileName;
 	std::fstream _saveFile;
 
-	bool _fileNotExist = false;
-	bool _inited = false;
+	bool _fileNotExist = FALSE;
+	bool _inited = FALSE;
 
 	bool Load();
-	void Crypt(unsigned char* src, unsigned char* dest, int64_t len);
+	void Crypt(unsigned char* src, unsigned char* dest, LONG64 len);
 
-	void ReadSaveData(int64_t& offset);
+	void ReadSaveData(LONG64& offset);
 
-	void WriteData(unsigned char* buf, int64_t size, std::fstream* pFS = nullptr);
-	void ReadData(unsigned char* buf, int64_t size, int64_t offset);
-	int64_t GetNextSaveDataLength(int64_t& offset);
+	void WriteData(unsigned char* buf, LONG64 size, std::fstream* pFS = nullptr);
+	void ReadData(unsigned char* buf, LONG64 size, LONG64 offset);
+	LONG64 GetNextSaveDataLength(LONG64& offset);
 
 	std::mutex _mutex;
 
@@ -39,9 +40,9 @@ public:
 	~SWSaveData();
 
 	DWORD Init(std::string fileName = "");
-	int64_t GetCurrentLength();
+	LONG64 GetCurrentLength();
 	void Save(flatbuffers::FlatBufferBuilder& fbb);
-	void Delete(int64_t index, int64_t clearCount = -1);
+	void Delete(LONG64 index, LONG64 clearCount = -1);
 	void Clone(std::string filename);
 	void Reset();
 

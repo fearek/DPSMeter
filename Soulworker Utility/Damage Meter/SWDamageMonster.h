@@ -10,22 +10,22 @@ using namespace SoulMeterFBS::History;
 class SWDamageMonster : public MemoryPool<SWDamageMonster, 100> {
 private:
 	uint32_t _id;
-	//uint16_t _db1;
+	//unsigned short _db1;
 	uint32_t _db2;
 	uint64_t _damage;
 	uint64_t _critDamage;
-	uint16_t _hitCount;
-	uint16_t _critHitCount;
+	unsigned short _hitCount;
+	unsigned short _critHitCount;
 	char _name[MONSTER_NAME_LEN];
 	int32_t _type;
 
 	std::vector<SWDamageSkill*> _skillinfo;
 
-	void InsertSkillInfo(uint32_t skillID, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount);
+	void InsertSkillInfo(uint32_t skillID, uint64_t damage, uint64_t critDamage, unsigned short hitCount, unsigned short critHitCount);
 	void Sort();
 
 public:
-	SWDamageMonster(uint32_t id, uint32_t db2, uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount, uint32_t skillID);
+	SWDamageMonster(uint32_t id, uint32_t db2, uint64_t damage, uint64_t critDamage, unsigned short hitCount, unsigned short critHitCount, uint32_t skillID);
 	SWDamageMonster() : _type(-1), _id(0), _db2(0), _damage(0), _critDamage(0), _hitCount(0), _critHitCount(0) { }
 	~SWDamageMonster();
 
@@ -33,21 +33,21 @@ public:
 
 	uint32_t GetID();
 	int32_t GetType();
-	//uint16_t GetDB1();
+	//unsigned short GetDB1();
 	uint32_t GetDB2();
 	uint64_t GetDamage();
 	uint64_t GetCritDamage();
-	uint16_t GetHitCount();
-	uint16_t GetCritHitCount();
+	unsigned short GetHitCount();
+	unsigned short GetCritHitCount();
 	uint64_t GetSkillTotalDamage();
 	const char* GetName();
 
 	std::vector<SWDamageSkill*>::const_iterator begin();
 	std::vector<SWDamageSkill*>::const_iterator end();
-	const SIZE_T size();
+	const size_t size();
 
 	void SetNameFromDB();
-	void AddDamage(uint64_t damage, uint64_t critDamage, uint16_t hitCount, uint16_t critHitCount, uint32_t skillID);
+	void AddDamage(uint64_t damage, uint64_t critDamage, unsigned short hitCount, unsigned short critHitCount, uint32_t skillID);
 
 	void Serialization(flatbuffers::FlatBufferBuilder& fbb, std::vector<flatbuffers::Offset<_tDamageMonster>>& vDamageMonster)
 	{

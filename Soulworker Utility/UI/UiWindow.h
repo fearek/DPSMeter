@@ -1,6 +1,6 @@
 #pragma once
 
-#define UI_WINDOW_CLASSNAME _T("UI_WINDOW_CLASSNAME")
+#define UI_WINDOW_CLASSNAME L"UI_WINDOW_CLASSNAME"
 #define IMGUI_OPTION_FILE "option.xml"
 
 #define UIWINDOW UiWindow::getInstance()

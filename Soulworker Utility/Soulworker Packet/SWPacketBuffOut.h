@@ -4,8 +4,8 @@
 #pragma pack(push, 1)
 typedef struct _SWPACKETBUFFOUT {
 	uint32_t _playerID;
-	uint16_t _buffID;
-	uint8_t _unknwon01;
+	unsigned short _buffID;
+	BYTE _unknwon01;
 	uint32_t _giverID;
 }SWPACKETBUFFOUT;
 #pragma pack(pop)
@@ -15,7 +15,7 @@ protected:
 	SWPacketBuffOut() {}
 
 public:
-	SWPacketBuffOut(SWHEADER* swheader, uint8_t* data);
+	SWPacketBuffOut(SWHEADER* swheader, BYTE* data);
 	~SWPacketBuffOut() {}
 
 	void Do();

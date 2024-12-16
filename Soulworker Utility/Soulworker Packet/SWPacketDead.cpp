@@ -4,7 +4,7 @@
 #include ".\Damage Meter\Damage Meter.h"
 
 
-SWPacketDead::SWPacketDead(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
+SWPacketDead::SWPacketDead(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
 

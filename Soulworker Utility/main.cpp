@@ -2,10 +2,11 @@
 #include ".\Damage Meter/Damage Meter.h"
 #include ".\UI\UiWindow.h"
 #include ".\Damage Meter\MySQLite.h"
-#include ".\UI\PlayerTable.h"
 #include ".\Third Party/discord/DiscordPresence.h"
+#include ".\UI\PlayerTable.h"
 #include ".\Damage Meter\SaveData.h"
 #include ".\Soulworker Packet\SWPacketMaker.h"
+#include "SimpleIni.h"
 #if defined(DEBUG) || defined(_DEBUG)
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console" )
 #endif
@@ -17,10 +18,6 @@ void getconfig(CSimpleIniA& ini, int sec)
 		if (shouldLog)
 		{
 			LogInstance.Enable();
-		}
-		const char* language = ini.GetValue("Meter", "Language");
-		if (language) {
-			LANGMANAGER.SetCurrentLang((CHAR*)language);
 		}
 		bool shouldLogMonsterStats = ini.GetBoolValue("Meter", "LogMonsterStats", false);
 		bool presence = ini.GetBoolValue("Meter", "RichPresence", true);
@@ -34,29 +31,22 @@ void getconfig(CSimpleIniA& ini, int sec)
 		if (wideness < 0 || wideness > 3)
 			wideness = 1;
 		DAMAGEMETER.mswideness = wideness;
-		const char* font = ini.GetValue("Meter", "DefaultFont");
-		if (font)
-		{
-			DAMAGEMETER.selectedFont.filename = font;
-			DAMAGEMETER.selectedFont.path = font;
-		}
-		DAMAGEMETER.shouldLogMstrStats = shouldLogMonsterStats;
+		DAMAGEMETER.shouldLogMonsterStats = shouldLogMonsterStats;
+		UIOPTION._isUseImage = ini.GetBoolValue("Meter", "UseImage", true);
 		return;
 	}
 }
 bool configloaded = false;
 bool createconfig()
 {
-	DAMAGEMETER.ini.SetBoolValue("Loader", "XignCheck", true);
 	DAMAGEMETER.ini.SetBoolValue("Loader", "OpenMeterOnInjection", true);
-	DAMAGEMETER.ini.SetLongValue("Meter", "Language", 0);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "LogFile", false);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "LogMonsterStats", false);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "RichPresence", true);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "HideName", false);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "HideClass", false);
+	DAMAGEMETER.ini.SetBoolValue("Meter", "UseImage", true);
 	DAMAGEMETER.ini.SetLongValue("Meter", "TimerAcc", 1);
-	DAMAGEMETER.ini.SetValue("Meter", "DefaultFont", "");
 	SI_Error rc = DAMAGEMETER.ini.SaveFile("meterconfig.ini");
 	if (rc < 0) {
 		MessageBoxA(NULL, "Something is wrong with your system, cant make config file.", "ERROR", MB_OK | MB_ICONERROR);
@@ -95,15 +85,20 @@ void loadconfig()
 //int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd) 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ PSTR szCmdLine, _In_ int iCmdShow) {
-
+	auto m_singleInstanceMutex = CreateMutex(NULL, TRUE, L"FeArSoulMeter137cf5f8-a5c7-4261-9806-c2be88b23e48");
+	if (GetLastError() == ERROR_ALREADY_EXISTS) {
+		HWND existingApp = FindWindow(0, L"FeAr SoulMeter");
+		if (existingApp) SetForegroundWindow(existingApp);
+		return FALSE; // Exit the app. For MFC, return false from InitInstance.
+	}
 	MiniDump::Begin();
 	{
 		DWORD errorCode = ERROR_SUCCESS;
-		CHAR errorMsg[512] = { 0 };
+		char errorMsg[512] = { 0 };
 
 		do
 		{
-			const UINT codePage = GetACP();
+			const unsigned int codePage = GetACP();
 			switch (codePage) {
 			case 932: // JP
 				_wsetlocale(LC_ALL, L"ja-JP.UTF8");
@@ -128,7 +123,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 				sprintf_s(errorMsg, "Init Lang failed. err: %lu", errorCode);
 				break;
 			}
-
 
 			if (!SWDB.Init()) {
 				sprintf_s(errorMsg, "Init database failed.");
@@ -155,6 +149,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 						break;
 					}
 				}
+				
 				UIWINDOW.Run();
 			}
 			else {

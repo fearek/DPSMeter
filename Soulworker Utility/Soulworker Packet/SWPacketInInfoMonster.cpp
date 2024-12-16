@@ -4,15 +4,15 @@
 #include ".\Soulworker Packet\SWPacketInInfoMonster.h"
 #include ".\Combat Meter\CombatMeter.h"
 
-SWPacketInInfoMonster::SWPacketInInfoMonster(SWHEADER* swheader, uint8_t* data) : SWPacket(swheader, data) {
+SWPacketInInfoMonster::SWPacketInInfoMonster(SWHEADER* swheader, BYTE* data) : SWPacket(swheader, data) {
 
 }
 
 void SWPacketInInfoMonster::Do() {
 
-	uint8_t counts = *(_data + sizeof(SWHEADER));
-	int16_t offset = sizeof(SWHEADER) + sizeof(counts);
-	for (uint8_t i = 0; i < counts; i++) {
+	BYTE counts = *(_data + sizeof(SWHEADER));
+	short offset = sizeof(SWHEADER) + sizeof(counts);
+	for (BYTE i = 0; i < counts; i++) {
 
 		SWPACKET_IN_INFO_MONSTER1* pktHeader = (SWPACKET_IN_INFO_MONSTER1*)(_data + offset);
 		offset += sizeof(SWPACKET_IN_INFO_MONSTER1);
@@ -49,9 +49,9 @@ void SWPacketInInfoMonster::Log() {
 
 void SWPacketInInfoMonster::Debug() {
 
-	/*uint8_t counts = *(_data + sizeof(SWHEADER));
-	int16_t offset = sizeof(SWHEADER) + sizeof(counts);
-	for (uint8_t i = 0; i < counts; i++) {
+	/*BYTE counts = *(_data + sizeof(SWHEADER));
+	short offset = sizeof(SWHEADER) + sizeof(counts);
+	for (BYTE i = 0; i < counts; i++) {
 
 		SWPACKET_IN_INFO_MONSTER1* pktHeader = (SWPACKET_IN_INFO_MONSTER1*)(_data + offset);
 		offset += sizeof(SWPACKET_IN_INFO_MONSTER1);
@@ -63,7 +63,7 @@ void SWPacketInInfoMonster::Debug() {
 		if (pktFooter->data2Count > 0)
 			offset += (pktFooter->data2Count * sizeof(SWPACKET_IN_INFO_MONSTER_DATA2));
 
-		Log::WriteLogA("[SWPacketInInfoMonster] MonsterID: %u, DB2: %u, data1: %d, data2: %d", pktHeader->id, pktHeader->realDB2, pktHeader->data1Count, pktFooter->data2Count);
+		LogInstance.WriteLog("[SWPacketInInfoMonster] MonsterID: %u, DB2: %u, data1: %d, data2: %d", pktHeader->id, pktHeader->realDB2, pktHeader->data1Count, pktFooter->data2Count);
 	}
 	*/
 }
