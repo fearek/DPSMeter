@@ -1172,8 +1172,9 @@ void PlayerTable::DrawBar(float window_Width, float percent, ImU32 color) {
 
 	line.x = FLOOR(line.x);	line.y = line.y;
 	height = height;
-
+	ImGui::TablePushBackgroundChannel(); //without this image drawing will break bar
 	draw_list->AddRectFilled(ImVec2(line.x, line.y), ImVec2(line.x + result_width, line.y + height), color, 0, 0);
+	ImGui::TablePopBackgroundChannel();
 }
 
 bool PlayerTable::ToggleSelectInfo(uint32_t id) {
