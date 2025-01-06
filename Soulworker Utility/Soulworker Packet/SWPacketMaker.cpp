@@ -25,13 +25,15 @@ DWORD ReceiveCallback(void* prc)
 	auto dll = LoadLibraryA("SoulMeterIPC.dll");
 	if (dll == NULL)
 	{
-		LogInstance.WriteLog("Failed loading IPC dll, handle null.");
+		LogInstance.WriteLog("Failed loading IPC dll, handle null. %d",GetLastError());
+		MessageBoxA(NULL, "Failed to load IPC DLL, check logs for error code.", "ERROR", MB_OK);
 		return FALSE;
 	}
 	auto func = (RunPacketLoopFunc)GetProcAddress(dll, "?runPacketLoop@@YAXPEAVSWPacketMaker@@P81@EAAXAEAV?$vector@EV?$allocator@E@std@@@std@@@Z@Z");
 	if (func == NULL)
 	{
-		LogInstance.WriteLog("Failed retrieving dll func pointer.");
+		LogInstance.WriteLog("Failed retrieving IPC func pointer. %d",GetLastError());
+		MessageBoxA(NULL, "Failed retrieving IPC func pointer, check logs for error code.", "ERROR", MB_OK);
 		return FALSE;
 	}
 	func(&SWPACKETMAKER, &SWPacketMaker::CreateSWPacket);
