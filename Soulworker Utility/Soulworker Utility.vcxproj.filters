@@ -360,58 +360,7 @@
     <ClInclude Include="SimpleIni.h">
       <Filter>Utiliry\헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Third Party\discord\types.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\user_manager.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\voice_manager.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\achievement_manager.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\activity_manager.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\application_manager.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\core.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\discord.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
     <ClInclude Include="Third Party\discord\DiscordPresence.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\event.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\ffi.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\image_manager.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\lobby_manager.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\network_manager.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\overlay_manager.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\relationship_manager.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\storage_manager.h">
-      <Filter>Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="Third Party\discord\store_manager.h">
       <Filter>Discord</Filter>
     </ClInclude>
     <ClInclude Include="Soulworker Packet\SWCPacket.h">
@@ -653,49 +602,7 @@
     <ClCompile Include="Soulworker Packet\SWPacketBrooch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Third Party\discord\types.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\user_manager.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\voice_manager.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\achievement_manager.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\activity_manager.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\application_manager.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\core.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
     <ClCompile Include="Third Party\discord\DiscordPresence.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\image_manager.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\lobby_manager.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\network_manager.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\overlay_manager.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\relationship_manager.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\storage_manager.cpp">
-      <Filter>Discord</Filter>
-    </ClCompile>
-    <ClCompile Include="Third Party\discord\store_manager.cpp">
       <Filter>Discord</Filter>
     </ClCompile>
     <ClCompile Include="Soulworker Packet\SWCPacket.cpp">

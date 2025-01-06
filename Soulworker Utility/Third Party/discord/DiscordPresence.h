@@ -4,7 +4,6 @@
 class DiscordCustomPresence: public Singleton<DiscordCustomPresence> {
 private:
 public:
-	discord::Core* core{};
 	DWORD Init();
 	void RunCallbacks();
 	void UpdatePresence(std::string nick,uint32_t maze, uint8_t playerclass);

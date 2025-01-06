@@ -30,7 +30,7 @@
 #include <filesystem>
 #include <fstream> 
 // DISCORD
-#include "discord\discord.h"
+#include "discord\discord_rpc.h"
 // IMGUI
 #include "imgui\imgui.h"
 #include "imgui\backends\imgui_impl_win32.h"

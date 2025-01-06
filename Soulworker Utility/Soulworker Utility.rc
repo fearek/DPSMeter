@@ -77,10 +77,10 @@ BLOCK "StringFileInfo"
 BEGIN
 BLOCK "040904b0"
 BEGIN
-VALUE "FileDescription", "https://discord.com/invite/H7jZpcVJhq"
+VALUE "FileDescription", "https://discord.gg/qefpmJXGRu"
 VALUE "FileVersion", APP_VERSION
 VALUE "InternalName", "SoulMeter.exe"
-VALUE "LegalCopyright", "AFN & FeAr"
+VALUE "LegalCopyright", "FeAr & AFN"
 VALUE "OriginalFilename", "SoulMeter.exe"
 VALUE "ProductName", "SoulMeter"
 VALUE "ProductVersion", APP_VERSION

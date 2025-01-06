@@ -2,16 +2,34 @@
 #include ".\DiscordPresence.h"
 #include ".\Damage Meter\MySQLite.h"
 #include ".\Damage Meter\Damage Meter.h"
+#include <atomic>
+
+
 #ifndef SERVER_KOREA
-const uint64_t appId = 766705016081612810;
+const char* appId = "1325916409670406325";
 const char imageLink[] = "https://cdn.discordapp.com/app-icons/766705016081612810/2e18ca8613674db1caf850a35ca8e9df.png?size=256";
 #else
 const uint64_t appId = 997228082530353242;
 const char imageLink[] = "https://cdn.discordapp.com/app-icons/997228082530353242/daed10ef3cfd4aeef5738e7dbf73d132.png?size=256";
 #endif
-void LogProblemsFunction(discord::LogLevel level, const char * message)
+static bool firstInit = true;
+static void handleDiscordError(int errcode, const char* message)
 {
-	LogInstance.WriteLog("Discord[%d] - %s",level,message);
+	LogInstance.WriteLog("Discord: error (%d: %s)\n", errcode, message);
+
+	DISCORD.isInitialized = false;
+	if (!firstInit)
+	{
+		DISCORD.Init();
+	}
+}
+static void handleDiscordReady(const DiscordUser* connectedUser)
+{
+	LogInstance.WriteLog("\nDiscord: connected to user %s#%s - %s\n",
+		connectedUser->username,
+		connectedUser->discriminator,
+		connectedUser->userId);
+
 }
 DWORD DiscordCustomPresence::Init()
 {
@@ -19,50 +37,26 @@ DWORD DiscordCustomPresence::Init()
 	{
 		return TRUE;
 	}
-	delete core;
-	core = nullptr;
-	auto result = discord::Core::Create(appId, DiscordCreateFlags_NoRequireDiscord, &core);
-	if (result != discord::Result::Ok)
-	{
-		return FALSE;
-	}
-	core->SetLogHook(discord::LogLevel::Debug,LogProblemsFunction);
-	discord::Activity Activity{};
-	Activity.SetDetails("Idle");
-	Activity.SetState("discord.com/invite/H7jZpcVJhq");
-	Activity.SetType(discord::ActivityType::Playing);
-	Activity.GetAssets().SetLargeImage(imageLink);
-	core->ActivityManager().UpdateActivity(Activity, [](discord::Result callback) {if (callback == discord::Result::Ok) { LogInstance.WriteLog("Discord is initialized"); DISCORD.isInitialized = true; } else { LogInstance.WriteLog("Failed to init discord: %u", callback); }});
+	firstInit = false;
+	DiscordEventHandlers handlers;
+	handlers.errored = handleDiscordError;
+	handlers.ready = handleDiscordReady;
+	memset(&handlers, 0, sizeof(handlers));
+
+	Discord_Initialize(appId, &handlers, 1, NULL);
+
 	LogInstance.WriteLog("Initialized discord");
+	isInitialized = true;
 	return TRUE;
 }
 void DiscordCustomPresence::RunCallbacks()
 {
-	try {
-		if (core) {
-			discord::Result result = core->RunCallbacks();
-			if (result != discord::Result::Ok)
-			{
-				isInitialized = false;
-				DISCORD.Init();
-			}
-		}
-		else
-		{
-			isInitialized = false;
-			DISCORD.Init();
-		}
-	}
-	catch (std::exception e)
+	if (!isInitialized)
 	{
-		LogInstance.WriteLog("Discord exception: %s",e.what());
-		return;
+		Init();
 	}
-	catch (const discord::Result& r)
-	{
-		LogInstance.WriteLog("Discord exception: %d", r);
-		return;
-	}
+	Discord_RunCallbacks();
+
 	return;
 }
 std::string getCharacterName(int id)
@@ -101,36 +95,43 @@ void DiscordCustomPresence::UpdatePresence(std::string nick, uint32_t maze, uint
 	{
 		return;
 	}
-	discord::Activity Activity{};
+	DiscordRichPresence discordPresence;
+	std::string detailsString; //lifetime must be enough so Discord_UpdatePresence can run
+	memset(&discordPresence, 0, sizeof(discordPresence));
 	if (maze != 0) {
 		char _mapName[MAX_MAP_LEN];
 		SWDB.GetMapNameENG(maze, _mapName, MAX_MAP_LEN);
-		std::string detailsString = _mapName;
+		
 		if (!hideName)
-			detailsString += " | " + nick;
-		if(!hideClass)
+		{
+			detailsString += nick;
+		}
+		if (!hideClass)
+		{
 			detailsString += " (" + getCharacterName(playerclass) + ")";
-		Activity.SetDetails(detailsString.c_str());
-		std::string pingString;
-		pingString += std::to_string(DAMAGEMETER.GetPing()) + "ms discord.com/invite/H7jZpcVJhq";
-		Activity.SetState(pingString.c_str());
+		}
+		detailsString += " " + std::to_string(DAMAGEMETER.GetPing()) + "ms";
+		discordPresence.details = detailsString.c_str();
+
+		discordPresence.state = _mapName;
 	}
 	else
 	{
-		Activity.SetDetails("Character Selection");
-		Activity.SetState("discord.com/invite/H7jZpcVJhq");
+		discordPresence.details = "Character Selection";
+		discordPresence.state = "discord.com/invite/H7jZpcVJhq";
 	}
 	if (DAMAGEMETER.isRun()) {
-		Activity.GetTimestamps().SetStart(DAMAGEMETER.GetStartTime());
+		discordPresence.startTimestamp = DAMAGEMETER.GetStartTime();
 	}
-	Activity.SetType(discord::ActivityType::Playing);
-	Activity.GetAssets().SetLargeImage(imageLink);
-	core->ActivityManager().UpdateActivity(Activity, [](discord::Result callback) {if (callback != discord::Result::Ok) { LogInstance.WriteLog("Failed to update presence: %u", callback); }});
+	discordPresence.largeImageKey = imageLink;
+	discordPresence.button1_label = "Get Meter";
+	discordPresence.button1_url = "https://discord.gg/qefpmJXGRu";
+	Discord_UpdatePresence(&discordPresence);
 
 }
 void DiscordCustomPresence::ClearPresence()
 {
 	if (isInitialized) {
-		core->ActivityManager().ClearActivity([](discord::Result callback) {if (callback != discord::Result::Ok) { LogInstance.WriteLog("Failed to clear presence: %u", callback); }});
+		Discord_ClearPresence();
 	}
 }

@@ -170,7 +170,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Soulworker Utility\Third Party\openssl\lib\VC;..\Soulworker Utility\Third Party\WinDivert\x64;..\Soulworker Utility\Third Party\SQLite\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;SQLite.lib;discord_game_sdk.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;SQLite.lib;discord_integration.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -240,24 +240,7 @@
     <ClInclude Include="Soulworker Packet\SWSPacketMySkillUsed.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="SWConfig.h" />
-    <ClInclude Include="Third Party\discord\achievement_manager.h" />
-    <ClInclude Include="Third Party\discord\activity_manager.h" />
-    <ClInclude Include="Third Party\discord\application_manager.h" />
-    <ClInclude Include="Third Party\discord\core.h" />
-    <ClInclude Include="Third Party\discord\discord.h" />
     <ClInclude Include="Third Party\discord\DiscordPresence.h" />
-    <ClInclude Include="Third Party\discord\event.h" />
-    <ClInclude Include="Third Party\discord\ffi.h" />
-    <ClInclude Include="Third Party\discord\image_manager.h" />
-    <ClInclude Include="Third Party\discord\lobby_manager.h" />
-    <ClInclude Include="Third Party\discord\network_manager.h" />
-    <ClInclude Include="Third Party\discord\overlay_manager.h" />
-    <ClInclude Include="Third Party\discord\relationship_manager.h" />
-    <ClInclude Include="Third Party\discord\storage_manager.h" />
-    <ClInclude Include="Third Party\discord\store_manager.h" />
-    <ClInclude Include="Third Party\discord\types.h" />
-    <ClInclude Include="Third Party\discord\user_manager.h" />
-    <ClInclude Include="Third Party\discord\voice_manager.h" />
     <ClInclude Include="Third Party\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="Third Party\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="Third Party\imgui\Custom.h" />
@@ -340,21 +323,7 @@
     <ClCompile Include="Soulworker Packet\SWPacketWorldChange.cpp" />
     <ClCompile Include="Soulworker Packet\SWSPacketMyDodgeUsed.cpp" />
     <ClCompile Include="Soulworker Packet\SWSPacketMySkillUsed.cpp" />
-    <ClCompile Include="Third Party\discord\achievement_manager.cpp" />
-    <ClCompile Include="Third Party\discord\activity_manager.cpp" />
-    <ClCompile Include="Third Party\discord\application_manager.cpp" />
-    <ClCompile Include="Third Party\discord\core.cpp" />
     <ClCompile Include="Third Party\discord\DiscordPresence.cpp" />
-    <ClCompile Include="Third Party\discord\image_manager.cpp" />
-    <ClCompile Include="Third Party\discord\lobby_manager.cpp" />
-    <ClCompile Include="Third Party\discord\network_manager.cpp" />
-    <ClCompile Include="Third Party\discord\overlay_manager.cpp" />
-    <ClCompile Include="Third Party\discord\relationship_manager.cpp" />
-    <ClCompile Include="Third Party\discord\storage_manager.cpp" />
-    <ClCompile Include="Third Party\discord\store_manager.cpp" />
-    <ClCompile Include="Third Party\discord\types.cpp" />
-    <ClCompile Include="Third Party\discord\user_manager.cpp" />
-    <ClCompile Include="Third Party\discord\voice_manager.cpp" />
     <ClCompile Include="Third Party\imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="Third Party\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="Third Party\imgui\Custom.cpp" />
