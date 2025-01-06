@@ -180,6 +180,7 @@ void UiWindow::Run() {
 }
 
 void UiWindow::Update() {
+	DISCORD.RunCallbacks();
 	if (DAMAGEMETER.shouldRebuildAtlas)
 	{
 		DAMAGEMETER.shouldRebuildAtlas = false;
