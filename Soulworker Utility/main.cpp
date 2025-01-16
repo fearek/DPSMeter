@@ -40,6 +40,8 @@ bool configloaded = false;
 bool createconfig()
 {
 	DAMAGEMETER.ini.SetBoolValue("Loader", "OpenMeterOnInjection", true);
+	DAMAGEMETER.ini.SetBoolValue("Loader", "LoadMeter", true);
+	DAMAGEMETER.ini.SetBoolValue("Loader", "LoadZoom", true);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "LogFile", false);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "LogMonsterStats", false);
 	DAMAGEMETER.ini.SetBoolValue("Meter", "RichPresence", true);

@@ -444,20 +444,24 @@ bool UiOption::GetOption() {
 	tinyxml2::XMLNode* node = doc.FirstChildElement("SDM");
 
 	if (!node)
+	{
+		LogInstance.WriteLog("[UiOption::GetOption] Failed to get SDM element");
 		return FALSE;
-
+	}
 	// Option
 	tinyxml2::XMLElement* ele = node->FirstChildElement("Option");
 
 	if (!ele)
+	{
+		LogInstance.WriteLog("[UiOption::GetOption] Failed to get Option element");
 		return FALSE;
-
+	}
 	auto attr = ele->FindAttribute("GlobalScale");
 
-	if (attr == nullptr)
-		return FALSE;
+	if (attr != nullptr)
+		attr->QueryfloatValue(&_fontScale);
 
-	attr->QueryfloatValue(&_fontScale);
+	
 
 #if DEBUG_READ_XML == 1
 	LogInstance.WriteLog("Read FontScale = %.1f", _fontScale);
@@ -465,10 +469,10 @@ bool UiOption::GetOption() {
 
 	attr = ele->FindAttribute("TableScale");
 
-	if (attr == nullptr)
-		return FALSE;
+	if (attr != nullptr)
+		attr->QueryfloatValue(&_tableFontScale);
 
-	attr->QueryfloatValue(&_tableFontScale);
+	
 
 #if DEBUG_READ_XML == 1
 	LogInstance.WriteLog("Read TableFontScale = %.1f", _tableFontScale);
@@ -476,10 +480,10 @@ bool UiOption::GetOption() {
 
 	attr = ele->FindAttribute("ColumnScale");
 
-	if (attr == nullptr)
-		return FALSE;
+	if (attr != nullptr)
+		attr->QueryfloatValue(&_columnFontScale);
 
-	attr->QueryfloatValue(&_columnFontScale);
+	
 
 #if DEBUG_READ_XML == 1
 	LogInstance.WriteLog("Read ColumnFontScale = %.1f", _columnFontScale);
@@ -487,10 +491,9 @@ bool UiOption::GetOption() {
 
 	attr = ele->FindAttribute("K");
 
-	if (attr == nullptr)
-		return FALSE;
+	if (attr != nullptr)
+		attr->QueryIntValue(&_is1K);
 
-	attr->QueryIntValue(&_is1K);
 
 #if DEBUG_READ_XML == 1
 	LogInstance.WriteLog("Read 1K = %d", _is1K);
@@ -498,35 +501,32 @@ bool UiOption::GetOption() {
 
 	attr = ele->FindAttribute("M");
 
-	if (attr == nullptr)
-		return FALSE;
+	if (attr != nullptr)
+		attr->QueryIntValue(&_is1M);
 
-	attr->QueryIntValue(&_is1M);
+	
 
 	attr = ele->FindAttribute("Man");
 
-	if (attr == nullptr)
-		return FALSE;
-	attr->QueryIntValue(&_is10K);
+	if (attr != nullptr)
+		attr->QueryIntValue(&_is10K);
 
 	attr = ele->FindAttribute("IsSoloMode");
-	if (attr == nullptr)
-		return FALSE;
-	attr->QueryIntValue(&_isSoloMode);
+	if (attr != nullptr)
+		attr->QueryIntValue(&_isSoloMode);
 
 	attr = ele->FindAttribute("DoHideName");
-	if (attr == nullptr)
-		return FALSE;
-	attr->QueryIntValue(&_hideName);
+	if (attr != nullptr)
+		attr->QueryIntValue(&_hideName);
 
 	attr = ele->FindAttribute("IsTopMost");
-	if (attr == nullptr)
-		return FALSE;
-	attr->QueryIntValue(&_isTopMost);
+	if (attr != nullptr)
+		attr->QueryIntValue(&_isTopMost);
+
 	attr = ele->FindAttribute("IsUseImage");
-	if (attr == nullptr)
-		return false;
-	attr = ele->FindAttribute("TeamTA_LF");
+	if (attr != nullptr)
+		attr = ele->FindAttribute("TeamTA_LF");
+
 	if (attr != nullptr)
 		attr->QueryIntValue(&_teamTA_LF);
 
@@ -574,11 +574,12 @@ bool UiOption::GetOption() {
 
 	attr = ele->FindAttribute("CellPaddingX");
 
-	if (attr == nullptr)
-		return FALSE;
+	if (attr != nullptr)
+	{
+		attr->QueryfloatValue(&_cellPadding.x);
+		style.CellPadding.x = _cellPadding.x;
+	}
 
-	attr->QueryfloatValue(&_cellPadding.x);
-	style.CellPadding.x = _cellPadding.x;
 
 #if DEBUG_READ_XML == 1
 	LogInstance.WriteLog("Read CellPadding X = %f", _cellPadding.x);
@@ -586,11 +587,13 @@ bool UiOption::GetOption() {
 
 	attr = ele->FindAttribute("CellPaddingY");
 
-	if (attr == nullptr)
-		return FALSE;
+	if (attr != nullptr)
+	{
+		attr->QueryfloatValue(&_cellPadding.y);
+		style.CellPadding.y = _cellPadding.y;
+	}
 
-	attr->QueryfloatValue(&_cellPadding.y);
-	style.CellPadding.y = _cellPadding.y;
+
 
 #if DEBUG_READ_XML == 1
 	LogInstance.WriteLog("Read CellPadding Y = %f", _cellPadding.y);
@@ -598,11 +601,13 @@ bool UiOption::GetOption() {
 
 	attr = ele->FindAttribute("BorderSize");
 
-	if (attr == nullptr)
-		return FALSE;
+	if (attr != nullptr)
+	{
+		attr->QueryfloatValue(&_windowBorderSize);
+		style.WindowBorderSize = _windowBorderSize;
+	}
 
-	attr->QueryfloatValue(&_windowBorderSize);
-	style.WindowBorderSize = _windowBorderSize;
+	
 
 #if DEBUG_READ_XML == 1
 	LogInstance.WriteLog("Read WindowBorderSize = %f", _windowBorderSize);
@@ -610,10 +615,8 @@ bool UiOption::GetOption() {
 
 	attr = ele->FindAttribute("WindowWidth");
 
-	if (attr == nullptr)
-		return FALSE;
-
-	attr->QueryfloatValue(&_windowWidth);
+	if (attr != nullptr)
+		attr->QueryfloatValue(&_windowWidth);
 
 
 #if DEBUG_READ_XML == 1
@@ -622,32 +625,25 @@ bool UiOption::GetOption() {
 
 	attr = ele->FindAttribute("RefreshTime");
 
-	if (attr == nullptr)
-		return FALSE;
-
-	attr->QueryfloatValue(&_refreshTime);
+	if (attr != nullptr)
+		attr->QueryfloatValue(&_refreshTime);
 
 #if DEBUG_READ_XML == 1
 		LogInstance.WriteLog("Read RefreshTime = %f", _refreshTime);
 #endif
 		attr = ele->FindAttribute("WinPosX");
 
-		if (attr == nullptr)
-			return FALSE;
+		if (attr != nullptr)
+		{
+			float winX, winY;
 
-		float winX, winY;
+			attr->QueryfloatValue(&winX);
 
-		attr->QueryfloatValue(&winX);
-
-		attr = ele->FindAttribute("WinPosY");
-
-		if (attr == nullptr)
-			return FALSE;
-
-		attr->QueryfloatValue(&winY);
-
-		//SetWindowPos(UIWINDOW.GetHWND(), HWND_NOTOPMOST, winX, winY, 0, 0, SWP_NOSIZE);
-		SetWindowPos(UIWINDOW.GetHWND(), HWND_TOPMOST, static_cast<int>(winX), static_cast<int>(winY), 0, 0, SWP_NOSIZE);
+			attr = ele->FindAttribute("WinPosY");
+			attr->QueryfloatValue(&winY);
+			//SetWindowPos(UIWINDOW.GetHWND(), HWND_NOTOPMOST, winX, winY, 0, 0, SWP_NOSIZE);
+			SetWindowPos(UIWINDOW.GetHWND(), HWND_TOPMOST, static_cast<int>(winX), static_cast<int>(winY), 0, 0, SWP_NOSIZE);
+		}
 
 #if DEBUG_READ_XML == 1
 		LogInstance.WriteLog("Read WinPos(X,Y) = (%f, %f)", winX, winY);
@@ -657,29 +653,33 @@ bool UiOption::GetOption() {
 	ele = ele->NextSiblingElement("TextColor");
 
 	if (!ele)
+	{
+		LogInstance.WriteLog("[UiOption::GetOption] Failed to get sibling TextColor");
 		return FALSE;
+	}
+		
 
 	const char name[4][8] = { {"r"}, {"g"}, {"b"}, {"a"} };
 
 	for (int i = 0; i < 4; i++) {
 		attr = ele->FindAttribute(name[i]);
 
-		if (attr == nullptr)
-			return FALSE;
-
-		switch (i) {
-		case 0:
-			attr->QueryfloatValue(&_textColor.x);
-			break;
-		case 1:
-			attr->QueryfloatValue(&_textColor.y);
-			break;
-		case 2:
-			attr->QueryfloatValue(&_textColor.z);
-			break;
-		case 3:
-			attr->QueryfloatValue(&_textColor.w);
-			break;
+		if (attr != nullptr)
+		{
+			switch (i) {
+			case 0:
+				attr->QueryfloatValue(&_textColor.x);
+				break;
+			case 1:
+				attr->QueryfloatValue(&_textColor.y);
+				break;
+			case 2:
+				attr->QueryfloatValue(&_textColor.z);
+				break;
+			case 3:
+				attr->QueryfloatValue(&_textColor.w);
+				break;
+			}
 		}
 	}
 
@@ -693,27 +693,31 @@ bool UiOption::GetOption() {
 	ele = ele->NextSiblingElement("WindowBgColor");
 
 	if (!ele)
+	{
+		LogInstance.WriteLog("[UiOption::GetOption] Failed to get sibling WindowBgColor");
 		return FALSE;
+	}
 
 	for (int i = 0; i < 4; i++) {
 		attr = ele->FindAttribute(name[i]);
 
-		if (attr == nullptr)
-			return FALSE;
+		if (attr != nullptr)
+		{
 
-		switch (i) {
-		case 0:
-			attr->QueryfloatValue(&_windowBg.x);
-			break;
-		case 1:
-			attr->QueryfloatValue(&_windowBg.y);
-			break;
-		case 2:
-			attr->QueryfloatValue(&_windowBg.z);
-			break;
-		case 3:
-			attr->QueryfloatValue(&_windowBg.w);
-			break;
+			switch (i) {
+			case 0:
+				attr->QueryfloatValue(&_windowBg.x);
+				break;
+			case 1:
+				attr->QueryfloatValue(&_windowBg.y);
+				break;
+			case 2:
+				attr->QueryfloatValue(&_windowBg.z);
+				break;
+			case 3:
+				attr->QueryfloatValue(&_windowBg.w);
+				break;
+			}
 		}
 	}
 
@@ -727,27 +731,31 @@ bool UiOption::GetOption() {
 	ele = ele->NextSiblingElement("OutlineColor");
 		
 	if (!ele)
+	{
+		LogInstance.WriteLog("UiOption::GetOption] Failed to get sibling OutlineColor");
 		return FALSE;
+	}
 
 	for (int i = 0; i < 4; i++) {
 		attr = ele->FindAttribute(name[i]);
 
-		if (attr == nullptr)
-			return FALSE;
-		
-		switch (i) {
-		case 0:
-			attr->QueryfloatValue(&_outlineColor.x);
-			break;
-		case 1:
-			attr->QueryfloatValue(&_outlineColor.y);
-			break;
-		case 2:
-			attr->QueryfloatValue(&_outlineColor.z);
-			break;
-		case 3:
-			attr->QueryfloatValue(&_outlineColor.w);
-			break;
+		if (attr != nullptr)
+		{
+
+			switch (i) {
+			case 0:
+				attr->QueryfloatValue(&_outlineColor.x);
+				break;
+			case 1:
+				attr->QueryfloatValue(&_outlineColor.y);
+				break;
+			case 2:
+				attr->QueryfloatValue(&_outlineColor.z);
+				break;
+			case 3:
+				attr->QueryfloatValue(&_outlineColor.w);
+				break;
+			}
 		}
 	}
 
@@ -759,27 +767,30 @@ bool UiOption::GetOption() {
 	ele = ele->NextSiblingElement("ActiveColor");
 
 	if (!ele)
+	{
+		LogInstance.WriteLog("UiOption::GetOption] Failed to get sibling ActiveColor");
 		return FALSE;
-
+	}
 	for (int i = 0; i < 4; i++) {
 		attr = ele->FindAttribute(name[i]);
 
-		if (attr == nullptr)
-			return FALSE;
+		if (attr != nullptr)
+		{
 
-		switch (i) {
-		case 0:
-			attr->QueryfloatValue(&_activeColor[1].x);
-			break;
-		case 1:
-			attr->QueryfloatValue(&_activeColor[1].y);
-			break;
-		case 2:
-			attr->QueryfloatValue(&_activeColor[1].z);
-			break;
-		case 3:
-			attr->QueryfloatValue(&_activeColor[1].w);
-			break;
+			switch (i) {
+			case 0:
+				attr->QueryfloatValue(&_activeColor[1].x);
+				break;
+			case 1:
+				attr->QueryfloatValue(&_activeColor[1].y);
+				break;
+			case 2:
+				attr->QueryfloatValue(&_activeColor[1].z);
+				break;
+			case 3:
+				attr->QueryfloatValue(&_activeColor[1].w);
+				break;
+			}
 		}
 	}
 
@@ -790,27 +801,31 @@ bool UiOption::GetOption() {
 	ele = ele->NextSiblingElement("InActiveColor");
 
 	if (!ele)
+	{
+		LogInstance.WriteLog("UiOption::GetOption] Failed to get sibling InActiveColor");
 		return FALSE;
+	}
 
 	for (int i = 0; i < 4; i++) {
 		attr = ele->FindAttribute(name[i]);
 
-		if (attr == nullptr)
-			return FALSE;
+		if (attr != nullptr)
 
-		switch (i) {
-		case 0:
-			attr->QueryfloatValue(&_activeColor[0].x);
-			break;
-		case 1:
-			attr->QueryfloatValue(&_activeColor[0].y);
-			break;
-		case 2:
-			attr->QueryfloatValue(&_activeColor[0].z);
-			break;
-		case 3:
-			attr->QueryfloatValue(&_activeColor[0].w);
-			break;
+		{
+			switch (i) {
+			case 0:
+				attr->QueryfloatValue(&_activeColor[0].x);
+				break;
+			case 1:
+				attr->QueryfloatValue(&_activeColor[0].y);
+				break;
+			case 2:
+				attr->QueryfloatValue(&_activeColor[0].z);
+				break;
+			case 3:
+				attr->QueryfloatValue(&_activeColor[0].w);
+				break;
+			}
 		}
 	}
 
@@ -824,27 +839,31 @@ bool UiOption::GetOption() {
 		ele = ele->NextSiblingElement(temp);
 
 		if (!ele)
+		{
+			LogInstance.WriteLog("UiOption::GetOption] Failed to get sibling %s",temp);
 			return FALSE;
+		}
 
 		for (int j = 0; j < 4; j++) {
 			attr = ele->FindAttribute(name[j]);
 
-			if (attr == nullptr)
-				return FALSE;
+			if (attr != nullptr)
+			{
 
-			switch (j) {
-			case 0:
-				attr->QueryfloatValue(&_jobColor[i].x);
-				break;
-			case 1:
-				attr->QueryfloatValue(&_jobColor[i].y);
-				break;
-			case 2:
-				attr->QueryfloatValue(&_jobColor[i].z);
-				break;
-			case 3:
-				attr->QueryfloatValue(&_jobColor[i].w);
-				break;
+				switch (j) {
+				case 0:
+					attr->QueryfloatValue(&_jobColor[i].x);
+					break;
+				case 1:
+					attr->QueryfloatValue(&_jobColor[i].y);
+					break;
+				case 2:
+					attr->QueryfloatValue(&_jobColor[i].z);
+					break;
+				case 3:
+					attr->QueryfloatValue(&_jobColor[i].w);
+					break;
+				}
 			}
 		}
 

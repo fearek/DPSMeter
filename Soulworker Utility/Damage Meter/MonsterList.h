@@ -38,7 +38,7 @@ static std::unordered_set<uint32_t> pauseIdList({
 	40302002, // Relfenne Normal
 	40302001, // Kain Normal
 	40302005, // Vista Egg Normal
-	40301004, // Vista Egg Hard
+	40301005, // Vista Egg Hard
 
 	/* CD */
 	44002014, // Beletto Normal P1
@@ -90,7 +90,7 @@ static std::unordered_set<uint32_t> endIdList({
 	13901301, // Parallel Metronome Hard P2
 
 	/* VP */
-	40301005, // Vista Hard
+	40301004, // Vista Hard
 	40301009, // Fake Vista Hard
 	40301002, // Relfenne Hard
 	40301003, // Flemma Hard

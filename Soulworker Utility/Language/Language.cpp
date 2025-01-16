@@ -65,7 +65,7 @@ std::unordered_map<std::string, std::string> Language::MapLangData(char* langFil
 DWORD Language::SetCurrentLang(char* langFile)
 {
 	DWORD error = ERROR_SUCCESS;
-
+	LogInstance.WriteLog("[Language::SetCurrentLang] %s", langFile);
 	do {
 		std::unordered_map<std::string, std::string> newLang;
 
