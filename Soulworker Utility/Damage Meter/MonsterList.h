@@ -220,6 +220,8 @@ static std::unordered_set<uint32_t> dpsIgnoreIdList({
 
 	/* VS Hero */
 	30301003, 30301006, 30301001, // Tombstone
+	/* VP */
+	41201011, 40201011,
 
 	});
 
