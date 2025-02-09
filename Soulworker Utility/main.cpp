@@ -10,80 +10,7 @@
 #if defined(DEBUG) || defined(_DEBUG)
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console" )
 #endif
-void getconfig(CSimpleIniA& ini, int sec)
-{
-	if (sec == 1) //meter
-	{
-		bool shouldLog = ini.GetBoolValue("Meter", "LogFile", false);
-		if (shouldLog)
-		{
-			LogInstance.Enable();
-		}
-		bool shouldLogMonsterStats = ini.GetBoolValue("Meter", "LogMonsterStats", false);
-		bool presence = ini.GetBoolValue("Meter", "RichPresence", true);
-		DISCORD.shouldLoad = presence;
-		DISCORD.shouldUpdate = presence;
-		bool hidename = ini.GetBoolValue("Meter", "HideName", false);
-		DISCORD.hideName = hidename;
-		bool hideclass = ini.GetBoolValue("Meter", "HideClass", false);
-		DISCORD.hideClass = hideclass;
-		int wideness = ini.GetLongValue("Meter", "TimerAcc", 1);
-		if (wideness < 0 || wideness > 3)
-			wideness = 1;
-		DAMAGEMETER.mswideness = wideness;
-		DAMAGEMETER.shouldLogMonsterStats = shouldLogMonsterStats;
-		UIOPTION._isUseImage = ini.GetBoolValue("Meter", "UseImage", true);
-		return;
-	}
-}
-bool configloaded = false;
-bool createconfig()
-{
-	DAMAGEMETER.ini.SetBoolValue("Loader", "OpenMeterOnInjection", true);
-	DAMAGEMETER.ini.SetBoolValue("Loader", "LoadMeter", true);
-	DAMAGEMETER.ini.SetBoolValue("Loader", "LoadZoom", true);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "LogFile", false);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "LogMonsterStats", false);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "RichPresence", true);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "HideName", false);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "HideClass", false);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "UseImage", true);
-	DAMAGEMETER.ini.SetLongValue("Meter", "TimerAcc", 1);
-	SI_Error rc = DAMAGEMETER.ini.SaveFile("meterconfig.ini");
-	if (rc < 0) {
-		MessageBoxA(NULL, "Something is wrong with your system, cant make config file.", "ERROR", MB_OK | MB_ICONERROR);
-		return false;
-	}
-	return true;
-}
-void loadconfig()
-{
-	DAMAGEMETER.ini.SetUnicode();
-	SI_Error rc = DAMAGEMETER.ini.LoadFile("meterconfig.ini");
-	if (rc < 0)
-	{
-		bool test = createconfig();
-		if (test == false) return;
-	}
-	SI_Error rc2 = DAMAGEMETER.ini.LoadFile("meterconfig.ini");
-	if (rc2 < 0)
-	{
-		MessageBoxA(NULL, "Loading config failed for some reason?", "ERROR", MB_OK | MB_ICONERROR);
-		return;
-	}
-	configloaded = true;
-	CSimpleIniA::TNamesDepend sections;
-	CSimpleIniA::TNamesDepend::const_iterator it;
-	DAMAGEMETER.ini.GetAllSections(sections);
-	for (it = sections.begin(); it != sections.end(); ++it)
-	{
-		if (!std::strcmp(it->pItem, "Meter"))
-		{
-			getconfig(DAMAGEMETER.ini, 1);
-		}
-	}
-	return;
-}
+
 //int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd) 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ PSTR szCmdLine, _In_ int iCmdShow) {
@@ -120,7 +47,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 				errorCode = LANGMANAGER.SetCurrentLang("en.json");
 				break;
 			}
-			loadconfig();
 			if (errorCode) {
 				sprintf_s(errorMsg, "Init Lang failed. err: %lu", errorCode);
 				break;

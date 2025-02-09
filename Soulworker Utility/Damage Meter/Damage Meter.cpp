@@ -40,18 +40,7 @@ SWDamageMeter::~SWDamageMeter() {
 
 	FreeLock();
 }
-void SWDamageMeter::SaveConfig() {
-	bool meteropen = DAMAGEMETER.ini.GetBoolValue("Loader", "OpenMeterOnInjection", true);;
-	DAMAGEMETER.ini.SetBoolValue("Loader", "OpenMeterOnInjection", meteropen);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "LogFile", LogInstance.shouldLog);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "LogMonsterStats", DAMAGEMETER.shouldLogMonsterStats);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "RichPresence", DISCORD.shouldUpdate);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "HideName", DISCORD.hideName);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "HideClass", DISCORD.hideClass);
-	DAMAGEMETER.ini.SetLongValue("Meter", "TimerAcc", DAMAGEMETER.mswideness);
-	DAMAGEMETER.ini.SetBoolValue("Meter", "UseImage", UIOPTION._isUseImage);
-	DAMAGEMETER.ini.SaveFile("meterconfig.ini");
-}
+
 void SWDamageMeter::GetLock() {
 	_mutex.lock();
 }

@@ -372,7 +372,6 @@ void UiOption::OpenOption() {
 		
 		if (ImGui::Button(LANGMANAGER.GetText("STR_OPTION_SAVE_AND_EXIT").data())) {
 			SaveOption();
-			DAMAGEMETER.SaveConfig();
 			if (DAMAGEMETER.GetWorldID() == 20011) {
 				DAMAGEMETER.SetWorldID(0);
 			}
@@ -534,7 +533,29 @@ bool UiOption::GetOption() {
 	if (attr != nullptr)
 		attr->QueryIntValue(&_teamTA_LF_Mode);
 
-	
+	attr = ele->FindAttribute("LogFile");
+	if (attr != nullptr)
+		attr->QueryboolValue(&LogInstance.shouldLog);
+
+	attr = ele->FindAttribute("LogMonsterStats");
+	if (attr != nullptr)
+		attr->QueryboolValue(&DAMAGEMETER.shouldLogMonsterStats);
+
+	attr = ele->FindAttribute("RichPresence");
+	if (attr != nullptr)
+		attr->QueryboolValue(&DISCORD.shouldUpdate);
+
+	attr = ele->FindAttribute("HideName");
+	if (attr != nullptr)
+		attr->QueryboolValue(&DISCORD.hideName);
+
+	attr = ele->FindAttribute("HideClass");
+	if (attr != nullptr)
+		attr->QueryboolValue(&DISCORD.hideClass);
+
+	attr = ele->FindAttribute("TimerAcc");
+	if (attr != nullptr)
+		attr->QueryIntValue(&DAMAGEMETER.mswideness);
 
 	auto attr2 = ele->FirstChildElement("UseLangFile");
 	if (attr2 != nullptr) {
@@ -952,8 +973,14 @@ bool UiOption::SaveOption(bool skipWarning) {
 	option->SetAttribute("BorderSize", _windowBorderSize);
 	option->SetAttribute("WindowWidth", _windowWidth);
 	option->SetAttribute("RefreshTime", _refreshTime);
-
+	option->SetAttribute("LogFile", LogInstance.shouldLog);
 	
+	option->SetAttribute("LogMonsterStats", DAMAGEMETER.shouldLogMonsterStats);
+	option->SetAttribute("RichPresence", DISCORD.shouldUpdate);
+	option->SetAttribute("HideName", DISCORD.hideName);
+	option->SetAttribute("HideClass", DISCORD.hideClass);
+	option->SetAttribute("TimerAcc", DAMAGEMETER.mswideness);
+	option->SetAttribute("UseImage", UIOPTION._isUseImage);
 
 	option->SetAttribute("UseLangFile",_selectedLang);
 
