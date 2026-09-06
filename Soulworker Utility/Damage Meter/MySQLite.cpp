@@ -64,7 +64,7 @@ bool MySQL::InitSkillDB() {
 
 	char* errbuf = nullptr;
 
-	const char* sql = "CREATE TABLE IF NOT EXISTS Skill(Id intEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
+	const char* sql = "CREATE TABLE IF NOT EXISTS Skill(Id INTEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT, Name_CN TEXT);";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in InitSkillDB : %s", errbuf);
@@ -88,7 +88,7 @@ bool MySQL::InitMonsterDB() {
 
 	char* errbuf = nullptr;
 
-	const char* sql = "CREATE TABLE IF NOT EXISTS Monster(Id intEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
+	const char* sql = "CREATE TABLE IF NOT EXISTS Monster(Id INTEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT, Name_CN TEXT);";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in InitMonsterDB : %s", errbuf);
@@ -111,7 +111,7 @@ bool MySQL::InitMonsterDB() {
 bool MySQL::InitMapDB() {
 	char* errbuf = nullptr;
 
-	const char* sql = "CREATE TABLE IF NOT EXISTS Map(Id intEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT);";
+	const char* sql = "CREATE TABLE IF NOT EXISTS Map(Id INTEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT, Name_CN TEXT);";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in InitMapDB : %s", errbuf);
@@ -139,7 +139,7 @@ bool MySQL::InitMapDB() {
 bool MySQL::InitBuffDB() {
 	char* errbuf = nullptr;
 
-	const char* sql = "CREATE TABLE IF NOT EXISTS Buff (Id intEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT, Desc_EN TEXT, Desc_TC TEXT, Desc_JP TEXT, Desc_KR TEXT)";
+	const char* sql = "CREATE TABLE IF NOT EXISTS Buff (Id INTEGER PRIMARY KEY, Name_EN TEXT, Name_TC TEXT, Name_JP TEXT, Name_KR TEXT, Name_CN TEXT, Desc_EN TEXT, Desc_TC TEXT, Desc_JP TEXT, Desc_KR TEXT, Desc_CN TEXT)";
 
 	if (sqlite3_exec(_db, sql, 0, 0, &errbuf) != SQLITE_OK) {
 		LogInstance.WriteLog("Error in InitBuffDB : %s", errbuf);

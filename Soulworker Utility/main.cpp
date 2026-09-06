@@ -1,11 +1,11 @@
 #include "pch.h"
 #include ".\Damage Meter/Damage Meter.h"
-#include ".\UI\UiWindow.h"
 #include ".\Damage Meter\MySQLite.h"
-#include ".\Third Party/discord/DiscordPresence.h"
-#include ".\UI\PlayerTable.h"
 #include ".\Damage Meter\SaveData.h"
 #include ".\Soulworker Packet\SWPacketMaker.h"
+#include ".\Third Party/discord/DiscordPresence.h"
+#include ".\UI\PlayerTable.h"
+#include ".\UI\UiWindow.h"
 #include "SimpleIni.h"
 #if defined(DEBUG) || defined(_DEBUG)
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console" )
@@ -38,6 +38,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 				errorCode = LANGMANAGER.SetCurrentLang("kr.json");
 				break;
 			case 936: // ZH-CN
+				_wsetlocale(LC_ALL, L"zh-CN.UTF8");
+				errorCode = LANGMANAGER.SetCurrentLang("zh_cn.json");
+				break;
 			case 950: // ZH-TW
 				_wsetlocale(LC_ALL, L"zh-TW.UTF8");
 				errorCode = LANGMANAGER.SetCurrentLang("zh_tw.json");
@@ -77,7 +80,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 						break;
 					}
 				}
-				
+
 				UIWINDOW.Run();
 			}
 			else {

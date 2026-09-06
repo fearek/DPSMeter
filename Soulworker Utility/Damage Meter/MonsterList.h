@@ -2,7 +2,7 @@
 #include "pch.h"
 #include <unordered_set>
 
-static std::unordered_set<uint32_t> pauseIdList({
+static std::unordered_set<std::uint32_t> pauseIdList({
 
 	702, // Trainning Master
 
@@ -33,6 +33,9 @@ static std::unordered_set<uint32_t> pauseIdList({
 	13901202, // Parallel Metronome Normal P1
 	13901201, // Parallel Metronome Hard P1
 
+	/* VP Solo */
+	41301005, // Vista Egg Solo
+
 	/* VP */
 	40302003, // Flemma Normal
 	40302002, // Relfenne Normal
@@ -50,13 +53,17 @@ static std::unordered_set<uint32_t> pauseIdList({
 	/* VS Hero */
 	31301014, // Flemma P1
 
+	/* Hired Muscle */
+	31350366, // Clive
+	31350367, // Unknown
+
 	});
 
-static std::unordered_set<uint32_t> endIdList({
+static std::unordered_set<std::uint32_t> endIdList({
 
 	/* HH */
 	31308001, // Raphakumba
-	
+
 	/* LF */
 	31309151, // Junk Queen
 
@@ -89,6 +96,9 @@ static std::unordered_set<uint32_t> endIdList({
 	13901302, // Parallel Metronome Normal P2
 	13901301, // Parallel Metronome Hard P2
 
+	/* VP Solo */
+	41301004, // Vista Solo
+
 	/* VP */
 	40301004, // Vista Hard
 	40301009, // Fake Vista Hard
@@ -101,13 +111,16 @@ static std::unordered_set<uint32_t> endIdList({
 
 	/* VS Hero Solo */
 	31301007, // Flemma P2
-	
+
 	/* VS Hero */
 	31301015, // Flemma P2
 
+	/* Hired Muscle */
+	31350368, // Huff
+
 	});
 
-static std::unordered_set<uint32_t> resumeIgnoreIdList({
+static std::unordered_set<std::uint32_t> resumeIgnoreIdList({
 
 	/* AR */
 	14000101, 14000102, 14000103, // Summoned Orb
@@ -119,7 +132,7 @@ static std::unordered_set<uint32_t> resumeIgnoreIdList({
 	/* HH Hero */
 	44002038, 44002031, 44002035, 44002033, 44002052, // Normal
 	44002054, 44002036, 44002033, 44002034, 44002032, // Hard
-	
+
 	/* VS Hero Solo */
 	30301002, 30301004, 30301005, // Tombstone
 	30301007, 30301008, 30301009, 30301010, // Anasyth
@@ -130,7 +143,7 @@ static std::unordered_set<uint32_t> resumeIgnoreIdList({
 
 	});
 
-static std::unordered_set<uint32_t> changeAggroIdList({
+static std::unordered_set<std::uint32_t> changeAggroIdList({
 
 	701, 702, // Trainning Master
 
@@ -183,7 +196,7 @@ static std::unordered_set<uint32_t> changeAggroIdList({
 
 	});
 
-static std::unordered_set<uint32_t> dpsIgnoreIdList({
+static std::unordered_set<std::uint32_t> dpsIgnoreIdList({
 
 	/* HH */
 	31308106, // Hermit
@@ -213,6 +226,12 @@ static std::unordered_set<uint32_t> dpsIgnoreIdList({
 	44002038, 44002031, 44002035, 44002033, 44002052, // Normal
 	44002054, 44002036, 44002033, 44002034, 44002032, // Hard
 
+	/* VP Solo */
+	41201011, // Wolf P2
+
+	/* VP */
+	40201011, // Wolf P2
+
 	/* VS Hero Solo */
 	30301002, 30301004, 30301005, // Tombstone
 	30301007, 30301008, 30301009, 30301010, // Anasyth
@@ -220,12 +239,10 @@ static std::unordered_set<uint32_t> dpsIgnoreIdList({
 
 	/* VS Hero */
 	30301003, 30301006, 30301001, // Tombstone
-	/* VP */
-	41201011, 40201011,
 
 	});
 
-static std::unordered_set<uint32_t> LunarFallBossListId({
+static std::unordered_set<std::uint32_t> LunarFallBossListId({
 
 	701, 702, // Trainning Master
 
@@ -236,7 +253,7 @@ static std::unordered_set<uint32_t> LunarFallBossListId({
 
 	});
 
-static std::unordered_map<uint32_t, std::vector<uint32_t>> StrictModeList({
+static std::unordered_map<UINT32, std::vector<std::uint32_t>> StrictModeList({
 	// HH Rank
 	{
 		22016,
@@ -318,7 +335,14 @@ static std::unordered_map<uint32_t, std::vector<uint32_t>> StrictModeList({
 	{
 		21032,
 		{
-			31301014, 31301015, 
+			31301014, 31301015,
 		}
 	},
-});
+	// Hired Muscle - Clive / Unknown / Huff, one per gate
+	{
+		21038,
+		{
+			31350366, 31350367, 31350368
+		}
+	},
+	});
